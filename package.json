@@ -1,0 +1,19 @@
+{
+  "name": "doctor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd doctor_prescription_Server && npm start",
+    "client": "cd doctor_prescription && npm start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.2.1",
+    "server": "file:./doctor_prescription_Server",
+    "client": "file:./doctor_prescription"
+  }
+}
