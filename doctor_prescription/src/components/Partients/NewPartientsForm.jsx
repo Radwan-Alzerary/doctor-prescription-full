@@ -134,98 +134,14 @@ function NewPartientsForm(props) {
         }}
         multiline
         rows={1}
-        label="تفاصيل التشخيص"
+        label="التشخيص النهائي"
         // defaultValue="Hello World"
         InputProps={{
           style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
         }}
       />
-      <TextField
-        dir="rtl"
-        onChange={(event) => {
-          setDiagnosis(event.target.value);
-        }}
-        id="outlined-multiline-static"
-        size="small"
-        sx={{
-          width: "100%",
-          direction: "rtl",
-          textAlign: "right",
-          color: "#fff",
-        }}
-        multiline
-        rows={1}
-        label="التاريخ المرضي الحالي"
-        // defaultValue="Hello World"
-        InputProps={{
-          style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-        }}
-      />
-      <TextField
-        dir="rtl"
-        onChange={(event) => {
-          setDiagnosis(event.target.value);
-        }}
-        id="outlined-multiline-static"
-        size="small"
-        sx={{
-          width: "100%",
-          direction: "rtl",
-          textAlign: "right",
-          color: "#fff",
-        }}
-        multiline
-        rows={1}
-        label="تاريخ السابقة"
-        // defaultValue="Hello World"
-        InputProps={{
-          style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-        }}
-      />
+      
 
-      <TextField
-        dir="rtl"
-        onChange={(event) => {
-          setDiagnosis(event.target.value);
-        }}
-        id="outlined-multiline-static"
-        size="small"
-        sx={{
-          width: "100%",
-          direction: "rtl",
-          textAlign: "right",
-          color: "#fff",
-        }}
-        multiline
-        rows={1}
-        label="التاريخ العائلي"
-        // defaultValue="Hello World"
-        InputProps={{
-          style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-        }}
-      />
-
-      <TextField
-        dir="rtl"
-        onChange={(event) => {
-          setDiagnosis(event.target.value);
-        }}
-        id="outlined-multiline-static"
-        size="small"
-        sx={{
-          width: "100%",
-          direction: "rtl",
-          textAlign: "right",
-          color: "#fff",
-        }}
-        multiline
-        rows={1}
-        label="التحسس من الامراض"
-        // defaultValue="Hello World"
-        InputProps={{
-          style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-        }}
-      />
 
       <div className=" text-right flex w-full gap-[50%]">
         <h5>الوصفة الطبية</h5>
