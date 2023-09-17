@@ -93,8 +93,12 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
     backgroundImgActive: { type: Boolean, default: true },
     backgroundImg: { type: String },
     signatureActive: { type: Boolean, default: true },
-    signatureColor: { type: String },
+    signatureColor: { type: String, default: "#000" },
+    signatureSize: { type: String, default: 0.875 },
     signature: { type: String },
+    signatureX: { type: String, default: 85 },
+    signatureY: { type: String, default: 80 },
+
     dateOfRegistrationActive: { type: Boolean, default: true },
     dateOfRegistration: { type: String },
     numberOfRegistratonActive: { type: Boolean, default: true },
@@ -104,8 +108,8 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
     phoneNumber: { type: String },
     phoneNumberActive: { type: Boolean, default: true },
 
-    footerTextColor:{type:String,default:"#000"},
-    footerTextSize:{type:String,default:"#000"}
+    footerTextColor: { type: String, default: "#000" },
+    footerTextSize: { type: String, default: "#000" },
   },
   {
     timestamps: true,

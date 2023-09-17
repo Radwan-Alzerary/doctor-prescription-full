@@ -2,39 +2,35 @@ const router = require("express").Router();
 const MedicalReportsStype = require("../model/medicalReportsStype"); // Make sure to adjust the path as needed
 const uuidv4 = require("uuid/v4");
 const multer = require("multer");
-const DIR = "../public/";
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, DIR);
+    cb(null, "./public/img");
   },
   filename: (req, file, cb) => {
-    const fileName = file.originalname.toLowerCase().split(" ").join("-");
-    cb(null, uuidv4() + "-" + fileName);
-  },
-});
-var upload = multer({
-  storage: storage,
-  fileFilter: (req, file, cb) => {
-    if (
-      file.mimetype == "image/png" ||
-      file.mimetype == "image/jpg" ||
-      file.mimetype == "image/jpeg"
-    ) {
-      cb(null, true);
-    } else {
-      cb(null, false);
-      return cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
-    }
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const extension = file.originalname.split(".").pop();
+    cb(null, uniqueSuffix + "." + extension);
   },
 });
 
-router.post("/backgroundImage", upload.single("profileImg"),async (req, res, next) => {
-  console.log(req.file)
-  const url = req.protocol + "://" + req.get("host");
+// Create multer instance for uploading image
+const upload = multer({ storage: storage });
+
+router.post(
+  "/backgroundImage",
+  upload.single("image"),
+  async (req, res, next) => {
+    console.log(req.body);
+    const { filename, path } = req.file;
+    const { name } = req.body;
+    console.log(filename, path, name);
+    const url = req.protocol + "://" + req.get("host");
+    const imagePath = req.file ? "/img/" + req.file.filename : null;
+    console.log(imagePath);
     try {
-      const medicalReportsStype = await MedicalReportsStype.findByIdAndUpdate(
-        req.body.id,
-        {backgroundImg:url + "/public/" + req.file.filename}
+      const medicalReportsStype = await MedicalReportsStype.findOneAndUpdate(
+        {},
+        { backgroundImg: imagePath }
       );
       if (!medicalReportsStype) {
         return res.status(404).json({ error: "Category not found" });
@@ -43,8 +39,10 @@ router.post("/backgroundImage", upload.single("profileImg"),async (req, res, nex
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
+  }
+);
 
-});
+
 
 router.get("/getmedicalreportstype", async (req, res) => {
   try {

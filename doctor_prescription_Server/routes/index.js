@@ -8,6 +8,7 @@ router.use("/prescription", require("./prescription"));
 router.use("/constantdiseases", require("./constantDiseases"));
 router.use('/users', require('./users'));
 router.use('/messages', require('./messagesRoute'));
+router.use('/gpt', require('./gpt'));
 
 router.use("/medicaleeportstyle", require("./medicalReportsStyle"));
 router.use("/medicalreports", require("./medicalreports"));

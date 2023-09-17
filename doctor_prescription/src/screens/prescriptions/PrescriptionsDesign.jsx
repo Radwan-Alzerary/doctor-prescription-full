@@ -64,7 +64,6 @@ function PrescriptionsDesign() {
       });
   };
   // const handleOnInputChange = () => {};
-
   const handleInputChange = (name, value) => {
     const data = { [name]: value };
     console.log(data);
@@ -145,25 +144,43 @@ function PrescriptionsDesign() {
         console.error("Error making POST request:", error);
       });
   };
-  const [image, setImage] = useState({ preview: "", data: "" });
-  const [status, setStatus] = useState("");
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    let formData = new FormData();
-    formData.append("file", image.data);
-    const response = await fetch("http://localhost:5000/medicaleeportstyle/backgroundImage", {
-      method: "POST",
-      body: formData,
-    });
-    if (response) setStatus(response.statusText);
+
+  const [file, setFile] = useState(null);
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
   };
 
-  const handleFileChange = (e) => {
-    const img = {
-      preview: URL.createObjectURL(e.target.files[0]),
-      data: e.target.files[0],
-    };
-    setImage(img);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!file) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/medicaleeportstyle/backgroundImage",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        ubdateStyle()
+        // alert("Image uploaded successfully");
+        setFile(null);
+      } else {
+        // alert("Error uploading image");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -1048,25 +1065,72 @@ function PrescriptionsDesign() {
             <div className="flex justify-between items-center">
               <div>
                 <p>صوره الخلفية</p>
-                <h1>Upload to server</h1>
-                {image.preview && (
-                  <img src={image.preview} width="100" height="100" />
-                )}
-                <hr></hr>
                 <form onSubmit={handleSubmit}>
-                  <input
-                    type="file"
-                    name="file"
-                    onChange={handleFileChange}
-                  ></input>
-                  <button type="submit">Submit</button>
+                  <div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                    />
+                  </div>
+                  <div></div>
+                  <div className="p-4 rounded-lg w-24 flex justify-center items-center h-4 bg-blue-500">
+                    <button type="submit">رفع الصورة</button>
+                  </div>
                 </form>
-                {status && <h4>{status}</h4>}
               </div>
-              <div>
-                <p>صوره التوقيع</p>
-                <input type="file"></input>
-              </div>
+            </div>
+            <div className="flex w-full  mt-4 font-bold">
+              <p>معلومات التوقيع</p>
+            </div>
+
+            <div className="flex">
+              <TextField
+                value={medicalReportsStype.signature}
+                onChange={(event) => {
+                  handleInputChange("signature", event.target.value);
+                }}
+                label="التوقيع"
+                size="small"
+                sx={{ width: "60%" }}
+              ></TextField>
+              <TextField
+                value={medicalReportsStype.signatureColor}
+                onChange={(event) => {
+                  handleInputChange("signatureColor", event.target.value);
+                }}
+                label="لون التوقيع"
+                size="small"
+                type="color"
+                sx={{ width: "30%" }}
+              ></TextField>
+              <TextField
+                value={medicalReportsStype.signatureSize}
+                onChange={(event) => {
+                  handleInputChange("signatureSize", event.target.value);
+                }}
+                label="حجم التوقيع"
+                size="small"
+                sx={{ width: "40%" }}
+              ></TextField>
+              <TextField
+                value={medicalReportsStype.signatureX}
+                onChange={(event) => {
+                  handleInputChange("signatureX", event.target.value);
+                }}
+                label="X"
+                size="small"
+                sx={{ width: "20%" }}
+              ></TextField>
+              <TextField
+                value={medicalReportsStype.signatureY}
+                onChange={(event) => {
+                  handleInputChange("signatureY", event.target.value);
+                }}
+                label="Y"
+                size="small"
+                sx={{ width: "20%" }}
+              ></TextField>
             </div>
           </div>
           <div className="h-[100vh] w-[500px] bg-white">

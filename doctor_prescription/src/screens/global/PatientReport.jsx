@@ -21,9 +21,7 @@ function PatientReport(props) {
     setMiddleText(props.medicalReportsStype.HeaderMidleText);
     setRightText(props.medicalReportsStype.HeaderRightText);
     setLeftText(props.medicalReportsStype.HeaderLeftText);
-    console.log("xx");
     console.log(middleText);
-    console.log("xx");
 
     // setLodding(true);
   }, [props.medicalReportsStype]);
@@ -34,14 +32,32 @@ function PatientReport(props) {
   });
 
   return (
-    <div className=" ">
+    <div className="h-full ">
       <div
         ref={componentRef}
-        className="p-4"
+        className="p-4 relative"
         style={{ direction: "rtl", textAlign: "right" }}
       >
+        <img
+          className="z-0 opacity-30 absolute flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5  rounded-xl "
+          src={
+            "http://localhost:5000" + props.medicalReportsStype.backgroundImg
+          }
+          alt=""
+        ></img>
+        <div
+          className={`z-20 absolute flex flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5  rounded-xl `}
+          style={{
+            left:`${props.medicalReportsStype.signatureX}%`,
+            top:`${props.medicalReportsStype.signatureY}%`,
+            fontSize: `${props.medicalReportsStype.signatureSize}rem`,
+            color: `${props.medicalReportsStype.signatureColor}`,
+          }}
+        >
+          {props.medicalReportsStype.signature}
+        </div>
         {/* Your content to be printed */}
-        <div className=" h-[95vh] relative flex flex-col ">
+        <div className="  h-[100vh] relative flex flex-col z-10 ">
           <div className="flex w-full  flex-col justify-center items-center">
             <h1
               className={` font-semibold mb-2`}
@@ -277,7 +293,7 @@ function PatientReport(props) {
                     <>
                       {props.dataToPrint.prescription.pharmaceutical.map(
                         (drug, index) => (
-                          <tr class="bg-white ">
+                          <tr class=" ">
                             {props.medicalReportsStype.col6Active ? (
                               <th
                                 scope="row"

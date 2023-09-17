@@ -29,6 +29,9 @@ const ConstantDiseases = require("./model/constantDiseases");
 const MedicalReportsStype = require("./model/medicalReportsStype"); // Make sure to adjust the path as needed
 const socket = require("socket.io");
 
+
+
+
 //use flash
 app.use(flash());
 const corsOptions = {

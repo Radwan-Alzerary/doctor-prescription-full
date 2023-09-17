@@ -39,7 +39,6 @@ function NewPartientsForm(props) {
     props.onBillAdded(dataBillForm);
   };
 
-
   useEffect(() => {
     console.log(inputValue);
     if (value !== null && typeof value === "object" && "_id" in value) {
@@ -118,7 +117,7 @@ function NewPartientsForm(props) {
         </div> */}
       </div>
       <div className=" text-right w-full">
-        <h5>التشخيص</h5>
+        <h5>التشخيص الطبي</h5>
       </div>
       <TextField
         dir="rtl"
@@ -134,8 +133,94 @@ function NewPartientsForm(props) {
           color: "#fff",
         }}
         multiline
-        rows={3}
+        rows={1}
         label="تفاصيل التشخيص"
+        // defaultValue="Hello World"
+        InputProps={{
+          style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
+        }}
+      />
+      <TextField
+        dir="rtl"
+        onChange={(event) => {
+          setDiagnosis(event.target.value);
+        }}
+        id="outlined-multiline-static"
+        size="small"
+        sx={{
+          width: "100%",
+          direction: "rtl",
+          textAlign: "right",
+          color: "#fff",
+        }}
+        multiline
+        rows={1}
+        label="التاريخ المرضي الحالي"
+        // defaultValue="Hello World"
+        InputProps={{
+          style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
+        }}
+      />
+      <TextField
+        dir="rtl"
+        onChange={(event) => {
+          setDiagnosis(event.target.value);
+        }}
+        id="outlined-multiline-static"
+        size="small"
+        sx={{
+          width: "100%",
+          direction: "rtl",
+          textAlign: "right",
+          color: "#fff",
+        }}
+        multiline
+        rows={1}
+        label="تاريخ السابقة"
+        // defaultValue="Hello World"
+        InputProps={{
+          style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
+        }}
+      />
+
+      <TextField
+        dir="rtl"
+        onChange={(event) => {
+          setDiagnosis(event.target.value);
+        }}
+        id="outlined-multiline-static"
+        size="small"
+        sx={{
+          width: "100%",
+          direction: "rtl",
+          textAlign: "right",
+          color: "#fff",
+        }}
+        multiline
+        rows={1}
+        label="التاريخ العائلي"
+        // defaultValue="Hello World"
+        InputProps={{
+          style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
+        }}
+      />
+
+      <TextField
+        dir="rtl"
+        onChange={(event) => {
+          setDiagnosis(event.target.value);
+        }}
+        id="outlined-multiline-static"
+        size="small"
+        sx={{
+          width: "100%",
+          direction: "rtl",
+          textAlign: "right",
+          color: "#fff",
+        }}
+        multiline
+        rows={1}
+        label="التحسس من الامراض"
         // defaultValue="Hello World"
         InputProps={{
           style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
