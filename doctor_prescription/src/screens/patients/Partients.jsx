@@ -34,6 +34,7 @@ import {
   Share,
   Vaccines,
 } from "@mui/icons-material";
+import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 import NewPartientsForm from "../../components/Partients/NewPartientsForm";
 import NewPatientForm from "../../components/Partients/NewPatientForm";
 import BackGroundShadow from "../../components/pageCompond/BackGroundShadow";
@@ -45,6 +46,7 @@ import PatientReport from "../global/PatientReport";
 import NewMedicalReporyForm from "../../components/Partients/NewMedicalReporyForm";
 import PartientsProfile from "../../components/Partients/PartientsProfile";
 import EditPatientForm from "../../components/Partients/EditPatientForm";
+import MedicalForm from "../../components/Partients/MedicalForm";
 
 function Row(props) {
   const { row } = props;
@@ -86,6 +88,24 @@ function Row(props) {
         <TableCell component="th" scope="row" align="center">
           {row.visitCount}
         </TableCell>
+        <TableCell align="center">
+          <IconButton
+            sx={{ color: blue[800] }}
+            // className=" hover:text-yellow-500"
+
+            onClick={() => {
+              props.onMedicalFormShowHandle(row._id);
+            }}
+            aria-label="delete"
+            // size="large"
+          >
+            <ContentPasteIcon
+              aria-label="expand row"
+              size="small"
+            ></ContentPasteIcon>
+          </IconButton>
+        </TableCell>
+
         <TableCell align="center">
           <IconButton
             sx={{ color: yellow[800] }}
@@ -250,6 +270,7 @@ function Partients() {
   const [showPartientsEditForm, setShowPartientsEditForm] = useState(false);
   const [showAddReportForm, setShowAddReportForm] = useState(false);
   const [showPartientProfile, setShowPartientProfile] = useState(false);
+  const [showMidicalForm, setShowMidicalForm] = useState(false);
   const [userEditData, setUserEditData] = useState([]);
 
   const [partientsSelectId, setPartientsSelectId] = useState("");
@@ -377,6 +398,7 @@ function Partients() {
     setShowPartientsEditForm(false);
     setShowPartientProfile(false);
     setShowAddReportForm(false);
+    setShowMidicalForm(false);
     setShowAddForm(false);
     setShowPartientsAddForm(false);
   };
@@ -459,6 +481,13 @@ function Partients() {
     console.log(`Prescription Show clicked for id ${id}`);
   };
 
+  const onMedicalFormShowHandle = (id) => {
+    setPartientsSelectId(id);
+    setShowMidicalForm(true);
+
+    console.log(`Prescription Show clicked for id ${id}`);
+  };
+
   const handleNewPatientData = (data) => {
     console.log(data);
     axios
@@ -479,10 +508,10 @@ function Partients() {
 
   const handleEditPatientData = (data) => {
     console.log(data);
-    data.id = userEditData._id
-    console.log(userEditData._id)
+    data.id = userEditData._id;
+    console.log(userEditData._id);
     axios
-      .post("http://localhost:5000/patients/edit",data )
+      .post("http://localhost:5000/patients/edit", data)
       .then((response) => {
         // Handle the response if needed
         getPharmaceApi();
@@ -705,6 +734,7 @@ function Partients() {
               <TableCell align="center">الوزن</TableCell>
               <TableCell align="center">الطول</TableCell>
               <TableCell align="center">عدد الزيارات</TableCell>
+              <TableCell align="center">الطبلة</TableCell>
               <TableCell align="center">الوصفة</TableCell>
               <TableCell align="center">التقرير</TableCell>
               <TableCell align="center">الخيارات</TableCell>
@@ -717,6 +747,7 @@ function Partients() {
                 onDeleteHande={onDeleteHande}
                 onPrescriptionDeleteHande={HandleOnPrescriptionDeleteHande}
                 onEditHande={onEditHande}
+                onMedicalFormShowHandle={onMedicalFormShowHandle}
                 onReportShowHandel={onReportShowHandel}
                 onPrescriptionShowHande={onPrescriptionShowHande}
                 key={patient._id}
@@ -809,6 +840,16 @@ function Partients() {
             onFormSubmit={handleEditPatientData}
             userEditData={userEditData}
           ></EditPatientForm>
+        </>
+      ) : (
+        ""
+      )}
+      {showMidicalForm ? (
+        <>
+          <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
+          <MedicalForm
+            onFormSubmit={handleEditPatientData}
+          ></MedicalForm>
         </>
       ) : (
         ""
