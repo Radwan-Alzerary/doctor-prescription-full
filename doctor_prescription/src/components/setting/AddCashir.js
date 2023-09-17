@@ -40,7 +40,7 @@ function AddCashir(props) {
             textAlign: "right",
             color: "#fff",
           }}
-          label="اسم الكاشير"
+          label="اسم السكرتير"
           // defaultValue="Hello World"
           InputProps={{
             style: { textAlign: "right" }, // Apply CSS style to right-align placeholder

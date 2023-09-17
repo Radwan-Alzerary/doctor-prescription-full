@@ -20,7 +20,7 @@ function Setting() {
     <div>
       <div className="flex p-4">
         <div className="w-1/2">
-          <div className=" text-lg">اضافة كاشير جديد</div>
+          <div className=" text-lg">اضافة  سكرتير جديد</div>
           <AddCashir onCashireFormSubmit={onCashireFormSubmit}></AddCashir>
         </div>
       </div>
