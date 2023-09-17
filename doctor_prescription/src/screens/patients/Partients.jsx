@@ -23,6 +23,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import BiotechIcon from "@mui/icons-material/Biotech";
+
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import { Calendar } from "react-modern-calendar-datepicker";
 import {
@@ -136,6 +138,20 @@ function Row(props) {
             // size="large"
           >
             <SummarizeIcon aria-label="expand row" size="small"></SummarizeIcon>
+          </IconButton>
+        </TableCell>
+
+        <TableCell align="center">
+          <IconButton
+            sx={{ color: blue[800] }}
+            // className=" hover:text-yellow-500"
+            onClick={() => {
+              props.onReportShowHandel(row._id);
+            }}
+            aria-label="delete"
+            // size="large"
+          >
+            <BiotechIcon size={"small"} />
           </IconButton>
         </TableCell>
 
@@ -737,6 +753,7 @@ function Partients() {
               <TableCell align="center">الطبلة</TableCell>
               <TableCell align="center">الوصفة</TableCell>
               <TableCell align="center">التقرير</TableCell>
+              <TableCell align="center">الفحوصات</TableCell>
               <TableCell align="center">الخيارات</TableCell>
             </TableRow>
           </TableHead>
@@ -847,9 +864,7 @@ function Partients() {
       {showMidicalForm ? (
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
-          <MedicalForm
-            onFormSubmit={handleEditPatientData}
-          ></MedicalForm>
+          <MedicalForm onFormSubmit={handleEditPatientData}></MedicalForm>
         </>
       ) : (
         ""

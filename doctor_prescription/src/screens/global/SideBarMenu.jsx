@@ -84,7 +84,7 @@ function SideBarMenu(props) {
             router="/pharmaceutical"
             onClick={() => setActiveSubmenu("main")}
           ></Sidebaritems>
-          <Sidebaritems  
+          <Sidebaritems
             title="categories"
             // icon={<CategoryIcon style={{ fontSize: "28px" }} />}
             router="/category"
@@ -92,12 +92,6 @@ function SideBarMenu(props) {
           ></Sidebaritems>
         </SubMenu>
 
-        <Sidebaritems
-          title="tests"
-          icon={<BiotechIcon style={{ fontSize: "28px" }} />}
-          router="/dashboard/purchasestable"
-          onClick={() => setActiveSubmenu("main")}
-        ></Sidebaritems>
         <SubMenu
           // active={activeSubmenu === "main"}
           icon={<AssignmentIcon style={{ fontSize: "28px" }} />}
