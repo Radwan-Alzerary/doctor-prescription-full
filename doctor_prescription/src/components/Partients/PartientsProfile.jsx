@@ -4,6 +4,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import MedicalReportTable from "./profile/MedicalReportTable";
 import PrescriptionTable from "./profile/PrescriptionTable";
+import LaboryReportTable from "./profile/LaboryReportTable";
 
 function PartientsProfile(props) {
   const [partientsProfile, setPartientsProfile] = useState([]);
@@ -73,6 +74,17 @@ function PartientsProfile(props) {
         </div>
         <div
           onClick={() => {
+            setProfileSelect("labory");
+          }}
+          className={`${
+            profileSelect === "labory" ? "bg-green-200" : "bg-slate-200"
+          }  p-2 w-48 rounded-full hover:bg-slate-100 cursor-pointer`}
+        >
+          التقرير المختبري
+        </div>
+
+        <div
+          onClick={() => {
             setProfileSelect("History");
           }}
           className={`${
@@ -137,6 +149,16 @@ function PartientsProfile(props) {
       ) : (
         ""
       )}
+      {profileSelect === "labory" ? (
+        <>
+          <LaboryReportTable
+            laboryData={partientsProfile.labory}
+          ></LaboryReportTable>
+        </>
+      ) : (
+        ""
+      )}
+
       {profileSelect === "History" ? "" : ""}
     </form>
   );

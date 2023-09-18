@@ -49,6 +49,10 @@ import NewMedicalReporyForm from "../../components/Partients/NewMedicalReporyFor
 import PartientsProfile from "../../components/Partients/PartientsProfile";
 import EditPatientForm from "../../components/Partients/EditPatientForm";
 import MedicalForm from "../../components/Partients/MedicalForm";
+import AddLaboratoryExamination from "../../components/Partients/AddLaboratoryExamination";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { FormattedMessage } from "react-intl";
 
 function Row(props) {
   const { row } = props;
@@ -90,115 +94,127 @@ function Row(props) {
         <TableCell component="th" scope="row" align="center">
           {row.visitCount}
         </TableCell>
-        <TableCell align="center">
-          <IconButton
-            sx={{ color: blue[800] }}
-            // className=" hover:text-yellow-500"
 
-            onClick={() => {
-              props.onMedicalFormShowHandle(row._id);
-            }}
-            aria-label="delete"
-            // size="large"
-          >
-            <ContentPasteIcon
-              aria-label="expand row"
-              size="small"
-            ></ContentPasteIcon>
-          </IconButton>
-        </TableCell>
+        {props.currentUser ? (
+          props.currentUser.role === "doctor" ? (
+            <>
+              <TableCell align="center">
+                <IconButton
+                  sx={{ color: blue[800] }}
+                  // className=" hover:text-yellow-500"
 
-        <TableCell align="center">
-          <IconButton
-            sx={{ color: yellow[800] }}
-            className=" hover:text-yellow-500"
-            onClick={() => {
-              props.onPrescriptionShowHande(row._id);
-            }}
-            aria-label="delete"
-            // size="large"
-          >
-            <img
-              src={process.env.PUBLIC_URL + "/rx-icon.svg"}
-              alt=""
-              className="w-7 h-7"
-            />
-            {/* <Vaccines aria-label="expand row" size="small"></Vaccines> */}
-          </IconButton>
-        </TableCell>
+                  onClick={() => {
+                    props.onMedicalFormShowHandle(row._id);
+                  }}
+                  aria-label="delete"
+                  // size="large"
+                >
+                  <ContentPasteIcon
+                    aria-label="expand row"
+                    size="small"
+                  ></ContentPasteIcon>
+                </IconButton>
+              </TableCell>
 
-        <TableCell align="center">
-          <IconButton
-            sx={{ color: blue[800] }}
-            // className=" hover:text-yellow-500"
-            onClick={() => {
-              props.onReportShowHandel(row._id);
-            }}
-            aria-label="delete"
-            // size="large"
-          >
-            <SummarizeIcon aria-label="expand row" size="small"></SummarizeIcon>
-          </IconButton>
-        </TableCell>
+              <TableCell align="center">
+                <IconButton
+                  sx={{ color: yellow[800] }}
+                  className=" hover:text-yellow-500"
+                  onClick={() => {
+                    props.onPrescriptionShowHande(row._id);
+                  }}
+                  aria-label="delete"
+                  // size="large"
+                >
+                  <img
+                    src={process.env.PUBLIC_URL + "/rx-icon.svg"}
+                    alt=""
+                    className="w-7 h-7"
+                  />
+                  {/* <Vaccines aria-label="expand row" size="small"></Vaccines> */}
+                </IconButton>
+              </TableCell>
 
-        <TableCell align="center">
-          <IconButton
-            sx={{ color: blue[800] }}
-            // className=" hover:text-yellow-500"
-            onClick={() => {
-              props.onReportShowHandel(row._id);
-            }}
-            aria-label="delete"
-            // size="large"
-          >
-            <BiotechIcon size={"small"} />
-          </IconButton>
-        </TableCell>
+              <TableCell align="center">
+                <IconButton
+                  sx={{ color: blue[800] }}
+                  // className=" hover:text-yellow-500"
+                  onClick={() => {
+                    props.onReportShowHandel(row._id);
+                  }}
+                  aria-label="delete"
+                  // size="large"
+                >
+                  <SummarizeIcon
+                    aria-label="expand row"
+                    size="small"
+                  ></SummarizeIcon>
+                </IconButton>
+              </TableCell>
 
-        <TableCell align="center">
-          <IconButton
-            sx={{ color: green[400] }}
-            className=" hover:text-green-600"
-            onClick={() => props.onShareHande(row._id)}
-            aria-label="delete"
-            // size="large"
-          >
-            <Share fontSize="inherit" />
-          </IconButton>
-          <IconButton
-            onClick={() => {
-              props.onDeleteHande(row._id);
-            }}
-            sx={{ color: red[400] }}
-            className=" hover:text-red-600"
-            aria-label="delete"
+              <TableCell align="center">
+                <IconButton
+                  sx={{ color: blue[800] }}
+                  // className=" hover:text-yellow-500"
+                  onClick={() => {
+                    props.onLaboryShowHandel(row._id);
+                  }}
+                  aria-label="delete"
+                  // size="large"
+                >
+                  <BiotechIcon size={"small"} />
+                </IconButton>
+              </TableCell>
 
-            // size="large"
-          >
-            <Delete fontSize="inherit" />
-          </IconButton>
-          <IconButton
-            sx={{ color: blue[400] }}
-            className=" hover:text-blue-600"
-            onClick={() => {
-              props.onEditHande(row._id);
-            }}
-            aria-label="delete"
-          >
-            <Edit aria-label="expand row" size="small"></Edit>
-          </IconButton>
-        </TableCell>
+              <TableCell align="center">
+                <IconButton
+                  sx={{ color: green[400] }}
+                  className=" hover:text-green-600"
+                  onClick={() => props.onShareHande(row._id)}
+                  aria-label="delete"
+                  // size="large"
+                >
+                  <Share fontSize="inherit" />
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    props.onDeleteHande(row._id);
+                  }}
+                  sx={{ color: red[400] }}
+                  className=" hover:text-red-600"
+                  aria-label="delete"
 
-        <IconButton
-          type="button"
-          sx={{ p: "10px" }}
-          aria-label="search"
-          onClick={() => setOpen(!open)}
-        >
-          {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-        </IconButton>
+                  // size="large"
+                >
+                  <Delete fontSize="inherit" />
+                </IconButton>
+                <IconButton
+                  sx={{ color: blue[400] }}
+                  className=" hover:text-blue-600"
+                  onClick={() => {
+                    props.onEditHande(row._id);
+                  }}
+                  aria-label="delete"
+                >
+                  <Edit aria-label="expand row" size="small"></Edit>
+                </IconButton>
+              </TableCell>
+              <IconButton
+                type="button"
+                sx={{ p: "10px" }}
+                aria-label="search"
+                onClick={() => setOpen(!open)}
+              >
+                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
+            </>
+          ) : (
+            ""
+          )
+        ) : (
+          ""
+        )}
       </TableRow>
-
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
           <Collapse in={open} timeout="auto" unmountOnExit>
@@ -260,7 +276,6 @@ function Row(props) {
     </React.Fragment>
   );
 }
-
 function Partients() {
   const defaultFrom = {
     year: 2019,
@@ -285,6 +300,7 @@ function Partients() {
   const [showPartientsAddForm, setShowPartientsAddForm] = useState(false);
   const [showPartientsEditForm, setShowPartientsEditForm] = useState(false);
   const [showAddReportForm, setShowAddReportForm] = useState(false);
+  const [showLaporyReportForm, setShowLaporyReportForm] = useState(false);
   const [showPartientProfile, setShowPartientProfile] = useState(false);
   const [showMidicalForm, setShowMidicalForm] = useState(false);
   const [userEditData, setUserEditData] = useState([]);
@@ -300,6 +316,29 @@ function Partients() {
   const [prints, setprints] = useState(false);
   const [dataToPrint, setDataToPrint] = useState([]);
   const [medicalReportsStype, setMedicalReportsStype] = useState([]);
+
+  const [loading, setLoading] = useState(false);
+  const [currentUser, setCurrentUser] = useState(undefined);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const verifyUser = async () => {
+      const { data } = await axios.post(
+        "http://localhost:5000/users",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      setCurrentUser(data);
+      setIsLoaded(true);
+    };
+    console.log(currentUser);
+    verifyUser();
+  }, [Cookies, navigate]);
+
   useEffect(() => {
     getMedicalReportsStyle();
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
@@ -310,6 +349,7 @@ function Partients() {
       .then((response) => {
         setMedicalReportsStype(response.data[0]); // Update the categories state with the fetched data
         console.log(response.data[0]);
+        setLoading(true);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
@@ -411,6 +451,7 @@ function Partients() {
 
   const handleHideClick = () => {
     setPharmaceListInside([]);
+    setShowLaporyReportForm(false);
     setShowPartientsEditForm(false);
     setShowPartientProfile(false);
     setShowAddReportForm(false);
@@ -496,10 +537,25 @@ function Partients() {
 
     console.log(`Prescription Show clicked for id ${id}`);
   };
+  const onLaboryShowHandel = (id) => {
+    setPartientsSelectId(id);
+    setShowLaporyReportForm(true);
+
+    console.log(`Prescription Show clicked for id ${id}`);
+  };
 
   const onMedicalFormShowHandle = (id) => {
-    setPartientsSelectId(id);
-    setShowMidicalForm(true);
+    axios
+      .get(`http://localhost:5000/patients/medicalinfo/${id}`)
+      .then((response) => {
+        setUserEditData(response.data);
+        console.log(response.data);
+        setPartientsSelectId(id);
+        setShowMidicalForm(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
 
     console.log(`Prescription Show clicked for id ${id}`);
   };
@@ -523,9 +579,8 @@ function Partients() {
   };
 
   const handleEditPatientData = (data) => {
+    data.id = partientsSelectId;
     console.log(data);
-    data.id = userEditData._id;
-    console.log(userEditData._id);
     axios
       .post("http://localhost:5000/patients/edit", data)
       .then((response) => {
@@ -587,12 +642,37 @@ function Partients() {
   const handlePrintFeedBack = () => {
     setprints(false);
   };
+
   const HandleonPrinterClick = () => {
     handlePrint();
   };
+  const HandleonPrinterClickText = (data) => {
+    axios
+      .get(`http://localhost:5000/patients/medicalinfo/${partientsSelectId}`)
+      .then((response) => {
+        setDataToPrint({ patients: response.data, textonly: true, data: data }); // Update the categories state with the fetched data
+        setprints(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
+
   const handleNewReportData = (data) => {
     axios
       .post("http://localhost:5000/medicalreports/new", { data })
+      .then((response) => {
+        // Handle the response if needed
+        getPatientsList();
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+  };
+  const handleNewLaboryData = (data) => {
+    axios
+      .post("http://localhost:5000/labory/new", { data })
       .then((response) => {
         // Handle the response if needed
         getPatientsList();
@@ -741,20 +821,100 @@ function Partients() {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell align="center">#</TableCell>
-              <TableCell align="right">اسم المريض</TableCell>
-              <TableCell align="center">التاريخ</TableCell>
-              <TableCell align="center">العمر</TableCell>
-              <TableCell align="center">الجنس</TableCell>
-              <TableCell align="center">العنوان</TableCell>
-              <TableCell align="center">الوزن</TableCell>
-              <TableCell align="center">الطول</TableCell>
-              <TableCell align="center">عدد الزيارات</TableCell>
-              <TableCell align="center">الطبلة</TableCell>
-              <TableCell align="center">الوصفة</TableCell>
-              <TableCell align="center">التقرير</TableCell>
-              <TableCell align="center">الفحوصات</TableCell>
-              <TableCell align="center">الخيارات</TableCell>
+              <TableCell align="center"># </TableCell>
+              <TableCell align="right">
+                <FormattedMessage
+                  id={"PatientName"}
+                  defaultMessage="Hello, World!"
+                />
+              </TableCell>
+              <TableCell align="center">
+                <FormattedMessage id={"Date"} defaultMessage="Hello, World!" />
+              </TableCell>
+              <TableCell align="center">
+                {" "}
+                <FormattedMessage id={"Age"} defaultMessage="Hello, World!" />
+              </TableCell>
+              <TableCell align="center">
+                {" "}
+                <FormattedMessage
+                  id={"Gender"}
+                  defaultMessage="Hello, World!"
+                />
+              </TableCell>
+              <TableCell align="center">
+                {" "}
+                <FormattedMessage
+                  id={"Address"}
+                  defaultMessage="Hello, World!"
+                />
+              </TableCell>
+              <TableCell align="center">
+                {" "}
+                <FormattedMessage
+                  id={"Weight"}
+                  defaultMessage="Hello, World!"
+                />
+              </TableCell>
+              <TableCell align="center">
+                {" "}
+                <FormattedMessage
+                  id={"Length"}
+                  defaultMessage="Hello, World!"
+                />
+              </TableCell>
+              <TableCell align="center">
+                {" "}
+                <FormattedMessage
+                  id={"VisitNumber"}
+                  defaultMessage="Hello, World!"
+                />
+              </TableCell>
+              {currentUser ? (
+                currentUser.role === "doctor" ? (
+                  <>
+                    <TableCell align="center">
+                      {" "}
+                      <FormattedMessage
+                        id={"Examination"}
+                        defaultMessage="Hello, World!"
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      {" "}
+                      <FormattedMessage
+                        id={"Rx"}
+                        defaultMessage="Hello, World!"
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      {" "}
+                      <FormattedMessage
+                        id={"Report"}
+                        defaultMessage="Hello, World!"
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      {" "}
+                      <FormattedMessage
+                        id={"LaboratoryTesting"}
+                        defaultMessage="Hello, World!"
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      {" "}
+                      <FormattedMessage
+                        id={"Options"}
+                        defaultMessage="Hello, World!"
+                      />
+                    </TableCell>
+                  </>
+                ) : (
+                  ""
+                )
+              ) : (
+                ""
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -762,10 +922,12 @@ function Partients() {
               <Row
                 onShareHande={onShareHande}
                 onDeleteHande={onDeleteHande}
+                currentUser={currentUser}
                 onPrescriptionDeleteHande={HandleOnPrescriptionDeleteHande}
                 onEditHande={onEditHande}
                 onMedicalFormShowHandle={onMedicalFormShowHandle}
                 onReportShowHandel={onReportShowHandel}
+                onLaboryShowHandel={onLaboryShowHandel}
                 onPrescriptionShowHande={onPrescriptionShowHande}
                 key={patient._id}
                 onNameClickHandle={onNameClickHandle}
@@ -799,18 +961,7 @@ function Partients() {
       ) : (
         ""
       )}
-      {showAddReportForm ? (
-        <>
-          {" "}
-          <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
-          <NewMedicalReporyForm
-            partientsSelectId={partientsSelectId}
-            onFormSubmit={handleNewReportData}
-          ></NewMedicalReporyForm>
-        </>
-      ) : (
-        ""
-      )}
+
       {showPartientsAddForm ? (
         <>
           {" "}
@@ -831,7 +982,7 @@ function Partients() {
       ) : (
         ""
       )}
-      {prints ? (
+      {prints && loading ? (
         <PatientReport
           prints={prints}
           dataToPrint={dataToPrint}
@@ -864,7 +1015,35 @@ function Partients() {
       {showMidicalForm ? (
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
-          <MedicalForm onFormSubmit={handleEditPatientData}></MedicalForm>
+          <MedicalForm
+            onFormSubmit={handleEditPatientData}
+            userEditData={userEditData}
+          ></MedicalForm>
+        </>
+      ) : (
+        ""
+      )}
+      {showAddReportForm ? (
+        <>
+          {" "}
+          <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
+          <NewMedicalReporyForm
+            partientsSelectId={partientsSelectId}
+            onPrinterClick={HandleonPrinterClickText}
+            onFormSubmit={handleNewReportData}
+          ></NewMedicalReporyForm>
+        </>
+      ) : (
+        ""
+      )}
+      {showLaporyReportForm ? (
+        <>
+          <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
+          <AddLaboratoryExamination
+            partientsSelectId={partientsSelectId}
+            onPrinterClick={HandleonPrinterClickText}
+            onFormSubmit={handleNewLaboryData}
+          ></AddLaboratoryExamination>
         </>
       ) : (
         ""

@@ -14,6 +14,44 @@ function DoctorProfile() {
   const [showEditForm, setShowEditForm] = useState(false);
   const [editFormTarget, setEditFormTarget] = useState("");
   const [doctor, setDoctorData] = useState([]);
+  const [file, setFile] = useState(null);
+
+  const handleFileChange = async (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+    console.log(e.target.files[0]);
+    if (!e.target.files[0]) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", e.target.files[0]);
+    formData.append("id", currentUser.userId);
+
+    try {
+      const response = await fetch("http://localhost:5000/users/update/image", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        setFile(null);
+        axios
+          .get(`http://localhost:5000/users/getone/${currentUser.userId}`)
+          .then((response) => {
+            console.log(response.data);
+            setDoctorData(response.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching categories:", error);
+          });
+      } else {
+        // alert("Error uploading image");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   useEffect(() => {
     const verifyUser = async () => {
@@ -92,22 +130,34 @@ function DoctorProfile() {
           <div class="relative">
             {" "}
             <div class="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl absolute inset-x-0 -top-10 -mt-24 flex items-center justify-center text-indigo-500">
-              <Edit className=" absolute right-[0%] cursor-pointer opacity-20 top-[4%]"></Edit>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-24 w-24"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                {" "}
-                <path
-                  fill-rule="evenodd"
-                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                  clip-rule="evenodd"
-                />
-              </svg>{" "}
+              {/* <Edit onClick={imageAddHandle} className=" absolute right-[0%] cursor-pointer opacity-20 top-[4%]"></Edit> */}
+
+              {doctor.profileImg ? (
+                <img
+                  className=" rounded-full"
+                  src={"http://localhost:5000" + doctor.profileImg}
+                  alt=""
+                ></img>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-24 w-24"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              )}
             </div>{" "}
           </div>{" "}
+          <div>
+            <p>تحميل صورة شخصية</p>
+            <input type="file" className="" accept="image/*" onChange={handleFileChange} />
+          </div>
           <div class="space-x-8 flex justify-between mt-32 md:mt-0 md:justify-center">
             {/* <button class="text-white py-2 px-4 uppercase rounded bg-blue-400 hover:bg-blue-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
               {" "}

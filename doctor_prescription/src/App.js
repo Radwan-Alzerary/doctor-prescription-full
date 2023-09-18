@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
 import SideBarMenu from "./screens/global/SideBarMenu";
 import MedicalReports from "./screens/medicalReports/MedicalReports";
@@ -22,6 +22,7 @@ import PrivateRoute from "./screens/auth/PrivateRoute";
 import { useCookies } from "react-cookie";
 import DoctorProfile from "./components/doctor/DoctorProfile";
 import Tst from "./screens/global/tst";
+import axios from "axios";
 
 function Layout({ children }) {
   return (
@@ -63,7 +64,26 @@ function App() {
   };
 
   const messages = locale === "en" ? enTranslations : arTranslations; // Get the translations based on the locale
+  const [currentUser, setCurrentUser] = useState(undefined);
+  const [isLoaded, setIsLoaded] = useState(false);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const verifyUser = async () => {
+      const { data } = await axios.post(
+        "http://localhost:5000/users",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      setCurrentUser(data);
+      setIsLoaded(true);
+    };
+    console.log(currentUser);
+    verifyUser();
+  }, [cookies, navigate]);
   return (
     <IntlProvider locale={locale} messages={messages}>
       <div
@@ -76,7 +96,7 @@ function App() {
         }}
       >
         {isAuthenticated ? (
-          <SideBarMenu onLanguageChange={handleLanguageChange}></SideBarMenu>
+          <SideBarMenu currentUser={currentUser} onLanguageChange={handleLanguageChange}></SideBarMenu>
         ) : (
           ""
         )}

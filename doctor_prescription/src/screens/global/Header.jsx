@@ -5,14 +5,52 @@ import { blue, red } from "@mui/material/colors";
 import { Button, IconButton } from "@mui/material";
 import { useSignOut } from "react-auth-kit";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { toast } from "react-toastify";
+import { FormattedMessage } from "react-intl";
 
 function Header() {
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies([]);
+
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Function to toggle fullscreen mode
+  const toggleFullscreen = () => {
+    if (!isFullscreen) {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      } else if (document.documentElement.mozRequestFullScreen) {
+        document.documentElement.mozRequestFullScreen();
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen();
+      } else if (document.documentElement.msRequestFullscreen) {
+        document.documentElement.msRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    }
+
+    // Update the state to reflect the current fullscreen status
+    setIsFullscreen(!isFullscreen);
+  };
+  const handleClose = () => {
+    const shouldClose = window.confirm('Do you want to close this window/tab?');
+    if (shouldClose) {
+      window.close();
+    }
+  };
+
   useEffect(() => {
     const verifyUser = async () => {
       if (!cookies.jwt) {
@@ -45,17 +83,22 @@ function Header() {
     <header className="flex h-14 bg-white w-full justify-between items-center px-4">
       <div>
         <Button onClick={logOut} variant="contained" color="error">
-          تسجيل الخروج
+          <FormattedMessage id={"signOut"} defaultMessage="Hello, World!" />
         </Button>
       </div>
       <div className="flex">
-        <IconButton aria-label="fingerprint" color="secondary">
+        <IconButton
+          onClick={toggleFullscreen}
+          aria-label="fingerprint"
+          color="secondary"
+        >
           <FullscreenOutlinedIcon
             sx={{ color: blue[500] }}
             style={{ fontSize: "32px" }}
           ></FullscreenOutlinedIcon>
         </IconButton>
-        <IconButton aria-label="fingerprint" color="success">
+        <IconButton 
+         aria-label="fingerprint" color="success">
           <PowerSettingsNewOutlinedIcon
             sx={{ color: red[500] }}
             style={{ fontSize: "32px" }}

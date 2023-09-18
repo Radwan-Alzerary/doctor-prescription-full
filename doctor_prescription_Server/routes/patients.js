@@ -47,6 +47,12 @@ router.post("/edit", async (req, res) => {
       length: req.body.length,
       weight: req.body.weight,
       description: req.body.description,
+      fumbling: req.body.fumbling,
+      medicalDiagnosis: req.body.medicalDiagnosis,
+      currentMedicalHistory: req.body.currentMedicalHistory,
+      medicalHistory: req.body.medicalHistory,
+      previousSurgeries: req.body.previousSurgeries,
+      familyHistory: req.body.familyHistory
     };
 
     if (req.body.diseases) {
@@ -78,7 +84,8 @@ router.post("/edit", async (req, res) => {
 // Get all patients
 router.get("/getall", async (req, res) => {
   try {
-    const patients = await Patients.find().populate("prescription")
+    const patients = await Patients.find()
+      .populate("prescription")
       .sort({ updatedAt: -1 }); // Sort by 'updatedAt' field in descending order
     res.json(patients);
   } catch (error) {
@@ -107,7 +114,8 @@ router.get("/medicalinfo/:partientId", async (req, res) => {
         },
       })
       .populate("medicalReport")
-      .populate("diseases");
+      .populate("diseases")
+      .populate("labory");
 
     console.log(patients);
     res.json(patients);

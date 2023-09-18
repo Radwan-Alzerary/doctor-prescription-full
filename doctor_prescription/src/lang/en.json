@@ -12,7 +12,26 @@
     "messaging": "Messaging",
     "medical_reports": "Medical Reports",
     "account": "Account",
-    "settings": "Settings"
+    "settings": "Settings",
+    "PatientName" : "Patient Name",
+    "Date" : "Date",
+    "Age" : "Age",
+    "Gender" : "Gender",
+    "Address" : "Address",
+    "Weight" : "Weight",
+    "Length" : "Length",
+    "VisitNumber" : "Visit",
+    "PatientPage" : "Patient page",
+    "Rx" : "Rx",
+    "Report" : "Report",
+    "Examination" : "Examination",
+    "Options" : "Options",
+    "Drugs" : "Drugs",
+    "DrugsCategory" : "DrugsCategory",
+    "RxDesign" : "DrugsCategory",
+    "signOut" : "signOut",
+    "LaboratoryTesting":"Laboratory"
+
   }
   
   

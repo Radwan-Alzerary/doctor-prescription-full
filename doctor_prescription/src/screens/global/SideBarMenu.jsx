@@ -10,17 +10,22 @@ import CategoryIcon from "@mui/icons-material/Category";
 import VaccinesIcon from "@mui/icons-material/Vaccines";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebaritems from "../../components/Sidebar/Sidebaritems";
 import LanguageSelector from "./lanquageSelector";
 import { Home } from "@mui/icons-material";
 import { FormattedMessage } from "react-intl";
 
 import logo from "../../logo.png"; // Tell webpack this JS file uses this image
+import axios from "axios";
+import { useCookies } from "react-cookie";
+import { Navigate, useNavigate } from "react-router-dom";
 
 function SideBarMenu(props) {
   const [collapsedMode, setCollapsedMode] = useState(true);
   const [activeSubmenu, setActiveSubmenu] = useState("main");
+
+  console.log(props.currentUser);
 
   return (
     <Sidebar
@@ -67,53 +72,61 @@ function SideBarMenu(props) {
           router="/patients"
           onClick={() => setActiveSubmenu("main")}
         ></Sidebaritems>
-
-        <SubMenu
-          // active={activeSubmenu === "main"}
-          icon={<VaccinesIcon style={{ fontSize: "28px" }} />}
-          label={
-            <FormattedMessage
-              id={"medications"}
-              defaultMessage="Hello, World!"
-            />
-          }
-          className=" py-3"
-        >
-          <Sidebaritems
-            title="medications"
-            router="/pharmaceutical"
-            onClick={() => setActiveSubmenu("main")}
-          ></Sidebaritems>
-          <Sidebaritems
-            title="categories"
-            // icon={<CategoryIcon style={{ fontSize: "28px" }} />}
-            router="/category"
-            onClick={() => setActiveSubmenu("main")}
-          ></Sidebaritems>
-        </SubMenu>
-
-        <SubMenu
-          // active={activeSubmenu === "main"}
-          icon={<AssignmentIcon style={{ fontSize: "28px" }} />}
-          label={
-            <FormattedMessage
-              id={"prescription"}
-              defaultMessage="Hello, World!"
-            />
-          }
-          className=" py-3"
-        >
-          {/* <Sidebaritems
+        {props.currentUser ? (
+          props.currentUser.role === "doctor" ? (
+            <>
+              <SubMenu
+                // active={activeSubmenu === "main"}
+                icon={<VaccinesIcon style={{ fontSize: "28px" }} />}
+                label={
+                  <FormattedMessage
+                    id={"medications"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
+                className=" py-3"
+              >
+                <Sidebaritems
+                  title="medications"
+                  router="/pharmaceutical"
+                  onClick={() => setActiveSubmenu("main")}
+                ></Sidebaritems>
+                <Sidebaritems
+                  title="categories"
+                  // icon={<CategoryIcon style={{ fontSize: "28px" }} />}
+                  router="/category"
+                  onClick={() => setActiveSubmenu("main")}
+                ></Sidebaritems>
+              </SubMenu>
+              <SubMenu
+                // active={activeSubmenu === "main"}
+                icon={<AssignmentIcon style={{ fontSize: "28px" }} />}
+                label={
+                  <FormattedMessage
+                    id={"prescription"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
+                className=" py-3"
+              >
+                {/* <Sidebaritems
             title="prescriptions"
             router="/prescriptions"
             onClick={() => setActiveSubmenu("main")}
           ></Sidebaritems> */}
-          <Sidebaritems
-            title="PrescriptionDesign"
-            router="/Prescriptiondesign"
-            onClick={() => setActiveSubmenu("main")}
-          ></Sidebaritems>
-        </SubMenu>
+                <Sidebaritems
+                  title="PrescriptionDesign"
+                  router="/Prescriptiondesign"
+                  onClick={() => setActiveSubmenu("main")}
+                ></Sidebaritems>
+              </SubMenu>
+            </>
+          ) : (
+            ""
+          )
+        ) : (
+          ""
+        )}
 
         <Sidebaritems
           title="messaging"
@@ -121,24 +134,30 @@ function SideBarMenu(props) {
           router="/chats"
           onClick={() => setActiveSubmenu("main")}
         ></Sidebaritems>
-        {/* <Sidebaritems
-          title="medical_reports"
-          icon={<ReceiptIcon style={{ fontSize: "28px" }} />}
-          router="/medicalreports"
-          onClick={() => setActiveSubmenu("main")}
-        ></Sidebaritems> */}
-        <Sidebaritems
-          title="account"
-          icon={<AccountCircleIcon style={{ fontSize: "28px" }} />}
-          router="/doctorprofile"
-          onClick={() => setActiveSubmenu("main")}
-        ></Sidebaritems>
-        <Sidebaritems
-          title="settings"
-          icon={<SettingsIcon style={{ fontSize: "28px" }} />}
-          router="/setting"
-          onClick={() => setActiveSubmenu("main")}
-        ></Sidebaritems>
+
+        {props.currentUser ? (
+          props.currentUser.role === "doctor" ? (
+            <>
+              <Sidebaritems
+                title="account"
+                icon={<AccountCircleIcon style={{ fontSize: "28px" }} />}
+                router="/doctorprofile"
+                onClick={() => setActiveSubmenu("main")}
+              ></Sidebaritems>
+              <Sidebaritems
+                title="settings"
+                icon={<SettingsIcon style={{ fontSize: "28px" }} />}
+                router="/setting"
+                onClick={() => setActiveSubmenu("main")}
+              ></Sidebaritems>
+            </>
+          ) : (
+            ""
+          )
+        ) : (
+          ""
+        )}
+
         <LanguageSelector onLanguageChange={props.onLanguageChange} />
       </Menu>
     </Sidebar>

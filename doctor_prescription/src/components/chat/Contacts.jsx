@@ -78,9 +78,22 @@ export default function Contacts({ contacts, currentUser, changeChat,searchInput
                 onClick={() => changeCurrentChat(index, contact)}
               >
                 <div className="avatar">
+                {contact.profileImg ? (
+                  <img
+                  className=" rounded-full"
+                    src={
+                      "http://localhost:5000" +
+                      contact.profileImg
+                    }
+                    alt=""
+                  ></img>
+                ) : (
                   <Avatar sx={{ bgcolor: deepPurple[500] }}>
-                    {contact.userName}
-                  </Avatar>
+                  {contact.userName}
+                </Avatar>
+
+                )}
+
                 </div>
                 <div className="username">
                   <h3>{contact.userName}</h3>

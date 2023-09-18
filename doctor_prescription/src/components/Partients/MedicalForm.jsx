@@ -1,97 +1,34 @@
 import {
   Autocomplete,
   Button,
-  FormControl,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
 } from "@mui/material";
-import BillTable from "./BillTable";
-import { PrintRounded } from "@mui/icons-material";
-import { useEffect, useState } from "react";
+import {useEffect, useState } from "react";
 
 function MedicalForm(props) {
-  const [value, setValue] = useState("");
-  const [pharmaceuticalInputs, setPharmaceuticalInputs] = useState(true);
-  const [inputValue, setInputValue] = useState("");
-  const [dose, setDose] = useState("");
-  const [billId, setBillId] = useState("");
-  const [doseNumFirst, setDoseNumFirst] = useState("");
-  const [doseNumSecend, setDoseNumSecend] = useState("");
-  const [inTakeTime, setInTakeTime] = useState("");
-  const [inTakeTimeOther, setInTakeTimeOther] = useState("");
-  const [description, setDescription] = useState("");
-  const [diagnosis, setDiagnosis] = useState([]);
 
-  const handeAddBill = () => {
-    const dataBillForm = {};
-    dataBillForm.dose = dose;
-    dataBillForm.billId = billId;
-    dataBillForm.billName = inputValue;
-    dataBillForm.doseNum = `${doseNumFirst}*${doseNumSecend}`;
-    dataBillForm.inTakeTime = inTakeTime;
-    dataBillForm.inTakeTimeOther = inTakeTimeOther;
-    dataBillForm.description = description;
-    dataBillForm.partientId = props.partientId;
-    dataBillForm.PrescriptionId = props.PrescriptionId;
-    props.onBillAdded(dataBillForm);
-  };
-
+  const [formData, setFormData] = useState({
+  });
   useEffect(() => {
-    console.log(inputValue);
-    if (value !== null && typeof value === "object" && "_id" in value) {
-      setBillId(value._id);
-      if (value.dose) {
-        setDose(value.dose);
-      }
-    }
-    if (value && value.doseCount) {
-      const parts = value.doseCount.split("*");
-      if (value.intaketime) {
-        setInTakeTime(value.intaketime);
-        setShowInTakeOtherInput(false);
-      } else {
-        setInTakeTimeOther(value.anotherIntaketime);
-        setInTakeTime("other");
-        setShowInTakeOtherInput(true);
-      }
-
-      if (parts.length === 2) {
-        setDoseNumFirst(parts[0]);
-        setDoseNumSecend(parts[1]);
-        setPharmaceuticalInputs(true);
-      } else {
-        // Handle the case where value.doseCount doesn't have the expected format
-        console.error("Invalid value.doseCount format:", value.doseCount);
-      }
-    } else {
-      // Handle the case where value or value.doseCount is undefined
-      console.error("Invalid value or value.doseCount:", value);
-    }
-  }, [value, inputValue]);
-
-  const [showInTakeOtherInput, setShowInTakeOtherInput] = useState(false);
-  const handleInTakeTimeInputChange = (value) => {
-    if (value === "other") {
-      setShowInTakeOtherInput(true);
-    } else {
-      setShowInTakeOtherInput(false);
-    }
-  };
+    const { diseases, ...formDataWithoutDiseases } = props.userEditData;
+      setFormData(formDataWithoutDiseases);
+      // console.log(formDataWithoutDiseases)
+  }, []);
 
   const handleSubmit = (event) => {
-    const prescriptionData = {};
-    prescriptionData.id = props.PrescriptionId;
-    prescriptionData.diagnosis = diagnosis;
     event.preventDefault();
     // Call the onFormSubmit function passed as a prop with the formData
-    props.onFormSubmit(prescriptionData);
+    props.onFormSubmit(formData);
   };
 
   // Handle changes in form fields
-  console.log(props.partientId);
+  const handleInputChange = (name, value) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
   return (
     <form
       className="fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
@@ -103,8 +40,9 @@ function MedicalForm(props) {
       </div>
       <TextField
         dir="rtl"
+        value={formData.medicalDiagnosis}
         onChange={(event) => {
-          setDiagnosis(event.target.value);
+          handleInputChange("medicalDiagnosis",event.target.value);
         }}
         id="outlined-multiline-static"
         size="small"
@@ -124,8 +62,10 @@ function MedicalForm(props) {
       />
        <TextField
         dir="rtl"
+        value={formData.currentMedicalHistory}
+
         onChange={(event) => {
-          setDiagnosis(event.target.value);
+          handleInputChange("currentMedicalHistory",event.target.value);
         }}
         id="outlined-multiline-static"
         size="small"
@@ -137,16 +77,17 @@ function MedicalForm(props) {
         }}
         multiline
         rows={2}
-        label="التاريخ الحالي "
-        // defaultValue="Hello World"
+        label="التاريخ المرضي الحالي "
         InputProps={{
           style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
         }}
       />
       <TextField
         dir="rtl"
+        value={formData.medicalHistory}
+
         onChange={(event) => {
-          setDiagnosis(event.target.value);
+          handleInputChange("medicalHistory",event.target.value);
         }}
         id="outlined-multiline-static"
         size="small"
@@ -166,8 +107,10 @@ function MedicalForm(props) {
       />
       <TextField
         dir="rtl"
+        value={formData.previousSurgeries}
+
         onChange={(event) => {
-          setDiagnosis(event.target.value);
+          handleInputChange("previousSurgeries",event.target.value);
         }}
         id="outlined-multiline-static"
         size="small"
@@ -188,8 +131,10 @@ function MedicalForm(props) {
 
       <TextField
         dir="rtl"
+        value={formData.familyHistory}
+
         onChange={(event) => {
-          setDiagnosis(event.target.value);
+          handleInputChange("familyHistory",event.target.value);
         }}
         id="outlined-multiline-static"
         size="small"
@@ -210,8 +155,10 @@ function MedicalForm(props) {
 
       <TextField
         dir="rtl"
+        value={formData.fumbling}
+
         onChange={(event) => {
-          setDiagnosis(event.target.value);
+          handleInputChange("fumbling",event.target.value);
         }}
         id="outlined-multiline-static"
         size="small"
@@ -237,17 +184,17 @@ function MedicalForm(props) {
         </IconButton>
 
         <Button
-          sx={{ width: "33%" }}
+          sx={{ width: "100%" }}
           type="submit"
           variant="contained"
           className="w-full"
           color="success"
         >
-          اضافة وصفة طبية
+          اضافة طبلة للمريض
         </Button>
-        <IconButton onClick={props.onPrinterClick}>
+        {/* <IconButton onClick={props.onPrinterClick}>
           <PrintRounded color="action"></PrintRounded>
-        </IconButton>
+        </IconButton> */}
       </div>
     </form>
   );

@@ -1,14 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AddCashir from "../../components/setting/AddCashir";
 import axios from "axios";
 
 function Setting() {
+  const [cashire, setCashire] = useState([]);
+
+  useEffect(() => {
+    getAllCashire();
+  }, []);
+
+  const getAllCashire = () => {
+    axios
+      .get("http://localhost:5000/users/allUsers")
+      .then((response) => {
+        setCashire(response.data); // Update the categories state with the fetched data
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
+
   const onCashireFormSubmit = (data) => {
     console.log(data);
     axios
       .post("http://localhost:5000/users/addcashire", data)
       .then((response) => {
         // Handle the response if needed
+        getAllCashire();
+
         console.log("POST request successful:", response.data);
       })
       .catch((error) => {
@@ -20,8 +39,11 @@ function Setting() {
     <div>
       <div className="flex p-4">
         <div className="w-1/2">
-          <div className=" text-lg">اضافة  سكرتير جديد</div>
-          <AddCashir onCashireFormSubmit={onCashireFormSubmit}></AddCashir>
+          <div className=" text-lg">اضافة سكرتير جديد</div>
+          <AddCashir
+            cashireData={cashire}
+            onCashireFormSubmit={onCashireFormSubmit}
+          ></AddCashir>
         </div>
       </div>
     </div>

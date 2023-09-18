@@ -151,7 +151,6 @@ function PrescriptionsDesign() {
     setFile(selectedFile);
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -172,7 +171,7 @@ function PrescriptionsDesign() {
       );
 
       if (response.ok) {
-        ubdateStyle()
+        ubdateStyle();
         // alert("Image uploaded successfully");
         setFile(null);
       } else {

@@ -15,17 +15,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "user",
   },
-  userName:{
-    type:String,
+  userName: {
+    type: String,
     required: [true, "UserName is Required"],
   },
-  image:{type:String},
-  Specialization:{type:String,default:"التخصص"},
-  university:{type:String,default:"الجامعة"},
-  phoneNumber:{type:String,default:"رقم الهاتف"},
-  adresses:{type:String,default:"العنوان"},
-  description:{type:String,default:"نبذة"},
-
+  image: { type: String },
+  Specialization: { type: String, default: "التخصص" },
+  university: { type: String, default: "الجامعة" },
+  phoneNumber: { type: String, default: "رقم الهاتف" },
+  adresses: { type: String, default: "العنوان" },
+  description: { type: String, default: "نبذة" },
+  profileImg: { type: String },
 });
 
 userSchema.pre("save", async function (next) {

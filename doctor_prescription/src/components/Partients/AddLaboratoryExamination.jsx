@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { PrintRounded } from "@mui/icons-material";
 
-function NewMedicalReporyForm({
+function AddLaboratoryExamination({
   onFormSubmit,
   partientsSelectId,
   onPrinterClick,
@@ -17,11 +17,11 @@ function NewMedicalReporyForm({
     report: "",
     patientId: partientsSelectId,
   });
-
   // Handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
     // Call the onFormSubmit function passed as a prop with the formData
+    console.log(formData)
     onFormSubmit(formData);
   };
 
@@ -40,7 +40,7 @@ function NewMedicalReporyForm({
       className="fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
     >
       <div className=" text-right w-full">
-        <h5>معلومات التقرير</h5>
+        <h5>معلومات الفحص المختبر</h5>
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
@@ -54,7 +54,7 @@ function NewMedicalReporyForm({
             textAlign: "right",
             color: "#fff",
           }}
-          label="التقرير"
+          label="الفحص"
           multiline
           rows={3}
           // defaultValue="Hello World"
@@ -75,7 +75,7 @@ function NewMedicalReporyForm({
           className="w-full"
           color="success"
         >
-          اضافة تقرير طبي
+          اضافة فحص طبي
         </Button>
         <IconButton onClick={()=>{onPrinterClick(formData.report)}}>
           <PrintRounded color="action"></PrintRounded>
@@ -85,4 +85,4 @@ function NewMedicalReporyForm({
   );
 }
 
-export default NewMedicalReporyForm;
+export default AddLaboratoryExamination;

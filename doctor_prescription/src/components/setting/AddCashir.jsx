@@ -100,6 +100,16 @@ function AddCashir(props) {
       >
         تعديل المعلومات
       </Button>
+      <div className="flex justify-between px-6 items-center w-full h-12 rounded-xl bg-white">
+        <div>الاسم</div>
+        <div>الايميل</div>
+      </div>
+      {props.cashireData.map((cashire, index) => (
+        <div className="flex justify-between px-6 items-center w-full h-12 rounded-xl my-2 bg-white">
+          <div>{cashire.userName}</div>
+          <div>{cashire.email}</div>
+        </div>
+      ))}
     </form>
   );
 }

@@ -1,15 +1,17 @@
 const mongoose = require("mongoose");
 
-const {cashirRegister, register, login } = require("../controllers/authControllers");
+const {
+  cashirRegister,
+  register,
+  login,
+} = require("../controllers/authControllers");
 const { checkUser } = require("../middlewares/authMiddleware");
 const User = require("../model/user");
-const multer = require("multer");
-
 const router = require("express").Router();
-
+const multer = require("multer");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./public/doctorImg");
+    cb(null, "./public/img");
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -18,7 +20,8 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+// Create multer instance for uploading image
+const upload = multer({ storage: storage });
 
 router.post("/", checkUser);
 router.post("/register", register);
@@ -26,6 +29,18 @@ router.post("/addcashire", cashirRegister);
 router.post("/login", login);
 
 module.exports = router;
+
+
+router.get("/allusers/", async (req, res, next) => {
+  try {
+    const users = await User.find({"role":"cashir"});
+    return res.json(users);
+  } catch (err) {
+    next(err);
+  }
+});
+
+
 router.get("/allUsers/:id/name/:name?", async (req, res, next) => {
   try {
     const userName = req.params.name ? req.params.name : "";
@@ -43,6 +58,43 @@ router.get("/allUsers/:id/name/:name?", async (req, res, next) => {
 router.get("/getone/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post(
+  "/update/image",
+  upload.single("image"),
+  async (req, res, next) => {
+    console.log(req.body);
+    const { filename, path } = req.file;
+    console.log(filename, path);
+    const url = req.protocol + "://" + req.get("host");
+    const imagePath = req.file ? "/img/" + req.file.filename : null;
+    console.log(imagePath);
+    try {
+      const user = await User.findByIdAndUpdate(
+        req.body.id,
+        { profileImg: imagePath }
+      );
+      if (!user) {
+        return res.status(404).json({ error: "Category not found" });
+      }
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+router.post("/update/image", async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.body.id, req.body.data);
     if (!user) {
       return res.status(404).json({ error: "Category not found" });
     }

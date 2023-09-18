@@ -24,7 +24,6 @@ const MenuProps = {
 };
 function EditPatientForm(props) {
   console.log(props.userEditData);
-  const [userData, setUserData] = useState([]);
   const [personName, setPersonName] = useState([]);
   useEffect(() => {
     console.log(personName);
