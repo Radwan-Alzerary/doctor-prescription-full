@@ -15,7 +15,6 @@ function PatientReport(props) {
         setMiddleText(props.medicalReportsStype.HeaderMidleText);
         setRightText(props.medicalReportsStype.HeaderRightText);
         setLeftText(props.medicalReportsStype.HeaderLeftText);
-
         // Introduce a 1-second delay
         await new Promise((resolve) => setTimeout(resolve, 300));
 
@@ -27,6 +26,18 @@ function PatientReport(props) {
 
     updateTextAndPrint();
   }, [props.prints]);
+
+
+
+  
+  useEffect(()=>{
+    setMiddleText(props.medicalReportsStype.HeaderMidleText);
+    setRightText(props.medicalReportsStype.HeaderRightText);
+    setLeftText(props.medicalReportsStype.HeaderLeftText);
+  },[props.medicalReportsStype])
+
+
+
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
