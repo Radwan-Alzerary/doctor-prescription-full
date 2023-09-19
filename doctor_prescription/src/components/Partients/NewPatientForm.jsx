@@ -213,62 +213,70 @@ function NewPatientForm(props) {
           }}
         />
       </div>
-      <div className=" text-right w-full">
-        <h5>التاريخ المرضي</h5>
-      </div>
-      <FormControl sx={{ m: 1, width: "100%" }}>
-        <InputLabel id="demo-multiple-chip-label">الامراض</InputLabel>
-        <Select
-          labelId="demo-multiple-chip-label"
-          id="demo-multiple-chip"
-          multiple
-          value={personName}
-          onChange={handleChange}
-          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-          renderValue={(selected) => (
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip
-                  key={value.constantDiseasesId}
-                  color="success"
-                  label={JSON.parse(value).constantDiseasesName}
-                />
-              ))}
-            </Box>
-          )}
-          MenuProps={MenuProps}
-        >
-          {props.constantDiseases.map((constantDiseases) => (
-            <MenuItem
-              key={constantDiseases._id}
-              value={`{"constantDiseasesId":"${constantDiseases._id}","constantDiseasesName":"${constantDiseases.name}"}`}
+      {props.currentUser.role === "doctor" ? (
+        <>
+          <div className=" text-right w-full">
+            <h5>التاريخ المرضي</h5>
+          </div>
+          <FormControl sx={{ m: 1, width: "100%" }}>
+            <InputLabel id="demo-multiple-chip-label">الامراض</InputLabel>
+            <Select
+              labelId="demo-multiple-chip-label"
+              id="demo-multiple-chip"
+              multiple
+              value={personName}
+              onChange={handleChange}
+              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+              renderValue={(selected) => (
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Chip
+                      key={value.constantDiseasesId}
+                      color="success"
+                      label={JSON.parse(value).constantDiseasesName}
+                    />
+                  ))}
+                </Box>
+              )}
+              MenuProps={MenuProps}
             >
-              {constantDiseases.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <div className=" text-right w-full">
-        <h5>التحسس من الادوية</h5>
-      </div>
-      <TextField
-        dir="rtl"
-        // required
-        id="outlined-required"
-        size="small"
-        onChange={(event) => handleInputChange("fumbling", event.target.value)} // Update the name state
-        sx={{
-          width: "100%",
-          direction: "rtl",
-          textAlign: "right",
-          color: "#fff",
-        }}
-        label="التحسس"
-        // defaultValue="Hello World"
-        InputProps={{
-          style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-        }}
-      />
+              {props.constantDiseases.map((constantDiseases) => (
+                <MenuItem
+                  key={constantDiseases._id}
+                  value={`{"constantDiseasesId":"${constantDiseases._id}","constantDiseasesName":"${constantDiseases.name}"}`}
+                >
+                  {constantDiseases.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <div className=" text-right w-full">
+            <h5>التحسس من الادوية</h5>
+          </div>
+          <TextField
+            dir="rtl"
+            // required
+            id="outlined-required"
+            size="small"
+            onChange={(event) =>
+              handleInputChange("fumbling", event.target.value)
+            } // Update the name state
+            sx={{
+              width: "100%",
+              direction: "rtl",
+              textAlign: "right",
+              color: "#fff",
+            }}
+            label="التحسس"
+            // defaultValue="Hello World"
+            InputProps={{
+              style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
+            }}
+          />
+        </>
+      ) : (
+        ""
+      )}
       <TextField
         dir="rtl"
         id="outlined-required"

@@ -24,13 +24,13 @@
     "PatientPage" : "Patient page",
     "Rx" : "Rx",
     "Report" : "Report",
-    "Examination" : "Examination",
+    "Examination" : "patient page",
     "Options" : "Options",
     "Drugs" : "Drugs",
     "DrugsCategory" : "DrugsCategory",
     "RxDesign" : "DrugsCategory",
     "signOut" : "signOut",
-    "LaboratoryTesting":"Laboratory"
+    "LaboratoryTesting":"examination"
 
   }
   

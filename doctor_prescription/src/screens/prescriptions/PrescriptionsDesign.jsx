@@ -187,6 +187,66 @@ function PrescriptionsDesign() {
       {loading ? (
         <div className="flex justify-around p-3">
           <div className="">
+          <div className="flex w-full mt-4 font-bold">
+              <p>معلومات الكنية</p>
+            </div>
+            
+
+
+            <div className="flex justify-between items-center gap-10">
+              <TextField
+                value={medicalReportsStype.mainNameHeaderknia}
+                label="الكنية"
+                size="small"
+                onChange={(event) => {
+                  handleInputChange("mainNameHeaderknia", event.target.value);
+                }}
+              ></TextField>
+              <TextField
+                value={medicalReportsStype.mainNameHeaderkniaSize}
+                onChange={(event) => {
+                  handleInputChange("mainNameHeaderkniaSize", event.target.value);
+                }}
+                type="number"
+                label="حجم الخط"
+                size="small"
+              ></TextField>
+
+              <div className="flex flex-col justify-center items-center">
+                <p>اللون</p>
+                <input
+                  value={medicalReportsStype.mainNameHeaderkniaColor}
+                  onChange={(event) => {
+                    handleInputChange(
+                      "mainNameHeaderkniaColor",
+                      event.target.value
+                    );
+                  }}
+                  type="color"
+                  className=" border-none rounded-full"
+                  // value={color} onChange={e => setColor(e.target.value)}
+                />
+              </div>
+              <FormControlLabel
+                sx={{
+                  display: "block",
+                }}
+                control={
+                  <Switch
+                    checked={medicalReportsStype.mainNameHeaderkniaActive}
+                    onChange={(event) => {
+                      handleInputChange(
+                        "mainNameHeaderkniaActive",
+                        !medicalReportsStype.mainNameHeaderkniaActive
+                      );
+                    }}
+                    color="primary"
+                  />
+                }
+              />
+            </div>
+            <hr></hr>
+
             <div className="flex w-full mt-4 font-bold">
               <p>معلومات الاسم</p>
             </div>

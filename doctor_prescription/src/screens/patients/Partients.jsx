@@ -954,6 +954,7 @@ function Partients() {
           {" "}
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewPatientForm
+          currentUser={currentUser}
             constantDiseases={constantDiseases}
             onFormSubmit={handleNewPatientData}
           ></NewPatientForm>

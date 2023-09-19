@@ -6,6 +6,12 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
     mainNameHeader: { type: String, default: "اسم الطبيب" },
     mainNameSize: { type: String, default: 1.5 },
     mainNameActive: { type: Boolean, default: true },
+
+    mainNameHeaderkniaColor: { type: String, default: "#EF4444" },
+    mainNameHeaderknia: { type: String, default: "دكتور" },
+    mainNameHeaderkniaSize: { type: String, default: 1.5 },
+    mainNameHeaderkniaActive: { type: Boolean, default: true },
+
     backgroundColor: { type: String, default: "#fff" },
     HeaderLeftTextActive: { type: Boolean, default: true },
     HeaderLeftText: [
