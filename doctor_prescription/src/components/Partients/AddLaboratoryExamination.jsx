@@ -6,6 +6,7 @@ import {
   TextField,
 } from "@mui/material";
 import { PrintRounded } from "@mui/icons-material";
+import { FormattedMessage } from "react-intl";
 
 function AddLaboratoryExamination({
   onFormSubmit,
@@ -21,7 +22,7 @@ function AddLaboratoryExamination({
   const handleSubmit = (event) => {
     event.preventDefault();
     // Call the onFormSubmit function passed as a prop with the formData
-    console.log(formData)
+    console.log(formData);
     onFormSubmit(formData);
   };
 
@@ -40,7 +41,13 @@ function AddLaboratoryExamination({
       className="fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
     >
       <div className=" text-right w-full">
-        <h5>معلومات الفحص المختبر</h5>
+        <h5>
+          {" "}
+          <FormattedMessage
+            id={"Laboratory Test Information"}
+            defaultMessage="Hello, World!"
+          />
+        </h5>
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
@@ -54,7 +61,12 @@ function AddLaboratoryExamination({
             textAlign: "right",
             color: "#fff",
           }}
-          label="الفحص"
+          label={
+            <FormattedMessage
+              id={"Diagnostic Details"}
+              defaultMessage="Hello, World!"
+            />
+          }
           multiline
           rows={3}
           // defaultValue="Hello World"
@@ -77,7 +89,11 @@ function AddLaboratoryExamination({
         >
           اضافة فحص طبي
         </Button>
-        <IconButton onClick={()=>{onPrinterClick(formData.report)}}>
+        <IconButton
+          onClick={() => {
+            onPrinterClick(formData.report);
+          }}
+        >
           <PrintRounded color="action"></PrintRounded>
         </IconButton>
       </div>{" "}

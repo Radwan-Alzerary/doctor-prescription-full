@@ -1,5 +1,6 @@
 import { Button, TextField } from "@mui/material";
 import React, { useState } from "react";
+import { FormattedMessage } from "react-intl";
 
 function AddCashir(props) {
   const [formData, setFormData] = useState({
@@ -40,7 +41,12 @@ function AddCashir(props) {
             textAlign: "right",
             color: "#fff",
           }}
-          label="اسم السكرتير"
+          label={
+            <FormattedMessage
+              id={"Secretary name"}
+              defaultMessage="Hello, World!"
+            />
+          }
           // defaultValue="Hello World"
           InputProps={{
             style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
@@ -61,7 +67,9 @@ function AddCashir(props) {
             textAlign: "right",
             color: "#fff",
           }}
-          label="الايميل"
+          label={
+            <FormattedMessage id={"email"} defaultMessage="Hello, World!" />
+          }
           type="email"
           // defaultValue="Hello World"
           InputProps={{
@@ -84,7 +92,9 @@ function AddCashir(props) {
             color: "#fff",
           }}
           type="password"
-          label="الرمز"
+          label={
+            <FormattedMessage id={"Password"} defaultMessage="Hello, World!" />
+          }
           // defaultValue="Hello World"
           InputProps={{
             style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
@@ -98,11 +108,33 @@ function AddCashir(props) {
         className="w-full"
         color="success"
       >
-        تعديل المعلومات
+        {
+          <FormattedMessage
+            id={"Information edit"}
+            defaultMessage="Hello, World!"
+          />
+        }
       </Button>
+
       <div className="flex justify-between px-6 items-center w-full h-12 rounded-xl bg-white">
-        <div>الاسم</div>
-        <div>الايميل</div>
+        <div>
+          {" "}
+          {
+            <FormattedMessage
+              id={"Secretary name"}
+              defaultMessage="Hello, World!"
+            />
+          }
+        </div>
+        <div>
+          {" "}
+          {
+            <FormattedMessage
+              id={"email"}
+              defaultMessage="Hello, World!"
+            />
+          }
+        </div>
       </div>
       {props.cashireData.map((cashire, index) => (
         <div className="flex justify-between px-6 items-center w-full h-12 rounded-xl my-2 bg-white">

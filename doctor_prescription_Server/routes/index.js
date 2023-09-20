@@ -10,6 +10,7 @@ router.use('/users', require('./users'));
 router.use('/messages', require('./messagesRoute'));
 router.use('/gpt', require('./gpt'));
 router.use('/labory', require('./labory'));
+router.use('/dashboard', require('./dashboard'));
 
 router.use("/medicaleeportstyle", require("./medicalReportsStyle"));
 router.use("/medicalreports", require("./medicalreports"));

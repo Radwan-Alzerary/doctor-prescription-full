@@ -1,19 +1,13 @@
-import {
-  Autocomplete,
-  Button,
-  IconButton,
-  TextField,
-} from "@mui/material";
-import {useEffect, useState } from "react";
+import { Autocomplete, Button, IconButton, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
+import { FormattedMessage } from "react-intl";
 
 function MedicalForm(props) {
-
-  const [formData, setFormData] = useState({
-  });
+  const [formData, setFormData] = useState({});
   useEffect(() => {
     const { diseases, ...formDataWithoutDiseases } = props.userEditData;
-      setFormData(formDataWithoutDiseases);
-      // console.log(formDataWithoutDiseases)
+    setFormData(formDataWithoutDiseases);
+    // console.log(formDataWithoutDiseases)
   }, []);
 
   const handleSubmit = (event) => {
@@ -36,13 +30,19 @@ function MedicalForm(props) {
     >
       <div className="w-full flex gap-9"></div>
       <div className=" text-right w-full">
-        <h5>التشخيص الطبي</h5>
+        <h5>
+          {" "}
+          <FormattedMessage
+            id={"Medical Diagnosis"}
+            defaultMessage="Hello, World!"
+          />
+        </h5>
       </div>
       <TextField
         dir="rtl"
         value={formData.medicalDiagnosis}
         onChange={(event) => {
-          handleInputChange("medicalDiagnosis",event.target.value);
+          handleInputChange("medicalDiagnosis", event.target.value);
         }}
         id="outlined-multiline-static"
         size="small"
@@ -54,18 +54,22 @@ function MedicalForm(props) {
         }}
         multiline
         rows={2}
-        label="تفاصيل التشخيص"
+        label={
+          <FormattedMessage
+            id={"Diagnostic Details"}
+            defaultMessage="Hello, World!"
+          />
+        }
         // defaultValue="Hello World"
         InputProps={{
           style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
         }}
       />
-       <TextField
+      <TextField
         dir="rtl"
         value={formData.currentMedicalHistory}
-
         onChange={(event) => {
-          handleInputChange("currentMedicalHistory",event.target.value);
+          handleInputChange("currentMedicalHistory", event.target.value);
         }}
         id="outlined-multiline-static"
         size="small"
@@ -77,17 +81,22 @@ function MedicalForm(props) {
         }}
         multiline
         rows={2}
-        label="التاريخ المرضي الحالي "
+        label={
+          <FormattedMessage
+            id={"Present Medical History"}
+            defaultMessage="Hello, World!"
+          />
+        }
         InputProps={{
           style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
         }}
       />
+
       <TextField
         dir="rtl"
         value={formData.medicalHistory}
-
         onChange={(event) => {
-          handleInputChange("medicalHistory",event.target.value);
+          handleInputChange("medicalHistory", event.target.value);
         }}
         id="outlined-multiline-static"
         size="small"
@@ -99,18 +108,22 @@ function MedicalForm(props) {
         }}
         multiline
         rows={2}
-        label="التاريخ المرضي "
-        // defaultValue="Hello World"
+        label={
+          <FormattedMessage
+            id={"Medical History"}
+            defaultMessage="Hello, World!"
+          />
+        } // defaultValue="Hello World"
         InputProps={{
           style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
         }}
       />
+
       <TextField
         dir="rtl"
         value={formData.previousSurgeries}
-
         onChange={(event) => {
-          handleInputChange("previousSurgeries",event.target.value);
+          handleInputChange("previousSurgeries", event.target.value);
         }}
         id="outlined-multiline-static"
         size="small"
@@ -122,8 +135,12 @@ function MedicalForm(props) {
         }}
         multiline
         rows={2}
-        label="العمليات الجراحية السابقة"
-        // defaultValue="Hello World"
+        label={
+          <FormattedMessage
+            id={"Previous Surgical Procedures"}
+            defaultMessage="Hello, World!"
+          />
+        } // defaultValue="Hello World"        Present Medical History
         InputProps={{
           style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
         }}
@@ -132,9 +149,8 @@ function MedicalForm(props) {
       <TextField
         dir="rtl"
         value={formData.familyHistory}
-
         onChange={(event) => {
-          handleInputChange("familyHistory",event.target.value);
+          handleInputChange("familyHistory", event.target.value);
         }}
         id="outlined-multiline-static"
         size="small"
@@ -146,7 +162,14 @@ function MedicalForm(props) {
         }}
         multiline
         rows={2}
-        label="التاريخ العائلي"
+        label={
+          <FormattedMessage
+            id={"Family Medical History"}
+            defaultMessage="Hello, World!"
+          />
+        }
+        Diagnostic
+        Details
         // defaultValue="Hello World"
         InputProps={{
           style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
@@ -156,9 +179,8 @@ function MedicalForm(props) {
       <TextField
         dir="rtl"
         value={formData.fumbling}
-
         onChange={(event) => {
-          handleInputChange("fumbling",event.target.value);
+          handleInputChange("fumbling", event.target.value);
         }}
         id="outlined-multiline-static"
         size="small"
@@ -170,13 +192,17 @@ function MedicalForm(props) {
         }}
         multiline
         rows={2}
-        label="التحسس من الادوية"
+        label={
+          <FormattedMessage
+            id={"Medication Allergies"}
+            defaultMessage="Hello, World!"
+          />
+        }
         // defaultValue="Hello World"
         InputProps={{
           style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
         }}
       />
-
 
       <div className="flex gap-6 w-full justify-between">
         <IconButton>

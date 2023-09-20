@@ -23,7 +23,11 @@ import { useCookies } from "react-cookie";
 import DoctorProfile from "./components/doctor/DoctorProfile";
 import Tst from "./screens/global/tst";
 import axios from "axios";
-
+import Gpt from "./screens/global/Gpt";
+import { Icon, IconButton } from "@mui/material";
+import QuizIcon from "@mui/icons-material/Quiz";
+import { blue } from "@mui/material/colors";
+import VoiceRecoed from "./screens/global/VoiceRecoed";
 function Layout({ children }) {
   return (
     <div
@@ -50,6 +54,7 @@ function App() {
   });
   const [cookies, setCookies] = useCookies(["jwt"]); // Add "jwt" to the list of cookies you want to use
   const [isAuthenticated, setIsAuthenticated] = useState(!!cookies.jwt); // Initialize isAuthenticated
+  const [showGpt, setShowGpt] = useState(false); // Initialize isAuthenticated
 
   useEffect(() => {
     // This effect runs whenever cookies.jwt changes
@@ -96,7 +101,10 @@ function App() {
         }}
       >
         {isAuthenticated ? (
-          <SideBarMenu currentUser={currentUser} onLanguageChange={handleLanguageChange}></SideBarMenu>
+          <SideBarMenu
+            currentUser={currentUser}
+            onLanguageChange={handleLanguageChange}
+          ></SideBarMenu>
         ) : (
           ""
         )}
@@ -108,9 +116,9 @@ function App() {
               <Route exact path="/register" element={<Register />} />
               <Route exact path="/newcomputer" element={<Register />} />
               <Route exact path="/login" element={<Login />} />
-              <Route exact path="/tst" element={<Tst />} />
+              <Route exact path="/tst" element={<VoiceRecoed />} />
 
-              <Route exact path="/" element={<PrivateRoute />}>
+              <Route exact path="/" element={<Dashboard />}>
                 <Route exact path="/" element={<Dashboard />}></Route>
                 <Route exact path="Chats" element={<Chats />} />
                 <Route exact path="dashboard" element={<Dashboard />}></Route>
@@ -139,6 +147,36 @@ function App() {
                 <Route exact path="setting" element={<Setting />}></Route>
               </Route>
             </Routes>
+
+            {isAuthenticated ? (
+              <div className=" z-50 absolute bottom-2 right-2">
+                {!showGpt ? (
+                  <IconButton
+                    onClick={() => {
+                      setShowGpt(true);
+                    }}
+                    size="large"
+                    sx={{ backgroundColor: blue[200], color: "black" }}
+                  >
+                    <QuizIcon></QuizIcon>
+                  </IconButton>
+                ) : (
+                  ""
+                )}
+
+                {showGpt ? (
+                  <Gpt
+                    onClick={() => {
+                      setShowGpt(false);
+                    }}
+                  ></Gpt>
+                ) : (
+                  ""
+                )}
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         </main>
       </div>

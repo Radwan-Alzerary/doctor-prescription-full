@@ -11,6 +11,7 @@ import {
 import BillTable from "./BillTable";
 import { PrintRounded } from "@mui/icons-material";
 import { useEffect, useState } from "react";
+import { FormattedMessage } from "react-intl";
 
 function NewPartientsForm(props) {
   const [value, setValue] = useState("");
@@ -117,7 +118,13 @@ function NewPartientsForm(props) {
         </div> */}
       </div>
       <div className=" text-right w-full">
-        <h5>التشخيص الطبي</h5>
+        <h5>
+          {" "}
+          <FormattedMessage
+            id={"Medical Diagnosis"}
+            defaultMessage="Hello, World!"
+          />
+        </h5>
       </div>
       <TextField
         dir="rtl"
@@ -140,8 +147,6 @@ function NewPartientsForm(props) {
           style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
         }}
       />
-      
-
 
       <div className=" text-right flex w-full gap-[50%]">
         <h5>الوصفة الطبية</h5>

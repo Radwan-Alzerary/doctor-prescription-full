@@ -37,8 +37,6 @@ function PatientReport(props) {
   },[props.medicalReportsStype])
 
 
-
-
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     documentTitle: "emp-data",

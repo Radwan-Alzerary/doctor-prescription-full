@@ -14,46 +14,65 @@ import {
   IconButton,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
+import { FormattedMessage } from "react-intl";
+
+const Drugnamet = () => {
+  return <FormattedMessage id={"Drug name"} defaultMessage="Hello, World!" />;
+};
+const CategoryTr = () => {
+  return <FormattedMessage id={"Category"} defaultMessage="Hello, World!" />;
+};
+const DosageTr = () => {
+  return <FormattedMessage id={"Dosage"} defaultMessage="Hello, World!" />;
+};
+
+const NodosageTr = () => {
+  return <FormattedMessage id={"No.dosage"} defaultMessage="Hello, World!" />;
+};
+const TakeTimeTr = () => {
+  return <FormattedMessage id={"Take time"} defaultMessage="Hello, World!" />;
+};
+const optionTr = () => {
+  return <FormattedMessage id={"Options"} defaultMessage="Hello, World!" />;
+};
 
 const headCells = [
   {
     id: "name",
     numeric: true,
     disablePadding: false,
-    label: "اسم الدواء",
+    label: Drugnamet(),
   },
   {
     id: "billNum",
     numeric: false,
     disablePadding: false,
-    label: "الصنف",
+    label: CategoryTr(),
   },
   {
     id: "tools",
     numeric: false,
     disablePadding: false,
-    label: "الجرعة",
+    label: DosageTr(),
   },
   {
     id: "tools",
     numeric: false,
     disablePadding: false,
-    label: "عدد الجرع",
+    label: NodosageTr(),
   },
   {
     id: "tools",
     numeric: false,
     disablePadding: false,
-    label: "وقت التناول",
+    label: TakeTimeTr(),
   },
   {
     id: "tools",
     numeric: false,
     disablePadding: false,
-    label: "الخيارات",
+    label: optionTr(),
   },
-
-
 ];
 
 function EnhancedTableHead(props) {
@@ -175,13 +194,24 @@ export default function PharmaceuticalTable(props) {
                       selected={isItemSelected}
                       sx={{ cursor: "pointer" }}
                     >
-                      <TableCell align="center" component="th" scope="row" padding="none">
+                      <TableCell
+                        align="center"
+                        component="th"
+                        scope="row"
+                        padding="none"
+                      >
                         {row.name}
                       </TableCell>
-                      <TableCell align="center">{row.category ? row.category.name : ""}</TableCell>
+                      <TableCell align="center">
+                        {row.category ? row.category.name : ""}
+                      </TableCell>
                       <TableCell align="center">{row.dose}</TableCell>
                       <TableCell align="center">{row.doseCount}</TableCell>
-                      <TableCell align="center">{row.intaketime ? row.intaketime.name : row.anotherIntaketime}</TableCell>
+                      <TableCell align="center">
+                        {row.intaketime
+                          ? row.intaketime.name
+                          : row.anotherIntaketime}
+                      </TableCell>
                       <TableCell align="center">
                         <IconButton
                           onClick={() => {

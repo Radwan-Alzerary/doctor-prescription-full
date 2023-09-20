@@ -6,6 +6,7 @@ import {
   TextField,
 } from "@mui/material";
 import { PrintRounded } from "@mui/icons-material";
+import VoiceRecoed from "../../screens/global/VoiceRecoed";
 
 function NewMedicalReporyForm({
   onFormSubmit,
@@ -80,6 +81,8 @@ function NewMedicalReporyForm({
         <IconButton onClick={()=>{onPrinterClick(formData.report)}}>
           <PrintRounded color="action"></PrintRounded>
         </IconButton>
+        <VoiceRecoed setInputValue={setFormData} />
+
       </div>{" "}
     </form>
   );

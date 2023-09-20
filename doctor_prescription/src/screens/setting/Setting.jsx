@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AddCashir from "../../components/setting/AddCashir";
 import axios from "axios";
+import { FormattedMessage } from "react-intl";
 
 function Setting() {
   const [cashire, setCashire] = useState([]);
@@ -19,7 +20,6 @@ function Setting() {
         console.error("Error fetching categories:", error);
       });
   };
-
   const onCashireFormSubmit = (data) => {
     console.log(data);
     axios
@@ -27,7 +27,6 @@ function Setting() {
       .then((response) => {
         // Handle the response if needed
         getAllCashire();
-
         console.log("POST request successful:", response.data);
       })
       .catch((error) => {
@@ -39,7 +38,13 @@ function Setting() {
     <div>
       <div className="flex p-4">
         <div className="w-1/2">
-          <div className=" text-lg">اضافة سكرتير جديد</div>
+          <div className=" text-lg">
+            {" "}
+            <FormattedMessage
+              id={"Add new secretary"}
+              defaultMessage="Hello, World!"
+            />
+          </div>
           <AddCashir
             cashireData={cashire}
             onCashireFormSubmit={onCashireFormSubmit}

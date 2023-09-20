@@ -14,19 +14,27 @@ import {
   IconButton,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
+import { FormattedMessage } from "react-intl";
+
+const CategoryTr = () => {
+  return <FormattedMessage id={"Category"} defaultMessage="Hello, World!" />;
+};
+const optionTr = () => {
+  return <FormattedMessage id={"Options"} defaultMessage="Hello, World!" />;
+};
 
 const headCells = [
   {
     id: "name",
     numeric: true,
     disablePadding: false,
-    label: "الاسم",
+    label: CategoryTr(),
   },
   {
     id: "tools",
     numeric: false,
     disablePadding: false,
-    label: "الخيارات",
+    label: optionTr(),
   },
 ];
 
@@ -149,7 +157,12 @@ export default function CategoryTable(props) {
                       selected={isItemSelected}
                       sx={{ cursor: "pointer" }}
                     >
-                      <TableCell align="center" component="th" scope="row" padding="none">
+                      <TableCell
+                        align="center"
+                        component="th"
+                        scope="row"
+                        padding="none"
+                      >
                         {row.name}
                       </TableCell>
                       <TableCell align="center">

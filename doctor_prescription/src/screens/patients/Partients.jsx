@@ -732,7 +732,10 @@ function Partients() {
         <div className=" w-1/6">
           <FormControl className="w-full bg-whiteh" size="small" sx={{ m: 1 }}>
             <InputLabel id="demo-simple-select-helper-label">
-              تصنيف حسب العمر{" "}
+              <FormattedMessage 
+                id={"ageSort"}
+                defaultMessage="Hello, World!"
+              />
             </InputLabel>
             <Select
               labelId="demo-simple-select-helper-label"
@@ -753,7 +756,10 @@ function Partients() {
         <div className=" w-1/6">
           <FormControl className="w-full bg-whiteh" size="small" sx={{ m: 1 }}>
             <InputLabel id="demo-simple-select-helper-label">
-              تصنيف حسب الحالة{" "}
+            <FormattedMessage 
+                id={"stateSort"}
+                defaultMessage="Hello, World!"
+              />
             </InputLabel>
             <Select
               labelId="demo-simple-select-helper-label"
@@ -774,7 +780,10 @@ function Partients() {
         <div className=" w-1/6">
           <FormControl className="w-full bg-whiteh" size="small" sx={{ m: 1 }}>
             <InputLabel id="demo-simple-select-helper-label">
-              تصنيف حسب الجنس{" "}
+            <FormattedMessage 
+                id={"genderSort"}
+                defaultMessage="Hello, World!"
+              />
             </InputLabel>
             <Select
               labelId="demo-simple-select-helper-label"
@@ -791,7 +800,10 @@ function Partients() {
         <div className=" w-1/6">
           <FormControl className="w-full bg-whiteh" size="small" sx={{ m: 1 }}>
             <InputLabel id="demo-simple-select-helper-label">
-              تصنيف حسب الوقت
+            <FormattedMessage 
+                id={"dateSort"}
+                defaultMessage="Hello, World!"
+              />
             </InputLabel>
             <Select
               labelId="demo-simple-select-helper-label"
@@ -808,7 +820,7 @@ function Partients() {
           </FormControl>
         </div>
 
-        <button onClick={toggleCalendar}>تحديد مده زمنية</button>
+        {/* <button onClick={toggleCalendar}>تحديد مده زمنية</button> */}
         <div className={`${showCalendar ? "" : "hidden"}`}>
           {/* <Calendar
             value={selectedDayRange}
@@ -954,7 +966,7 @@ function Partients() {
           {" "}
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewPatientForm
-          currentUser={currentUser}
+            currentUser={currentUser}
             constantDiseases={constantDiseases}
             onFormSubmit={handleNewPatientData}
           ></NewPatientForm>
