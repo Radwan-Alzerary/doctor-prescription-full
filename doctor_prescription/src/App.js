@@ -118,7 +118,7 @@ function App() {
               <Route exact path="/login" element={<Login />} />
               <Route exact path="/tst" element={<VoiceRecoed />} />
 
-              <Route exact path="/" element={<Dashboard />}>
+              <Route exact path="/" element={<PrivateRoute />}>
                 <Route exact path="/" element={<Dashboard />}></Route>
                 <Route exact path="Chats" element={<Chats />} />
                 <Route exact path="dashboard" element={<Dashboard />}></Route>
