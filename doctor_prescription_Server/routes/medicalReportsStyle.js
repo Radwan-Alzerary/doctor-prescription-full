@@ -42,8 +42,6 @@ router.post(
   }
 );
 
-
-
 router.get("/getmedicalreportstype", async (req, res) => {
   try {
     const medicalReportsStype = await MedicalReportsStype.find({

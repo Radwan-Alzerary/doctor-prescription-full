@@ -53,7 +53,6 @@ function NewPatientForm(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Call the onFormSubmit function passed as a prop with the formData
     props.onFormSubmit(formData);
   };
 

@@ -13,7 +13,7 @@ import { PrintRounded } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-function NewPartientsForm(props) {
+function EditPartients(props) {
   const [value, setValue] = useState("");
   const [pharmaceuticalInputs, setPharmaceuticalInputs] = useState(true);
   const [inputValue, setInputValue] = useState("");
@@ -360,4 +360,4 @@ function NewPartientsForm(props) {
   );
 }
 
-export default NewPartientsForm;
+export default EditPartients;

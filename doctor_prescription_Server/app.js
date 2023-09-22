@@ -33,7 +33,7 @@ const socket = require("socket.io");
 //use flash
 app.use(flash());
 const corsOptions = {
-  origin: "http://localhost:3000", // notice origin won´t work as any (*) from that point
+  origin: ["http://localhost:8080", "http://localhost:3000"],
   credentials: true,
   "Access-Control-Allow-Credentials": true,
 };

@@ -264,6 +264,21 @@ function Row(props) {
                         >
                           <Delete fontSize="inherit" />
                         </IconButton>
+                        <IconButton
+                          onClick={() => {
+                            props.onPrescriptionDeleteHande(
+                              row._id,
+                              prescription._id
+                            );
+                          }}
+                          sx={{ color: red[400] }}
+                          className=" hover:text-red-600"
+                          aria-label="delete"
+                          // size="large"
+                        >
+                          <edit fontSize="inherit" />
+                        </IconButton>
+
                       </TableCell>
                     </TableRow>
                   ))}
