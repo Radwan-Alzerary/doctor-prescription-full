@@ -7,6 +7,8 @@ import { ToastContainer, toast } from "react-toastify";
 function Login() {
   const [cookies] = useCookies([]);
   const navigate = useNavigate();
+  const [errorMsg, setErrorMsg] =useState("")
+
   useEffect(() => {
     if (cookies.jwt) {
       navigate("/");
@@ -39,6 +41,7 @@ function Login() {
       }
     } catch (ex) {
       console.log(ex);
+      setErrorMsg(ex)
     }
   };
   return (
@@ -73,6 +76,7 @@ function Login() {
                 />
                 <button class="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                   <span class="ml-3">تسجيل الدخول</span>
+                  <p>{errorMsg}</p>
                 </button>
               </div>
             </div>

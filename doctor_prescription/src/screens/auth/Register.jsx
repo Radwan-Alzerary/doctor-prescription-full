@@ -9,6 +9,8 @@ function Register() {
   const [accsesDone, setAccsesDone] = useState(false);
   const [serialNumberDefult, setSerialNumberDefult] =
     useState("123456787654321");
+    const [errorMsg, setErrorMsg] =useState("")
+
   const navigate = useNavigate();
   useEffect(() => {
     if (cookies.jwt) {
@@ -48,6 +50,7 @@ function Register() {
         }
       } catch (ex) {
         console.log(ex);
+        setErrorMsg(ex)
       }
     } else {
       event.preventDefault();
@@ -120,6 +123,7 @@ function Register() {
                 <button className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                   <span className="ml-3">تسجيل الحساب</span>
                 </button>
+                <p>{errorMsg}</p>
               </div>
             </div>
           </div>
