@@ -2,5 +2,5 @@ node_modules/
 locales/
 dist/
 
-public/img/
+# public/img/
 image.png
