@@ -43,10 +43,10 @@ function Login() {
   };
   return (
     <form
-      class=" h-screen w-screen bg-gray-700  text-gray-900 "
+      className=" h-screen w-screen bg-gray-700  text-gray-900 "
       onSubmit={(e) => handleSubmit(e)}
     >
-      <div class=" w-full bg-white shadow sm:rounded-lg flex flex-row justify-center items-center ">
+      <div className=" w-full bg-white shadow sm:rounded-lg flex flex-row justify-center items-center ">
         <div class=" w-3/5">
           <div class="w-full flex flex-col items-center">
             <h1 class="text-2xl xl:text-3xl font-extrabold">تسجيل الدخول</h1>

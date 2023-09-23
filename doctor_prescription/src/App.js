@@ -70,9 +70,20 @@ function App() {
 
   const messages = locale === "en" ? enTranslations : arTranslations; // Get the translations based on the locale
   const [currentUser, setCurrentUser] = useState(undefined);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(true);
 
   const navigate = useNavigate();
+  const [userAvailable, setUserAvailable] = useState(false);
+  axios
+    .get("http://localhost:5000/users/checkAvailable")
+    .then((response) => {
+      console.log(response.data);
+      setUserAvailable(response.data);
+      setIsLoaded(false);
+    })
+    .catch((error) => {
+      console.error("Error fetching categories:", error);
+    });
 
   useEffect(() => {
     const verifyUser = async () => {
@@ -84,102 +95,115 @@ function App() {
         }
       );
       setCurrentUser(data);
-      setIsLoaded(true);
     };
     console.log(currentUser);
     verifyUser();
   }, [cookies, navigate]);
   return (
     <IntlProvider locale={locale} messages={messages}>
-      <div
-        id="app"
-        style={{
-          display: "flex",
-          height: "100%",
-          minHeight: "100px",
-          direction: "rtl",
-        }}
-      >
-        {isAuthenticated ? (
-          <SideBarMenu
-            currentUser={currentUser}
-            onLanguageChange={handleLanguageChange}
-          ></SideBarMenu>
-        ) : (
-          ""
-        )}
-        <main className="w-full">
-          {isAuthenticated ? <Header></Header> : ""}
-
-          <div className="h-[92vh] relative bg-gray-100 w-full">
-            <Routes>
-              <Route exact path="/register" element={<Register />} />
-              <Route exact path="/newcomputer" element={<Register />} />
-              <Route exact path="/login" element={<Login />} />
-              <Route exact path="/tst" element={<VoiceRecoed />} />
-
-              <Route exact path="/" element={<PrivateRoute />}>
-                <Route exact path="/" element={<Dashboard />}></Route>
-                <Route exact path="Chats" element={<Chats />} />
-                <Route exact path="dashboard" element={<Dashboard />}></Route>
-                <Route
-                  exact
-                  path="medicalreports"
-                  element={<MedicalReports />}
-                ></Route>
-                <Route exact path="patients" element={<Partients />} />
-                <Route
-                  exact
-                  path="pharmaceutical"
-                  element={<Pharmaceutical />}
-                ></Route>
-                <Route exact path="category" element={<Category />}></Route>
-                <Route
-                  exact
-                  path="Prescriptiondesign"
-                  element={<PrescriptionsDesign />}
-                ></Route>
-                <Route
-                  exact
-                  path="doctorprofile"
-                  element={<DoctorProfile />}
-                ></Route>
-                <Route exact path="setting" element={<Setting />}></Route>
-              </Route>
-            </Routes>
-
+      {!isLoaded ? (
+        userAvailable ? (
+          <div
+            id="app"
+            style={{
+              display: "flex",
+              height: "100%",
+              minHeight: "100px",
+              direction: "rtl",
+            }}
+          >
             {isAuthenticated ? (
-              <div className=" z-50 absolute bottom-2 right-2">
-                {!showGpt ? (
-                  <IconButton
-                    onClick={() => {
-                      setShowGpt(true);
-                    }}
-                    size="large"
-                    sx={{ backgroundColor: blue[200], color: "black" }}
-                  >
-                    <QuizIcon></QuizIcon>
-                  </IconButton>
-                ) : (
-                  ""
-                )}
+              <SideBarMenu
+                currentUser={currentUser}
+                onLanguageChange={handleLanguageChange}
+              ></SideBarMenu>
+            ) : (
+              ""
+            )}
+            <main className="w-full">
+              {isAuthenticated ? <Header></Header> : ""}
 
-                {showGpt ? (
-                  <Gpt
-                    onClick={() => {
-                      setShowGpt(false);
-                    }}
-                  ></Gpt>
+              <div className="h-[92vh] relative bg-gray-100 w-full">
+                <Routes>
+                  <Route exact path="/register" element={<Register />} />
+                  <Route exact path="/newcomputer" element={<Register />} />
+                  <Route exact path="/login" element={<Login />} />
+                  <Route exact path="/tst" element={<VoiceRecoed />} />
+
+                  <Route exact path="/" element={<PrivateRoute />}>
+                    <Route exact path="/" element={<Dashboard />}></Route>
+                    <Route exact path="Chats" element={<Chats />} />
+                    <Route
+                      exact
+                      path="dashboard"
+                      element={<Dashboard />}
+                    ></Route>
+                    <Route
+                      exact
+                      path="medicalreports"
+                      element={<MedicalReports />}
+                    ></Route>
+                    <Route exact path="patients" element={<Partients />} />
+                    <Route
+                      exact
+                      path="pharmaceutical"
+                      element={<Pharmaceutical />}
+                    ></Route>
+                    <Route exact path="category" element={<Category />}></Route>
+                    <Route
+                      exact
+                      path="Prescriptiondesign"
+                      element={<PrescriptionsDesign />}
+                    ></Route>
+                    <Route
+                      exact
+                      path="doctorprofile"
+                      element={<DoctorProfile />}
+                    ></Route>
+                    <Route exact path="setting" element={<Setting />}></Route>
+                  </Route>
+                </Routes>
+
+                {isAuthenticated ? (
+                  <div className=" z-50 absolute bottom-2 right-2">
+                    {!showGpt ? (
+                      <IconButton
+                        onClick={() => {
+                          setShowGpt(true);
+                        }}
+                        size="large"
+                        sx={{ backgroundColor: blue[200], color: "black" }}
+                      >
+                        <QuizIcon></QuizIcon>
+                      </IconButton>
+                    ) : (
+                      ""
+                    )}
+
+                    {showGpt ? (
+                      <Gpt
+                        onClick={() => {
+                          setShowGpt(false);
+                        }}
+                      ></Gpt>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 ) : (
                   ""
                 )}
               </div>
-            ) : (
-              ""
-            )}
+            </main>
           </div>
-        </main>
-      </div>
+        ) : (
+          <div>
+            <Register />
+          </div>
+        )
+      ) : (
+        ""
+      )}
     </IntlProvider>
   );
 }

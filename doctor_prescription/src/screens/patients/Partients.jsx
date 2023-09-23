@@ -216,7 +216,7 @@ function Row(props) {
         )}
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={15}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography
@@ -266,19 +266,19 @@ function Row(props) {
                         </IconButton>
                         <IconButton
                           onClick={() => {
-                            props.onPrescriptionDeleteHande(
+                            props.onPrescriptionEditHandel(
                               row._id,
                               prescription._id
                             );
                           }}
-                          sx={{ color: red[400] }}
+                          sx={{ color: blue[400] }}
                           className=" hover:text-red-600"
                           aria-label="delete"
+
                           // size="large"
                         >
-                          <edit fontSize="inherit" />
+                          <Edit fontSize="inherit" />
                         </IconButton>
-
                       </TableCell>
                     </TableRow>
                   ))}
@@ -331,6 +331,7 @@ function Partients() {
   const [prints, setprints] = useState(false);
   const [dataToPrint, setDataToPrint] = useState([]);
   const [medicalReportsStype, setMedicalReportsStype] = useState([]);
+  const [editPrescriptionData, setEditPrescriptionData] = useState({});
 
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -728,6 +729,24 @@ function Partients() {
         // Handle error, e.g., show an error message
       });
   };
+  const onPrescriptionEditHandel = (patientsId, prescriptionId)=>{
+    axios
+    .get(`http://localhost:5000/prescription/getone/${prescriptionId}?`)
+    .then((response) => {
+      console.log(response.data);
+      setPrescriptionId(response.data._id);
+      getAllPrescription(response.data._id)
+      setPartientsSelectId(patientsId);
+
+      setEditPrescriptionData(response.data)
+      setShowPartientsAddForm(true)
+    })
+    .catch((error) => {
+      console.error("Error fetching categories:", error);
+    });
+
+  }
+
   return (
     <div className="p-7 relative h-[97vh] overflow-auto">
       <div className=" flex flex-col justify-center items-center p-4">
@@ -947,6 +966,7 @@ function Partients() {
           <TableBody>
             {patientsList.map((patient, index) => (
               <Row
+              onPrescriptionEditHandel={onPrescriptionEditHandel}
                 onShareHande={onShareHande}
                 onDeleteHande={onDeleteHande}
                 currentUser={currentUser}
@@ -995,6 +1015,7 @@ function Partients() {
           {" "}
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewPartientsForm
+          editPrescriptionData ={editPrescriptionData}
             patientsList={patientsList}
             pharmaceList={pharmaceList}
             inTakeTimeList={inTakeTimeList}
@@ -1082,7 +1103,6 @@ function Partients() {
 
 function SelectLabels(props) {
   const [age, setAge] = React.useState("");
-
   const handleChange = (event) => {
     setAge(event.target.value);
   };

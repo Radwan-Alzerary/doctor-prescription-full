@@ -27,15 +27,11 @@ function PatientReport(props) {
     updateTextAndPrint();
   }, [props.prints]);
 
-
-
-  
-  useEffect(()=>{
+  useEffect(() => {
     setMiddleText(props.medicalReportsStype.HeaderMidleText);
     setRightText(props.medicalReportsStype.HeaderRightText);
     setLeftText(props.medicalReportsStype.HeaderLeftText);
-  },[props.medicalReportsStype])
-
+  }, [props.medicalReportsStype]);
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -57,7 +53,7 @@ function PatientReport(props) {
           alt=""
         ></img>
         <div
-          className={`z-20 absolute flex flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5  rounded-xl `}
+          className={`z-20 absolute text-center flex flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5  rounded-xl `}
           style={{
             fontFamily: "signfont",
             left: `${props.medicalReportsStype.signatureX}%`,
@@ -66,7 +62,11 @@ function PatientReport(props) {
             color: `${props.medicalReportsStype.signatureColor}`,
           }}
         >
+          <div className="m-0">
+          {props.medicalReportsStype.mainNameHeaderknia}
+          <br></br>
           {props.medicalReportsStype.signature}
+          </div>
         </div>
         {/* Your content to be printed */}
         <div className="  h-[95vh] relative flex flex-col z-10 ">
@@ -220,13 +220,14 @@ function PatientReport(props) {
 
           <div className=" w-full h-1/2  ">
             <div class="relative ">
-              <table class="w-full text-sm text-left text-gray-500 ">
+              <table class="w-full text-sm  text-center text-gray-500 ">
                 {!props.dataToPrint.textonly ? (
-                  <thead class="text-xs text-gray-700 uppercase   ">
+                  <thead class="text-xs text-center text-gray-700 uppercase   ">
                     {props.medicalReportsStype.tableHeaderActive ? (
                       <tr>
                         {props.medicalReportsStype.col6Active ? (
                           <th
+                            className="text-center"
                             scope="col"
                             class="px-3 py-3"
                             style={{
@@ -242,6 +243,7 @@ function PatientReport(props) {
 
                         {props.medicalReportsStype.col5Active ? (
                           <th
+                            className="text-center"
                             scope="col"
                             class="px-3 py-3 "
                             style={{
@@ -256,6 +258,7 @@ function PatientReport(props) {
                         )}
                         {props.medicalReportsStype.col4Active ? (
                           <th
+                            className="text-center"
                             scope="col"
                             class="px-3 py-3"
                             style={{
@@ -270,6 +273,7 @@ function PatientReport(props) {
                         )}
                         {props.medicalReportsStype.col3Active ? (
                           <th
+                            className="text-center"
                             scope="col"
                             class="px-3 py-3"
                             style={{
@@ -285,6 +289,7 @@ function PatientReport(props) {
 
                         {props.medicalReportsStype.col2Active ? (
                           <th
+                            className="text-center"
                             scope="col"
                             class="px-3 py-3"
                             style={{
@@ -299,6 +304,7 @@ function PatientReport(props) {
                         )}
                         {props.medicalReportsStype.col1Active ? (
                           <th
+                            className="text-center"
                             scope="col"
                             class="px-3 py-3"
                             style={{
@@ -335,9 +341,10 @@ function PatientReport(props) {
                       <>
                         {props.dataToPrint.prescription.pharmaceutical.map(
                           (drug, index) => (
-                            <tr class=" ">
+                            <tr className="text-center">
                               {props.medicalReportsStype.col6Active ? (
                                 <th
+                                  className="text-center"
                                   scope="row"
                                   class="px-3 py-3 font-medium text-gray-900 whitespace-nowrap "
                                   style={{

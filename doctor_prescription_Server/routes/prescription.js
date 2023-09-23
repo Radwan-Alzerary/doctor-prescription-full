@@ -35,6 +35,7 @@ router.post("/postpharmaceutical", async (req, res) => {
       await newPharmaceutical.save();
       billData.id = newPharmaceutical._id.toString();
     }
+    
     const PrescriptionId = req.body.PrescriptionId;
 
     const prescription = await Prescription.findById(PrescriptionId);

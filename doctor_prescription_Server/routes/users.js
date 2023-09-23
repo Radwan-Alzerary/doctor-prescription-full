@@ -27,19 +27,29 @@ router.post("/", checkUser);
 router.post("/register", register);
 router.post("/addcashire", cashirRegister);
 router.post("/login", login);
-
-module.exports = router;
-
-
-router.get("/allusers/", async (req, res, next) => {
+router.get("/checkAvailable", async (req, res, next) => {
   try {
-    const users = await User.find({"role":"cashir"});
-    return res.json(users);
+    const users = await User.countDocuments();
+    if (users > 0) {
+      return res.json(true);
+    } else {
+      return res.json(false);
+    }
   } catch (err) {
     next(err);
   }
 });
 
+module.exports = router;
+
+router.get("/allusers/", async (req, res, next) => {
+  try {
+    const users = await User.find({ role: "cashir" });
+    return res.json(users);
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.get("/allUsers/:id/name/:name?", async (req, res, next) => {
   try {
@@ -67,30 +77,25 @@ router.get("/getone/:id", async (req, res) => {
   }
 });
 
-router.post(
-  "/update/image",
-  upload.single("image"),
-  async (req, res, next) => {
-    console.log(req.body);
-    const { filename, path } = req.file;
-    console.log(filename, path);
-    const url = req.protocol + "://" + req.get("host");
-    const imagePath = req.file ? "/img/" + req.file.filename : null;
-    console.log(imagePath);
-    try {
-      const user = await User.findByIdAndUpdate(
-        req.body.id,
-        { profileImg: imagePath }
-      );
-      if (!user) {
-        return res.status(404).json({ error: "Category not found" });
-      }
-      res.json(user);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+router.post("/update/image", upload.single("image"), async (req, res, next) => {
+  console.log(req.body);
+  const { filename, path } = req.file;
+  console.log(filename, path);
+  const url = req.protocol + "://" + req.get("host");
+  const imagePath = req.file ? "/img/" + req.file.filename : null;
+  console.log(imagePath);
+  try {
+    const user = await User.findByIdAndUpdate(req.body.id, {
+      profileImg: imagePath,
+    });
+    if (!user) {
+      return res.status(404).json({ error: "Category not found" });
     }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-);
+});
 
 router.post("/update/image", async (req, res) => {
   try {

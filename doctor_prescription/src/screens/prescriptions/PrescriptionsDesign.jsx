@@ -190,9 +190,6 @@ function PrescriptionsDesign() {
           <div className="flex w-full mt-4 font-bold">
               <p>معلومات الكنية</p>
             </div>
-            
-
-
             <div className="flex justify-between items-center gap-10">
               <TextField
                 value={medicalReportsStype.mainNameHeaderknia}
