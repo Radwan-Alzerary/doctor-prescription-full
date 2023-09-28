@@ -223,7 +223,7 @@ export default function PharmaceuticalTable(props) {
                         </IconButton>
                         <IconButton
                           onClick={() => {
-                            onEditHandle(row.name);
+                            onEditHandle(row._id);
                           }}
                           aria-label="edit"
                         >

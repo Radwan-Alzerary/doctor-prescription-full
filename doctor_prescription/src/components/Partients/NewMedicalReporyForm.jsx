@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { PrintRounded } from "@mui/icons-material";
 import VoiceRecoed from "../../screens/global/VoiceRecoed";
+import Cookies from "js-cookie";
 
 function NewMedicalReporyForm({
   onFormSubmit,
@@ -17,6 +18,9 @@ function NewMedicalReporyForm({
   const [formData, setFormData] = useState({
     report: "",
     patientId: partientsSelectId,
+  });
+  const [locale, setLocale] = useState(() => {
+    return Cookies.get("locale") || "ar";
   });
 
   // Handle form submission
@@ -39,29 +43,26 @@ function NewMedicalReporyForm({
     <form
       onSubmit={handleSubmit}
       className="fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
+      style={{
+        direction: locale === "en" ? "ltr" : "rtl",
+      }}
     >
       <div className=" text-right w-full">
         <h5>معلومات التقرير</h5>
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
-          dir="rtl"
           id="outlined-required"
           size="small"
           onChange={(event) => handleInputChange("report", event.target.value)} // Update the name state
           sx={{
             width: "100%",
-            direction: "rtl",
-            textAlign: "right",
             color: "#fff",
           }}
           label="التقرير"
           multiline
           rows={3}
           // defaultValue="Hello World"
-          InputProps={{
-            style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-          }}
         />
       </div>
       <div className="flex gap-6 w-full justify-between">
@@ -78,11 +79,14 @@ function NewMedicalReporyForm({
         >
           اضافة تقرير طبي
         </Button>
-        <IconButton onClick={()=>{onPrinterClick(formData.report)}}>
+        <IconButton
+          onClick={() => {
+            onPrinterClick(formData.report);
+          }}
+        >
           <PrintRounded color="action"></PrintRounded>
         </IconButton>
         <VoiceRecoed setInputValue={setFormData} />
-
       </div>{" "}
     </form>
   );

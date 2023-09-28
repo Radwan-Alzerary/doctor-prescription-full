@@ -1,4 +1,5 @@
 import { Button, TextField } from "@mui/material";
+import Cookies from "js-cookie";
 import React, { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -8,6 +9,10 @@ function AddCashir(props) {
     email: "",
     password: "",
   });
+  const [locale, setLocale] = useState(() => {
+    return Cookies.get("locale") || "ar";
+  });
+
   const handleSubmit = (event) => {
     event.preventDefault();
     props.onCashireFormSubmit(formData);
@@ -24,10 +29,13 @@ function AddCashir(props) {
     <form
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
       className="h-full"
+      style={{
+        direction: locale === "en" ? "ltr" : "rtl",
+      }}
+
     >
       <div>
         <TextField
-          dir="rtl" // Set the direction to RTL
           required
           id="outlined-required"
           size="small"
@@ -37,8 +45,6 @@ function AddCashir(props) {
           }} // Update the name state
           sx={{
             width: "30%",
-            direction: "rtl",
-            textAlign: "right",
             color: "#fff",
           }}
           label={
@@ -48,9 +54,6 @@ function AddCashir(props) {
             />
           }
           // defaultValue="Hello World"
-          InputProps={{
-            style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-          }}
         />
         <TextField
           dir="rtl" // Set the direction to RTL

@@ -12,6 +12,7 @@ import BillTable from "./BillTable";
 import { PrintRounded } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
+import Cookies from "js-cookie";
 function EditPartients(props) {
   const [value, setValue] = useState("");
   const [pharmaceuticalInputs, setPharmaceuticalInputs] = useState(true);
@@ -24,6 +25,9 @@ function EditPartients(props) {
   const [inTakeTimeOther, setInTakeTimeOther] = useState("");
   const [description, setDescription] = useState("");
   const [diagnosis, setDiagnosis] = useState([]);
+  const [locale, setLocale] = useState(() => {
+    return Cookies.get("locale") || "ar";
+  });
 
   const handeAddBill = () => {
     const dataBillForm = {};
@@ -99,6 +103,10 @@ function EditPartients(props) {
     <form
       className="fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
+      style={{
+        direction: locale === 'en' ? 'ltr' : 'rtl',
+      }}
+
     >
       <div className="w-full flex gap-9">
         {/* <div className=" w-2/6">
@@ -129,7 +137,6 @@ function EditPartients(props) {
         </h5>
       </div>
       <TextField
-        dir="rtl"
         onChange={(event) => {
           setDiagnosis(event.target.value);
         }}
@@ -137,17 +144,12 @@ function EditPartients(props) {
         size="small"
         sx={{
           width: "100%",
-          direction: "rtl",
-          textAlign: "right",
           color: "#fff",
         }}
         multiline
         rows={1}
         label="التشخيص النهائي"
         // defaultValue="Hello World"
-        InputProps={{
-          style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-        }}
       />
 
       <div className=" text-right flex w-full gap-[50%]">
@@ -180,7 +182,6 @@ function EditPartients(props) {
             {pharmaceuticalInputs ? (
               <>
                 <TextField
-                  dir="rtl"
                   required
                   id="outlined-required"
                   size="small"
@@ -191,20 +192,14 @@ function EditPartients(props) {
                   }} // Update the name state
                   sx={{
                     width: "42%",
-                    direction: "rtl",
-                    textAlign: "right",
                     color: "#fff",
                   }}
                   label="الجرعة"
                   // defaultValue="Hello World"
-                  InputProps={{
-                    style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-                  }}
                 />
                 {/* First TextField */}
 
                 <TextField
-                  dir="rtl"
                   required
                   id="outlined-required"
                   size="small"
@@ -214,17 +209,11 @@ function EditPartients(props) {
                   }}
                   sx={{
                     width: "41%",
-                    direction: "rtl",
-                    textAlign: "right",
                     color: "#fff",
-                  }}
-                  InputProps={{
-                    style: { textAlign: "right" },
                   }}
                 />
                 <span>X</span>
                 <TextField
-                  dir="rtl"
                   required
                   id="outlined-required"
                   size="small"
@@ -234,12 +223,7 @@ function EditPartients(props) {
                   }}
                   sx={{
                     width: "41%",
-                    direction: "rtl",
-                    textAlign: "right",
                     color: "#fff",
-                  }}
-                  InputProps={{
-                    style: { textAlign: "right" },
                   }}
                 />
               </>
@@ -275,7 +259,6 @@ function EditPartients(props) {
                 </FormControl>
                 {showInTakeOtherInput ? (
                   <TextField
-                    dir="rtl"
                     required
                     id="outlined-required"
                     size="small"
@@ -285,28 +268,20 @@ function EditPartients(props) {
                     }} // Update the name state
                     sx={{
                       width: "33%",
-                      direction: "rtl",
-                      textAlign: "right",
                       color: "#fff",
                     }}
                     label="ادخل وقت التناول"
                     // defaultValue="Hello World"
-                    InputProps={{
-                      style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-                    }}
                   />
                 ) : (
                   ""
                 )}
 
                 <TextField
-                  dir="rtl"
                   id="outlined-multiline-static"
                   size="small"
                   sx={{
                     width: "33%",
-                    direction: "rtl",
-                    textAlign: "right",
                     color: "#fff",
                   }}
                   onChange={(event) => {
@@ -314,9 +289,6 @@ function EditPartients(props) {
                   }}
                   label="ملاحضات اضافية"
                   // defaultValue="Hello World"
-                  InputProps={{
-                    style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-                  }}
                 />
               </>
             ) : (

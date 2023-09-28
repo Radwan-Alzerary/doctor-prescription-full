@@ -7,6 +7,7 @@ import BackGroundShadow from "../../components/pageCompond/BackGroundShadow";
 import NewPharmaceuticalForm from "../../components/pharmaceutical/NewPharmaceuticalForm";
 import axios from "axios";
 import { useIsAuthenticated } from "react-auth-kit";
+import EditPharmaceForm from "../../components/pharmaceutical/EditPharmaceForm";
 
 function CustomizedInputBase() {
   return (
@@ -28,6 +29,8 @@ function CustomizedInputBase() {
 function Pharmaceutical() {
   const { isAuthenticated } = useIsAuthenticated();
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [editingData, setEditingData] = useState(false);
   const [pharmaceList, setPharmaceList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   const [inTakeTimeList, setInTakeTime] = useState([]);
@@ -50,6 +53,22 @@ function Pharmaceutical() {
     // // Update the state or perform actions with the data as needed
     setAddFormData(data);
   };
+  const handleEditFormData = (data) => {
+    console.log(data);
+    axios
+      .post("http://localhost:5000/pharmaceutical/edit", data)
+      .then((response) => {
+        // Handle the response if needed
+        console.log("POST request successful:", response.data);
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+
+    // // Update the state or perform actions with the data as needed
+    setAddFormData(data);
+  };
 
   const onDeleteHandle = (id) => {
     console.log(id)
@@ -59,6 +78,23 @@ function Pharmaceutical() {
         // Handle success, e.g., show a success message or update the categories list
         getAllBill();
         // You might want to update the categories list here to reflect the changes
+      })
+      .catch((error) => {
+        // Handle error, e.g., show an error message
+        console.error(`Error deleting category with ID ${id}:`, error);
+      });
+
+    console.log(`Delete clicked for id ${id}`);
+  };
+  const onEditHandle = (id) => {
+    console.log(id)
+    axios
+      .get(`http://localhost:5000/pharmaceutical//getone/${id}`)
+      .then((response) => {
+        // Handle success, e.g., show a success message or update the categories list
+        console.log(response.data)
+        setShowEditForm(true)
+        setEditingData(response.data)
       })
       .catch((error) => {
         // Handle error, e.g., show an error message
@@ -112,12 +148,14 @@ function Pharmaceutical() {
 
   const handleHideClick = () => {
     setShowAddForm(false);
+    setShowEditForm(false)
   };
   return (
     <div className=" h-[92vh] overflow-auto">
       <CustomizedInputBase></CustomizedInputBase>
       <PharmaceuticalTable
         onDeleteHandle={onDeleteHandle}
+        onEditHandle={onEditHandle}
         rows={pharmaceList}
       ></PharmaceuticalTable>
       <div className=" absolute z-50 bottom-4 left-6">
@@ -139,6 +177,20 @@ function Pharmaceutical() {
       ) : (
         ""
       )}
+            {showEditForm ? (
+        <>
+          <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
+          <EditPharmaceForm
+            inTakeTimeList={inTakeTimeList}
+            onFormSubmit={handleEditFormData}
+            editingData={editingData}
+            categoryList={categoryList}
+          ></EditPharmaceForm>
+        </>
+      ) : (
+        ""
+      )}
+
     </div>
   );
 }

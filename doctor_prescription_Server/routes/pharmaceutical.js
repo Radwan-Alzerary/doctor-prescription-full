@@ -21,15 +21,35 @@ router.post("/new", async (req, res) => {
   }
 });
 
+router.post("/edit", async (req, res) => {
+  try {
+    const pharmaceuticalData = req.body;
+    console.log(pharmaceuticalData);
+    if (req.body.intaketime === "") {
+      delete pharmaceuticalData.intaketime;
+    }
+    const pharmaceutical = await Pharmaceutical.findByIdAndUpdate(
+      req.body.id,
+      pharmaceuticalData,
+      {
+        new: true,
+      }
+    );
+    res.status(201).json(pharmaceutical);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 // Get all categories
 router.get("/getall", async (req, res) => {
   try {
-    const pharmaceutical = await Pharmaceutical.find({active: { $ne: false }})
+    const pharmaceutical = await Pharmaceutical.find({ active: { $ne: false } })
       .populate("category")
       .populate("intaketime")
       .sort({ name: 1 }); // 1 for ascending order, -1 for descending order
 
-      // console.log(pharmaceutical)
+    // console.log(pharmaceutical)
     res.json(pharmaceutical);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -112,7 +132,7 @@ router.delete("/delete/:id", async (req, res) => {
   try {
     const pharmaceutical = await Pharmaceutical.findByIdAndUpdate(
       req.params.id,
-      {active : false}
+      { active: false }
     );
     if (!pharmaceutical) {
       return res.status(404).json({ error: "Pharmaceutical not found" });
@@ -122,7 +142,5 @@ router.delete("/delete/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-
 
 module.exports = router;

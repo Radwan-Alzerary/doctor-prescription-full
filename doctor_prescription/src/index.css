@@ -58,3 +58,13 @@ code {
 ::-webkit-scrollbar-thumb:hover {
   background: #a3a3a3;
 }
+
+
+.text-left-en {
+  text-align: left;
+}
+
+/* For Arabic (right alignment) */
+.text-right-ar {
+  text-align: right;
+}

@@ -10,6 +10,7 @@ import {
   TextField,
   useTheme,
 } from "@mui/material";
+import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 
 const ITEM_HEIGHT = 48;
@@ -23,6 +24,10 @@ const MenuProps = {
   },
 };
 function EditPatientForm(props) {
+  const [locale, setLocale] = useState(() => {
+    return Cookies.get("locale") || "ar";
+  });
+
   console.log(props.userEditData);
   const [personName, setPersonName] = useState([]);
   useEffect(() => {
@@ -78,13 +83,16 @@ function EditPatientForm(props) {
     <form
       className="fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
+      style={{
+        direction: locale === "en" ? "ltr" : "rtl",
+      }}
+
     >
       <div className=" text-right w-full">
         <h5>المعلومات الشخصية</h5>
       </div>
       <div className="flex gap-4  w-full">
         <TextField
-          dir="rtl" // Set the direction to RTL
           required
           id="outlined-required"
           size="small"
@@ -94,18 +102,12 @@ function EditPatientForm(props) {
           }} // Update the name state
           sx={{
             width: "30%",
-            direction: "rtl",
-            textAlign: "right",
             color: "#fff",
           }}
           label="اسم المريض"
           // defaultValue="Hello World"
-          InputProps={{
-            style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-          }}
         />
         <TextField
-          dir="rtl"
           // required
           id="outlined-required"
           size="small"
@@ -115,19 +117,13 @@ function EditPatientForm(props) {
           } // Update the name state
           sx={{
             width: "20%",
-            direction: "rtl",
-            textAlign: "right",
             color: "#fff",
           }}
           label="رقم الهاتف"
           // defaultValue="Hello World"
           type="number"
-          InputProps={{
-            style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-          }}
         />
         <TextField
-          dir="rtl"
           // required
           id="outlined-required"
           size="small"
@@ -137,15 +133,10 @@ function EditPatientForm(props) {
           }
           sx={{
             width: "50%",
-            direction: "rtl",
-            textAlign: "right",
             color: "#fff",
           }}
           label="العنوان"
           // defaultValue="Hello World"
-          InputProps={{
-            style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-          }}
         />
       </div>
       <div className=" text-right w-full">
@@ -170,7 +161,6 @@ function EditPatientForm(props) {
           </Select>
         </FormControl>
         <TextField
-          dir="rtl"
           // required
           id="outlined-required"
           size="small"
@@ -178,19 +168,13 @@ function EditPatientForm(props) {
           onChange={(event) => handleInputChange("age", event.target.value)} // Update the name state
           sx={{
             width: "33%",
-            direction: "rtl",
-            textAlign: "right",
             color: "#fff",
           }}
           label="العمر"
           type="number" // Specifies that the input should accept numeric values
           // defaultValue="Hello World"
-          InputProps={{
-            style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-          }}
         />
         <TextField
-          dir="rtl"
           // required
           id="outlined-required"
           size="small"
@@ -198,19 +182,13 @@ function EditPatientForm(props) {
           onChange={(event) => handleInputChange("weight", event.target.value)} // Update the name state
           sx={{
             width: "33%",
-            direction: "rtl",
-            textAlign: "right",
             color: "#fff",
           }}
           label="الوزن"
           type="number" // Specifies that the input should accept numeric values
           // defaultValue="Hello World"
-          InputProps={{
-            style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-          }}
         />
         <TextField
-          dir="rtl"
           // required
           id="outlined-required"
           size="small"
@@ -218,16 +196,11 @@ function EditPatientForm(props) {
           onChange={(event) => handleInputChange("length", event.target.value)} // Update the name state
           sx={{
             width: "33%",
-            direction: "rtl",
-            textAlign: "right",
             color: "#fff",
           }}
           label="الطول"
           type="number" // Specifies that the input should accept numeric values
           // defaultValue="Hello World"
-          InputProps={{
-            style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-          }}
         />
       </div>
       <div className=" text-right w-full">
@@ -270,7 +243,6 @@ function EditPatientForm(props) {
         <h5>التحسس من الادوية</h5>
       </div>
       <TextField
-        dir="rtl"
         // required
         id="outlined-required"
         size="small"
@@ -278,18 +250,12 @@ function EditPatientForm(props) {
         onChange={(event) => handleInputChange("fumbling", event.target.value)} // Update the name state
         sx={{
           width: "100%",
-          direction: "rtl",
-          textAlign: "right",
           color: "#fff",
         }}
         label="التحسس"
         // defaultValue="Hello World"
-        InputProps={{
-          style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-        }}
       />
       <TextField
-        dir="rtl"
         id="outlined-required"
         size="small"
         value={formData.description}
@@ -299,15 +265,10 @@ function EditPatientForm(props) {
         } // Update the name state
         sx={{
           width: "100%",
-          direction: "rtl",
-          textAlign: "right",
           color: "#fff",
         }}
         label="الملاحظات"
         // defaultValue="Hello World"
-        InputProps={{
-          style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-        }}
       />
 
       <Button
