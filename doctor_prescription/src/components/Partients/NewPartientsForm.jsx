@@ -51,7 +51,7 @@ function EditPartients(props) {
         setDose(value.dose);
       }
     }
-    console.log(value)
+    console.log(value);
     if (value.intaketime) {
       setInTakeTime(value.intaketime._id);
       setShowInTakeOtherInput(false);
@@ -63,7 +63,7 @@ function EditPartients(props) {
 
     if (value && value.doseCount) {
       const parts = value.doseCount.split("*");
-      console.log(value)
+      console.log(value);
 
       if (parts.length === 2) {
         setDoseNumFirst(parts[0]);
@@ -104,9 +104,8 @@ function EditPartients(props) {
       className="fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
       style={{
-        direction: locale === 'en' ? 'ltr' : 'rtl',
+        direction: locale === "en" ? "ltr" : "rtl",
       }}
-
     >
       <div className="w-full flex gap-9">
         {/* <div className=" w-2/6">
@@ -148,13 +147,26 @@ function EditPartients(props) {
         }}
         multiline
         rows={1}
-        label="التشخيص النهائي"
+        label={
+          <FormattedMessage
+            id={"Medical Diagnosis"}
+            defaultMessage="Hello, World!"
+          />
+        }
         // defaultValue="Hello World"
       />
 
       <div className=" text-right flex w-full gap-[50%]">
-        <h5>الوصفة الطبية</h5>
-        <h5>عدد الجرعات</h5>
+        <h5>
+          <FormattedMessage
+            id={"prescription"}
+            defaultMessage="Hello, World!"
+          />
+        </h5>
+        <h5>
+          {" "}
+          <FormattedMessage id={"No.dosage"} defaultMessage="Hello, World!" />
+        </h5>
       </div>
       <div className="w-full ">
         <div className="">
@@ -177,7 +189,17 @@ function EditPartients(props) {
                 setBillId("");
                 setInputValue(newInputValue);
               }}
-              renderInput={(params) => <TextField {...params} label="الدواء" />}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={
+                    <FormattedMessage
+                      id={"Drug name"}
+                      defaultMessage="Hello, World!"
+                    />
+                  }
+                />
+              )}
             />
             {pharmaceuticalInputs ? (
               <>
@@ -194,7 +216,12 @@ function EditPartients(props) {
                     width: "42%",
                     color: "#fff",
                   }}
-                  label="الجرعة"
+                  label={
+                    <FormattedMessage
+                      id={"Dosage"}
+                      defaultMessage="Hello, World!"
+                    />
+                  }
                   // defaultValue="Hello World"
                 />
                 {/* First TextField */}
@@ -236,13 +263,21 @@ function EditPartients(props) {
               <>
                 <FormControl className=" w-1/3 bg-whiteh" size="small">
                   <InputLabel id="demo-simple-select-helper-label">
-                    وقت التناول
+                    <FormattedMessage
+                      id={"Take time"}
+                      defaultMessage="Hello, World!"
+                    />
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-helper-label"
                     id="demo-simple-select-helper"
                     value={inTakeTime}
-                    label="وقت التناول"
+                    label={
+                      <FormattedMessage
+                        id={"Take time"}
+                        defaultMessage="Hello, World!"
+                      />
+                    }
                     onChange={(event) => {
                       setInTakeTime(event.target.value);
 
@@ -254,7 +289,13 @@ function EditPartients(props) {
                         {inTakeTime.name}
                       </MenuItem>
                     ))}
-                    <MenuItem value={"other"}>اخرى</MenuItem>
+                    <MenuItem value={"other"}>
+                      {" "}
+                      <FormattedMessage
+                        id={"other"}
+                        defaultMessage="Hello, World!"
+                      />
+                    </MenuItem>
                   </Select>
                 </FormControl>
                 {showInTakeOtherInput ? (
@@ -270,7 +311,13 @@ function EditPartients(props) {
                       width: "33%",
                       color: "#fff",
                     }}
-                    label="ادخل وقت التناول"
+                    label={
+                      <FormattedMessage
+                        id={"time to take"}
+                        defaultMessage="Hello, World!"
+                      />
+                    }
+
                     // defaultValue="Hello World"
                   />
                 ) : (

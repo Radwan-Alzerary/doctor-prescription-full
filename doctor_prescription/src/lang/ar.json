@@ -60,7 +60,9 @@
   "import 3000 pharmaceutical": "تحميل 3000 دواء",
   "old Password": "الرمز الحالي",
   "doctor name":"الاسم الحالي",
-  "account info":"معلومات الحساب"
+  "account info":"معلومات الحساب",
+  "other":"اخرى",
+  "time to take" :"وقت تناول"
 
 
 }

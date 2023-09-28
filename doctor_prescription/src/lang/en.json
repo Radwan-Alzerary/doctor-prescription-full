@@ -62,7 +62,7 @@
   "import 3000 pharmaceutical" : "import 3000 pharmaceutical",
   "old Password" : "current Password",
 "doctor name":"username",
- "account info":"account info"
-
-
+ "account info":"account info",
+ "other":"other",
+ "time to take" :"time to take"
 }
