@@ -58,9 +58,11 @@
   "Information edit" : "Information edit",
   "Secretary name" : "Secretary name",
   "email" : "email",
-  "Password" : "Password"
-
- 
+  "Password" : "Password",
+  "import 3000 pharmaceutical" : "import 3000 pharmaceutical",
+  "old Password" : "current Password",
+"doctor name":"username",
+ "account info":"account info"
 
 
 }

@@ -41,9 +41,10 @@ function PatientReport(props) {
   return (
     <div className="h-full ">
       <div
+      
         ref={componentRef}
         className="p-4 relative"
-        style={{ direction: "rtl", textAlign: "right" }}
+        style={{ direction: "rtl", textAlign: "right" ,paddingLeft:`${props.medicalReportsStype.xPading}px`,paddingRight:`${props.medicalReportsStype.xPading}px`}}
       >
         <img
           className="z-0 opacity-30 absolute flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5  rounded-xl "
@@ -63,14 +64,17 @@ function PatientReport(props) {
           }}
         >
           <div className="m-0">
-          {props.medicalReportsStype.mainNameHeaderknia}
-          <br></br>
-          {props.medicalReportsStype.signature}
+            {props.medicalReportsStype.mainNameHeaderknia}
+            <br></br>
+            {props.medicalReportsStype.signature}
           </div>
         </div>
         {/* Your content to be printed */}
         <div className="  h-[95vh] relative flex flex-col z-10 ">
           <div className="flex w-full  flex-col justify-center items-center">
+            <div
+              style={{ height: `${props.medicalReportsStype.topPading}px` }}
+            ></div>
             <h1
               className={` font-semibold mb-2`}
               style={{
@@ -84,7 +88,6 @@ function PatientReport(props) {
                 ""
               )}
             </h1>
-
             <h1
               className={` font-semibold mb-2`}
               style={{
@@ -147,74 +150,84 @@ function PatientReport(props) {
             <div className="w-full h-0.5 bg-slate-100 mt-2"></div>
           </div>
           <div className="flex justify-around items-center my-2 ">
-            <div className="flex gap-2">
-              <h2
-                className=" text-red-500 font-semibold"
-                style={{
-                  // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
-                  color: `${props.medicalReportsStype.patientsTitleColor}`,
-                }}
-              >
-                اسم المريض :{" "}
-              </h2>
-              <h2
-                className="font-semibold"
-                style={{
-                  // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
-                  color: `${props.medicalReportsStype.patientsSubTitleColor}`,
-                }}
-              >
-                {props.dataToPrint.patients.name}
-              </h2>
-            </div>
-
-            <div className="flex gap-2">
-              <h2
-                className=" text-red-500 font-semibold"
-                style={{
-                  // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
-                  color: `${props.medicalReportsStype.patientsTitleColor}`,
-                }}
-              >
-                العمر :{" "}
-              </h2>
-              <h2
-                className="font-semibold"
-                style={{
-                  // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
-                  color: `${props.medicalReportsStype.patientsSubTitleColor}`,
-                }}
-              >
-                {" "}
-                {props.dataToPrint.patients.age}
-              </h2>
-            </div>
-
-            <div className="flex gap-2">
-              <h2
-                className=" text-red-500 font-semibold"
-                style={{
-                  // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
-                  color: `${props.medicalReportsStype.patientsTitleColor}`,
-                }}
-              >
-                التاريخ :{" "}
-              </h2>
-              <h2
-                className="font-semibold"
-                style={{
-                  // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
-                  color: `${props.medicalReportsStype.patientsSubTitleColor}`,
-                }}
-              >
-                {" "}
-                {!props.dataToPrint.textonly
-                  ? new Date(
-                      props.dataToPrint.prescription.createdAt
-                    ).toLocaleDateString()
-                  : ""}
-              </h2>
-            </div>
+            {props.medicalReportsStype.nameActive ? (
+              <div className="flex gap-2">
+                <h2
+                  className=" text-red-500 font-semibold"
+                  style={{
+                    // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
+                    color: `${props.medicalReportsStype.patientsTitleColor}`,
+                  }}
+                >
+                  اسم المريض :{" "}
+                </h2>
+                <h2
+                  className="font-semibold"
+                  style={{
+                    // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
+                    color: `${props.medicalReportsStype.patientsSubTitleColor}`,
+                  }}
+                >
+                  {props.dataToPrint.patients.name}
+                </h2>
+              </div>
+            ) : (
+              ""
+            )}
+            {props.medicalReportsStype.ageActive ? (
+              <div className="flex gap-2">
+                <h2
+                  className=" text-red-500 font-semibold"
+                  style={{
+                    // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
+                    color: `${props.medicalReportsStype.patientsTitleColor}`,
+                  }}
+                >
+                  العمر :{" "}
+                </h2>
+                <h2
+                  className="font-semibold"
+                  style={{
+                    // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
+                    color: `${props.medicalReportsStype.patientsSubTitleColor}`,
+                  }}
+                >
+                  {" "}
+                  {props.dataToPrint.patients.age}
+                </h2>
+              </div>
+            ) : (
+              ""
+            )}
+            {props.medicalReportsStype.dateActive ? (
+              <div className="flex gap-2">
+                <h2
+                  className=" text-red-500 font-semibold"
+                  style={{
+                    // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
+                    color: `${props.medicalReportsStype.patientsTitleColor}`,
+                  }}
+                >
+                  التاريخ :{" "}
+                </h2>
+                <h2
+                  className="font-semibold"
+                  style={{
+                    // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
+                    color: `${props.medicalReportsStype.patientsSubTitleColor}`,
+                  }}
+                >
+                  {" "}
+                  {!props.dataToPrint.textonly
+                    ? new Date(
+                        props.dataToPrint.prescription.createdAt
+                      ).toLocaleDateString()
+                    : ""}
+                </h2>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
           <div className="w-full h-0.5 bg-slate-100 mb-2"></div>
 
@@ -513,6 +526,9 @@ function PatientReport(props) {
                 )}
               </div>
             </div>
+            <div
+              style={{ height: `${props.medicalReportsStype.bottomPading}px` }}
+            ></div>
           </div>
         </div>
       </div>

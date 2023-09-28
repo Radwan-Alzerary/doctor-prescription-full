@@ -24,6 +24,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import BiotechIcon from "@mui/icons-material/Biotech";
+import { useSpeechRecognition } from 'react-speech-recognition';
 
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import { Calendar } from "react-modern-calendar-datepicker";
@@ -584,6 +585,7 @@ function Partients() {
         // Handle the response if needed
         getPharmaceApi();
         getPatientsList();
+        setShowAddForm(false)
         console.log("POST request successful:", response.data);
       })
       .catch((error) => {
@@ -603,6 +605,8 @@ function Partients() {
         // Handle the response if needed
         getPharmaceApi();
         getPatientsList();
+        setShowPartientsEditForm(false)
+        setShowMidicalForm(false)
         console.log("POST request successful:", response.data);
       })
       .catch((error) => {
@@ -629,7 +633,7 @@ function Partients() {
     axios
       .get(`http://localhost:5000/prescription/getbills/${PrescriptionId}`)
       .then((response) => {
-        setPharmaceListInside(response.data); // Update the categories state with the fetched data
+        setPharmaceListInside(()=>response.data); // Update the categories state with the fetched data
         console.log(response.data);
       })
       .catch((error) => {
@@ -648,6 +652,7 @@ function Partients() {
       .then((response) => {
         // Handle the response if needed
         getPatientsList();
+        setShowPartientsAddForm(false)
       })
       .catch((error) => {
         // Handle errors if the request fails
@@ -680,6 +685,7 @@ function Partients() {
       .then((response) => {
         // Handle the response if needed
         getPatientsList();
+        setShowAddReportForm(false)
       })
       .catch((error) => {
         // Handle errors if the request fails
@@ -692,6 +698,7 @@ function Partients() {
       .then((response) => {
         // Handle the response if needed
         getPatientsList();
+        setShowLaporyReportForm(false)
       })
       .catch((error) => {
         // Handle errors if the request fails
@@ -751,6 +758,7 @@ function Partients() {
     <div className="p-7 relative h-[97vh] overflow-auto">
       <div className=" flex flex-col justify-center items-center p-4">
         <div className="flex bg-white px-4 py-1 rounded-3xl w-1/2">
+          
           <InputBase
             onChange={handeSearchInput}
             sx={{ ml: 1, flex: 1 }}

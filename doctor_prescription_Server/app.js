@@ -28,6 +28,7 @@ const Intaketime = require("./model/intaketime");
 const ConstantDiseases = require("./model/constantDiseases");
 const categories = require("./model/categories");
 const MedicalReportsStype = require("./model/medicalReportsStype"); // Make sure to adjust the path as needed
+const SystemSettingSchema = require("./model/systemSetting"); // Make sure to adjust the path as needed
 const socket = require("socket.io");
 
 //use flash
@@ -340,6 +341,30 @@ MedicalReportsStype.countDocuments()
   .catch((err) => {
     console.error("Error checking Storge collection:", err);
   });
+
+
+  SystemSettingSchema.countDocuments()
+  .then((count) => {
+    if (count === 0) {
+      // Create default documents
+      const systemSettingSchema = new SystemSettingSchema({
+      });
+
+      // Save the default documents to the database
+      systemSettingSchema
+        .save()
+        .then(() => {
+          console.log("Default defaultPaymentType 1 created.");
+        })
+        .catch((err) => {
+          console.error("Error creating defaultPaymentType Storge 1:", err);
+        });
+    }
+  })
+  .catch((err) => {
+    console.error("Error checking Storge collection:", err);
+  });
+
 
 const server = app.listen(port, () => {
   console.log(`Server started on port ${port}`);

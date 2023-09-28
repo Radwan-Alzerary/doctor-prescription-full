@@ -12,6 +12,7 @@ const PharmaceuticalSchema = new mongoose.Schema(
     anotherIntaketime: { type: String },
     manufactoy: { type: String },
     description: { type: String },
+    active:{type:Boolean,default:true}
   },
   {
     timestamps: true,

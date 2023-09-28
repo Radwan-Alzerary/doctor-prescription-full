@@ -215,7 +215,7 @@ export default function PharmaceuticalTable(props) {
                       <TableCell align="center">
                         <IconButton
                           onClick={() => {
-                            onDeleteHandle(row.name);
+                            onDeleteHandle(row._id);
                           }}
                           aria-label="delete"
                         >

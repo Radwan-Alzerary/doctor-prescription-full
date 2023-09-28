@@ -52,11 +52,15 @@
   "Dosage": "الجرعة",
   "No.dosage": "عدد الجرع",
   "Take time": "وقت التناول",
-  "Add new secretary" : "اضافة سكرتير جديد",
-  "Information edit" : "تعديل المعلومات",
-  "Secretary name" : "اسم السكرتير",
-  "email" : "الايميل",
-  "Password" : "الرمز السري"
+  "Add new secretary": "اضافة سكرتير جديد",
+  "Information edit": "تعديل المعلومات",
+  "Secretary name": "اسم السكرتير",
+  "email": "الايميل",
+  "Password": "الرمز السري",
+  "import 3000 pharmaceutical": "تحميل 3000 دواء",
+  "old Password": "الرمز الحالي",
+  "doctor name":"الاسم الحالي",
+  "account info":"معلومات الحساب"
 
 
 }

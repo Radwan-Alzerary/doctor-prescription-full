@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 const MedicalReportsStyleSchema = new mongoose.Schema(
   {
     name: { type: String },
+
+    xPading: { type: String, default: 0 },
+    topPading: { type: String, default: 0 },
+    bottomPading: { type: String, default: 0 },
+
     mainNameHeaderColor: { type: String, default: "#EF4444" },
     mainNameHeader: { type: String, default: "اسم الطبيب" },
     mainNameSize: { type: String, default: 1.5 },
@@ -55,7 +60,7 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
     tableHeaderActive: { type: Boolean, default: true },
     tableHeaderColor: {
       type: String,
-      default: "#fff",
+      default: "#000",
     },
     tableHeaderTextSize: {
       type: String,
@@ -63,7 +68,7 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
     },
     tableContentColor: {
       type: String,
-      default: "#fff",
+      default: "#000",
     },
     tableContentTextSize: {
       type: String,
@@ -90,7 +95,7 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
 
     patientsSubTitleColor: {
       type: String,
-      default: "#fff",
+      default: "#000",
     },
 
     nameActive: { type: Boolean, default: true },

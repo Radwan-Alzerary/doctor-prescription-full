@@ -1,9 +1,19 @@
 import { Button, TextField, Input } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-function FaieldEdit({ onFormSubmit, editFormTarget }) {
-  const [formData, setFormData] = useState({});
-
+function FaieldEdit({ onFormSubmit, editFormTarget,editFormData }) {
+  const [formData, setFormData] = useState({ });
+const [value,setValue] = useState("")
+  useEffect(()=>{
+    setValue(editFormData)
+    setFormData({
+      ...formData,
+      [editFormTarget]: editFormData,
+    }
+    );
+  
+  },[])
+console.log(formData)
   // Handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -36,14 +46,16 @@ function FaieldEdit({ onFormSubmit, editFormTarget }) {
           dir="rtl"
           id="outlined-required"
           size="small"
-          onChange={(event) => handleInputChange(editFormTarget, event.target.value)} // Update the name state
+          value={value}
+          onChange={(event) => {handleInputChange(editFormTarget, event.target.value) 
+          setValue(event.target.value)}} // Update the name state
           sx={{
             width: "100%",
             direction: "rtl",
             textAlign: "right",
             color: "#fff",
           }}
-          label="التقرير"
+          label="المعلومات"
           multiline
           rows={3}
           InputProps={{
@@ -58,7 +70,7 @@ function FaieldEdit({ onFormSubmit, editFormTarget }) {
         className="w-full"
         color="success"
       >
-        اضافة تقرير
+        تعديل المعلومات
       </Button>
     </form>
   );

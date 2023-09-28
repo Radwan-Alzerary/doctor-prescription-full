@@ -12,7 +12,6 @@ import BillTable from "./BillTable";
 import { PrintRounded } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
-
 function EditPartients(props) {
   const [value, setValue] = useState("");
   const [pharmaceuticalInputs, setPharmaceuticalInputs] = useState(true);
@@ -48,16 +47,19 @@ function EditPartients(props) {
         setDose(value.dose);
       }
     }
+    console.log(value)
+    if (value.intaketime) {
+      setInTakeTime(value.intaketime._id);
+      setShowInTakeOtherInput(false);
+    } else {
+      setInTakeTimeOther(value.anotherIntaketime);
+      setInTakeTime("other");
+      setShowInTakeOtherInput(true);
+    }
+
     if (value && value.doseCount) {
       const parts = value.doseCount.split("*");
-      if (value.intaketime) {
-        setInTakeTime(value.intaketime);
-        setShowInTakeOtherInput(false);
-      } else {
-        setInTakeTimeOther(value.anotherIntaketime);
-        setInTakeTime("other");
-        setShowInTakeOtherInput(true);
-      }
+      console.log(value)
 
       if (parts.length === 2) {
         setDoseNumFirst(parts[0]);
@@ -333,7 +335,6 @@ function EditPartients(props) {
           </div>
         </div>
       </div>
-
       <BillTable
         onBillInsideRemove={props.onBillInsideRemove}
         pharmaceList={props.pharmaceListInside}
@@ -342,7 +343,6 @@ function EditPartients(props) {
         <IconButton>
           {/* <PrintRounded color="action"></PrintRounded> */}
         </IconButton>
-
         <Button
           sx={{ width: "33%" }}
           type="submit"

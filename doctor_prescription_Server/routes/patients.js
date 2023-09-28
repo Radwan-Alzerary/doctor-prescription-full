@@ -2,7 +2,7 @@ const router = require("express").Router();
 const Prescription = require("../model/prescription"); // Make sure to adjust the path as needed
 
 const Patients = require("../model/patients"); // Make sure to adjust the path as needed
-
+const ConstantDiseases = require("../model/constantDiseases")
 // Add a new patients
 router.post("/new", async (req, res) => {
   const patientsDate = {};
@@ -15,18 +15,25 @@ router.post("/new", async (req, res) => {
     patientsDate.length = req.body.length;
     patientsDate.weight = req.body.weight;
     patientsDate.description = req.body.description;
-    const diseasesArrayId = [];
-    const objects = req.body.diseases.split("},{");
-    // Add square brackets to create a valid JSON array
-    const jsonArrayString = "[" + objects.join("},{") + "]";
-    // Parse the JSON array string into a JavaScript array
-    const diseasesArray = JSON.parse(jsonArrayString);
-    diseasesArray.map((diseases, index) => {
-      diseasesArrayId.push(diseases.constantDiseasesId);
-      console.log(diseases.constantDiseasesId);
-    });
-    patientsDate.diseases = diseasesArrayId;
-    console.log(patientsDate);
+
+    const diseasesArray = req.body.diseases;
+    const resultArray = [];
+
+    for (const diseaseName of diseasesArray) {
+      const existingDisease = await ConstantDiseases.findOne({ name: diseaseName });
+
+      if (existingDisease) {
+        resultArray.push(existingDisease._id.toString());
+      } else {
+        const newDisease = { name: diseaseName };
+        const insertResult = new ConstantDiseases(newDisease);
+        await insertResult.save()
+        resultArray.push(insertResult._id.toString());
+      }
+    }
+    
+    patientsDate.diseases = resultArray;
+    console.log(resultArray);
     const patients = new Patients(patientsDate);
     await patients.save();
     res.status(201).json(patients);

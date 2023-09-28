@@ -14,6 +14,7 @@ const VoiceRecoed = () => {
   const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
     useSpeechRecognition();
   useEffect(() => {
+    console.log(transcript)
     if (selector === "input1") {
       setValue1(transcript);
     } else if (selector === "input2") {

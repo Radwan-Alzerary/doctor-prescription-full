@@ -4,6 +4,7 @@ const {
   cashirRegister,
   register,
   login,
+  editAcount
 } = require("../controllers/authControllers");
 const { checkUser } = require("../middlewares/authMiddleware");
 const User = require("../model/user");
@@ -25,6 +26,7 @@ const upload = multer({ storage: storage });
 
 router.post("/", checkUser);
 router.post("/register", register);
+router.post("/edit", editAcount);
 router.post("/addcashire", cashirRegister);
 router.post("/login", login);
 router.get("/checkAvailable", async (req, res, next) => {

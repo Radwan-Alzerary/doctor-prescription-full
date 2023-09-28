@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 function Login() {
   const [cookies] = useCookies([]);
   const navigate = useNavigate();
-  const [errorMsg, setErrorMsg] =useState("")
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     if (cookies.jwt) {
@@ -32,16 +32,23 @@ function Login() {
       );
       if (data) {
         if (data.errors) {
+          console.log(data.errors);
           const { email, password } = data.errors;
-          if (email) generateError(email);
-          else if (password) generateError(password);
+          if (email) {
+            setErrorMsg(email);
+
+            generateError(email);
+          } else if (password) {
+            setErrorMsg(password);
+            generateError(password);
+          }
         } else {
           navigate("/");
         }
       }
     } catch (ex) {
       console.log(ex);
-      setErrorMsg(ex)
+      setErrorMsg(ex);
     }
   };
   return (
@@ -76,14 +83,18 @@ function Login() {
                 />
                 <button class="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                   <span class="ml-3">تسجيل الدخول</span>
-                  <p>{errorMsg}</p>
                 </button>
+                <p className=" text-center text-red-500">{errorMsg}</p>
               </div>
             </div>
           </div>
         </div>
         <div className=" w-2/5 h-screen">
-          <img className="w-full h-full" src={process.env.PUBLIC_URL + "/loginSideImage.jpg"} alt=""></img>
+          <img
+            className="w-full h-full"
+            src={process.env.PUBLIC_URL + "/loginSideImage.jpg"}
+            alt=""
+          ></img>
         </div>
       </div>
       {/* <ToastContainer /> */}

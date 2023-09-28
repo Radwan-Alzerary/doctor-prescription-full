@@ -2,9 +2,8 @@ const router = require("express").Router();
 
 const Pharmaceutical = require("../model/pharmaceutical"); // Make sure to adjust the path as needed
 const Patients = require("../model/patients"); // Make sure to adjust the path as needed
+const SystemSetting = require("../model/systemSetting"); // Make sure to adjust the path as needed
 const fs = require("fs");
-
-
 
 // Add a new category
 router.post("/new", async (req, res) => {
@@ -25,8 +24,13 @@ router.post("/new", async (req, res) => {
 // Get all categories
 router.get("/getall", async (req, res) => {
   try {
-    const categories = await Pharmaceutical.find().populate("category").populate("intaketime");
-    res.json(categories);
+    const pharmaceutical = await Pharmaceutical.find({active: { $ne: false }})
+      .populate("category")
+      .populate("intaketime")
+      .sort({ name: 1 }); // 1 for ascending order, -1 for descending order
+
+      // console.log(pharmaceutical)
+    res.json(pharmaceutical);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -36,7 +40,7 @@ router.get("/import", async (req, res) => {
   try {
     // Replace 'your-csv-file.csv' with the path to your CSV file
     const csvFilePath = "pharmacy.csv";
-    console.log(process.cwd())
+    console.log(process.cwd());
     // Read the CSV file
     const data = fs.readFileSync(csvFilePath, "utf8");
 
@@ -63,13 +67,13 @@ router.get("/import", async (req, res) => {
     }
 
     console.log("Import completed.");
+    await SystemSetting.findOneAndUpdate({}, { pharmaceuticalLoded: true });
     res.status(200).json({ message: "Import completed." });
   } catch (error) {
     console.error(`Error reading CSV file: ${error.message}`);
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 // Get one Pharmaceutical by ID
 router.get("/getone/:id", async (req, res) => {
@@ -106,8 +110,9 @@ router.put("/edit/:id", async (req, res) => {
 // Delete one Pharmaceutical by ID
 router.delete("/delete/:id", async (req, res) => {
   try {
-    const pharmaceutical = await Pharmaceutical.findByIdAndDelete(
-      req.params.id
+    const pharmaceutical = await Pharmaceutical.findByIdAndUpdate(
+      req.params.id,
+      {active : false}
     );
     if (!pharmaceutical) {
       return res.status(404).json({ error: "Pharmaceutical not found" });
@@ -117,5 +122,7 @@ router.delete("/delete/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
 
 module.exports = router;

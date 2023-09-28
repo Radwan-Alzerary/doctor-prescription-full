@@ -85,6 +85,7 @@ function NewPharmaceuticalForm(props) {
           required
           id="outlined-required"
           size="small"
+          value={formData.name}
           onChange={(event) => handleInputChange("name", event.target.value)} // Update the name state
           sx={{
             width: "50%",
@@ -104,6 +105,8 @@ function NewPharmaceuticalForm(props) {
             labelId="demo-simple-select-helper-label"
             id="demo-simple-select-helper"
             // value={age}
+            value={formData.category}
+
             onChange={(event) =>
               handleInputChange("category", event.target.value)
             } // Update the name state
@@ -126,6 +129,8 @@ function NewPharmaceuticalForm(props) {
           required
           id="outlined-required"
           size="small"
+          value={formData.dose}
+
           onChange={(event) => handleInputChange("dose", event.target.value)} // Update the name state
           sx={{
             width: "42%",
@@ -144,6 +149,8 @@ function NewPharmaceuticalForm(props) {
           required
           id="outlined-required"
           size="small"
+          value={formData.doseCount}
+
           onChange={(event) =>
             handleInputChange("doseCount", event.target.value)
           } // Update the name state
@@ -170,6 +177,7 @@ function NewPharmaceuticalForm(props) {
             id="demo-simple-select-helper"
             // value={age}
             label="وقت التناول"
+
             onChange={(event) =>
               handleInTakeTimeInputChange(event.target.value)
             } // Update the name state
@@ -193,6 +201,8 @@ function NewPharmaceuticalForm(props) {
           }}
           label="شركة الصنع"
           // defaultValue="Hello World"
+          value={formData.manufactoy}
+
           onChange={(event) =>
             handleInputChange("manufactoy", event.target.value)
           } // Update the name state
@@ -209,6 +219,8 @@ function NewPharmaceuticalForm(props) {
             required
             id="outlined-required"
             size="small"
+            value={formData.anotherIntaketime}
+
             onChange={(event) =>
               handleInputChange("anotherIntaketime", event.target.value)
             } // Update the name state
@@ -235,6 +247,8 @@ function NewPharmaceuticalForm(props) {
         dir="rtl"
         id="outlined-required"
         size="small"
+        value={formData.description}
+
         onChange={(event) =>
           handleInputChange("description", event.target.value)
         } // Update the name state
@@ -257,7 +271,7 @@ function NewPharmaceuticalForm(props) {
         className="w-full"
         color="success"
       >
-        اضافة مريض
+        اتمام
       </Button>
     </form>
   );

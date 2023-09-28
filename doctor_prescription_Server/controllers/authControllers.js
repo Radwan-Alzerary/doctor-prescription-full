@@ -38,6 +38,7 @@ module.exports.cashirRegister = async (req, res, next) => {
   try {
     console.log(req.body)
     const { userName, email, password } = req.body;
+    console.log(req.body)
     const user = await User.create({
       email,
       password,
@@ -86,6 +87,39 @@ module.exports.register = async (req, res, next) => {
     res.json({ errors, created: false });
   }
 };
+
+module.exports.editAcount = async (req, res, next) => {
+  try {
+    const userId = req.body.id; // Assuming the user ID is passed in the URL parameter
+    const { userName, email, password } = req.body;
+    console.log(req.body)
+    // Update user information using the User.findByIdAndUpdate method or a similar method
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          userName,
+          email,
+          // password,
+        },
+      },
+      { new: true } // To get the updated user object
+    );
+
+    if (!updatedUser) {
+      // Handle the case where the user with the given ID was not found
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ user: updatedUser, updated: true });
+
+  } catch (err) {
+    console.log(err);
+    const errors = handleErrors(err);
+    res.json({ errors, created: false });
+  }
+};
+
 
 module.exports.login = async (req, res) => {
   const { email, password } = req.body;

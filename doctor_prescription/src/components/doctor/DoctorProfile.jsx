@@ -13,6 +13,7 @@ function DoctorProfile() {
   const [cookies, removeCookie] = useCookies([]);
   const [showEditForm, setShowEditForm] = useState(false);
   const [editFormTarget, setEditFormTarget] = useState("");
+  const [editFormData, setEditFormData] = useState("");
   const [doctor, setDoctorData] = useState([]);
   const [file, setFile] = useState(null);
 
@@ -156,7 +157,12 @@ function DoctorProfile() {
           </div>{" "}
           <div>
             <p>تحميل صورة شخصية</p>
-            <input type="file" className="" accept="image/*" onChange={handleFileChange} />
+            <input
+              type="file"
+              className=""
+              accept="image/*"
+              onChange={handleFileChange}
+            />
           </div>
           <div class="space-x-8 flex justify-between mt-32 md:mt-0 md:justify-center">
             {/* <button class="text-white py-2 px-4 uppercase rounded bg-blue-400 hover:bg-blue-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
@@ -174,8 +180,10 @@ function DoctorProfile() {
           <div className="flex gap-2 justify-center items-center">
             <IconButton
               onClick={() => {
-                setShowEditForm(true);
                 setEditFormTarget("userName");
+                setEditFormData(doctor.userName);
+                setShowEditForm(true);
+
               }}
             >
               <Edit></Edit>
@@ -187,8 +195,10 @@ function DoctorProfile() {
           <div className="flex justify-center items-center">
             <IconButton
               onClick={() => {
-                setShowEditForm(true);
                 setEditFormTarget("Specialization");
+                setEditFormData(doctor.Specialization);
+                setShowEditForm(true);
+
               }}
             >
               <Edit></Edit>
@@ -198,8 +208,10 @@ function DoctorProfile() {
           <div className="flex justify-center items-center">
             <IconButton
               onClick={() => {
-                setShowEditForm(true);
                 setEditFormTarget("university");
+                setEditFormData(doctor.university);
+                setShowEditForm(true);
+
               }}
             >
               <Edit></Edit>
@@ -212,6 +224,7 @@ function DoctorProfile() {
               onClick={() => {
                 setShowEditForm(true);
                 setEditFormTarget("adresses");
+                setEditFormData(doctor.adresses);
               }}
             >
               <Edit></Edit>
@@ -226,6 +239,7 @@ function DoctorProfile() {
               onClick={() => {
                 setShowEditForm(true);
                 setEditFormTarget("description");
+                setEditFormData(doctor.description);
               }}
             >
               <Edit></Edit>
@@ -245,6 +259,7 @@ function DoctorProfile() {
           ></BackGroundShadow>
           <FaieldEdit
             editFormTarget={editFormTarget}
+            editFormData={editFormData}
             onFormSubmit={onFormSubmit}
           ></FaieldEdit>
         </>

@@ -187,7 +187,7 @@ function PrescriptionsDesign() {
       {loading ? (
         <div className="flex justify-around p-3">
           <div className="">
-          <div className="flex w-full mt-4 font-bold">
+            <div className="flex w-full mt-4 font-bold">
               <p>معلومات الكنية</p>
             </div>
             <div className="flex justify-between items-center gap-10">
@@ -202,7 +202,10 @@ function PrescriptionsDesign() {
               <TextField
                 value={medicalReportsStype.mainNameHeaderkniaSize}
                 onChange={(event) => {
-                  handleInputChange("mainNameHeaderkniaSize", event.target.value);
+                  handleInputChange(
+                    "mainNameHeaderkniaSize",
+                    event.target.value
+                  );
                 }}
                 type="number"
                 label="حجم الخط"
@@ -1184,6 +1187,49 @@ function PrescriptionsDesign() {
                   handleInputChange("signatureY", event.target.value);
                 }}
                 label="Y"
+                size="small"
+                sx={{ width: "20%" }}
+              ></TextField>
+            </div>
+
+            <div className="flex w-full  mt-4 font-bold">
+              <p>معلومات الصفحة</p>
+            </div>
+            <div className="flex">
+              <TextField
+                value={medicalReportsStype.backgroundColor}
+                onChange={(event) => {
+                  handleInputChange("backgroundColor", event.target.value);
+                }}
+                label="لون الصفحة"
+                size="small"
+                type="color"
+                sx={{ width: "30%" }}
+              ></TextField>
+              <TextField
+                value={medicalReportsStype.xPading}
+                onChange={(event) => {
+                  handleInputChange("xPading", event.target.value);
+                }}
+                label="تقليص الجوانب"
+                size="small"
+                sx={{ width: "20%" }}
+              ></TextField>
+              <TextField
+                value={medicalReportsStype.topPading}
+                onChange={(event) => {
+                  handleInputChange("topPading", event.target.value);
+                }}
+                label="تقليص علوي"
+                size="small"
+                sx={{ width: "20%" }}
+              ></TextField>
+              <TextField
+                value={medicalReportsStype.bottomPading}
+                onChange={(event) => {
+                  handleInputChange("bottomPading", event.target.value);
+                }}
+                label="تقليص سفلي"
                 size="small"
                 sx={{ width: "20%" }}
               ></TextField>

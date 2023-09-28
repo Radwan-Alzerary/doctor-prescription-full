@@ -160,7 +160,11 @@ function App() {
                       path="doctorprofile"
                       element={<DoctorProfile />}
                     ></Route>
-                    <Route exact path="setting" element={<Setting />}></Route>
+                    <Route
+                      exact
+                      path="setting"
+                      element={<Setting currentUser={currentUser} />}
+                    ></Route>
                   </Route>
                 </Routes>
 

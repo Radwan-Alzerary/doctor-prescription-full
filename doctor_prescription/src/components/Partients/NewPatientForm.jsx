@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Box,
   Button,
   Chip,
@@ -25,18 +26,13 @@ const MenuProps = {
 
 // اضافة مريض جديد
 function NewPatientForm(props) {
-  const [personName, setPersonName] = React.useState([]);
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
+  const [personName, setPersonName] = useState([]);
+  const [historyPatient,setHistoryPatient] = useState([])
 
-    // Split the selected value into an array of selected IDs and names
-    const selectedValues = typeof value === "string" ? value.split(",") : value;
-    setPersonName(selectedValues);
+  const handleChange = (event,value) => {
     setFormData({
       ...formData,
-      diseases: selectedValues.join(","), // Assuming you want them as a comma-separated string
+      diseases: value, // Assuming you want them as a comma-separated string
     });
   };
 
@@ -48,7 +44,7 @@ function NewPatientForm(props) {
     age: "",
     weight: "",
     description: "",
-    diseases: "",
+    diseases: [],
   });
 
   const handleSubmit = (event) => {
@@ -217,7 +213,7 @@ function NewPatientForm(props) {
           <div className=" text-right w-full">
             <h5>التاريخ المرضي</h5>
           </div>
-          <FormControl sx={{ m: 1, width: "100%" }}>
+          {/* <FormControl sx={{ m: 1, width: "100%" }}>
             <InputLabel id="demo-multiple-chip-label">الامراض</InputLabel>
             <Select
               labelId="demo-multiple-chip-label"
@@ -248,7 +244,40 @@ function NewPatientForm(props) {
                 </MenuItem>
               ))}
             </Select>
-          </FormControl>
+          </FormControl> */}
+          <div className=" w-full">
+            <Autocomplete
+              multiple
+              sx={{ width: "100%" }}
+              id="tags-filled"
+              onChange={(event, newValue) => {
+                handleChange(event, newValue)
+                setHistoryPatient(newValue)
+              }}
+              options={props.constantDiseases.map((option) => option.name)}
+              // defaultValue={[top100Films[13].title]}
+              freeSolo
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip
+                    variant="outlined"
+                    color="success"
+                    label={option}
+                    {...getTagProps({ index })}
+                  />
+                ))
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  sx={{ width: "100%" }}
+                  label="الامراض"
+                  placeholder="Favorites"
+                />
+              )}
+            />
+          </div>
+
           <div className=" text-right w-full">
             <h5>التحسس من الادوية</h5>
           </div>
@@ -278,7 +307,7 @@ function NewPatientForm(props) {
       )}
       <TextField
         dir="rtl"
-        id="outlined-required"
+        // id="outlined-required"
         size="small"
         onChange={(event) =>
           handleInputChange("description", event.target.value)

@@ -9,14 +9,12 @@ const Pharmaceutical = require("../model/pharmaceutical"); // Make sure to adjus
 
 router.post("/postpharmaceutical", async (req, res) => {
   try {
-    // console.log(req.body);
     const billData = {};
     if (req.body.inTakeTime == "other") {
       billData.anotherIntaketime = req.body.inTakeTimeOther;
-    } else if (billData.inTakeTime) {
+    } else  {
       billData.inTakeTime = req.body.inTakeTime;
     }
-
     billData.dose = req.body.dose;
     billData.doseNum = req.body.doseNum;
     billData.description = req.body.description;
@@ -27,7 +25,7 @@ router.post("/postpharmaceutical", async (req, res) => {
       const newPharmaceutical = new Pharmaceutical({
         name: req.body.billName,
         dose: billData.dose,
-        inTakeTime: billData.inTakeTime,
+        intaketime: billData.inTakeTime,
         anotherIntaketime: billData.anotherIntaketime,
         doseCount: billData.doseNum,
         description: billData.description,
@@ -45,16 +43,16 @@ router.post("/postpharmaceutical", async (req, res) => {
       { _id: billData.id },
       {
         dose: billData.dose,
-        inTakeTime: billData.inTakeTime,
+        intaketime: billData.inTakeTime,
         anotherIntaketime: billData.anotherIntaketime,
         doseCount: billData.doseNum,
         description: billData.description,
       },
       { new: true } // Set to true to return the updated document
     );
-    console.log("updatedPharmaceutical : ");
+    // console.log("updatedPharmaceutical : ");
 
-    console.log(billData);
+    // console.log(billData);
     await prescription.save();
     // console.log(prescription);
     res.status(201).json("prescription");
@@ -93,7 +91,7 @@ router.delete(
 
 router.post("/ubdateData", async (req, res) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     const prescription = await Prescription.findById(req.body.data.id);
 
     if (!prescription) {
@@ -112,7 +110,7 @@ router.post("/ubdateData", async (req, res) => {
 
 router.post("/new", async (req, res) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     const patientId = req.body.PartientsId; // Assuming you have prescription data in req.body
 
     // Create a new prescription
@@ -129,7 +127,7 @@ router.post("/new", async (req, res) => {
     }
 
     // Push the new prescription's ID into the patient's prescription field
-    console.log(newPrescription._id.toString());
+    // console.log(newPrescription._id.toString());
     patient.prescription.push(newPrescription._id.toString());
 
     // Save the updated patient
@@ -152,7 +150,7 @@ router.get("/getbills/:prescriptionId", async (req, res) => {
     const prescription = await Prescription.findById(prescriptionId).populate(
       "pharmaceutical.id"
     );
-    console.log(prescription);
+    // console.log(prescription);
     res.json(prescription.pharmaceutical);
   } catch (error) {
     res.status(500).json({ error: error.message });

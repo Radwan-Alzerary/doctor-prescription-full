@@ -27,7 +27,6 @@ function CustomizedInputBase() {
 
 function Pharmaceutical() {
   const { isAuthenticated } = useIsAuthenticated();
-
   const [showAddForm, setShowAddForm] = useState(false);
   const [pharmaceList, setPharmaceList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
@@ -52,6 +51,23 @@ function Pharmaceutical() {
     setAddFormData(data);
   };
 
+  const onDeleteHandle = (id) => {
+    console.log(id)
+    axios
+      .delete(`http://localhost:5000/pharmaceutical/delete/${id}`)
+      .then((response) => {
+        // Handle success, e.g., show a success message or update the categories list
+        getAllBill();
+        // You might want to update the categories list here to reflect the changes
+      })
+      .catch((error) => {
+        // Handle error, e.g., show an error message
+        console.error(`Error deleting category with ID ${id}:`, error);
+      });
+
+    console.log(`Delete clicked for id ${id}`);
+  };
+
   useEffect(() => {
     axios
       .get("http://localhost:5000/category/getall")
@@ -65,6 +81,9 @@ function Pharmaceutical() {
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
 
   useEffect(() => {
+    getAllBill();
+  }, []); // The empty array [] means this effect runs only once, like componentDidMount
+  const getAllBill = () => {
     axios
       .get("http://localhost:5000/pharmaceutical/getall")
       .then((response) => {
@@ -74,8 +93,7 @@ function Pharmaceutical() {
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
-  }, []); // The empty array [] means this effect runs only once, like componentDidMount
-
+  };
   useEffect(() => {
     axios
       .get("http://localhost:5000/intaketime/getall")
@@ -98,7 +116,10 @@ function Pharmaceutical() {
   return (
     <div className=" h-[92vh] overflow-auto">
       <CustomizedInputBase></CustomizedInputBase>
-      <PharmaceuticalTable rows={pharmaceList}></PharmaceuticalTable>
+      <PharmaceuticalTable
+        onDeleteHandle={onDeleteHandle}
+        rows={pharmaceList}
+      ></PharmaceuticalTable>
       <div className=" absolute z-50 bottom-4 left-6">
         <Fab onClick={handleAddButtonClick} color="secondary" aria-label="add">
           <Add />
