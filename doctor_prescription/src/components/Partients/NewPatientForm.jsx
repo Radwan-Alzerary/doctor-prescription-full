@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
+import { FormattedMessage } from "react-intl";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -28,12 +29,13 @@ const MenuProps = {
 // اضافة مريض جديد
 function NewPatientForm(props) {
   const [personName, setPersonName] = useState([]);
-  const [historyPatient,setHistoryPatient] = useState([])
+  const [historyPatient, setHistoryPatient] = useState([]);
+
   const [locale, setLocale] = useState(() => {
     return Cookies.get("locale") || "ar";
   });
 
-  const handleChange = (event,value) => {
+  const handleChange = (event, value) => {
     setFormData({
       ...formData,
       diseases: value, // Assuming you want them as a comma-separated string
@@ -69,9 +71,9 @@ function NewPatientForm(props) {
       className="fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
       style={{
-        direction: locale === 'en' ? 'ltr' : 'rtl',
+        direction: locale === "en" ? "ltr" : "rtl",
       }}
-  >
+    >
       <div className=" text-right w-full">
         <h5>المعلومات الشخصية</h5>
       </div>
@@ -86,7 +88,12 @@ function NewPatientForm(props) {
             textAlign: "right",
             color: "#fff",
           }}
-          label="اسم المريض"
+          label={
+            <FormattedMessage
+              id={"New Patient"}
+              defaultMessage="Hello, World!"
+            />
+          }
           // defaultValue="Hello World"
           InputProps={{
             style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
@@ -104,7 +111,12 @@ function NewPatientForm(props) {
             textAlign: "right",
             color: "#fff",
           }}
-          label="رقم الهاتف"
+          label={
+            <FormattedMessage
+              id={"phone number"}
+              defaultMessage="Hello, World!"
+            />
+          }
           // defaultValue="Hello World"
           type="number"
           InputProps={{
@@ -123,7 +135,9 @@ function NewPatientForm(props) {
             textAlign: "right",
             color: "#fff",
           }}
-          label="العنوان"
+          label={
+            <FormattedMessage id={"Address"} defaultMessage="Hello, World!" />
+          }
           // defaultValue="Hello World"
         />
       </div>
@@ -141,11 +155,23 @@ function NewPatientForm(props) {
             onChange={(event) =>
               handleInputChange("gender", event.target.value)
             } // Update the name state
-            label="الجنس"
+            label={
+              <FormattedMessage id={"Gender"} defaultMessage="Hello, World!" />
+            }
             // onChange={handleAgeChange}
           >
-            <MenuItem value={"ذكر"}>ذكر</MenuItem>
-            <MenuItem value={"انثى"}>انثى</MenuItem>
+            <MenuItem value={"ذكر"}>
+              {" "}
+              <FormattedMessage
+                id={"male"}
+                defaultMessage="Hello, World!"
+              />
+            </MenuItem>
+            <MenuItem value={"انثى"}>              <FormattedMessage
+                id={"female"}
+                defaultMessage="Hello, World!"
+              />
+</MenuItem>
           </Select>
         </FormControl>
         <TextField
@@ -156,7 +182,7 @@ function NewPatientForm(props) {
             width: "33%",
             color: "#fff",
           }}
-          label="العمر"
+          label={<FormattedMessage id={"Age"} defaultMessage="Hello, World!" />}
           type="number" // Specifies that the input should accept numeric values
           // defaultValue="Hello World"
         />
@@ -169,7 +195,9 @@ function NewPatientForm(props) {
             width: "33%",
             color: "#fff",
           }}
-          label="الوزن"
+          label={
+            <FormattedMessage id={"Weight"} defaultMessage="Hello, World!" />
+          }
           type="number" // Specifies that the input should accept numeric values
           // defaultValue="Hello World"
         />
@@ -183,7 +211,9 @@ function NewPatientForm(props) {
             width: "33%",
             color: "#fff",
           }}
-          label="الطول"
+          label={
+            <FormattedMessage id={"Length"} defaultMessage="Hello, World!" />
+          }
           type="number" // Specifies that the input should accept numeric values
           // defaultValue="Hello World"
         />
@@ -191,7 +221,13 @@ function NewPatientForm(props) {
       {props.currentUser.role === "doctor" ? (
         <>
           <div className=" text-right w-full">
-            <h5>التاريخ المرضي</h5>
+            <h5>
+              {" "}
+              <FormattedMessage
+                id={"Medical History"}
+                defaultMessage="Hello, World!"
+              />
+            </h5>
           </div>
           {/* <FormControl sx={{ m: 1, width: "100%" }}>
             <InputLabel id="demo-multiple-chip-label">الامراض</InputLabel>
@@ -231,8 +267,8 @@ function NewPatientForm(props) {
               sx={{ width: "100%" }}
               id="tags-filled"
               onChange={(event, newValue) => {
-                handleChange(event, newValue)
-                setHistoryPatient(newValue)
+                handleChange(event, newValue);
+                setHistoryPatient(newValue);
               }}
               options={props.constantDiseases.map((option) => option.name)}
               // defaultValue={[top100Films[13].title]}
@@ -251,7 +287,12 @@ function NewPatientForm(props) {
                 <TextField
                   {...params}
                   sx={{ width: "100%" }}
-                  label="الامراض"
+                  label={
+                    <FormattedMessage
+                      id={"Present Medical"}
+                      defaultMessage="Hello, World!"
+                    />
+                  }
                   placeholder="Favorites"
                 />
               )}
@@ -259,7 +300,13 @@ function NewPatientForm(props) {
           </div>
 
           <div className=" text-right w-full">
-            <h5>التحسس من الادوية</h5>
+            <h5>
+              {" "}
+              <FormattedMessage
+                id={"Allergy to medications"}
+                defaultMessage="Hello, World!"
+              />
+            </h5>
           </div>
           <TextField
             dir="rtl"
@@ -273,7 +320,12 @@ function NewPatientForm(props) {
               width: "100%",
               color: "#fff",
             }}
-            label="التحسس"
+            label={
+              <FormattedMessage
+                id={"Allergy to medications"}
+                defaultMessage="Hello, World!"
+              />
+            }
             // defaultValue="Hello World"
           />
         </>
@@ -290,7 +342,7 @@ function NewPatientForm(props) {
           width: "100%",
           color: "#fff",
         }}
-        label="الملاحظات"
+        label={<FormattedMessage id={"Notes"} defaultMessage="Hello, World!" />}
         // defaultValue="Hello World"
       />
 
@@ -300,7 +352,7 @@ function NewPatientForm(props) {
         className="w-full"
         color="success"
       >
-        اضافة مريض
+        <FormattedMessage id={"New Patient"} defaultMessage="Hello, World!" />
       </Button>
     </form>
   );

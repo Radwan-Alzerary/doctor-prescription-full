@@ -62,7 +62,12 @@
   "doctor name":"الاسم الحالي",
   "account info":"معلومات الحساب",
   "other":"اخرى",
-  "time to take" :"وقت تناول"
-
-
+  "time to take" :"وقت تناول",
+  "New Patient" : "اضافة مريض",
+  "phone number":"رقم الهاتف",
+  "Allergy to medications":"التحسس من الادوية",
+  "Present Medical" : "الامراض",
+  "Notes":"الملاحضات",
+  "male":"ذكر",
+  "female":"انثى"
 }

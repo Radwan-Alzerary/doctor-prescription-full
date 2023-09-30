@@ -16,7 +16,7 @@ function createData(name, calories, fat, carbs, protein) {
 
 export default function BillTable(props) {
   return (
-    <TableContainer className=" h-44 overflow-auto" component={Paper}>
+    <TableContainer  className=" h-44 overflow-auto" component={Paper}>
       <Table size="small" sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>

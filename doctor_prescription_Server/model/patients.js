@@ -24,14 +24,15 @@ const PatientsSchema = new mongoose.Schema(
     adresses: {
       type: String,
     },
-    
+    visitDate: [{
+      type: Date,
+    }],
     fumbling: { type: String },
     medicalDiagnosis : {type:String},
     currentMedicalHistory: {type:String},
     medicalHistory: {type:String},
     previousSurgeries: {type:String},
     familyHistory: {type:String},
-
     visitCount: { type: Number, default: 0 },
     diseases: [
       { type: mongoose.Schema.Types.ObjectId, ref: "ConstantDiseases" },
