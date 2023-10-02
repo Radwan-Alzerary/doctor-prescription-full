@@ -51,34 +51,33 @@ function EditPartients(props) {
         setDose(value.dose);
       }
     }
-    console.log(value);
-    if (value.intaketime) {
+    
+    if (value && value.intaketime) {
       setInTakeTime(value.intaketime._id);
       setShowInTakeOtherInput(false);
     } else {
-      setInTakeTimeOther(value.anotherIntaketime);
+      if (value && value.anotherIntaketime) { // Add a null check here
+        setInTakeTimeOther(value.anotherIntaketime);
+      }
       setInTakeTime("other");
       setShowInTakeOtherInput(true);
     }
-
+  
     if (value && value.doseCount) {
       const parts = value.doseCount.split("*");
       console.log(value);
-
       if (parts.length === 2) {
         setDoseNumFirst(parts[0]);
         setDoseNumSecend(parts[1]);
         setPharmaceuticalInputs(true);
       } else {
-        // Handle the case where value.doseCount doesn't have the expected format
         console.error("Invalid value.doseCount format:", value.doseCount);
       }
     } else {
-      // Handle the case where value or value.doseCount is undefined
       console.error("Invalid value or value.doseCount:", value);
     }
   }, [value, inputValue]);
-
+  
   const [showInTakeOtherInput, setShowInTakeOtherInput] = useState(false);
   const handleInTakeTimeInputChange = (value) => {
     if (value === "other") {
@@ -334,11 +333,12 @@ function EditPartients(props) {
                   onChange={(event) => {
                     setDescription(event.target.value);
                   }}
-                  label={          <FormattedMessage
-                    id={"Notes"}
-                    defaultMessage="Hello, World!"
-                  />
-        }
+                  label={
+                    <FormattedMessage
+                      id={"Notes"}
+                      defaultMessage="Hello, World!"
+                    />
+                  }
                   // defaultValue="Hello World"
                 />
               </>
