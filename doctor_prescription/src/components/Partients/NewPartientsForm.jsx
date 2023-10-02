@@ -334,7 +334,11 @@ function EditPartients(props) {
                   onChange={(event) => {
                     setDescription(event.target.value);
                   }}
-                  label="ملاحضات اضافية"
+                  label={          <FormattedMessage
+                    id={"Notes"}
+                    defaultMessage="Hello, World!"
+                  />
+        }
                   // defaultValue="Hello World"
                 />
               </>
@@ -349,7 +353,10 @@ function EditPartients(props) {
               color="success"
               onClick={handeAddBill}
             >
-              اضافة الدواء
+              <FormattedMessage
+                id={"Adding medication"}
+                defaultMessage="Hello, World!"
+              />
             </Button>
           </div>
         </div>
@@ -369,7 +376,10 @@ function EditPartients(props) {
           className="w-full"
           color="success"
         >
-          اضافة وصفة طبية
+          <FormattedMessage
+            id={"Add a prescription"}
+            defaultMessage="Hello, World!"
+          />
         </Button>
         <IconButton onClick={props.onPrinterClick}>
           <PrintRounded color="action"></PrintRounded>

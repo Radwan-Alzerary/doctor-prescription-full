@@ -35,7 +35,6 @@ function MedicalForm(props) {
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
       }}
-
     >
       <div className="w-full flex gap-9"></div>
       <div className=" text-right w-full">
@@ -189,7 +188,10 @@ function MedicalForm(props) {
           className="w-full"
           color="success"
         >
-          اضافة طبلة للمريض
+          <FormattedMessage
+            id={"add patient page"}
+            defaultMessage="Hello, World!"
+          />
         </Button>
         {/* <IconButton onClick={props.onPrinterClick}>
           <PrintRounded color="action"></PrintRounded>

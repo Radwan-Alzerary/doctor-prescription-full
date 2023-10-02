@@ -75,7 +75,12 @@ function NewPatientForm(props) {
       }}
     >
       <div className=" text-right w-full">
-        <h5>المعلومات الشخصية</h5>
+        <h5>
+          <FormattedMessage
+            id={"personal information"}
+            defaultMessage="Hello, World!"
+          />
+        </h5>
       </div>
       <div className="flex gap-4  w-full">
         <TextField
@@ -142,12 +147,20 @@ function NewPatientForm(props) {
         />
       </div>
       <div className=" text-right w-full">
-        <h5>معلومات اضافية</h5>
+        <h5>
+          <FormattedMessage
+            id={"additional information"}
+            defaultMessage="Hello, World!"
+          />
+        </h5>
       </div>
 
       <div className=" flex w-full gap-4 items-center">
         <FormControl className=" w-1/3 bg-whiteh" size="small">
-          <InputLabel id="demo-simple-select-helper-label">الجنس</InputLabel>
+          <InputLabel id="demo-simple-select-helper-label">
+            {" "}
+            <FormattedMessage id={"Gender"} defaultMessage="Hello, World!" />
+          </InputLabel>
           <Select
             labelId="demo-simple-select-helper-label"
             id="demo-simple-select-helper"
@@ -162,16 +175,12 @@ function NewPatientForm(props) {
           >
             <MenuItem value={"ذكر"}>
               {" "}
-              <FormattedMessage
-                id={"male"}
-                defaultMessage="Hello, World!"
-              />
+              <FormattedMessage id={"male"} defaultMessage="Hello, World!" />
             </MenuItem>
-            <MenuItem value={"انثى"}>              <FormattedMessage
-                id={"female"}
-                defaultMessage="Hello, World!"
-              />
-</MenuItem>
+            <MenuItem value={"انثى"}>
+              {" "}
+              <FormattedMessage id={"female"} defaultMessage="Hello, World!" />
+            </MenuItem>
           </Select>
         </FormControl>
         <TextField

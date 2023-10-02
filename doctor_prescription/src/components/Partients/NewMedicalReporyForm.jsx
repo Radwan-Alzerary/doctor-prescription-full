@@ -8,6 +8,7 @@ import {
 import { PrintRounded } from "@mui/icons-material";
 import VoiceRecoed from "../../screens/global/VoiceRecoed";
 import Cookies from "js-cookie";
+import { FormattedMessage } from "react-intl";
 
 function NewMedicalReporyForm({
   onFormSubmit,
@@ -48,7 +49,13 @@ function NewMedicalReporyForm({
       }}
     >
       <div className=" text-right w-full">
-        <h5>معلومات التقرير</h5>
+        <h5>
+          {" "}
+          <FormattedMessage
+            id={"Report information"}
+            defaultMessage="Hello, World!"
+          />
+        </h5>
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
@@ -59,7 +66,9 @@ function NewMedicalReporyForm({
             width: "100%",
             color: "#fff",
           }}
-          label="التقرير"
+          label={
+            <FormattedMessage id={"Report"} defaultMessage="Hello, World!" />
+          }
           multiline
           rows={3}
           // defaultValue="Hello World"
@@ -77,7 +86,10 @@ function NewMedicalReporyForm({
           className="w-full"
           color="success"
         >
-          اضافة تقرير طبي
+          <FormattedMessage
+            id={"Add report information"}
+            defaultMessage="Hello, World!"
+          />
         </Button>
         <IconButton
           onClick={() => {
@@ -86,7 +98,7 @@ function NewMedicalReporyForm({
         >
           <PrintRounded color="action"></PrintRounded>
         </IconButton>
-        <VoiceRecoed setInputValue={setFormData} />
+        {/* <VoiceRecoed setInputValue={setFormData} /> */}
       </div>{" "}
     </form>
   );

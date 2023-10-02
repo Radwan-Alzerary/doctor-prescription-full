@@ -3,8 +3,6 @@ import { Fab, IconButton, InputBase } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Add } from "@mui/icons-material";
 import BackGroundShadow from "../../components/pageCompond/BackGroundShadow";
-import CategoryTable from "../../components/Category/CategoryTable";
-import NewCategoryForm from "../../components/Category/NewCategoryForm";
 import axios from "axios";
 import MedicalReportsTable from "../../components/medicalReports/MedicalReportsTable";
 import NewMedicalReports from "../../components/medicalReports/NewMedicalReports";

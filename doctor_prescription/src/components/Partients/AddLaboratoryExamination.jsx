@@ -89,7 +89,10 @@ function AddLaboratoryExamination({
           className="w-full"
           color="success"
         >
-          اضافة فحص طبي
+          <FormattedMessage
+            id={"Add a laboratory test"}
+            defaultMessage="Hello, World!"
+          />
         </Button>
         <IconButton
           onClick={() => {
