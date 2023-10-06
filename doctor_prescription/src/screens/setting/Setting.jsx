@@ -84,7 +84,8 @@ function Setting(props) {
           .post("http://localhost:5000/users/edit", data)
           .then((response) => {
             // Handle the response if needed
-            // getAllCashire();
+            window.location.reload(false);
+
             console.log("POST request successful:", response.data);
           })
           .catch((error) => {
