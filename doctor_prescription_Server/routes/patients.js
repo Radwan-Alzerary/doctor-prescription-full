@@ -2,7 +2,7 @@ const router = require("express").Router();
 const Prescription = require("../model/prescription"); // Make sure to adjust the path as needed
 
 const Patients = require("../model/patients"); // Make sure to adjust the path as needed
-const ConstantDiseases = require("../model/constantDiseases")
+const ConstantDiseases = require("../model/constantDiseases");
 // Add a new patients
 router.post("/new", async (req, res) => {
   const patientsDate = {};
@@ -20,18 +20,20 @@ router.post("/new", async (req, res) => {
     const resultArray = [];
 
     for (const diseaseName of diseasesArray) {
-      const existingDisease = await ConstantDiseases.findOne({ name: diseaseName });
+      const existingDisease = await ConstantDiseases.findOne({
+        name: diseaseName,
+      });
 
       if (existingDisease) {
         resultArray.push(existingDisease._id.toString());
       } else {
         const newDisease = { name: diseaseName };
         const insertResult = new ConstantDiseases(newDisease);
-        await insertResult.save()
+        await insertResult.save();
         resultArray.push(insertResult._id.toString());
       }
     }
-    
+
     patientsDate.diseases = resultArray;
     console.log(resultArray);
     const patients = new Patients(patientsDate);
@@ -59,7 +61,7 @@ router.post("/edit", async (req, res) => {
       currentMedicalHistory: req.body.currentMedicalHistory,
       medicalHistory: req.body.medicalHistory,
       previousSurgeries: req.body.previousSurgeries,
-      familyHistory: req.body.familyHistory
+      familyHistory: req.body.familyHistory,
     };
 
     if (req.body.diseases) {
@@ -92,7 +94,10 @@ router.post("/edit", async (req, res) => {
 router.get("/getall", async (req, res) => {
   try {
     const patients = await Patients.find()
-      .populate("prescription")
+      .populate({
+        path: "prescription",
+        match: { active: true }, // Filter prescriptions with active: true
+      })
       .sort({ updatedAt: -1 }); // Sort by 'updatedAt' field in descending order
     res.json(patients);
   } catch (error) {

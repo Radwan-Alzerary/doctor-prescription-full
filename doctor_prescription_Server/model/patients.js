@@ -25,7 +25,10 @@ const PatientsSchema = new mongoose.Schema(
       type: String,
     },
     visitDate: [{
-      type: Date,
+      date:{type: Date},
+      medicalReportsCount :{type:Number},
+      prescriptionCount :{type:Number},
+      laboryReportCount:{type:Number}
     }],
     fumbling: { type: String },
     medicalDiagnosis : {type:String},

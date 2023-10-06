@@ -1,57 +1,64 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 
-function VisitChart() {
-  const chartData = {
-    series: [
-      {
-        name: 'series1',
-        data: [31, 40, 28, 51, 42, 109, 100],
-      },
-      {
-        name: 'series2',
-        data: [11, 32, 45, 32, 34, 52, 41],
-      },
-    ],
-    options: {
-      chart: {
-        height: 350,
-        type: 'area',
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        curve: 'smooth',
-      },
-      xaxis: {
-        type: 'datetime',
-        categories: [
-          '2018-09-19T00:00:00.000Z',
-          '2018-09-19T01:30:00.000Z',
-          '2018-09-19T02:30:00.000Z',
-          '2018-09-19T03:30:00.000Z',
-          '2018-09-19T04:30:00.000Z',
-          '2018-09-19T05:30:00.000Z',
-          '2018-09-19T06:30:00.000Z',
+function VisitChart(props) {
+  const [loading, setLoading] = useState(true);
+  const [chartData, setChartData] = useState({ series: [], options: {} });
+
+  useEffect(() => {
+    if (props.dashboardVisitCount && Array.isArray(props.dashboardVisitCount)) {
+      setLoading(false); // Set loading to false when the data is available
+      const seriesData = props.dashboardVisitCount.map((entry) => entry.count);
+      const dateLabels = props.dashboardVisitCount.map((entry) => entry.date);
+
+      const newChartData = {
+        series: [
+          {
+            name: 'Visits',
+            data: seriesData,
+          },
         ],
-      },
-      tooltip: {
-        x: {
-          format: 'dd/MM/yy HH:mm',
+        options: {
+          chart: {
+            height: 350,
+            type: 'area',
+          },
+          dataLabels: {
+            enabled: false,
+          },
+          stroke: {
+            curve: 'smooth',
+          },
+          xaxis: {
+            type: 'datetime',
+            categories: dateLabels,
+          },
+          tooltip: {
+            x: {
+              format: 'dd/MM/yy HH:mm',
+            },
+          },
         },
-      },
-    },
-  };
+      };
+
+      setChartData(newChartData);
+    } else {
+      console.error("props.dashboardVisitCount is not a valid array");
+    }
+  }, [props.dashboardVisitCount]);
 
   return (
     <div id="chart">
-      <ReactApexChart
-        options={chartData.options}
-        series={chartData.series}
-        type="area"
-        height={350}
-      />
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <ReactApexChart
+          options={chartData.options}
+          series={chartData.series}
+          type="area"
+          height={350}
+        />
+      )}
     </div>
   );
 }

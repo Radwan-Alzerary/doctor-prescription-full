@@ -12,7 +12,7 @@ router.post("/postpharmaceutical", async (req, res) => {
     const billData = {};
     if (req.body.inTakeTime == "other") {
       billData.anotherIntaketime = req.body.inTakeTimeOther;
-    } else  {
+    } else {
       billData.inTakeTime = req.body.inTakeTime;
     }
     billData.dose = req.body.dose;
@@ -33,7 +33,7 @@ router.post("/postpharmaceutical", async (req, res) => {
       await newPharmaceutical.save();
       billData.id = newPharmaceutical._id.toString();
     }
-    
+
     const PrescriptionId = req.body.PrescriptionId;
 
     const prescription = await Prescription.findById(PrescriptionId);
@@ -91,16 +91,51 @@ router.delete(
 
 router.post("/ubdateData", async (req, res) => {
   try {
-    // console.log(req.body);
+    console.log(req.body);
     const prescription = await Prescription.findById(req.body.data.id);
 
     if (!prescription) {
       // Handle the case where the prescription is not found
       return res.status(404).json({ message: "Prescription not found" });
     }
-
-    prescription.MedicalDiagnosis = req.body.data.diagnosis;
+    if (prescription.MedicalDiagnosis) {
+      prescription.MedicalDiagnosis = req.body.data.diagnosis;
+    }
+    prescription.active = true;
     await prescription.save();
+
+    const patient = await Patients.findById(req.body.data.patientId);
+
+    if (!patient) {
+      return res.status(404).json({ error: "Patient not found" });
+    }
+
+    const currentDate = new Date();
+    const currentDateStr = currentDate.toISOString().split("T")[0]; // Get today's date as YYYY-MM-DD string
+
+    // Find the visitDate entry for today's date, if it exists
+    const todayVisitDate = patient.visitDate.find(
+      (visit) =>
+        visit.date && visit.date.toISOString().split("T")[0] === currentDateStr
+    );
+
+    if (todayVisitDate) {
+      if (todayVisitDate.medicalReportsCount) {
+        todayVisitDate.prescriptionCount += 1;
+      } else {
+        todayVisitDate.prescriptionCount = 1;
+      }
+    } else {
+      // Today's date is not in visitDate, so push it with initial counts
+      patient.visitDate.push({
+        date: currentDate,
+        prescriptionCount: 1,
+      });
+    }
+
+    // Save the updated patient data
+    await patient.save();
+
     res.json({ message: "Prescription updated successfully" });
   } catch (error) {
     console.error(error);
@@ -159,7 +194,7 @@ router.get("/getbills/:prescriptionId", async (req, res) => {
 
 router.get("/getall", async (req, res) => {
   try {
-    const prescription = await Prescription.find();
+    const prescription = await Prescription.find({ active: true });
     res.json(prescription);
   } catch (error) {
     res.status(500).json({ error: error.message });

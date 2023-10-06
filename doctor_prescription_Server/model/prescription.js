@@ -6,6 +6,7 @@ const PrescriptionSchema = new mongoose.Schema(
     },
     ready: { type: Boolean },
     MedicalDiagnosis: { type: String },
+    active :{type:Boolean,default:false},
     pharmaceutical: [
       {
         id: { type: mongoose.Schema.Types.ObjectId, ref: "Pharmaceutical" },

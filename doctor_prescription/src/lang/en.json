@@ -79,5 +79,7 @@
   "Add a prescription":"Add a prescription",
   "Adding medication":"Adding medication",
   "add patient page" : "add patient page",
-  "Add a laboratory test":"Add a laboratory test"
+  "Add a laboratory test":"Add a laboratory test",
+  "Number of visit":"Total number of visit"
+
 }

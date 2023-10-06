@@ -5,7 +5,7 @@ const Patients = require("../model/patients"); // Make sure to adjust the path a
 // Add a new Medicalreports
 router.post("/new", async (req, res) => {
   try {
-    console.log(req.body.data.patientId)
+    console.log(req.body.data.patientId);
     const labory = new Labory({ report: req.body.data.report });
     await labory.save();
 
@@ -18,7 +18,28 @@ router.post("/new", async (req, res) => {
     // Push the new prescription's ID into the patient's prescription field
     console.log(labory._id.toString());
     patient.labory.push(labory._id.toString());
+    const currentDate = new Date();
+    const currentDateStr = currentDate.toISOString().split("T")[0]; // Get today's date as YYYY-MM-DD string
 
+    // Find the visitDate entry for today's date, if it exists
+    const todayVisitDate = patient.visitDate.find(
+      (visit) =>
+        visit.date && visit.date.toISOString().split("T")[0] === currentDateStr
+    );
+
+    if (todayVisitDate) {
+      if (todayVisitDate.laboryReportCount) {
+        todayVisitDate.laboryReportCount += 1;
+      } else {
+        todayVisitDate.laboryReportCount = 1;
+      }
+    } else {
+      // Today's date is not in visitDate, so push it with initial counts
+      patient.visitDate.push({
+        date: currentDate,
+        laboryReportCount: 1,
+      });
+    }
     // Save the updated patient
     await patient.save();
 
@@ -41,9 +62,7 @@ router.get("/getall", async (req, res) => {
 // Delete one Medicalreports by ID
 router.delete("/delete/:id", async (req, res) => {
   try {
-    const labory = await Labory.findByIdAndDelete(
-      req.params.id
-    );
+    const labory = await Labory.findByIdAndDelete(req.params.id);
     if (!labory) {
       return res.status(404).json({ error: "labory not found" });
     }

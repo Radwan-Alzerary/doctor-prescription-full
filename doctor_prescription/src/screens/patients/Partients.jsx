@@ -24,7 +24,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import BiotechIcon from "@mui/icons-material/Biotech";
-import { useSpeechRecognition } from 'react-speech-recognition';
+import { useSpeechRecognition } from "react-speech-recognition";
 
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import { Calendar } from "react-modern-calendar-datepicker";
@@ -65,12 +65,13 @@ function Row(props) {
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         <TableCell>{props.index + 1}</TableCell>
         <TableCell
+          className=" cursor-pointer hover:bg-blue-50"
           onClick={() => {
             props.onNameClickHandle(row._id);
           }}
           component="th"
           scope="row"
-          align="right"
+          align="center"
         >
           {row.name}
         </TableCell>
@@ -93,7 +94,7 @@ function Row(props) {
           {row.length}
         </TableCell>
         <TableCell component="th" scope="row" align="center">
-          {row.visitCount}
+          {row.visitDate.length}
         </TableCell>
 
         {props.currentUser ? (
@@ -454,14 +455,6 @@ function Partients() {
   };
 
   // Function to handle the button click to toggle the calendar visibility
-  const toggleCalendar = () => {
-    setShowCalendar(!showCalendar);
-  };
-  const handleDateRangeSelection = (range) => {
-    setSelectedDayRange(range);
-    // setShowCalendar(false); // Hide the calendar
-  };
-
   const handleAddButtonClick = () => {
     setShowAddForm(true);
   };
@@ -585,7 +578,7 @@ function Partients() {
         // Handle the response if needed
         getPharmaceApi();
         getPatientsList();
-        setShowAddForm(false)
+        setShowAddForm(false);
         console.log("POST request successful:", response.data);
       })
       .catch((error) => {
@@ -605,8 +598,8 @@ function Partients() {
         // Handle the response if needed
         getPharmaceApi();
         getPatientsList();
-        setShowPartientsEditForm(false)
-        setShowMidicalForm(false)
+        setShowPartientsEditForm(false);
+        setShowMidicalForm(false);
         console.log("POST request successful:", response.data);
       })
       .catch((error) => {
@@ -633,7 +626,7 @@ function Partients() {
     axios
       .get(`http://localhost:5000/prescription/getbills/${PrescriptionId}`)
       .then((response) => {
-        setPharmaceListInside(()=>response.data); // Update the categories state with the fetched data
+        setPharmaceListInside(() => response.data); // Update the categories state with the fetched data
         console.log(response.data);
       })
       .catch((error) => {
@@ -647,12 +640,13 @@ function Partients() {
   };
 
   const handleNewPrescriptionData = (data) => {
+    data.patientId = partientsSelectId;
     axios
       .post("http://localhost:5000/prescription/ubdateData", { data })
       .then((response) => {
         // Handle the response if needed
         getPatientsList();
-        setShowPartientsAddForm(false)
+        setShowPartientsAddForm(false);
       })
       .catch((error) => {
         // Handle errors if the request fails
@@ -685,20 +679,21 @@ function Partients() {
       .then((response) => {
         // Handle the response if needed
         getPatientsList();
-        setShowAddReportForm(false)
+        setShowAddReportForm(false);
       })
       .catch((error) => {
         // Handle errors if the request fails
         console.error("Error making POST request:", error);
       });
   };
+
   const handleNewLaboryData = (data) => {
     axios
       .post("http://localhost:5000/labory/new", { data })
       .then((response) => {
         // Handle the response if needed
         getPatientsList();
-        setShowLaporyReportForm(false)
+        setShowLaporyReportForm(false);
       })
       .catch((error) => {
         // Handle errors if the request fails
@@ -736,29 +731,27 @@ function Partients() {
         // Handle error, e.g., show an error message
       });
   };
-  const onPrescriptionEditHandel = (patientsId, prescriptionId)=>{
+  const onPrescriptionEditHandel = (patientsId, prescriptionId) => {
     axios
-    .get(`http://localhost:5000/prescription/getone/${prescriptionId}?`)
-    .then((response) => {
-      console.log(response.data);
-      setPrescriptionId(response.data._id);
-      getAllPrescription(response.data._id)
-      setPartientsSelectId(patientsId);
+      .get(`http://localhost:5000/prescription/getone/${prescriptionId}?`)
+      .then((response) => {
+        console.log(response.data);
+        setPrescriptionId(response.data._id);
+        getAllPrescription(response.data._id);
+        setPartientsSelectId(patientsId);
 
-      setEditPrescriptionData(response.data)
-      setShowPartientsAddForm(true)
-    })
-    .catch((error) => {
-      console.error("Error fetching categories:", error);
-    });
-
-  }
+        setEditPrescriptionData(response.data);
+        setShowPartientsAddForm(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
 
   return (
     <div className="p-7 relative h-[97vh] overflow-auto">
       <div className=" flex flex-col justify-center items-center p-4">
         <div className="flex bg-white px-4 py-1 rounded-3xl w-1/2">
-          
           <InputBase
             onChange={handeSearchInput}
             sx={{ ml: 1, flex: 1 }}
@@ -774,10 +767,7 @@ function Partients() {
         <div className=" w-1/6">
           <FormControl className="w-full bg-whiteh" size="small" sx={{ m: 1 }}>
             <InputLabel id="demo-simple-select-helper-label">
-              <FormattedMessage 
-                id={"ageSort"}
-                defaultMessage="Hello, World!"
-              />
+              <FormattedMessage id={"ageSort"} defaultMessage="Hello, World!" />
             </InputLabel>
             <Select
               labelId="demo-simple-select-helper-label"
@@ -798,7 +788,7 @@ function Partients() {
         <div className=" w-1/6">
           <FormControl className="w-full bg-whiteh" size="small" sx={{ m: 1 }}>
             <InputLabel id="demo-simple-select-helper-label">
-            <FormattedMessage 
+              <FormattedMessage
                 id={"stateSort"}
                 defaultMessage="Hello, World!"
               />
@@ -822,7 +812,7 @@ function Partients() {
         <div className=" w-1/6">
           <FormControl className="w-full bg-whiteh" size="small" sx={{ m: 1 }}>
             <InputLabel id="demo-simple-select-helper-label">
-            <FormattedMessage 
+              <FormattedMessage
                 id={"genderSort"}
                 defaultMessage="Hello, World!"
               />
@@ -842,7 +832,7 @@ function Partients() {
         <div className=" w-1/6">
           <FormControl className="w-full bg-whiteh" size="small" sx={{ m: 1 }}>
             <InputLabel id="demo-simple-select-helper-label">
-            <FormattedMessage 
+              <FormattedMessage
                 id={"dateSort"}
                 defaultMessage="Hello, World!"
               />
@@ -974,7 +964,7 @@ function Partients() {
           <TableBody>
             {patientsList.map((patient, index) => (
               <Row
-              onPrescriptionEditHandel={onPrescriptionEditHandel}
+                onPrescriptionEditHandel={onPrescriptionEditHandel}
                 onShareHande={onShareHande}
                 onDeleteHande={onDeleteHande}
                 currentUser={currentUser}
@@ -1023,7 +1013,7 @@ function Partients() {
           {" "}
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewPartientsForm
-          editPrescriptionData ={editPrescriptionData}
+            editPrescriptionData={editPrescriptionData}
             patientsList={patientsList}
             pharmaceList={pharmaceList}
             inTakeTimeList={inTakeTimeList}
