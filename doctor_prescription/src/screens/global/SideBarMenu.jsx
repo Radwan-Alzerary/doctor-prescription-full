@@ -15,16 +15,11 @@ import Sidebaritems from "../../components/Sidebar/Sidebaritems";
 import LanguageSelector from "./lanquageSelector";
 import { Home } from "@mui/icons-material";
 import { FormattedMessage } from "react-intl";
-
 import logo from "../../logo.png"; // Tell webpack this JS file uses this image
-import axios from "axios";
-import { useCookies } from "react-cookie";
-import { Navigate, useNavigate } from "react-router-dom";
 
 function SideBarMenu(props) {
   const [collapsedMode, setCollapsedMode] = useState(true);
   const [activeSubmenu, setActiveSubmenu] = useState("main");
-
   console.log(props.currentUser);
 
   return (
@@ -57,23 +52,35 @@ function SideBarMenu(props) {
           className="pt-1 pb-4"
         >
           <img className="w-20" src={logo} alt="Logo" />
-          {/*<h2>نضام راجيتة</h2> */}
         </MenuItem>
-        <Sidebaritems
-          title="home"
-          active={activeSubmenu === "home"}
-          icon={<Home style={{ fontSize: "28px" }} />}
-          router="/dashboard"
-          onClick={() => setActiveSubmenu("home")}
-        ></Sidebaritems>
-        <Sidebaritems
-          title="patients"
-          icon={<AssignmentIndIcon style={{ fontSize: "28px" }} />}
-          router="/patients"
-          onClick={() => setActiveSubmenu("main")}
-        ></Sidebaritems>
+
         {props.currentUser ? (
-          props.currentUser.role === "doctor" ? (
+          new Date(props.currentUser.expireDate) > new Date() ? (
+            <>
+              <Sidebaritems
+                title="home"
+                active={activeSubmenu === "home"}
+                icon={<Home style={{ fontSize: "28px" }} />}
+                router="/dashboard"
+                onClick={() => setActiveSubmenu("home")}
+              ></Sidebaritems>
+              <Sidebaritems
+                title="patients"
+                icon={<AssignmentIndIcon style={{ fontSize: "28px" }} />}
+                router="/patients"
+                onClick={() => setActiveSubmenu("main")}
+              ></Sidebaritems>
+            </>
+          ) : (
+            ""
+          )
+        ) : (
+          ""
+        )}
+
+        {props.currentUser ? (
+          props.currentUser.role === "doctor" &&
+          new Date(props.currentUser.expireDate) > new Date() ? (
             <>
               <SubMenu
                 // active={activeSubmenu === "main"}
@@ -128,22 +135,34 @@ function SideBarMenu(props) {
           ""
         )}
 
-        <Sidebaritems
-          title="messaging"
-          icon={<MailOutlineIcon style={{ fontSize: "28px" }} />}
-          router="/chats"
-          onClick={() => setActiveSubmenu("main")}
-        ></Sidebaritems>
+        {props.currentUser ? (
+          new Date(props.currentUser.expireDate) > new Date() ? (
+            <Sidebaritems
+              title="messaging"
+              icon={<MailOutlineIcon style={{ fontSize: "28px" }} />}
+              router="/chats"
+              onClick={() => setActiveSubmenu("main")}
+            ></Sidebaritems>
+          ) : (
+            ""
+          )
+        ) : (
+          ""
+        )}
 
         {props.currentUser ? (
           props.currentUser.role === "doctor" ? (
             <>
-              <Sidebaritems
-                title="account"
-                icon={<AccountCircleIcon style={{ fontSize: "28px" }} />}
-                router="/doctorprofile"
-                onClick={() => setActiveSubmenu("main")}
-              ></Sidebaritems>
+              {new Date(props.currentUser.expireDate) > new Date() ? (
+                <Sidebaritems
+                  title="account"
+                  icon={<AccountCircleIcon style={{ fontSize: "28px" }} />}
+                  router="/doctorprofile"
+                  onClick={() => setActiveSubmenu("main")}
+                ></Sidebaritems>
+              ) : (
+                ""
+              )}
               <Sidebaritems
                 title="settings"
                 icon={<SettingsIcon style={{ fontSize: "28px" }} />}

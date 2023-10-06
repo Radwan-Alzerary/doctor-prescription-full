@@ -25,6 +25,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.post("/", checkUser);
+// router.post("/updatetoken", updateToken);
 router.post("/register", register);
 router.post("/edit", editAcount);
 router.post("/addcashire", cashirRegister);
@@ -135,5 +136,6 @@ router.get("/usercheck", async (req, res) => {
     next(err);
   }
 });
+
 
 module.exports = router;

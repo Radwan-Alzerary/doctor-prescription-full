@@ -28,11 +28,10 @@ function AddCashir(props) {
   return (
     <form
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
-      className="h-full"
+      className="mb-8"
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
       }}
-
     >
       <div>
         <TextField
@@ -131,12 +130,7 @@ function AddCashir(props) {
         </div>
         <div>
           {" "}
-          {
-            <FormattedMessage
-              id={"email"}
-              defaultMessage="Hello, World!"
-            />
-          }
+          {<FormattedMessage id={"email"} defaultMessage="Hello, World!" />}
         </div>
       </div>
       {props.cashireData.map((cashire, index) => (

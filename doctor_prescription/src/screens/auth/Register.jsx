@@ -7,9 +7,7 @@ function Register() {
   const [cookies] = useCookies(["cookie-name"]);
   const [serialNumber, setSerialNumber] = useState("");
   const [accsesDone, setAccsesDone] = useState(false);
-  const [serialNumberDefult, setSerialNumberDefult] =
-    useState("123456787654321");
-    const [errorMsg, setErrorMsg] =useState("")
+  const [errorMsg, setErrorMsg] = useState("");
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -17,45 +15,89 @@ function Register() {
       navigate("/");
     }
   }, [cookies, navigate]);
+  const [result, setResult] = useState(null); // Track the result
 
   const [values, setValues] = useState({
     email: "",
     password: "",
     userName: "",
+    expireDate: "",
   });
   const generateError = (error) =>
     toast.error(error, {
       position: "bottom-right",
     });
   const handleSubmit = async (event) => {
-    console.log(accsesDone);
-    if (accsesDone) {
-      try {
-        const { data } = await axios.post(
-          "http://localhost:5000/users/register",
-          {
-            ...values,
-          },
-          { withCredentials: true }
-        );
-        console.log("Response data:", data); // Add this line
-        if (data) {
-          if (data.errors) {
-            const { email, password } = data.errors;
-            if (email) generateError(email);
-            else if (password) generateError(password);
-          } else {
-            //   navigate("/");
-          }
+    console.log("accessDone");
+    event.preventDefault();
+    await checkToken(event);
+  };
+  const register = async (event) => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5000/users/register",
+        {
+          ...values,
+        },
+        { withCredentials: true }
+      );
+      console.log("Response data:", data); // Add this line
+      if (data) {
+        if (data.errors) {
+          const { email, password } = data.errors;
+          if (email) generateError(email);
+          else if (password) generateError(password);
+        } else {
+          //   navigate("/");
         }
-      } catch (ex) {
-        console.log(ex);
-        setErrorMsg(ex)
       }
-    } else {
-      event.preventDefault();
+    } catch (ex) {
+      console.log(ex);
+      setErrorMsg(ex);
     }
   };
+  const checkToken = async (event) => {
+    try {
+      const response = await axios.post(
+        "http://95.179.178.183:4000/checkToken",
+        { token: serialNumber }
+      );
+      console.log(response);
+
+      if (response.data.result) {
+        console.log("POST request successful:", response.data);
+        const today = new Date();
+        const futureDate = new Date(today);
+        futureDate.setDate(today.getDate() + response.data.dayNum);
+
+        // Update state without the callback
+        setValues((prevValues) => ({
+          ...prevValues,
+          expireDate: futureDate,
+        }));
+
+        // Set the result to true after updating the state
+        setResult(true);
+      } else {
+        setErrorMsg("التوكين غير صالح او منتهي الصلاحية");
+        console.log("accessDone");
+        setResult(false);
+      }
+    } catch (error) {
+      setErrorMsg("التوكين غير صالح او منتهي الصلاحية");
+      console.error("Error making POST request:", error);
+      setResult(false);
+    }
+  };
+
+  useEffect(() => {
+    if (result === true) {
+      console.log("Result is true");
+      register();
+      // Perform any additional actions here if needed
+    }
+  }, [result]);
+
   return (
     <form
       className=" h-screen w-screen bg-gray-700  text-gray-900 "
@@ -112,11 +154,9 @@ function Register() {
                   placeholder="serialNumber"
                   required
                   name="serialNumber"
+                  value={serialNumber}
                   onChange={(e) => {
                     setSerialNumber(e.target.value);
-                    e.target.value === serialNumberDefult
-                      ? setAccsesDone(true)
-                      : setAccsesDone(false);
                   }}
                 />
 

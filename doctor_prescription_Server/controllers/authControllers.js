@@ -1,4 +1,5 @@
 const User = require("../model/user");
+const SystemSetting = require("../model/systemSetting");
 const jwt = require("jsonwebtoken");
 
 const maxAge = 3 * 24 * 60 * 60;
@@ -36,9 +37,9 @@ const handleErrors = (err) => {
 
 module.exports.cashirRegister = async (req, res, next) => {
   try {
-    console.log(req.body)
+    console.log(req.body);
     const { userName, email, password } = req.body;
-    console.log(req.body)
+    console.log(req.body);
     const user = await User.create({
       email,
       password,
@@ -61,17 +62,18 @@ module.exports.cashirRegister = async (req, res, next) => {
   }
 };
 
-
 module.exports.register = async (req, res, next) => {
   try {
-    console.log(req.body)
-    const { userName, email, password } = req.body;
+    console.log(req.body);
+    const { userName, email, password, expireDate } = req.body;
     const user = await User.create({
       email,
       password,
       userName,
+      expireDate,
       role: "doctor",
     });
+
     const token = createToken(user._id);
 
     res.cookie("jwt", token, {
@@ -79,6 +81,10 @@ module.exports.register = async (req, res, next) => {
       httpOnly: false,
       maxAge: maxAge * 1000,
     });
+    await SystemSetting.findOneAndUpdate(
+      {},
+      { expireDate: req.body.expireDate }
+    );
 
     res.status(201).json({ user: user._id, created: true });
   } catch (err) {
@@ -91,17 +97,12 @@ module.exports.register = async (req, res, next) => {
 module.exports.editAcount = async (req, res, next) => {
   try {
     const userId = req.body.id; // Assuming the user ID is passed in the URL parameter
-    const { userName, email, password } = req.body;
-    console.log(req.body)
+    console.log(req.body);
     // Update user information using the User.findByIdAndUpdate method or a similar method
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
-        $set: {
-          userName,
-          email,
-          // password,
-        },
+        $set: req.body,
       },
       { new: true } // To get the updated user object
     );
@@ -112,14 +113,12 @@ module.exports.editAcount = async (req, res, next) => {
     }
 
     res.status(200).json({ user: updatedUser, updated: true });
-
   } catch (err) {
     console.log(err);
     const errors = handleErrors(err);
     res.json({ errors, created: false });
   }
 };
-
 
 module.exports.login = async (req, res) => {
   const { email, password } = req.body;

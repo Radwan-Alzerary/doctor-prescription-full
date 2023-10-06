@@ -27,7 +27,7 @@ function UserSetting(props) {
   return (
     <form
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
-      className="h-full"
+      className="mb-8"
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
       }}

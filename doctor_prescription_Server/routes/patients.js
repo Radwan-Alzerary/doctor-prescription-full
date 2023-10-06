@@ -3,6 +3,8 @@ const Prescription = require("../model/prescription"); // Make sure to adjust th
 
 const Patients = require("../model/patients"); // Make sure to adjust the path as needed
 const ConstantDiseases = require("../model/constantDiseases");
+const axios = require("axios");
+
 // Add a new patients
 router.post("/new", async (req, res) => {
   const patientsDate = {};
@@ -102,6 +104,40 @@ router.get("/getall", async (req, res) => {
     res.json(patients);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/checktoken", async (req, res) => {
+  let dayNum = 0;
+  try {
+    await axios
+      .post("http://95.179.178.183:4000/checkToken", {
+        token: "85021035-48d5-4dbb-993c-5c07b5c71a75/30",
+      })
+      .then(function (response) {
+        if (response.data.result) {
+          dayNum = response.data.dayNum;
+          const today = new Date();
+          const futureDate = new Date(today);
+          futureDate.setDate(today.getDate() + dayNum);
+          console.log(futureDate);
+        
+        } else {
+          res.status(400).json({ result: "token expire", day: dayNum });
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    console.log(dayNum);
+
+    // Send the response from the other server back to the client
+    res.status(200).json({ result: "token correct", day: dayNum });
+  } catch (error) {
+    // Handle any errors that may occur during the request
+    console.error("Error:", error.message);
+    res.status(500).json({ error: "An error occurred" });
   }
 });
 

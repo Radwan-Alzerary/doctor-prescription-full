@@ -5,24 +5,45 @@ import axios from "axios";
 
 function PrivateRoute() {
   const [cookies] = useCookies([]);
-  const [userAvailable, setUserAvailable] = useState([]);
+  const [userData, setUserData] = useState({});
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     axios
-      .get(
-        `http://localhost:5000/users/usercheck`
-      )
+      .get("http://localhost:5000/users/usercheck")
       .then((response) => {
-        setUserAvailable(response.data); // Update the categories state with the fetched data
+        setLoading(false); // Set loading to false when data is available
         console.log(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching categories:", error);
+        console.error("Error fetching user data:", error);
+        setLoading(false); // Set loading to false in case of an error
       });
-  });
-  console.log(userAvailable)
+  }, []);
+
   const isAuthenticated = cookies.jwt;
-  
-  return userAvailable ? (isAuthenticated ? <Outlet /> : <Navigate to="/login" />) : <Navigate to="/newcomputer" />
+
+  if (loading) {
+    // Render a loading indicator while waiting for data
+    return <p>Loading...</p>;
+  }   
+
+
+  if (userData.expireDate) {
+    const expireDate = new Date(userData.expireDate);
+    if (expireDate < new Date()) {
+      // Token has expired, redirect to /enterserial
+      return <Navigate to="/enterserial" />;
+    }
+  }
+
+  if (isAuthenticated) {
+    // Token is valid, render the Outlet
+    return <Outlet />;
+  } else {
+    // User is not authenticated, redirect to /login
+    return <Navigate to="/login" />;
+  }
 }
 
 export default PrivateRoute;

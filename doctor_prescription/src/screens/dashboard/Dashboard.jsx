@@ -26,8 +26,7 @@ function Dashboard() {
     <div className="w-full p-4  h-[93%]">
       {loading ? (
         <>
-          <div className="w-full grid grid-cols-1 lg:grid-cols-5 md:grid-cols-5 gap-8   ">
-            
+          <div className="w-full grid grid-cols-1 lg:grid-cols-5 md:grid-cols-5 gap-8   ">        
             <div className="  h-28 p-2 px-4 bg-white rounded-lg shadow">
               <p className=" text-base">
                 {" "}
@@ -90,7 +89,6 @@ function Dashboard() {
                 {dashboardCount.todayCont}
               </h1>
             </div>
-
           </div>
           <div className="mt-8">
             <VisitChart

@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "UserName is Required"],
   },
+  expireDate:{type:Date},
   image: { type: String },
   Specialization: { type: String, default: "التخصص" },
   university: { type: String, default: "الجامعة" },

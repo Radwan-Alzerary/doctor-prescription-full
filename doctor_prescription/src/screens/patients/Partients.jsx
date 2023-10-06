@@ -360,7 +360,6 @@ function Partients() {
   useEffect(() => {
     getMedicalReportsStyle();
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
-
   const getMedicalReportsStyle = () => {
     axios
       .get("http://localhost:5000/medicaleeportstyle/getmedicalreportstype")

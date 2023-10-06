@@ -78,5 +78,8 @@
   "Adding medication": "اضافة دواء",
   "add patient page" : "اضافة طبلة للمريض",
   "Add a laboratory test":"اضافة فحص مختبري",
-"Number of visit":"عدد الزيارات الكلية"
+"Number of visit":"عدد الزيارات الكلية",
+"serial number" : "الرمز التسلسلي",
+"active" : "تفعيل"
+
 }
