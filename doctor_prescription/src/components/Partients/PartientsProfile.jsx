@@ -124,7 +124,7 @@ function PartientsProfile(props) {
             <div className=" bg-white p-3 rounded-2xl shadow my-4">
               <div className=" font-medium text-xl">التحسس</div>
               <div className="flex gap-4 ">
-                <p>يعاني المريض من تحسس شديد من الحبوب </p>
+                <p>{partientsProfile.fumbling} </p>
               </div>
             </div>
           </div>

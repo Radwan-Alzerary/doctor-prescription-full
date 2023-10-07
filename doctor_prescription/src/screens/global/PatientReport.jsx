@@ -41,10 +41,15 @@ function PatientReport(props) {
   return (
     <div className="h-full ">
       <div
-      
+        className="h-full"
         ref={componentRef}
         className="p-4 relative"
-        style={{ direction: "rtl", textAlign: "right" ,paddingLeft:`${props.medicalReportsStype.xPading}px`,paddingRight:`${props.medicalReportsStype.xPading}px`}}
+        style={{
+          direction: "rtl",
+          textAlign: "right",
+          paddingLeft: `${props.medicalReportsStype.xPading}px`,
+          paddingRight: `${props.medicalReportsStype.xPading}px`,
+        }}
       >
         <img
           className="z-0 opacity-30 absolute flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5  rounded-xl "
@@ -70,7 +75,7 @@ function PatientReport(props) {
           </div>
         </div>
         {/* Your content to be printed */}
-        <div className="  h-[95vh] relative flex flex-col z-10 ">
+        <div className="  h-screen relative flex flex-col z-10 ">
           <div className="flex w-full  flex-col justify-center items-center">
             <div
               style={{ height: `${props.medicalReportsStype.topPading}px` }}
@@ -459,7 +464,7 @@ function PatientReport(props) {
               </table>
             </div>
           </div>
-
+          
           <div className=" w-full  absolute bottom-0 ">
             <div className="w-full h-0.5 bg-slate-100 mb-3"></div>
 

@@ -51,18 +51,19 @@ function EditPartients(props) {
         setDose(value.dose);
       }
     }
-    
+
     if (value && value.intaketime) {
       setInTakeTime(value.intaketime._id);
       setShowInTakeOtherInput(false);
     } else {
-      if (value && value.anotherIntaketime) { // Add a null check here
+      if (value && value.anotherIntaketime) {
+        // Add a null check here
         setInTakeTimeOther(value.anotherIntaketime);
       }
       setInTakeTime("other");
       setShowInTakeOtherInput(true);
     }
-  
+
     if (value && value.doseCount) {
       const parts = value.doseCount.split("*");
       console.log(value);
@@ -77,7 +78,7 @@ function EditPartients(props) {
       console.error("Invalid value or value.doseCount:", value);
     }
   }, [value, inputValue]);
-  
+
   const [showInTakeOtherInput, setShowInTakeOtherInput] = useState(false);
   const handleInTakeTimeInputChange = (value) => {
     if (value === "other") {
@@ -173,6 +174,7 @@ function EditPartients(props) {
             <Autocomplete
               freeSolo
               size="small"
+              disableListWrap
               disablePortal
               id="combo-box-demo"
               options={props.pharmaceList}

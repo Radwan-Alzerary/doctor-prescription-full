@@ -50,6 +50,7 @@ function NewPatientForm(props) {
     age: "",
     weight: "",
     description: "",
+    fumbling:"",
     diseases: [],
   });
 
@@ -323,6 +324,7 @@ function NewPatientForm(props) {
             id="outlined-required"
             size="small"
             onChange={(event) =>
+              
               handleInputChange("fumbling", event.target.value)
             } // Update the name state
             sx={{

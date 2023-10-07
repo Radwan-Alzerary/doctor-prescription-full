@@ -748,7 +748,7 @@ function Partients() {
     };
 
     onQueryChange();
-  }, [ageQuery, stateQuery, genderQuery, dateQuery,range]);
+  }, [ageQuery, stateQuery, genderQuery, dateQuery, range]);
 
   return (
     <div className="p-7 relative h-[97vh] overflow-auto">
@@ -1030,19 +1030,21 @@ function Partients() {
         ""
       )}
       {prints && loading ? (
-        <PatientReport
-          prints={prints}
-          dataToPrint={dataToPrint}
-          medicalReportsStype={medicalReportsStype}
-          feedback={handlePrintFeedBack}
-        />
+        <div>
+          <PatientReport
+            prints={prints}
+            dataToPrint={dataToPrint}
+            medicalReportsStype={medicalReportsStype}
+            feedback={handlePrintFeedBack}
+          />
+        </div>
       ) : (
         ""
       )}
       {showPartientProfile ? (
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
-          <PartientsProfile  partientId={partientsSelectId}></PartientsProfile>
+          <PartientsProfile partientId={partientsSelectId}></PartientsProfile>
         </>
       ) : (
         ""
@@ -1098,6 +1100,5 @@ function Partients() {
     </div>
   );
 }
-
 
 export default Partients;
