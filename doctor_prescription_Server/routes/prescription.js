@@ -120,7 +120,7 @@ router.post("/ubdateData", async (req, res) => {
     );
 
     if (todayVisitDate) {
-      if (todayVisitDate.medicalReportsCount) {
+      if (todayVisitDate.prescriptionCount) {
         todayVisitDate.prescriptionCount += 1;
       } else {
         todayVisitDate.prescriptionCount = 1;

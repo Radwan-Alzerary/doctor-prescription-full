@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import MedicalReportTable from "./profile/MedicalReportTable";
 import PrescriptionTable from "./profile/PrescriptionTable";
 import LaboryReportTable from "./profile/LaboryReportTable";
+import VisitDateTable from "./profile/VisitDateTable";
 
 function PartientsProfile(props) {
   const [partientsProfile, setPartientsProfile] = useState([]);
@@ -159,7 +160,11 @@ function PartientsProfile(props) {
         ""
       )}
 
-      {profileSelect === "History" ? "" : ""}
+      {profileSelect === "History" ? (
+        <VisitDateTable visitData={partientsProfile.visitDate}></VisitDateTable>
+      ) : (
+        ""
+      )}
     </form>
   );
 }

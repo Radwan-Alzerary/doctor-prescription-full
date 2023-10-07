@@ -95,7 +95,7 @@ router.get("/import", async (req, res) => {
   }
 });
 
-router.get("/getbyname/:searchName?", async (req, res) => {
+router.get("/getbyname/:searchName", async (req, res) => {
   const searchName = req.params.searchName;
   try {
     const pharmaceutical = await Pharmaceutical.find({
@@ -108,7 +108,7 @@ router.get("/getbyname/:searchName?", async (req, res) => {
 });
 router.get("/getbyname/", async (req, res) => {
   try {
-    const pharmaceutical = await Pharmaceutical.find({    })
+    const pharmaceutical = await Pharmaceutical.find({})
     res.json(pharmaceutical);
   } catch (error) {
     res.status(500).json({ error: error.message });

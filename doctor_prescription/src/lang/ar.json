@@ -76,10 +76,11 @@
   "Add report information": "اضافة معلومات التقرير",
   "Add a prescription": "اضافة وصفة طبية",
   "Adding medication": "اضافة دواء",
-  "add patient page" : "اضافة طبلة للمريض",
-  "Add a laboratory test":"اضافة فحص مختبري",
-"Number of visit":"عدد الزيارات الكلية",
-"serial number" : "الرمز التسلسلي",
-"active" : "تفعيل"
-
+  "add patient page": "اضافة طبلة للمريض",
+  "Add a laboratory test": "اضافة فحص مختبري",
+  "Number of visit": "عدد الزيارات الكلية",
+  "serial number": "الرمز التسلسلي",
+  "active": "تفعيل",
+  "welcome": "مرحبا",
+  "startMassage": "يرجى اختيار محادثه لبدء الدردشة"
 }

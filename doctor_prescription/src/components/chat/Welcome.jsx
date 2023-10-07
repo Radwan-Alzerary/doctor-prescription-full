@@ -1,4 +1,5 @@
 import React from "react";
+import { FormattedMessage } from "react-intl";
 import styled from "styled-components";
 
 export default function Welcome({ currentUser }) {
@@ -8,10 +9,11 @@ export default function Welcome({ currentUser }) {
       <div className="text-center">
         {/* <img src={Robot} alt="welcome" /> */}
         <h1 className=" font-bold text-5xl text-center">
-          مرحبا <span>{currentUser.userName}!</span>
+          <FormattedMessage id={"welcome"} defaultMessage="Hello, World!" />
+          <span>{currentUser.userName}!</span>
         </h1>
         <h3 className="text-center font-bold text-5xl">
-          يرجى اختيار محادثه لبدء الدردشة
+          <FormattedMessage id={"startMassage"} defaultMessage="Hello, World!" />
         </h3>
       </div>
     </Container>

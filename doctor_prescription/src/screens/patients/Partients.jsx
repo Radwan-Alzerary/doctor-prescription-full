@@ -1042,7 +1042,7 @@ function Partients() {
       {showPartientProfile ? (
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
-          <PartientsProfile partientId={partientsSelectId}></PartientsProfile>
+          <PartientsProfile  partientId={partientsSelectId}></PartientsProfile>
         </>
       ) : (
         ""
