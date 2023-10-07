@@ -123,13 +123,12 @@ function App() {
             <main className="w-full">
               {isAuthenticated ? <Header></Header> : ""}
 
-              <div className="h-[92vh] relative bg-gray-100 w-full">
+              <div className="h-[92vh] relative bg-[#F3F4F9] w-full">
                 <Routes>
                   <Route exact path="/register" element={<Register />} />
                   <Route exact path="/newcomputer" element={<Register />} />
                   <Route exact path="/login" element={<Login />} />
                   <Route exact path="/tst" element={<VoiceRecoed />} />
-
                   <Route exact path="/" element={<PrivateRoute />}>
                     <Route exact path="/" element={<Dashboard />}></Route>
                     <Route exact path="Chats" element={<Chats />} />

@@ -13,8 +13,8 @@ function CustomizedInputBase() {
       <div className="flex bg-white px-4 py-1 rounded-3xl w-1/2">
         <InputBase
           sx={{ ml: 1, flex: 1 }}
-          placeholder="البحث عن دواء"
-          inputProps={{ "aria-label": "البحث عن دواء" }}
+          placeholder="البحث عن صنف"
+          inputProps={{ "aria-label": "البحث عن صنف" }}
         />
         <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
           <SearchIcon />

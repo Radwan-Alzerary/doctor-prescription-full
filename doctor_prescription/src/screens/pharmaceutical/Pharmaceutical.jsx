@@ -146,13 +146,40 @@ function Pharmaceutical() {
     setShowAddForm(true);
   };
 
+  const handeSearchInput = (event) => {
+    const searchInputValue = event.target.value;
+    axios
+      .get(`http://localhost:5000/pharmaceutical/getbyname/${searchInputValue}`)
+      .then((response) => {
+        setPharmaceList(response.data); // Update the categories state with the fetched data
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+    console.log(event.target.value);
+  };
+
+
   const handleHideClick = () => {
     setShowAddForm(false);
     setShowEditForm(false)
   };
   return (
     <div className=" h-[92vh] overflow-auto">
-      <CustomizedInputBase></CustomizedInputBase>
+      <div className=" flex flex-col justify-center items-center p-4">
+        <div className="flex bg-white px-4 py-1 rounded-3xl w-1/2">
+          <InputBase
+            onChange={handeSearchInput}
+            sx={{ ml: 1, flex: 1 }}
+            placeholder="البحث عن دواء"
+            inputProps={{ "aria-label": "البحث عن دواء" }}
+          />
+          <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
+            <SearchIcon />
+          </IconButton>
+        </div>
+      </div>
       <PharmaceuticalTable
         onDeleteHandle={onDeleteHandle}
         onEditHandle={onEditHandle}

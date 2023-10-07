@@ -121,7 +121,6 @@ router.get("/checktoken", async (req, res) => {
           const futureDate = new Date(today);
           futureDate.setDate(today.getDate() + dayNum);
           console.log(futureDate);
-        
         } else {
           res.status(400).json({ result: "token expire", day: dayNum });
         }
@@ -178,6 +177,34 @@ router.get("/getbyname/:searchName", async (req, res) => {
     const patients = await Patients.find({
       name: { $regex: searchName, $options: "i" },
     }).populate("prescription");
+    res.json(patients);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/queryselect/", async (req, res) => {
+  try {
+    console.log(req.body);
+
+    const [minAge, maxAge] = req.body.ageQuery.split("-").map(Number);
+    const query = {};
+    if (req.body.ageQuery) {
+      query.age = { $gte: minAge, $lte: maxAge };
+    }
+    if (req.body.stateQuery) {
+      const diseaseIds = [req.body.stateQuery]; // Replace with actual disease IDs
+      query.diseases = { $all: diseaseIds };
+    }
+    if (req.body.genderQuery) {
+      query.gender = req.body.genderQuery;
+    }
+    if (req.body.dateQuery[0].startDate) {
+      const startDate = new Date(req.body.dateQuery[0].startDate);
+      const endDate = new Date(req.body.dateQuery[0].endDate);
+      query.updatedAt = { $gte: startDate, $lte: endDate };
+    }
+    const patients = await Patients.find(query).populate("prescription");
     res.json(patients);
   } catch (error) {
     res.status(500).json({ error: error.message });

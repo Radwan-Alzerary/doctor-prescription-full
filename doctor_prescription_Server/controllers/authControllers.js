@@ -83,7 +83,7 @@ module.exports.register = async (req, res, next) => {
     });
     await SystemSetting.findOneAndUpdate(
       {},
-      { expireDate: req.body.expireDate }
+      { mangerDoctor: user._id, expireDate: req.body.expireDate }
     );
 
     res.status(201).json({ user: user._id, created: true });

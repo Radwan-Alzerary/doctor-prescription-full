@@ -7,7 +7,7 @@ router.get("/getcount", async (req, res) => {
   try {
     const pharmaceuticalCount = await Pharmaceutical.count();
     const patientsCount = await Patients.count();
-    const PrescriptionCount = await Prescription.count();
+    const PrescriptionCount = await Prescription.countDocuments({ active: true });
 
     // Calculate the start and end of the current day
     const today = new Date();

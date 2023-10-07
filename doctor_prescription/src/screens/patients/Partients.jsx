@@ -54,6 +54,7 @@ import AddLaboratoryExamination from "../../components/Partients/AddLaboratoryEx
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { FormattedMessage } from "react-intl";
+import DateRangePickerComp from "../global/DateRangePickerComp";
 
 function Row(props) {
   const { row } = props;
@@ -312,7 +313,6 @@ function Partients() {
   };
 
   const [showCalendar, setShowCalendar] = useState(false);
-  const [selectedDayRange, setSelectedDayRange] = useState(defaultRange);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showPartientsAddForm, setShowPartientsAddForm] = useState(false);
   const [showPartientsEditForm, setShowPartientsEditForm] = useState(false);
@@ -334,11 +334,21 @@ function Partients() {
   const [dataToPrint, setDataToPrint] = useState([]);
   const [medicalReportsStype, setMedicalReportsStype] = useState([]);
   const [editPrescriptionData, setEditPrescriptionData] = useState({});
+  const [ageQuery, setAgeQuery] = useState("");
+  const [genderQuery, setGenderQuery] = useState("");
+  const [stateQuery, setStateQuery] = useState("");
+  const [dateQuery, setDateQuery] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [isLoaded, setIsLoaded] = useState(false);
-
+  const [range, setRange] = useState([
+    {
+      //   startDate: new Date(),
+      //   endDate: addDays(new Date(), 7),
+      key: "selection",
+    },
+  ]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -372,7 +382,6 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   };
-
   const handlePrint = () => {
     axios
       .get(
@@ -387,7 +396,6 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   };
-
   useEffect(() => {
     axios
       .get("http://localhost:5000/category/getall")
@@ -399,11 +407,9 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
-
   useEffect(() => {
     getPharmaceApi();
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
-
   const getPharmaceApi = () => {
     axios
       .get("http://localhost:5000/pharmaceutical/getall")
@@ -414,7 +420,6 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   };
-
   useEffect(() => {
     axios
       .get("http://localhost:5000/intaketime/getall")
@@ -425,7 +430,6 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
-
   useEffect(() => {
     axios
       .get("http://localhost:5000/constantdiseases/getall")
@@ -436,11 +440,9 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
-
   useEffect(() => {
     getPatientsList();
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
-
   const getPatientsList = () => {
     axios
       .get("http://localhost:5000/patients/getall")
@@ -452,12 +454,10 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   };
-
   // Function to handle the button click to toggle the calendar visibility
   const handleAddButtonClick = () => {
     setShowAddForm(true);
   };
-
   const handleHideClick = () => {
     setPharmaceListInside([]);
     setShowLaporyReportForm(false);
@@ -468,7 +468,6 @@ function Partients() {
     setShowAddForm(false);
     setShowPartientsAddForm(false);
   };
-
   const handleOnBillInsideRemove = (id) => {
     axios
       .delete(
@@ -485,11 +484,9 @@ function Partients() {
         console.error(`Error deleting category with ID ${id}:`, error);
       });
   };
-
   const onShareHande = (id) => {
     console.log(`Share clicked for id ${id}`);
   };
-
   const onDeleteHande = (id) => {
     axios
       .delete(`http://localhost:5000/patients/delete/${id}`)
@@ -506,7 +503,6 @@ function Partients() {
 
     console.log(`Delete clicked for id ${id}`);
   };
-
   const onEditHande = (id) => {
     axios
       .get(`http://localhost:5000/patients/medicalinfo/${id}`)
@@ -521,7 +517,6 @@ function Partients() {
 
     console.log(`Edit clicked for id ${id}`);
   };
-
   const onPrescriptionShowHande = (id) => {
     axios
       .post("http://localhost:5000/prescription/new", { PartientsId: id })
@@ -539,7 +534,6 @@ function Partients() {
 
     console.log(`Prescription Show clicked for id ${id}`);
   };
-
   const onReportShowHandel = (id) => {
     setPartientsSelectId(id);
     setShowAddReportForm(true);
@@ -552,7 +546,6 @@ function Partients() {
 
     console.log(`Prescription Show clicked for id ${id}`);
   };
-
   const onMedicalFormShowHandle = (id) => {
     axios
       .get(`http://localhost:5000/patients/medicalinfo/${id}`)
@@ -568,7 +561,6 @@ function Partients() {
 
     console.log(`Prescription Show clicked for id ${id}`);
   };
-
   const handleNewPatientData = (data) => {
     console.log(data);
     axios
@@ -587,7 +579,6 @@ function Partients() {
 
     // Update the state or perform actions with the data as needed
   };
-
   const handleEditPatientData = (data) => {
     data.id = partientsSelectId;
     console.log(data);
@@ -606,7 +597,6 @@ function Partients() {
         console.error("Error making POST request:", error);
       });
   };
-
   const handleOnBillAdded = (data) => {
     axios
       .post("http://localhost:5000/prescription/postpharmaceutical", data)
@@ -620,7 +610,6 @@ function Partients() {
         console.error("Error making POST request:", error);
       });
   };
-
   const getAllPrescription = (PrescriptionId) => {
     axios
       .get(`http://localhost:5000/prescription/getbills/${PrescriptionId}`)
@@ -632,12 +621,10 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   };
-
   const onNameClickHandle = (id) => {
     setPartientsSelectId(id);
     setShowPartientProfile(true);
   };
-
   const handleNewPrescriptionData = (data) => {
     data.patientId = partientsSelectId;
     axios
@@ -652,11 +639,9 @@ function Partients() {
         console.error("Error making POST request:", error);
       });
   };
-
   const handlePrintFeedBack = () => {
     setprints(false);
   };
-
   const HandleonPrinterClick = () => {
     handlePrint();
   };
@@ -671,7 +656,6 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   };
-
   const handleNewReportData = (data) => {
     axios
       .post("http://localhost:5000/medicalreports/new", { data })
@@ -685,7 +669,6 @@ function Partients() {
         console.error("Error making POST request:", error);
       });
   };
-
   const handleNewLaboryData = (data) => {
     axios
       .post("http://localhost:5000/labory/new", { data })
@@ -699,7 +682,6 @@ function Partients() {
         console.error("Error making POST request:", error);
       });
   };
-
   const handeSearchInput = (event) => {
     const searchInputValue = event.target.value;
     axios
@@ -711,10 +693,8 @@ function Partients() {
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
-
     console.log(event.target.value);
   };
-
   const HandleOnPrescriptionDeleteHande = (patientsId, prescriptionId) => {
     axios
       .delete(
@@ -746,6 +726,29 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   };
+  useEffect(() => {
+    const onQueryChange = () => {
+      axios
+        .post("http://localhost:5000/patients/queryselect", {
+          ageQuery: ageQuery,
+          genderQuery: genderQuery,
+          stateQuery: stateQuery,
+          dateQuery: range,
+        })
+        .then((response) => {
+          setPatientsList(response.data); // Update the categories state with the fetched data
+
+          // Handle the response if needed
+          console.log("POST request successful:", response.data);
+        })
+        .catch((error) => {
+          // Handle errors if the request fails
+          console.error("Error making POST request:", error);
+        });
+    };
+
+    onQueryChange();
+  }, [ageQuery, stateQuery, genderQuery, dateQuery,range]);
 
   return (
     <div className="p-7 relative h-[97vh] overflow-auto">
@@ -769,17 +772,25 @@ function Partients() {
               <FormattedMessage id={"ageSort"} defaultMessage="Hello, World!" />
             </InputLabel>
             <Select
+              onChange={(event) => {
+                setAgeQuery(event.target.value);
+              }}
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
             >
               <MenuItem value="">
                 <em>الكل</em>
               </MenuItem>
-              <MenuItem value={10}>1-10</MenuItem>
-              <MenuItem value={20}>10-20</MenuItem>
-              <MenuItem value={30}>20-30</MenuItem>
-              <MenuItem value={30}>30-50</MenuItem>
-              <MenuItem value={30}>50-70</MenuItem>
+              <MenuItem value={"1-10"}>1-10</MenuItem>
+              <MenuItem value={"10-20"}>10-20</MenuItem>
+              <MenuItem value={"20-30"}>20-30</MenuItem>
+              <MenuItem value={"30-40"}>30-40</MenuItem>
+              <MenuItem value={"40-50"}>40-50</MenuItem>
+              <MenuItem value={"50-60"}>50-60</MenuItem>
+              <MenuItem value={"60-70"}>60-70</MenuItem>
+              <MenuItem value={"70-80"}>70-80</MenuItem>
+              <MenuItem value={"80-90"}>80-90</MenuItem>
+              <MenuItem value={"90-140"}>90-140</MenuItem>
             </Select>
           </FormControl>
         </div>
@@ -795,15 +806,16 @@ function Partients() {
             <Select
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
+              onChange={(event) => {
+                setStateQuery(event.target.value);
+              }}
             >
               <MenuItem value="">
                 <em>الكل</em>
               </MenuItem>
-              <MenuItem value={10}>امراض مزمنة</MenuItem>
-              <MenuItem value={20}>سكري</MenuItem>
-              <MenuItem value={30}>ضغط</MenuItem>
-              <MenuItem value={30}>حمل</MenuItem>
-              <MenuItem value={30}>50-70</MenuItem>
+              {constantDiseases.map((diseases, index) => (
+                <MenuItem value={diseases._id}>{diseases.name}</MenuItem>
+              ))}
             </Select>
           </FormControl>
         </div>
@@ -819,36 +831,25 @@ function Partients() {
             <Select
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
+              onChange={(event) => {
+                setGenderQuery(() => event.target.value);
+              }}
             >
               <MenuItem value="">
                 <em>الكل</em>
               </MenuItem>
-              <MenuItem value={10}>ذكر</MenuItem>
-              <MenuItem value={20}>انثى</MenuItem>
+              <MenuItem value={"ذكر"}>ذكر</MenuItem>
+              <MenuItem value={"انثى"}>انثى</MenuItem>
             </Select>
           </FormControl>
         </div>
         <div className=" w-1/6">
-          <FormControl className="w-full bg-whiteh" size="small" sx={{ m: 1 }}>
-            <InputLabel id="demo-simple-select-helper-label">
-              <FormattedMessage
-                id={"dateSort"}
-                defaultMessage="Hello, World!"
-              />
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-helper-label"
-              id="demo-simple-select-helper"
-            >
-              <MenuItem value="">
-                <em>الكل</em>
-              </MenuItem>
-              <MenuItem value={10}>اليوم</MenuItem>
-              <MenuItem value={20}>اسبوع</MenuItem>
-              <MenuItem value={20}>شهر</MenuItem>
-              <MenuItem value={30}>سنه</MenuItem>
-            </Select>
-          </FormControl>
+          <DateRangePickerComp
+            range={range}
+            setRange={(rangeValue) => {
+              setRange(rangeValue);
+            }}
+          ></DateRangePickerComp>
         </div>
 
         {/* <button onClick={toggleCalendar}>تحديد مده زمنية</button> */}
@@ -1098,35 +1099,5 @@ function Partients() {
   );
 }
 
-function SelectLabels(props) {
-  const [age, setAge] = React.useState("");
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-
-  return (
-    <div className=" w-1/6">
-      <FormControl className="w-full bg-whiteh" size="small" sx={{ m: 1 }}>
-        <InputLabel id="demo-simple-select-helper-label">
-          {props.title}
-        </InputLabel>
-        <Select
-          labelId="demo-simple-select-helper-label"
-          id="demo-simple-select-helper"
-          value={age}
-          label={props.title}
-          onChange={handleChange}
-        >
-          <MenuItem value="">
-            <em>الكل</em>
-          </MenuItem>
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-      </FormControl>
-    </div>
-  );
-}
 
 export default Partients;

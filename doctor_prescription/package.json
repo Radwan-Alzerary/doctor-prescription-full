@@ -27,6 +27,7 @@
     "react-apexcharts": "^1.4.1",
     "react-auth-kit": "^2.12.6",
     "react-cookie": "^6.1.1",
+    "react-date-range": "^1.4.0",
     "react-dom": "^18.2.0",
     "react-full-screen": "^1.1.1",
     "react-i18next": "^13.2.1",

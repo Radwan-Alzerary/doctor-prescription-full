@@ -95,6 +95,28 @@ router.get("/import", async (req, res) => {
   }
 });
 
+router.get("/getbyname/:searchName?", async (req, res) => {
+  const searchName = req.params.searchName;
+  try {
+    const pharmaceutical = await Pharmaceutical.find({
+      name: { $regex: searchName, $options: "i" },
+    })
+    res.json(pharmaceutical);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+router.get("/getbyname/", async (req, res) => {
+  try {
+    const pharmaceutical = await Pharmaceutical.find({    })
+    res.json(pharmaceutical);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
 // Get one Pharmaceutical by ID
 router.get("/getone/:id", async (req, res) => {
   try {
