@@ -135,7 +135,7 @@ function DoctorProfile() {
 
               {doctor.profileImg ? (
                 <img
-                  className=" rounded-full"
+                  className=" rounded-full h-full w-full overflow-hidden object-cover"
                   src={"http://localhost:5000" + doctor.profileImg}
                   alt=""
                 ></img>

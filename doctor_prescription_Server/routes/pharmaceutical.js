@@ -41,13 +41,42 @@ router.post("/edit", async (req, res) => {
   }
 });
 
+router.post("/favorite", async (req, res) => {
+  try {
+    console.log(req.body);
+    const selectedPharmaceutical = await Pharmaceutical.findById(req.body.id);
+
+    if (!selectedPharmaceutical) {
+      // If no pharmaceutical with the provided ID is found, return an error response.
+      return res.status(404).json({ error: "Pharmaceutical not found" });
+    }
+    let updatedFavoriteStatus = true;
+    if (selectedPharmaceutical.favorite) {
+      updatedFavoriteStatus = false;
+    }
+    const pharmaceutical = await Pharmaceutical.findByIdAndUpdate(
+      req.body.id,
+      {
+        favorite: updatedFavoriteStatus,
+      },
+      {
+        new: true,
+      }
+    );
+
+    res.status(201).json(pharmaceutical);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 // Get all categories
 router.get("/getall", async (req, res) => {
   try {
     const pharmaceutical = await Pharmaceutical.find({ active: { $ne: false } })
       .populate("category")
       .populate("intaketime")
-      .sort({ name: 1 }); // 1 for ascending order, -1 for descending order
+      .sort({ favorite: -1, name: 1 });
 
     // console.log(pharmaceutical)
     res.json(pharmaceutical);
@@ -100,7 +129,7 @@ router.get("/getbyname/:searchName", async (req, res) => {
   try {
     const pharmaceutical = await Pharmaceutical.find({
       name: { $regex: searchName, $options: "i" },
-    })
+    });
     res.json(pharmaceutical);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -108,14 +137,12 @@ router.get("/getbyname/:searchName", async (req, res) => {
 });
 router.get("/getbyname/", async (req, res) => {
   try {
-    const pharmaceutical = await Pharmaceutical.find({})
+    const pharmaceutical = await Pharmaceutical.find({});
     res.json(pharmaceutical);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
-
-
 
 // Get one Pharmaceutical by ID
 router.get("/getone/:id", async (req, res) => {

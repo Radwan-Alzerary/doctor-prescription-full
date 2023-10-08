@@ -13,8 +13,9 @@ import {
   Checkbox,
   IconButton,
 } from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete, Edit, Favorite } from "@mui/icons-material";
 import { FormattedMessage } from "react-intl";
+import { red } from "@mui/material/colors";
 
 const Drugnamet = () => {
   return <FormattedMessage id={"Drug name"} defaultMessage="Hello, World!" />;
@@ -107,7 +108,7 @@ function EnhancedTableHead(props) {
 }
 
 export default function PharmaceuticalTable(props) {
-  const { rows, onDeleteHandle, onEditHandle } = props;
+  const { rows, onDeleteHandle, onEditHandle, onFavoriteHandle } = props;
 
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
@@ -228,6 +229,19 @@ export default function PharmaceuticalTable(props) {
                           aria-label="edit"
                         >
                           <Edit fontSize="inherit" />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => {
+                            onFavoriteHandle(row._id);
+                          }}
+                          sx={
+                            row.favorite
+                              ? { color: red[500] }
+                              : { color: red[100] }
+                          }
+                          aria-label="edit"
+                        >
+                          <Favorite fontSize="inherit" />
                         </IconButton>
                       </TableCell>
                     </TableRow>

@@ -1,7 +1,5 @@
 import {
-  Box,
   Button,
-  Chip,
   FormControl,
   InputLabel,
   MenuItem,
@@ -22,15 +20,6 @@ const MenuProps = {
     },
   },
 };
-const names = [
-  "ضغط دم",
-  "مرض مزمن",
-  "سكري",
-  "حامل",
-  "اطفال",
-  "الحساسية",
-  "مرض السكري",
-];
 
 function NewPharmaceuticalForm(props) {
   const [formData, setFormData] = useState({
@@ -41,8 +30,9 @@ function NewPharmaceuticalForm(props) {
     intaketime: "",
     manufactoy: "",
     description: "",
-    anotherIntaketime:""
+    anotherIntaketime: "",
   });
+
   const [showInTakeOtherInput, setShowInTakeOtherInput] = useState(false);
   // Handle form submission
   const handleSubmit = (event) => {
@@ -106,7 +96,6 @@ function NewPharmaceuticalForm(props) {
             id="demo-simple-select-helper"
             // value={age}
             value={formData.category}
-
             onChange={(event) =>
               handleInputChange("category", event.target.value)
             } // Update the name state
@@ -130,7 +119,6 @@ function NewPharmaceuticalForm(props) {
           id="outlined-required"
           size="small"
           value={formData.dose}
-
           onChange={(event) => handleInputChange("dose", event.target.value)} // Update the name state
           sx={{
             width: "42%",
@@ -150,7 +138,6 @@ function NewPharmaceuticalForm(props) {
           id="outlined-required"
           size="small"
           value={formData.doseCount}
-
           onChange={(event) =>
             handleInputChange("doseCount", event.target.value)
           } // Update the name state
@@ -177,7 +164,6 @@ function NewPharmaceuticalForm(props) {
             id="demo-simple-select-helper"
             // value={age}
             label="وقت التناول"
-
             onChange={(event) =>
               handleInTakeTimeInputChange(event.target.value)
             } // Update the name state
@@ -202,7 +188,6 @@ function NewPharmaceuticalForm(props) {
           label="شركة الصنع"
           // defaultValue="Hello World"
           value={formData.manufactoy}
-
           onChange={(event) =>
             handleInputChange("manufactoy", event.target.value)
           } // Update the name state
@@ -211,7 +196,7 @@ function NewPharmaceuticalForm(props) {
           }}
         />
       </div>
-      
+
       {showInTakeOtherInput ? (
         <div className="w-full ">
           <TextField
@@ -220,7 +205,6 @@ function NewPharmaceuticalForm(props) {
             id="outlined-required"
             size="small"
             value={formData.anotherIntaketime}
-
             onChange={(event) =>
               handleInputChange("anotherIntaketime", event.target.value)
             } // Update the name state
@@ -248,7 +232,6 @@ function NewPharmaceuticalForm(props) {
         id="outlined-required"
         size="small"
         value={formData.description}
-
         onChange={(event) =>
           handleInputChange("description", event.target.value)
         } // Update the name state

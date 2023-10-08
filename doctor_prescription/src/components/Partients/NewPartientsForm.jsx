@@ -7,6 +7,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  createFilterOptions,
 } from "@mui/material";
 import BillTable from "./BillTable";
 import { PrintRounded } from "@mui/icons-material";
@@ -42,6 +43,11 @@ function EditPartients(props) {
     dataBillForm.PrescriptionId = props.PrescriptionId;
     props.onBillAdded(dataBillForm);
   };
+  const filterOptions = createFilterOptions({
+    ignoreCase: true,
+    matchFrom: "start",
+    limit: 20,
+  });
 
   useEffect(() => {
     console.log(inputValue);
@@ -179,6 +185,7 @@ function EditPartients(props) {
               id="combo-box-demo"
               options={props.pharmaceList}
               getOptionLabel={(option) => option.name} // Specify the field to use as the label
+              filterOptions={filterOptions}
               sx={{ width: "33%" }}
               //   value={value}
               onChange={(event, newValue) => {

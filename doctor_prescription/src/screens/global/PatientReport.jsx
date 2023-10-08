@@ -39,9 +39,9 @@ function PatientReport(props) {
   });
 
   return (
-    <div className="h-[100px] ">
+    <div className="h-full ">
       <div
-        className="h-full"
+        className="h-full p-4 relative"
         ref={componentRef}
         style={{
           direction: "rtl",
@@ -58,7 +58,7 @@ function PatientReport(props) {
           alt=""
         ></img>
         <div
-          className={`z-20 absolute text-center flex flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5  rounded-xl `}
+          className={`z-20 h-0 w-0 absolute text-center flex flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center  rounded-xl `}
           style={{
             fontFamily: "signfont",
             left: `${props.medicalReportsStype.signatureX}%`,
@@ -67,15 +67,13 @@ function PatientReport(props) {
             color: `${props.medicalReportsStype.signatureColor}`,
           }}
         >
-          <div className="m-0">
-            {props.medicalReportsStype.mainNameHeaderknia}
-            <br></br>
-            {props.medicalReportsStype.signature}
-          </div>
+          <p className="h-0"> {props.medicalReportsStype.mainNameHeaderknia}</p>
+          <br></br>
+          {props.medicalReportsStype.signature}
         </div>
         {/* Your content to be printed */}
-        <div className="relative z-10 ">
-          <div className="flex w-full flex-col justify-center items-center">
+        <div className="  h-[96vh] relative flex flex-col z-10 ">
+          <div className="flex w-full  flex-col justify-center items-center">
             <div
               style={{ height: `${props.medicalReportsStype.topPading}px` }}
             ></div>
@@ -235,7 +233,7 @@ function PatientReport(props) {
           </div>
           <div className="w-full h-0.5 bg-slate-100 mb-2"></div>
 
-          <div className="w-full h-1/2  ">
+          <div className=" w-full h-1/2  ">
             <div class="relative ">
               <table class="w-full text-sm  text-center text-gray-500 ">
                 {!props.dataToPrint.textonly ? (
@@ -464,7 +462,7 @@ function PatientReport(props) {
             </div>
           </div>
 
-          <div className="w-full absolute bottom-0 ">
+          <div className=" w-full  absolute bottom-0 ">
             <div className="w-full h-0.5 bg-slate-100 mb-3"></div>
 
             <div className="flex items-cenDter justify-around">
@@ -530,6 +528,9 @@ function PatientReport(props) {
                 )}
               </div>
             </div>
+            <div
+              style={{ height: `${props.medicalReportsStype.bottomPading}px` }}
+            ></div>
           </div>
         </div>
       </div>

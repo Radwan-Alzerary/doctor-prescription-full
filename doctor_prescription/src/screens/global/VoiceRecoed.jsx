@@ -29,12 +29,6 @@ const VoiceRecoed = () => {
   return (
     <>
       <div className="container">
-        <h2>Speech to Text Converter</h2>
-        <br />
-        <p>
-          A React hook that converts speech from the microphone to text and
-          makes it available to your React components.
-        </p>
         <input
           value={value1}
           onChange={(event) => {

@@ -86,6 +86,7 @@ function Pharmaceutical() {
 
     console.log(`Delete clicked for id ${id}`);
   };
+
   const onEditHandle = (id) => {
     console.log(id)
     axios
@@ -103,6 +104,20 @@ function Pharmaceutical() {
 
     console.log(`Delete clicked for id ${id}`);
   };
+
+  const onFavoriteHandle=(id)=>{
+    axios
+      .post("http://localhost:5000/pharmaceutical/favorite", {id:id})
+      .then((response) => {
+        getAllBill();
+        console.log("POST request successful:", response.data);
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+
+  }
 
   useEffect(() => {
     axios
@@ -183,6 +198,7 @@ function Pharmaceutical() {
       <PharmaceuticalTable
         onDeleteHandle={onDeleteHandle}
         onEditHandle={onEditHandle}
+        onFavoriteHandle={onFavoriteHandle}
         rows={pharmaceList}
       ></PharmaceuticalTable>
       <div className=" absolute z-50 bottom-4 left-6">
