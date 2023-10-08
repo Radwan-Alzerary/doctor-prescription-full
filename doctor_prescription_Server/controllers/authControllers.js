@@ -106,6 +106,12 @@ module.exports.editAcount = async (req, res, next) => {
       },
       { new: true } // To get the updated user object
     );
+    if (req.body.expireDate) {
+      await SystemSetting.findOneAndUpdate(
+        {},
+        {expireDate: req.body.expireDate }
+      );
+    }
 
     if (!updatedUser) {
       // Handle the case where the user with the given ID was not found

@@ -84,7 +84,7 @@ function Setting(props) {
           .post("http://localhost:5000/users/edit", data)
           .then((response) => {
             // Handle the response if needed
-            window.location.reload(false);
+            window.location.href = "/";
 
             console.log("POST request successful:", response.data);
           })

@@ -39,11 +39,10 @@ function PatientReport(props) {
   });
 
   return (
-    <div className="h-full ">
+    <div className="h-[100px] ">
       <div
         className="h-full"
         ref={componentRef}
-        className="p-4 relative"
         style={{
           direction: "rtl",
           textAlign: "right",
@@ -75,8 +74,8 @@ function PatientReport(props) {
           </div>
         </div>
         {/* Your content to be printed */}
-        <div className="  h-screen relative flex flex-col z-10 ">
-          <div className="flex w-full  flex-col justify-center items-center">
+        <div className="relative z-10 ">
+          <div className="flex w-full flex-col justify-center items-center">
             <div
               style={{ height: `${props.medicalReportsStype.topPading}px` }}
             ></div>
@@ -236,7 +235,7 @@ function PatientReport(props) {
           </div>
           <div className="w-full h-0.5 bg-slate-100 mb-2"></div>
 
-          <div className=" w-full h-1/2  ">
+          <div className="w-full h-1/2  ">
             <div class="relative ">
               <table class="w-full text-sm  text-center text-gray-500 ">
                 {!props.dataToPrint.textonly ? (
@@ -464,8 +463,8 @@ function PatientReport(props) {
               </table>
             </div>
           </div>
-          
-          <div className=" w-full  absolute bottom-0 ">
+
+          <div className="w-full absolute bottom-0 ">
             <div className="w-full h-0.5 bg-slate-100 mb-3"></div>
 
             <div className="flex items-cenDter justify-around">
@@ -531,9 +530,6 @@ function PatientReport(props) {
                 )}
               </div>
             </div>
-            <div
-              style={{ height: `${props.medicalReportsStype.bottomPading}px` }}
-            ></div>
           </div>
         </div>
       </div>
