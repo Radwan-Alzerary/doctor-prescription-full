@@ -24,18 +24,21 @@ const PatientsSchema = new mongoose.Schema(
     adresses: {
       type: String,
     },
-    visitDate: [{
-      date:{type: Date},
-      medicalReportsCount :{type:Number},
-      prescriptionCount :{type:Number},
-      laboryReportCount:{type:Number}
-    }],
+    galary: [{ type: String }],
+    visitDate: [
+      {
+        date: { type: Date },
+        medicalReportsCount: { type: Number },
+        prescriptionCount: { type: Number },
+        laboryReportCount: { type: Number },
+      },
+    ],
     fumbling: { type: String },
-    medicalDiagnosis : {type:String},
-    currentMedicalHistory: {type:String},
-    medicalHistory: {type:String},
-    previousSurgeries: {type:String},
-    familyHistory: {type:String},
+    medicalDiagnosis: { type: String },
+    currentMedicalHistory: { type: String },
+    medicalHistory: { type: String },
+    previousSurgeries: { type: String },
+    familyHistory: { type: String },
     visitCount: { type: Number, default: 0 },
     diseases: [
       { type: mongoose.Schema.Types.ObjectId, ref: "ConstantDiseases" },
@@ -48,9 +51,7 @@ const PatientsSchema = new mongoose.Schema(
     medicalReport: [
       { type: mongoose.Schema.Types.ObjectId, ref: "MedicalReportS" },
     ],
-    labory: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "labory" },
-    ],
+    labory: [{ type: mongoose.Schema.Types.ObjectId, ref: "labory" }],
 
     Medicine: [{ type: mongoose.Schema.Types.ObjectId, ref: "Medicine" }],
 

@@ -1,11 +1,23 @@
 const router = require("express").Router();
 const Prescription = require("../model/prescription"); // Make sure to adjust the path as needed
-
 const Patients = require("../model/patients"); // Make sure to adjust the path as needed
 const ConstantDiseases = require("../model/constantDiseases");
 const axios = require("axios");
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./public/img");
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const extension = file.originalname.split(".").pop();
+    cb(null, uniqueSuffix + "." + extension);
+  },
+});
 
-// Add a new patients
+// Create multer instance for uploading image
+const upload = multer({ storage: storage });
+
 router.post("/new", async (req, res) => {
   const patientsDate = {};
   try {
@@ -91,8 +103,6 @@ router.post("/edit", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
-// Get all patients
 router.get("/getall", async (req, res) => {
   try {
     const patients = await Patients.find()
@@ -106,7 +116,6 @@ router.get("/getall", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 router.get("/checktoken", async (req, res) => {
   let dayNum = 0;
   try {
@@ -139,8 +148,6 @@ router.get("/checktoken", async (req, res) => {
     res.status(500).json({ error: "An error occurred" });
   }
 });
-
-// Get all patients
 router.get("/getbyname/", async (req, res) => {
   const searchName = req.params.searchName;
   try {
@@ -150,7 +157,6 @@ router.get("/getbyname/", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 router.get("/medicalinfo/:partientId", async (req, res) => {
   try {
     const patients = await Patients.findById(req.params.partientId)
@@ -170,7 +176,6 @@ router.get("/medicalinfo/:partientId", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 router.get("/getbyname/:searchName", async (req, res) => {
   const searchName = req.params.searchName;
   try {
@@ -182,7 +187,6 @@ router.get("/getbyname/:searchName", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 router.post("/queryselect/", async (req, res) => {
   try {
     console.log(req.body);
@@ -210,8 +214,6 @@ router.post("/queryselect/", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-// Get one patients by ID
 router.get("/getone/:id", async (req, res) => {
   try {
     const patients = await Patients.findById(req.params.id);
@@ -223,7 +225,6 @@ router.get("/getone/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 router.get(
   "/printpatientsdata/:Patientsid/prescription/:prescriptionId",
   async (req, res) => {
@@ -232,7 +233,6 @@ router.get(
       if (!patients) {
         return res.status(404).json({ error: "Category not found" });
       }
-
       const prescription = await Prescription.findById(
         req.params.prescriptionId
       )
@@ -245,8 +245,32 @@ router.get(
     }
   }
 );
+router.post("/galaryimage", upload.single("image"), async (req, res, next) => {
+  console.log(req.body.id);
+  console.log(req.body);
+  console.log(req.body);
+  console.log(req.body);
+  const { filename, path } = req.file;
+  const { name } = req.body;
+  console.log(filename, path, name);
+  const url = req.protocol + "://" + req.get("host");
+  const imagePath = req.file ? "/img/" + req.file.filename : null;
+  console.log(imagePath);
+  try {
+    const medicalReportsStype = await Patients.findByIdAndUpdate(
+      req.body.id,
+      { $push: { galary: imagePath } },
+      { new: true }
+    );
+    if (!medicalReportsStype) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+    res.json(medicalReportsStype);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
-// Edit one category by ID
 router.put("/edit/:id", async (req, res) => {
   try {
     const patients = await Patients.findByIdAndUpdate(req.params.id, req.body, {
@@ -260,8 +284,6 @@ router.put("/edit/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-// Delete one category by ID
 router.delete("/delete/:id", async (req, res) => {
   try {
     const patients = await Patients.findByIdAndDelete(req.params.id);
@@ -273,7 +295,6 @@ router.delete("/delete/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 router.delete(
   "/Patientsid/:Patientsid/prescriptionid/:prescriptionId",
   async (req, res) => {

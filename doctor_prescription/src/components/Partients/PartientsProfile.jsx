@@ -6,6 +6,7 @@ import MedicalReportTable from "./profile/MedicalReportTable";
 import PrescriptionTable from "./profile/PrescriptionTable";
 import LaboryReportTable from "./profile/LaboryReportTable";
 import VisitDateTable from "./profile/VisitDateTable";
+import PatientPictures from "./profile/PatientPictures";
 
 function PartientsProfile(props) {
   const [partientsProfile, setPartientsProfile] = useState([]);
@@ -28,7 +29,20 @@ function PartientsProfile(props) {
 
     // console.log();
   }, []);
+  const refreshPaitent = () => {
+    axios
+      .get(`http://localhost:5000/patients/medicalinfo/${props.partientId}`)
+      .then((response) => {
+        setPartientsProfile(response.data); // Update the categories state with the fetched data
+        setDiseasesProfile(response.data.diseases);
 
+        console.log(response.data);
+        console.log(response.data.medicalReport);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
   return (
     <form className="fixed flex flex-col  left-[50%] top-[50%]  transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 h-[85%] bg-slate-50 p-5 rounded-xl z-50">
       <div className="  w-full flex flex-col  text-center items-center">
@@ -51,6 +65,19 @@ function PartientsProfile(props) {
         >
           المعلومات الشخصية
         </div>
+        <div
+          onClick={() => {
+            setProfileSelect("patientPictures");
+          }}
+          className={`${
+            profileSelect === "patientPictures"
+              ? "bg-green-200"
+              : "bg-slate-200"
+          }  p-2 w-48 rounded-full hover:bg-slate-100 cursor-pointer`}
+        >
+          معرض المريض
+        </div>
+
         <div
           onClick={() => {
             setProfileSelect("prescriptionSite");
@@ -132,6 +159,18 @@ function PartientsProfile(props) {
       ) : (
         ""
       )}
+      {profileSelect === "patientPictures" ? (
+        <>
+          <PatientPictures
+          refreshPaitent={refreshPaitent}
+            id={partientsProfile._id}
+            images={partientsProfile.galary}
+          ></PatientPictures>
+        </>
+      ) : (
+        ""
+      )}
+
       {profileSelect === "prescriptionSite" ? (
         <>
           <PrescriptionTable
