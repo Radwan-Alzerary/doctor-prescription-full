@@ -616,14 +616,23 @@ function Partients() {
       .get(`http://localhost:5000/prescription/getbills/${PrescriptionId}`)
       .then((response) => {
         setPharmaceListInside(() => response.data.prescription); // Update the categories state with the fetched data
-        setMidscapeData(()=>(response.data.midscapeData))
-        console.log(response.data.prescription);
-        console.log(response.data.midscapeData);
+        medscapecheck(PrescriptionId)
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
   };
+  const medscapecheck = (PrescriptionId) => {
+    axios
+      .get(`http://localhost:5000/prescription/medscapecheck/${PrescriptionId}`)
+      .then((response) => {
+        setMidscapeData(()=>(response.data.midscapeData))
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
+
   const onNameClickHandle = (id) => {
     setPartientsSelectId(id);
     setShowPartientProfile(true);

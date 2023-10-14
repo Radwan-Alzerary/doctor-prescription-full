@@ -193,14 +193,37 @@ router.get("/getbills/:prescriptionId", async (req, res) => {
       medscapeId += element.id.midScapeId + ","; // Use += to append values to medscapeId
       console.log(element.id.midScapeId);
     });
-    medscapeId = medscapeId.slice(0, -1); // Remove the trailing comma
-    console.log(medscapeId);
-    const midscapeData = await makeRequest(medscapeId);
-    res.json({ prescription: prescription.pharmaceutical, midscapeData: midscapeData.multiInteractions});
+    res.json({ prescription: prescription.pharmaceutical});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.get("/medscapecheck/:prescriptionId", async (req, res) => {
+  const prescriptionId = req.params.prescriptionId;
+  try {
+    const prescription = await Prescription.findById(prescriptionId).populate(
+      "pharmaceutical.id"
+    );
+    // console.log(prescription);
+    console.log(prescription.pharmaceutical);
+    let medscapeId = "";
+    prescription.pharmaceutical.forEach((element) => {
+      if (element.id.midScapeId === "non") {
+        return;
+      }
+      medscapeId += element.id.midScapeId + ","; // Use += to append values to medscapeId
+      console.log(element.id.midScapeId);
+    });
+    medscapeId = medscapeId.slice(0, -1); // Remove the trailing comma
+    console.log(medscapeId);
+    const midscapeData = await makeRequest(medscapeId);
+    res.json({midscapeData: midscapeData.multiInteractions});
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 const makeRequest = async (medscapeId) => {
   try {

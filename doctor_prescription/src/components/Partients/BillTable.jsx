@@ -12,7 +12,6 @@ import { red } from "@mui/material/colors";
 import { FormattedMessage } from "react-intl";
 import { useEffect } from "react";
 
-
 export default function BillTable(props) {
   useEffect(() => {
     console.log(props.midscapeData);
@@ -51,13 +50,13 @@ export default function BillTable(props) {
               className={`${
                 props.midscapeData &&
                 props.midscapeData.length > 0 &&
-                props.midscapeData.map((data) =>(
+                props.midscapeData.map((data) =>
                   data.subject === pharmace.id.name ||
                   data.subject === pharmace.id.midScapeval ||
                   data.object === pharmace.id.name ||
                   data.object === pharmace.id.midScapeval
                     ? "bg-red-200"
-                    : "")
+                    : ""
                 )
               }`}
               key={pharmace.name}
