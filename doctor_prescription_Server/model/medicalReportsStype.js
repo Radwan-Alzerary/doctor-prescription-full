@@ -4,6 +4,8 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
     name: { type: String },
 
     xPading: { type: String, default: 0 },
+    rightPading: { type: String, default: 0 },
+    leftPading: { type: String, default: 0 },
     topPading: { type: String, default: 0 },
     bottomPading: { type: String, default: 0 },
 

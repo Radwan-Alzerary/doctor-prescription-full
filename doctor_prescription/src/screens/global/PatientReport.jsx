@@ -46,8 +46,15 @@ function PatientReport(props) {
         style={{
           direction: "rtl",
           textAlign: "right",
-          paddingLeft: `${props.medicalReportsStype.xPading}px`,
-          paddingRight: `${props.medicalReportsStype.xPading}px`,
+
+          paddingLeft: `${
+            props.medicalReportsStype.leftPading +
+            props.medicalReportsStype.xPading
+          }px`,
+          paddingRight: `${
+            props.medicalReportsStype.rightPading +
+            props.medicalReportsStype.xPading
+          }px`,
         }}
       >
         <img

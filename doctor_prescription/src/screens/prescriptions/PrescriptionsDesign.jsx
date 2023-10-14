@@ -1216,6 +1216,25 @@ function PrescriptionsDesign() {
                 sx={{ width: "20%" }}
               ></TextField>
               <TextField
+                value={medicalReportsStype.rightPading}
+                onChange={(event) => {
+                  handleInputChange("rightPading", event.target.value);
+                }}
+                label="تقليص ايمن"
+                size="small"
+                sx={{ width: "20%" }}
+              ></TextField>
+              <TextField
+                value={medicalReportsStype.leftPading}
+                onChange={(event) => {
+                  handleInputChange("leftPading", event.target.value);
+                }}
+                label="تقليص ايسر"
+                size="small"
+                sx={{ width: "20%" }}
+              ></TextField>
+
+              <TextField
                 value={medicalReportsStype.topPading}
                 onChange={(event) => {
                   handleInputChange("topPading", event.target.value);
