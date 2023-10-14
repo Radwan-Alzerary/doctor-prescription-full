@@ -87,39 +87,40 @@ router.get("/getall", async (req, res) => {
 
 router.get("/import", async (req, res) => {
   try {
-    // Replace 'your-csv-file.csv' with the path to your CSV file
-    const csvFilePath = "pharmacy.csv";
+    // Replace 'your-json-file.json' with the path to your JSON file
+    const jsonFilePath = "pharmacydataset.json";
     console.log(process.cwd());
-    // Read the CSV file
-    const data = fs.readFileSync(csvFilePath, "utf8");
 
-    // Split the CSV data by line
-    const namesArray = data.split("\n");
+    // Read the JSON file
+    const jsonData = fs.readFileSync(jsonFilePath, "utf8");
 
-    for (const name of namesArray) {
-      // Remove leading/trailing whitespace and empty lines
-      const trimmedName = name.trim();
-      if (trimmedName.length === 0) {
-        continue;
-      }
+    // Parse the JSON data
+    const pharmaceuticalsArray = JSON.parse(jsonData);
 
-      // Create a new Pharmaceutical document with the name field
-      const pharmaceutical = new Pharmaceutical({ name: trimmedName });
+    for (const item of pharmaceuticalsArray) {
+      // Create a new Pharmaceutical document with the necessary fields
+      const pharmaceutical = new Pharmaceutical({
+        name: item.text, // Assuming 'text' field contains the name
+        midScapeId: item.id,
+        midScapeval: item.val,
+        midScapetype: item.type,
+        midScapeHasInteractions: item.has_interactions,
+      });
 
       try {
         // Save the pharmaceutical document to the database
         await pharmaceutical.save();
-        console.log(`Added: ${trimmedName}`);
+        console.log(`Added: ${item.text}`);
       } catch (error) {
-        console.error(`Error adding ${trimmedName}: ${error.message}`);
+        console.error(`Error adding ${item.text}: ${error.message}`);
       }
     }
 
     console.log("Import completed.");
-    await SystemSetting.findOneAndUpdate({}, { pharmaceuticalLoded: true });
+    await SystemSetting.findOneAndUpdate({}, { pharmaceuticalLoaded: true });
     res.status(200).json({ message: "Import completed." });
   } catch (error) {
-    console.error(`Error reading CSV file: ${error.message}`);
+    console.error(`Error reading JSON file: ${error.message}`);
     res.status(500).json({ error: "Internal server error" });
   }
 });

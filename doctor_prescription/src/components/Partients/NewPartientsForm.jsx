@@ -48,6 +48,14 @@ function EditPartients(props) {
     matchFrom: "start",
     limit: 20,
   });
+  useEffect(()=>{
+    console.log(props.MidscapeData)
+    console.log(props.MidscapeData)
+    console.log(props.MidscapeData)
+    console.log(props)
+    console.log(props)
+    console.log(props)
+  },[props])
 
   useEffect(() => {
     console.log(inputValue);
@@ -371,9 +379,11 @@ function EditPartients(props) {
         </div>
       </div>
       <BillTable
+      midscapeData={props.midscapeData}
         onBillInsideRemove={props.onBillInsideRemove}
         pharmaceList={props.pharmaceListInside}
       ></BillTable>
+      {props.midscapeData && props.midscapeData.length > 0 ? <p className="text-left text-sm text-red-700">{props.midscapeData.map((midscapedata)=>(midscapedata.text))}</p>:""}
       <div className="flex gap-6 w-full justify-between">
         <IconButton>
           {/* <PrintRounded color="action"></PrintRounded> */}

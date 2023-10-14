@@ -14,6 +14,10 @@ const PharmaceuticalSchema = new mongoose.Schema(
     description: { type: String },
     active: { type: Boolean, default: true },
     favorite: { type: Boolean, default: false },
+    midScapeId:{type:String},
+    midScapeval:{type:String},
+    midScapetype:{type:String},
+    midScapeHasInteractions:{type:String},
   },
   {
     timestamps: true,

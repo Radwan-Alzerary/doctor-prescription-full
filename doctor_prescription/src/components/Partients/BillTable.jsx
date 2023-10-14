@@ -10,12 +10,14 @@ import { IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
 import { FormattedMessage } from "react-intl";
+import { useEffect } from "react";
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
 
 export default function BillTable(props) {
+  useEffect(() => {
+    console.log(props.midscapeData);
+  }, [props.midscapeData]);
+
   return (
     <TableContainer className=" h-44 overflow-auto" component={Paper}>
       <Table size="small" sx={{ minWidth: 650 }} aria-label="simple table">
@@ -31,7 +33,10 @@ export default function BillTable(props) {
             </TableCell>
             <TableCell align="right">
               {" "}
-              <FormattedMessage id={"No.dosage"} defaultMessage="Hello, World!" />
+              <FormattedMessage
+                id={"No.dosage"}
+                defaultMessage="Hello, World!"
+              />
             </TableCell>
 
             <TableCell align="right">
@@ -43,7 +48,23 @@ export default function BillTable(props) {
         <TableBody>
           {props.pharmaceList.map((pharmace) => (
             <TableRow
+              className={`${
+                props.midscapeData &&
+                props.midscapeData.length > 0 &&
+                props.midscapeData.map((data) =>(
+                  data.subject === pharmace.id.name ||
+                  data.subject === pharmace.id.midScapeval ||
+                  data.object === pharmace.id.name ||
+                  data.object === pharmace.id.midScapeval
+                    ? "bg-red-200"
+                    : "")
+                )
+              }`}
               key={pharmace.name}
+              onClick={() => {
+                console.log(pharmace);
+                console.log(props.midscapeData);
+              }}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell align="right" component="th" scope="row"></TableCell>

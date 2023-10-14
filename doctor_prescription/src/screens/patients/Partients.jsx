@@ -349,8 +349,9 @@ function Partients() {
       key: "selection",
     },
   ]);
-  const navigate = useNavigate();
+  const [midscapeData,setMidscapeData] = useState([])
 
+  const navigate = useNavigate();
   useEffect(() => {
     const verifyUser = async () => {
       const { data } = await axios.post(
@@ -614,8 +615,10 @@ function Partients() {
     axios
       .get(`http://localhost:5000/prescription/getbills/${PrescriptionId}`)
       .then((response) => {
-        setPharmaceListInside(() => response.data); // Update the categories state with the fetched data
-        console.log(response.data);
+        setPharmaceListInside(() => response.data.prescription); // Update the categories state with the fetched data
+        setMidscapeData(()=>(response.data.midscapeData))
+        console.log(response.data.prescription);
+        console.log(response.data.midscapeData);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
@@ -1023,6 +1026,7 @@ function Partients() {
             onPrinterClick={HandleonPrinterClick}
             pharmaceListInside={pharmaceListInside}
             onBillAdded={handleOnBillAdded}
+            midscapeData={midscapeData}
             onFormSubmit={handleNewPrescriptionData}
           ></NewPartientsForm>
         </>

@@ -4,6 +4,7 @@ const Prescription = require("../model/prescription"); // Make sure to adjust th
 const Patients = require("../model/patients"); // Make sure to adjust the path as needed
 const { use } = require("passport");
 const Pharmaceutical = require("../model/pharmaceutical"); // Make sure to adjust the path as needed
+const axios = require("axios");
 
 // Add a new category
 
@@ -50,9 +51,6 @@ router.post("/postpharmaceutical", async (req, res) => {
       },
       { new: true } // Set to true to return the updated document
     );
-    // console.log("updatedPharmaceutical : ");
-
-    // console.log(billData);
     await prescription.save();
     // console.log(prescription);
     res.status(201).json("prescription");
@@ -186,11 +184,39 @@ router.get("/getbills/:prescriptionId", async (req, res) => {
       "pharmaceutical.id"
     );
     // console.log(prescription);
-    res.json(prescription.pharmaceutical);
+    console.log(prescription.pharmaceutical);
+    let medscapeId = "";
+    prescription.pharmaceutical.forEach((element) => {
+      if (element.id.midScapeId === "non") {
+        return;
+      }
+      medscapeId += element.id.midScapeId + ","; // Use += to append values to medscapeId
+      console.log(element.id.midScapeId);
+    });
+    medscapeId = medscapeId.slice(0, -1); // Remove the trailing comma
+    console.log(medscapeId);
+    const midscapeData = await makeRequest(medscapeId);
+    res.json({ prescription: prescription.pharmaceutical, midscapeData: midscapeData.multiInteractions});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
+const makeRequest = async (medscapeId) => {
+  try {
+    const response = await axios.get(
+      `https://reference.medscape.com/druginteraction.do?action=getMultiInteraction&ids=${medscapeId}`
+    );
+    const data = response.data; // Access the response data
+
+    console.log(`Received data:`, data);
+    // Here, you can process the 'data' as needed.
+    return data
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    return 0
+  }
+};
 
 router.get("/getall", async (req, res) => {
   try {
