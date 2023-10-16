@@ -193,7 +193,7 @@ router.get("/getbills/:prescriptionId", async (req, res) => {
       medscapeId += element.id.midScapeId + ","; // Use += to append values to medscapeId
       console.log(element.id.midScapeId);
     });
-    res.json({ prescription: prescription.pharmaceutical});
+    res.json({ prescription: prescription.pharmaceutical });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -209,7 +209,10 @@ router.get("/medscapecheck/:prescriptionId", async (req, res) => {
     console.log(prescription.pharmaceutical);
     let medscapeId = "";
     prescription.pharmaceutical.forEach((element) => {
-      if (element.id.midScapeId === "non") {
+      if (
+        element.id.midScapeId === "non" ||
+        element.id.midScapeId === undefined
+      ) {
         return;
       }
       medscapeId += element.id.midScapeId + ","; // Use += to append values to medscapeId
@@ -218,12 +221,11 @@ router.get("/medscapecheck/:prescriptionId", async (req, res) => {
     medscapeId = medscapeId.slice(0, -1); // Remove the trailing comma
     console.log(medscapeId);
     const midscapeData = await makeRequest(medscapeId);
-    res.json({midscapeData: midscapeData.multiInteractions});
+    res.json({ midscapeData: midscapeData.multiInteractions });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
-
 
 const makeRequest = async (medscapeId) => {
   try {
@@ -234,10 +236,10 @@ const makeRequest = async (medscapeId) => {
 
     console.log(`Received data:`, data);
     // Here, you can process the 'data' as needed.
-    return data
+    return data;
   } catch (error) {
     console.error(`Error: ${error.message}`);
-    return 0
+    return 0;
   }
 };
 
