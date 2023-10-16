@@ -1253,6 +1253,27 @@ function PrescriptionsDesign() {
                 sx={{ width: "20%" }}
               ></TextField>
             </div>
+            <div className="flex justify-center items-center flex-col">
+                <p>تفعيل الخطوط </p>
+                <FormControlLabel
+                  sx={{
+                    display: "block",
+                  }}
+                  control={
+                    <Switch
+                      checked={medicalReportsStype.linesActive}
+                      onChange={(event) => {
+                        handleInputChange(
+                          "linesActive",
+                          !medicalReportsStype.linesActive
+                        );
+                      }}
+                      color="primary"
+                    />
+                  }
+                />
+              </div>
+
           </div>
           <div className="h-[100vh] w-[500px] bg-white">
             <PatientReport

@@ -110,7 +110,11 @@ function PatientReport(props) {
                 ""
               )}
             </h1>
-            <div className="w-full h-0.5 bg-slate-100 my-2"></div>
+            {props.medicalReportsStype.linesActive ? (
+              <div className="w-full h-0.5 bg-slate-100 mt-2"></div>
+            ) : (
+              ""
+            )}
             <h1 className=" text-blue-500 text-sm font-semibold"> </h1>
             <div className="flex w-full justify-between">
               <div className=" text-right">
@@ -156,7 +160,11 @@ function PatientReport(props) {
                 ))}
               </div>
             </div>
-            <div className="w-full h-0.5 bg-slate-100 mt-2"></div>
+            {props.medicalReportsStype.linesActive ? (
+              <div className="w-full h-0.5 bg-slate-100 mt-2"></div>
+            ) : (
+              ""
+            )}
           </div>
           <div className="flex justify-around items-center my-2 ">
             {props.medicalReportsStype.nameActive ? (
@@ -238,7 +246,11 @@ function PatientReport(props) {
               ""
             )}
           </div>
-          <div className="w-full h-0.5 bg-slate-100 mb-2"></div>
+          {props.medicalReportsStype.linesActive ? (
+              <div className="w-full h-0.5 bg-slate-100 mt-2"></div>
+            ) : (
+              ""
+            )}
 
           <div className=" w-full h-1/2  ">
             <div class="relative ">
@@ -470,7 +482,11 @@ function PatientReport(props) {
           </div>
 
           <div className=" w-full  absolute bottom-0 ">
-            <div className="w-full h-0.5 bg-slate-100 mb-3"></div>
+          {props.medicalReportsStype.linesActive ? (
+              <div className="w-full h-0.5 bg-slate-100 mt-2"></div>
+            ) : (
+              ""
+            )}
 
             <div className="flex items-cenDter justify-around">
               <div>

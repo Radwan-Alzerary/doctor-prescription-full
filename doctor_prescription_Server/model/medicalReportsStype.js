@@ -59,6 +59,7 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
       line4Active: { type: Boolean, default: true },
       line4Height: { type: Number },
     },
+    linesActive :{type:Boolean,default:true},
     tableHeaderActive: { type: Boolean, default: true },
     tableHeaderColor: {
       type: String,
