@@ -65,7 +65,7 @@ function PatientReport(props) {
           alt=""
         ></img>
         <div
-          className={`z-20 h-0 w-0 absolute text-center flex flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center  rounded-xl `}
+          className={`z-20 h-0 w-40 absolute text-center flex flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center  rounded-xl `}
           style={{
             fontFamily: "signfont",
             left: `${props.medicalReportsStype.signatureX}%`,
