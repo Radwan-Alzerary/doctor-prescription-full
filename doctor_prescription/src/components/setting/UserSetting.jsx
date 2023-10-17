@@ -43,7 +43,7 @@ function UserSetting(props) {
             handleInputChange("userName", event.target.value);
           }} // Update the name state
           sx={{
-            width: "30%",
+            width: "50%",
             color: "#fff",
           }}
           label={
@@ -63,14 +63,13 @@ function UserSetting(props) {
             handleInputChange("email", event.target.value);
           }} // Update the name state
           sx={{
-            width: "30%",
+            width: "50%",
             color: "#fff",
           }}
           label={
             <FormattedMessage id={"email"} defaultMessage="Hello, World!" />
           }
           type="email"
-          // defaultValue="Hello World"
         />
       </div>
 

@@ -5,6 +5,7 @@ import { FormattedMessage } from "react-intl";
 import { Button } from "@mui/material";
 import UserSetting from "../../components/setting/UserSetting";
 import ProgramActive from "../../components/setting/ProgramActive";
+import BackUp from "../../components/setting/BackUp";
 
 function Setting(props) {
   const [cashire, setCashire] = useState([]);
@@ -101,9 +102,9 @@ function Setting(props) {
     }
   };
 
-  const import3000Drag = () => {
+  const backUpclickHandle = () => {
     axios
-      .get("http://localhost:5000/pharmaceutical/import")
+      .get("http://localhost:5000/setting/exportdata")
       .then((response) => {
         if (response.data.message === "Import completed.") {
           setDrugImported(true);
@@ -113,29 +114,64 @@ function Setting(props) {
         console.error("Error fetching categories:", error);
       });
   };
+  const restorClickHandle = () => {
+    axios
+      .get("http://localhost:5000/setting/importdata")
+      .then((response) => {
+
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
+
+  const import3000Drag = () => {
+    axios
+      .get("http://localhost:5000/pharmaceutical/import")
+      .then((response) => {
+
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
   return (
     <div>
-      <div className="flex p-4">
-        <div className="w-1/2">
+      <div className="p-4">
+        <div className="">
           <div className=" text-lg">
             <FormattedMessage
               id={"Add new secretary"}
               defaultMessage="Hello, World!"
             />
           </div>
-          <AddCashir
-            cashireData={cashire}
-            onCashireFormSubmit={onCashireFormSubmit}
-          ></AddCashir>
-          <FormattedMessage
-            id={"account info"}
-            defaultMessage="Hello, World!"
-          />
-          <UserSetting
-            doctorData={props.currentUser}
-            onUserUbdateSubmit={onUserUbdateSubmit}
-          ></UserSetting>
-          <ProgramActive onActiveSubmit={onActiveSubmit}></ProgramActive>
+          <div className="flex justify-between w-full">
+            <AddCashir
+              cashireData={cashire}
+              onCashireFormSubmit={onCashireFormSubmit}
+            ></AddCashir>
+            <div>
+              <FormattedMessage
+                id={"account info"}
+                defaultMessage="Hello, World!"
+              />
+              <UserSetting
+                doctorData={props.currentUser}
+                onUserUbdateSubmit={onUserUbdateSubmit}
+              ></UserSetting>
+            </div>
+          </div>
+          <div>
+            <div>النسخ الاحتياطي</div>
+            <BackUp
+              backUpclickHandle={backUpclickHandle}
+              restorClickHandle={restorClickHandle}
+            ></BackUp>
+          </div>
+          <div>
+            <div>تفعيل النسخة</div>
+            <ProgramActive onActiveSubmit={onActiveSubmit}></ProgramActive>
+          </div>
           <div>
             <Button
               disabled={drugImported ? true : false}

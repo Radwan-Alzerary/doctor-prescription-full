@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
 const SystemSettingSchema = new mongoose.Schema(
   {
-    pharmaceuticalLoded:{type:Boolean,default:false},
-    expireDate:{type:Date},
-    active:{type:Boolean,default:false},
-    mangerDoctor:{type: mongoose.Schema.Types.ObjectId, ref: "Users"}
-},
+    pharmaceuticalLoded: { type: Boolean, default: false },
+    expireDate: { type: Date },
+    active: { type: Boolean, default: false },
+    mangerDoctor: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
+    lastBackup: { type: Date },
+  },
   {
     timestamps: true,
   }

@@ -84,5 +84,8 @@
   "serial number": "serial number",
   "active": "active",
   "welcome": "welcome",
-  "startMassage": "Please select a conversation to start chatting"
+  "startMassage": "Please select a conversation to start chatting",
+  "backup data": "backup data",
+  "restor data": "restor data"
+
 }
