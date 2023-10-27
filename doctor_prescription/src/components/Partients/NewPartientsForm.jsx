@@ -10,16 +10,24 @@ import {
   createFilterOptions,
 } from "@mui/material";
 import BillTable from "./BillTable";
+
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 import { PrintRounded } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import Cookies from "js-cookie";
+import { DateTimePicker } from "@mui/x-date-pickers";
 function EditPartients(props) {
   const [value, setValue] = useState("");
   const [pharmaceuticalInputs, setPharmaceuticalInputs] = useState(true);
   const [inputValue, setInputValue] = useState("");
   const [dose, setDose] = useState("");
+  const [tradeName, setTradeName] = useState("");
   const [billId, setBillId] = useState("");
+  const [nextVisit, setNextVisit] = useState("");
   const [doseNumFirst, setDoseNumFirst] = useState("");
   const [doseNumSecend, setDoseNumSecend] = useState("");
   const [inTakeTime, setInTakeTime] = useState("");
@@ -34,6 +42,7 @@ function EditPartients(props) {
     const dataBillForm = {};
     dataBillForm.dose = dose;
     dataBillForm.billId = billId;
+    dataBillForm.tradeName = tradeName;
     dataBillForm.billName = inputValue;
     dataBillForm.doseNum = `${doseNumFirst}*${doseNumSecend}`;
     dataBillForm.inTakeTime = inTakeTime;
@@ -48,14 +57,6 @@ function EditPartients(props) {
     matchFrom: "start",
     limit: 20,
   });
-  useEffect(()=>{
-    console.log(props.MidscapeData)
-    console.log(props.MidscapeData)
-    console.log(props.MidscapeData)
-    console.log(props)
-    console.log(props)
-    console.log(props)
-  },[props])
 
   useEffect(() => {
     console.log(inputValue);
@@ -64,6 +65,9 @@ function EditPartients(props) {
       if (value.dose) {
         setDose(value.dose);
       }
+      if (value.tradeName) {
+        setTradeName(value.tradeName);
+      }
     }
 
     if (value && value.intaketime) {
@@ -71,7 +75,6 @@ function EditPartients(props) {
       setShowInTakeOtherInput(false);
     } else {
       if (value && value.anotherIntaketime) {
-        // Add a null check here
         setInTakeTimeOther(value.anotherIntaketime);
       }
       setInTakeTime("other");
@@ -105,7 +108,10 @@ function EditPartients(props) {
   const handleSubmit = (event) => {
     const prescriptionData = {};
     prescriptionData.id = props.PrescriptionId;
+    prescriptionData.patientId = props.patientId;
     prescriptionData.diagnosis = diagnosis;
+    prescriptionData.nextVisit = nextVisit;
+
     event.preventDefault();
     // Call the onFormSubmit function passed as a prop with the formData
     props.onFormSubmit(prescriptionData);
@@ -121,25 +127,6 @@ function EditPartients(props) {
         direction: locale === "en" ? "ltr" : "rtl",
       }}
     >
-      <div className="w-full flex gap-9">
-        {/* <div className=" w-2/6">
-          <div className=" text-right w-full">
-            <h5 className="pb-5">اسم المريض</h5>
-          </div>
-          <Autocomplete
-            size="small"
-            disablePortal
-            id="combo-box-demo"
-            options={props.patientsList}
-            getOptionLabel={(option) => option.name} // Specify the field to use as the label
-            sx={{ width: "100%" }}
-            renderInput={(params) => <TextField {...params} label="الاسم" />}
-            renderOption={(props, option) => (
-              <li {...props}>{option.name}</li> // Display the "name" field as the option label
-            )}
-          />
-        </div> */}
-      </div>
       <div className=" text-right w-full">
         <h5>
           {" "}
@@ -169,8 +156,24 @@ function EditPartients(props) {
         }
         // defaultValue="Hello World"
       />
+      <div className="w-full">
+        <h5>
+          {" "}
+          <FormattedMessage
+            id={"NextVisitDate"}
+            defaultMessage="Hello, World!"
+          />
+        </h5>
+        <LocalizationProvider
+          size="small"
+          className=" w-full"
+          dateAdapter={AdapterDayjs}
+        >
+          <DateTimePicker onChange={(newValue) => setNextVisit(newValue.$d)} className="w-full" />
+        </LocalizationProvider>
+      </div>
 
-      <div className=" text-right flex w-full gap-[50%]">
+      <div className=" text-right flex w-full gap-[74%]">
         <h5>
           <FormattedMessage
             id={"prescription"}
@@ -184,7 +187,7 @@ function EditPartients(props) {
       </div>
       <div className="w-full ">
         <div className="">
-          <div className="flex gap-2 justify-center mb-2 items-center">
+          <div className="flex gap-4 justify-center mb-2 items-center">
             <Autocomplete
               freeSolo
               size="small"
@@ -220,6 +223,27 @@ function EditPartients(props) {
             {pharmaceuticalInputs ? (
               <>
                 <TextField
+                  id="outlined-required"
+                  size="small"
+                  value={tradeName}
+                  onChange={(event) => {
+                    setTradeName(event.target.value);
+                    // handleBillInputChange("dose", event.target.value);
+                  }} // Update the name state
+                  sx={{
+                    width: "42%",
+                    color: "#fff",
+                  }}
+                  label={
+                    <FormattedMessage
+                      id={"Trade name"}
+                      defaultMessage="Hello, World!"
+                    />
+                  }
+                  // defaultValue="Hello World"
+                />
+
+                <TextField
                   required
                   id="outlined-required"
                   size="small"
@@ -251,7 +275,7 @@ function EditPartients(props) {
                     setDoseNumSecend(event.target.value);
                   }}
                   sx={{
-                    width: "41%",
+                    width: "10%",
                     color: "#fff",
                   }}
                 />
@@ -265,7 +289,7 @@ function EditPartients(props) {
                     setDoseNumFirst(event.target.value);
                   }}
                   sx={{
-                    width: "41%",
+                    width: "10%",
                     color: "#fff",
                   }}
                 />
@@ -379,11 +403,25 @@ function EditPartients(props) {
         </div>
       </div>
       <BillTable
-      midscapeData={props.midscapeData}
+        midscapeData={props.midscapeData}
         onBillInsideRemove={props.onBillInsideRemove}
         pharmaceList={props.pharmaceListInside}
       ></BillTable>
-      {props.midscapeData && props.midscapeData.length > 0 ? <p className="text-left text-sm text-red-700">{props.midscapeData.map((midscapedata)=>(midscapedata.text))}</p>:""}
+      {props.userData && props.userData.length > 0 ? (
+        <div>
+          المريض يعاني حساسية من :{" "}
+          <span className=" text-red-700">{props.userData}</span>
+        </div>
+      ) : (
+        ""
+      )}
+      {props.midscapeData && props.midscapeData.length > 0 ? (
+        <p className="text-left text-sm text-red-700">
+          {props.midscapeData.map((midscapedata) => midscapedata.text)}
+        </p>
+      ) : (
+        ""
+      )}
       <div className="flex gap-6 w-full justify-between">
         <IconButton>
           {/* <PrintRounded color="action"></PrintRounded> */}

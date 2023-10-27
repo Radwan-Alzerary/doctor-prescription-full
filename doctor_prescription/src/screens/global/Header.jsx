@@ -79,8 +79,13 @@ function Header() {
     removeCookie("jwt");
     navigate("/login");
   };
+  const handleIconButtonClick = () => {
+    // Close the current window or tab
+    window.close();
+  };
+
   return (
-    <header className="flex h-14 bg-white w-full justify-between items-center px-4">
+    <header className="flex h-14 bg-[white] w-full justify-between items-center px-4">
       <div>
         <Button onClick={logOut} variant="contained" color="error">
           <FormattedMessage id={"signOut"} defaultMessage="Hello, World!" />
@@ -98,6 +103,8 @@ function Header() {
           ></FullscreenOutlinedIcon>
         </IconButton>
         <IconButton 
+              onClick={handleIconButtonClick}
+
          aria-label="fingerprint" color="success">
           <PowerSettingsNewOutlinedIcon
             sx={{ color: red[500] }}

@@ -55,6 +55,8 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { FormattedMessage } from "react-intl";
 import DateRangePickerComp from "../global/DateRangePickerComp";
+import Loading from "../../components/pageCompond/Loading";
+import CancelAlert from "../../components/pageCompond/CancelAlert";
 
 function Row(props) {
   const { row } = props;
@@ -77,13 +79,22 @@ function Row(props) {
           {row.name}
         </TableCell>
         <TableCell component="th" scope="row" align="center">
+          <div className="bg-green-200 w-full flex justify-center items-center h-6 rounded-full">
           {new Date(row.createdAt).toLocaleString()}
+
+          </div>
         </TableCell>
         <TableCell component="th" scope="row" align="center">
           {row.age}
         </TableCell>
         <TableCell component="th" scope="row" align="center">
-          {row.gender}
+          <div
+            className={`p-0.5 rounded-full w-20 ${
+              row.gender === "ذكر" ? "bg-blue-200" : "bg-pink-200"
+            }`}
+          >
+            {row.gender}
+          </div>
         </TableCell>
         <TableCell component="th" scope="row" align="center">
           {row.adresses}
@@ -219,7 +230,10 @@ function Row(props) {
         )}
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={15}>
+        <TableCell
+          style={{ paddingBottom: 0, paddingTop: 0, border: "none" }}
+          colSpan={15}
+        >
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography
@@ -321,6 +335,7 @@ function Partients() {
   const [showPartientProfile, setShowPartientProfile] = useState(false);
   const [showMidicalForm, setShowMidicalForm] = useState(false);
   const [userEditData, setUserEditData] = useState([]);
+  const [userData, setUserData] = useState([]);
 
   const [partientsSelectId, setPartientsSelectId] = useState("");
   const [PrescriptionId, setPrescriptionId] = useState("");
@@ -342,6 +357,7 @@ function Partients() {
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [canceleAlert, setCanceleAlert] = useState(false);
   const [range, setRange] = useState([
     {
       //   startDate: new Date(),
@@ -349,7 +365,7 @@ function Partients() {
       key: "selection",
     },
   ]);
-  const [midscapeData,setMidscapeData] = useState([])
+  const [midscapeData, setMidscapeData] = useState([]);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -461,27 +477,24 @@ function Partients() {
   };
   const handleHideClick = () => {
     setPharmaceListInside([]);
-    setShowLaporyReportForm(false);
-    setShowPartientsEditForm(false);
-    setShowPartientProfile(false);
-    setShowAddReportForm(false);
-    setShowMidicalForm(false);
-    setShowAddForm(false);
-    setShowPartientsAddForm(false);
+    setCanceleAlert(true);
   };
   const handleOnBillInsideRemove = (id) => {
+    setLoading(() => false);
+
     axios
       .delete(
         `http://localhost:5000/prescription/removebill/${PrescriptionId}/pharmaceutical/${id}`
       )
       .then((response) => {
+        setLoading(() => true);
         // Handle success, e.g., show a success message or update the categories list
         console.log(`Category with ID ${id} has been deleted.`);
         getAllPrescription(PrescriptionId);
         // You might want to update the categories list here to reflect the changes
       })
       .catch((error) => {
-        // Handle error, e.g., show an error message
+        setLoading(() => true);
         console.error(`Error deleting category with ID ${id}:`, error);
       });
   };
@@ -489,15 +502,17 @@ function Partients() {
     console.log(`Share clicked for id ${id}`);
   };
   const onDeleteHande = (id) => {
+    setLoading(false);
     axios
       .delete(`http://localhost:5000/patients/delete/${id}`)
       .then((response) => {
-        // Handle success, e.g., show a success message or update the categories list
-        console.log(`Category with ID ${id} has been deleted.`);
+        setLoading(true);
         getPatientsList();
         // You might want to update the categories list here to reflect the changes
       })
       .catch((error) => {
+        setLoading(true);
+
         // Handle error, e.g., show an error message
         console.error(`Error deleting category with ID ${id}:`, error);
       });
@@ -527,6 +542,7 @@ function Partients() {
         setPrescriptionId(response.data.prescriptionId);
         setPartientsSelectId(id);
         setShowPartientsAddForm(true);
+        setUserData(response.data.patientFumbling);
       })
       .catch((error) => {
         // Handle errors if the request fails
@@ -580,6 +596,7 @@ function Partients() {
 
     // Update the state or perform actions with the data as needed
   };
+
   const handleEditPatientData = (data) => {
     data.id = partientsSelectId;
     console.log(data);
@@ -616,7 +633,7 @@ function Partients() {
       .get(`http://localhost:5000/prescription/getbills/${PrescriptionId}`)
       .then((response) => {
         setPharmaceListInside(() => response.data.prescription); // Update the categories state with the fetched data
-        medscapecheck(PrescriptionId)
+        medscapecheck(PrescriptionId);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
@@ -626,13 +643,12 @@ function Partients() {
     axios
       .get(`http://localhost:5000/prescription/medscapecheck/${PrescriptionId}`)
       .then((response) => {
-        setMidscapeData(()=>(response.data.midscapeData))
+        setMidscapeData(() => response.data.midscapeData);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
   };
-
   const onNameClickHandle = (id) => {
     setPartientsSelectId(id);
     setShowPartientProfile(true);
@@ -738,6 +754,19 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   };
+  const onCancelHande = () => {
+    setCanceleAlert(false);
+    setShowLaporyReportForm(false);
+    setShowPartientsEditForm(false);
+    setShowPartientProfile(false);
+    setShowAddReportForm(false);
+    setShowMidicalForm(false);
+    setShowAddForm(false);
+    setShowPartientsAddForm(false);
+  };
+  const onCancelAborteHande = () => {
+    setCanceleAlert(false);
+  };
   useEffect(() => {
     const onQueryChange = () => {
       axios
@@ -763,239 +792,258 @@ function Partients() {
   }, [ageQuery, stateQuery, genderQuery, dateQuery, range]);
 
   return (
-    <div className="p-7 relative h-[97vh] overflow-auto">
-      <div className=" flex flex-col justify-center items-center p-4">
-        <div className="flex bg-white px-4 py-1 rounded-3xl w-1/2">
-          <InputBase
-            onChange={handeSearchInput}
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="البحث عن مريض"
-            inputProps={{ "aria-label": "البحث عن مريض" }}
-          />
-          <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-            <SearchIcon />
-          </IconButton>
-        </div>
-      </div>
-      <div className="flex gap-4 justify-center items-center w-full">
-        <div className=" w-1/6">
-          <FormControl className="w-full bg-whiteh" size="small" sx={{ m: 1 }}>
-            <InputLabel id="demo-simple-select-helper-label">
-              <FormattedMessage id={"ageSort"} defaultMessage="Hello, World!" />
-            </InputLabel>
-            <Select
-              onChange={(event) => {
-                setAgeQuery(event.target.value);
-              }}
-              labelId="demo-simple-select-helper-label"
-              id="demo-simple-select-helper"
-            >
-              <MenuItem value="">
-                <em>الكل</em>
-              </MenuItem>
-              <MenuItem value={"1-10"}>1-10</MenuItem>
-              <MenuItem value={"10-20"}>10-20</MenuItem>
-              <MenuItem value={"20-30"}>20-30</MenuItem>
-              <MenuItem value={"30-40"}>30-40</MenuItem>
-              <MenuItem value={"40-50"}>40-50</MenuItem>
-              <MenuItem value={"50-60"}>50-60</MenuItem>
-              <MenuItem value={"60-70"}>60-70</MenuItem>
-              <MenuItem value={"70-80"}>70-80</MenuItem>
-              <MenuItem value={"80-90"}>80-90</MenuItem>
-              <MenuItem value={"90-140"}>90-140</MenuItem>
-            </Select>
-          </FormControl>
-        </div>
-
-        <div className=" w-1/6">
-          <FormControl className="w-full bg-whiteh" size="small" sx={{ m: 1 }}>
-            <InputLabel id="demo-simple-select-helper-label">
-              <FormattedMessage
-                id={"stateSort"}
-                defaultMessage="Hello, World!"
+    <div className="p-7 relative h-[93vh] overflow-scroll">
+      <div className=" bg-white overflow-scroll shadow-sm h-full rounded-md pb-4">
+        <div className="flex gap-4 justify-center items-center w-full">
+          <div className=" flex flex-col justify-center items-center p-4">
+            <div className="flex bg-white px-4 py-1 rounded-3xl w-full shadow-md">
+              <InputBase
+                onChange={handeSearchInput}
+                sx={{ ml: 1, flex: 1 }}
+                placeholder="البحث عن مريض"
+                inputProps={{ "aria-label": "البحث عن مريض" }}
               />
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-helper-label"
-              id="demo-simple-select-helper"
-              onChange={(event) => {
-                setStateQuery(event.target.value);
-              }}
-            >
-              <MenuItem value="">
-                <em>الكل</em>
-              </MenuItem>
-              {constantDiseases.map((diseases, index) => (
-                <MenuItem value={diseases._id}>{diseases.name}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
+              <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
+                <SearchIcon />
+              </IconButton>
+            </div>
+          </div>
 
-        <div className=" w-1/6">
-          <FormControl className="w-full bg-whiteh" size="small" sx={{ m: 1 }}>
-            <InputLabel id="demo-simple-select-helper-label">
-              <FormattedMessage
-                id={"genderSort"}
-                defaultMessage="Hello, World!"
-              />
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-helper-label"
-              id="demo-simple-select-helper"
-              onChange={(event) => {
-                setGenderQuery(() => event.target.value);
-              }}
+          <div className=" w-1/6">
+            <FormControl
+              className="w-full bg-whiteh"
+              size="small"
+              sx={{ m: 1 }}
             >
-              <MenuItem value="">
-                <em>الكل</em>
-              </MenuItem>
-              <MenuItem value={"ذكر"}>ذكر</MenuItem>
-              <MenuItem value={"انثى"}>انثى</MenuItem>
-            </Select>
-          </FormControl>
-        </div>
-        <div className=" w-1/6">
-          <DateRangePickerComp
-            range={range}
-            setRange={(rangeValue) => {
-              setRange(rangeValue);
-            }}
-          ></DateRangePickerComp>
-        </div>
+              <InputLabel id="demo-simple-select-helper-label">
+                <FormattedMessage
+                  id={"ageSort"}
+                  defaultMessage="Hello, World!"
+                />
+              </InputLabel>
+              <Select
+                onChange={(event) => {
+                  setAgeQuery(event.target.value);
+                }}
+                labelId="demo-simple-select-helper-label"
+                id="demo-simple-select-helper"
+              >
+                <MenuItem value="">
+                  <em>الكل</em>
+                </MenuItem>
+                <MenuItem value={"1-10"}>1-10</MenuItem>
+                <MenuItem value={"10-20"}>10-20</MenuItem>
+                <MenuItem value={"20-30"}>20-30</MenuItem>
+                <MenuItem value={"30-40"}>30-40</MenuItem>
+                <MenuItem value={"40-50"}>40-50</MenuItem>
+                <MenuItem value={"50-60"}>50-60</MenuItem>
+                <MenuItem value={"60-70"}>60-70</MenuItem>
+                <MenuItem value={"70-80"}>70-80</MenuItem>
+                <MenuItem value={"80-90"}>80-90</MenuItem>
+                <MenuItem value={"90-140"}>90-140</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
 
-        {/* <button onClick={toggleCalendar}>تحديد مده زمنية</button> */}
-        <div className={`${showCalendar ? "" : "hidden"}`}>
-          {/* <Calendar
+          <div className=" w-1/6">
+            <FormControl
+              className="w-full bg-whiteh"
+              size="small"
+              sx={{ m: 1 }}
+            >
+              <InputLabel id="demo-simple-select-helper-label">
+                <FormattedMessage
+                  id={"stateSort"}
+                  defaultMessage="Hello, World!"
+                />
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-helper-label"
+                id="demo-simple-select-helper"
+                onChange={(event) => {
+                  setStateQuery(event.target.value);
+                }}
+              >
+                <MenuItem value="">
+                  <em>الكل</em>
+                </MenuItem>
+                {constantDiseases.map((diseases, index) => (
+                  <MenuItem value={diseases._id}>{diseases.name}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+
+          <div className=" w-1/6">
+            <FormControl
+              className="w-full bg-whiteh"
+              size="small"
+              sx={{ m: 1 }}
+            >
+              <InputLabel id="demo-simple-select-helper-label">
+                <FormattedMessage
+                  id={"genderSort"}
+                  defaultMessage="Hello, World!"
+                />
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-helper-label"
+                id="demo-simple-select-helper"
+                onChange={(event) => {
+                  setGenderQuery(() => event.target.value);
+                }}
+              >
+                <MenuItem value="">
+                  <em>الكل</em>
+                </MenuItem>
+                <MenuItem value={"ذكر"}>ذكر</MenuItem>
+                <MenuItem value={"انثى"}>انثى</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div className=" w-1/6">
+            <DateRangePickerComp
+              range={range}
+              setRange={(rangeValue) => {
+                setRange(rangeValue);
+              }}
+            ></DateRangePickerComp>
+          </div>
+          <div className={`${showCalendar ? "" : "hidden"}`}>
+            {/* <Calendar
             value={selectedDayRange}
             onChange={handleDateRangeSelection}
             shouldHighlightWeekends
           /> */}
+          </div>
         </div>
-      </div>
-      <TableContainer dir="rtl" component={Paper}>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center"># </TableCell>
-              <TableCell align="right">
-                <FormattedMessage
-                  id={"PatientName"}
-                  defaultMessage="Hello, World!"
-                />
-              </TableCell>
-              <TableCell align="center">
-                <FormattedMessage id={"Date"} defaultMessage="Hello, World!" />
-              </TableCell>
-              <TableCell align="center">
-                {" "}
-                <FormattedMessage id={"Age"} defaultMessage="Hello, World!" />
-              </TableCell>
-              <TableCell align="center">
-                {" "}
-                <FormattedMessage
-                  id={"Gender"}
-                  defaultMessage="Hello, World!"
-                />
-              </TableCell>
-              <TableCell align="center">
-                {" "}
-                <FormattedMessage
-                  id={"Address"}
-                  defaultMessage="Hello, World!"
-                />
-              </TableCell>
-              <TableCell align="center">
-                {" "}
-                <FormattedMessage
-                  id={"Weight"}
-                  defaultMessage="Hello, World!"
-                />
-              </TableCell>
-              <TableCell align="center">
-                {" "}
-                <FormattedMessage
-                  id={"Length"}
-                  defaultMessage="Hello, World!"
-                />
-              </TableCell>
-              <TableCell align="center">
-                {" "}
-                <FormattedMessage
-                  id={"VisitNumber"}
-                  defaultMessage="Hello, World!"
-                />
-              </TableCell>
-              {currentUser ? (
-                currentUser.role === "doctor" ? (
-                  <>
-                    <TableCell align="center">
-                      {" "}
-                      <FormattedMessage
-                        id={"Examination"}
-                        defaultMessage="Hello, World!"
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      {" "}
-                      <FormattedMessage
-                        id={"Rx"}
-                        defaultMessage="Hello, World!"
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      {" "}
-                      <FormattedMessage
-                        id={"Report"}
-                        defaultMessage="Hello, World!"
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      {" "}
-                      <FormattedMessage
-                        id={"LaboratoryTesting"}
-                        defaultMessage="Hello, World!"
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      {" "}
-                      <FormattedMessage
-                        id={"Options"}
-                        defaultMessage="Hello, World!"
-                      />
-                    </TableCell>
-                  </>
+        <TableContainer dir="rtl" className="p-4 border shadow">
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center"># </TableCell>
+                <TableCell align="right">
+                  <FormattedMessage
+                    id={"PatientName"}
+                    defaultMessage="Hello, World!"
+                  />
+                </TableCell>
+                <TableCell align="center">
+                  <FormattedMessage
+                    id={"Date"}
+                    defaultMessage="Hello, World!"
+                  />
+                </TableCell>
+                <TableCell align="center">
+                  {" "}
+                  <FormattedMessage id={"Age"} defaultMessage="Hello, World!" />
+                </TableCell>
+                <TableCell align="center">
+                  {" "}
+                  <FormattedMessage
+                    id={"Gender"}
+                    defaultMessage="Hello, World!"
+                  />
+                </TableCell>
+                <TableCell align="center">
+                  {" "}
+                  <FormattedMessage
+                    id={"Address"}
+                    defaultMessage="Hello, World!"
+                  />
+                </TableCell>
+                <TableCell align="center">
+                  {" "}
+                  <FormattedMessage
+                    id={"Weight"}
+                    defaultMessage="Hello, World!"
+                  />
+                </TableCell>
+                <TableCell align="center">
+                  {" "}
+                  <FormattedMessage
+                    id={"Length"}
+                    defaultMessage="Hello, World!"
+                  />
+                </TableCell>
+                <TableCell align="center">
+                  {" "}
+                  <FormattedMessage
+                    id={"VisitNumber"}
+                    defaultMessage="Hello, World!"
+                  />
+                </TableCell>
+                {currentUser ? (
+                  currentUser.role === "doctor" ? (
+                    <>
+                      <TableCell align="center">
+                        {" "}
+                        <FormattedMessage
+                          id={"Examination"}
+                          defaultMessage="Hello, World!"
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        {" "}
+                        <FormattedMessage
+                          id={"Rx"}
+                          defaultMessage="Hello, World!"
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        {" "}
+                        <FormattedMessage
+                          id={"Report"}
+                          defaultMessage="Hello, World!"
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        {" "}
+                        <FormattedMessage
+                          id={"LaboratoryTesting"}
+                          defaultMessage="Hello, World!"
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        {" "}
+                        <FormattedMessage
+                          id={"Options"}
+                          defaultMessage="Hello, World!"
+                        />
+                      </TableCell>
+                    </>
+                  ) : (
+                    ""
+                  )
                 ) : (
                   ""
-                )
-              ) : (
-                ""
-              )}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {patientsList.map((patient, index) => (
-              <Row
-                onPrescriptionEditHandel={onPrescriptionEditHandel}
-                onShareHande={onShareHande}
-                onDeleteHande={onDeleteHande}
-                currentUser={currentUser}
-                onPrescriptionDeleteHande={HandleOnPrescriptionDeleteHande}
-                onEditHande={onEditHande}
-                onMedicalFormShowHandle={onMedicalFormShowHandle}
-                onReportShowHandel={onReportShowHandel}
-                onLaboryShowHandel={onLaboryShowHandel}
-                onPrescriptionShowHande={onPrescriptionShowHande}
-                key={patient._id}
-                onNameClickHandle={onNameClickHandle}
-                id={patient._id}
-                row={patient}
-                index={index}
-              />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                )}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {patientsList.map((patient, index) => (
+                <Row
+                  onPrescriptionEditHandel={onPrescriptionEditHandel}
+                  onShareHande={onShareHande}
+                  onDeleteHande={onDeleteHande}
+                  currentUser={currentUser}
+                  onPrescriptionDeleteHande={HandleOnPrescriptionDeleteHande}
+                  onEditHande={onEditHande}
+                  onMedicalFormShowHandle={onMedicalFormShowHandle}
+                  onReportShowHandel={onReportShowHandel}
+                  onLaboryShowHandel={onLaboryShowHandel}
+                  onPrescriptionShowHande={onPrescriptionShowHande}
+                  key={patient._id}
+                  onNameClickHandle={onNameClickHandle}
+                  id={patient._id}
+                  row={patient}
+                  index={index}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
       <div className=" fixed z-50 bottom-5 left-6">
         <Fab
           color="primary"
@@ -1020,11 +1068,13 @@ function Partients() {
         ""
       )}
 
+      {!loading ? <Loading></Loading> : ""}
+
       {showPartientsAddForm ? (
         <>
-          {" "}
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewPartientsForm
+            userData={userData}
             editPrescriptionData={editPrescriptionData}
             patientsList={patientsList}
             pharmaceList={pharmaceList}
@@ -1056,7 +1106,11 @@ function Partients() {
       )}
       {showPartientProfile ? (
         <>
-          <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
+          <BackGroundShadow
+            onClick={() => {
+              setShowPartientProfile(false);
+            }}
+          ></BackGroundShadow>
           <PartientsProfile partientId={partientsSelectId}></PartientsProfile>
         </>
       ) : (
@@ -1107,6 +1161,14 @@ function Partients() {
             onFormSubmit={handleNewLaboryData}
           ></AddLaboratoryExamination>
         </>
+      ) : (
+        ""
+      )}
+      {canceleAlert ? (
+        <CancelAlert
+          onCancelHande={onCancelHande}
+          onCancelAborteHande={onCancelAborteHande}
+        ></CancelAlert>
       ) : (
         ""
       )}

@@ -63,7 +63,7 @@
   "account info": "معلومات الحساب",
   "other": "اخرى",
   "time to take": "وقت تناول",
-  "New Patient": "اضافة مريض",
+  "New Patient": "اسم المريض",
   "phone number": "رقم الهاتف",
   "Allergy to medications": "التحسس من الادوية",
   "Present Medical": "الامراض",
@@ -84,5 +84,12 @@
   "welcome": "مرحبا",
   "startMassage": "يرجى اختيار محادثه لبدء الدردشة",
   "backup data": "عمل نسخ احتياطي",
-  "restor data": "استرجاع اخر نسخة"
+  "restor data": "استرجاع اخر نسخة",
+  "surgery": "العمليات الجراحية",
+  "Partients Surgery list": "قائمة العمليات",
+  "Surgery name list": "اسماء العمليات",
+  "Device list": "اسماء الاجهزة",
+  "takder list": "مواد التخدير",
+  "Trade name": "الاسم العلمي",
+  "NextVisitDate": "موعد الزيارة القادمة"
 }

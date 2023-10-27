@@ -38,9 +38,12 @@ function VisitChart(props) {
               format: 'dd/MM/yy HH:mm',
             },
           },
+          yaxis: {
+            min: 0, // Set the minimum value of the y-axis to 0
+          },
+
         },
       };
-
       setChartData(newChartData);
     } else {
       console.error("props.dashboardVisitCount is not a valid array");

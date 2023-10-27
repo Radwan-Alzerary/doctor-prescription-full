@@ -6,11 +6,13 @@ import { Button } from "@mui/material";
 import UserSetting from "../../components/setting/UserSetting";
 import ProgramActive from "../../components/setting/ProgramActive";
 import BackUp from "../../components/setting/BackUp";
+import Loading from "../../components/pageCompond/Loading";
 
 function Setting(props) {
   const [cashire, setCashire] = useState([]);
   const [drugImported, setDrugImported] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     getAllCashire();
     checkDrugImported();
@@ -117,26 +119,28 @@ function Setting(props) {
   const restorClickHandle = () => {
     axios
       .get("http://localhost:5000/setting/importdata")
-      .then((response) => {
-
-      })
+      .then((response) => {})
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
   };
 
   const import3000Drag = () => {
+    setLoading(true);
     axios
       .get("http://localhost:5000/pharmaceutical/import")
       .then((response) => {
-
+        setLoading(false);
       })
       .catch((error) => {
+        setLoading(false);
+
         console.error("Error fetching categories:", error);
       });
   };
   return (
     <div>
+      {loading ? <Loading></Loading> : ""}
       <div className="p-4">
         <div className="">
           <div className=" text-lg">

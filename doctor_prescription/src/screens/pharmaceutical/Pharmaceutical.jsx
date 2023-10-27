@@ -8,6 +8,7 @@ import NewPharmaceuticalForm from "../../components/pharmaceutical/NewPharmaceut
 import axios from "axios";
 import { useIsAuthenticated } from "react-auth-kit";
 import EditPharmaceForm from "../../components/pharmaceutical/EditPharmaceForm";
+import Loading from "../../components/pageCompond/Loading";
 
 function CustomizedInputBase() {
   return (
@@ -34,6 +35,7 @@ function Pharmaceutical() {
   const [pharmaceList, setPharmaceList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   const [inTakeTimeList, setInTakeTime] = useState([]);
+  const [loading,setLoading] = useState(true)
   const [addFormData, setAddFormData] = useState({});
 
   // Create a function to receive data from NewCategoryForm
@@ -140,6 +142,7 @@ function Pharmaceutical() {
       .then((response) => {
         setPharmaceList(response.data); // Update the categories state with the fetched data
         console.log(response.data);
+        setLoading(false)
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
@@ -182,6 +185,7 @@ function Pharmaceutical() {
   };
   return (
     <div className=" h-[92vh] overflow-auto">
+      {loading ? <Loading></Loading> : ""}
       <div className=" flex flex-col justify-center items-center p-4">
         <div className="flex bg-white px-4 py-1 rounded-3xl w-1/2">
           <InputBase

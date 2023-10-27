@@ -16,7 +16,7 @@ function Sidebaritems(props) {
       onClick={handleItemClick}
       style={{ textDecoration: "none" }}
     >
-      <MenuItem icon={props.icon} className="z-50">
+      <MenuItem icon={props.icon} className="z-50 " active={props.active}>
         <FormattedMessage id={props.title} defaultMessage="Hello, World!" />
       </MenuItem>
     </Link>

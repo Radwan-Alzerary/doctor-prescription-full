@@ -151,7 +151,10 @@ router.get("/checktoken", async (req, res) => {
 router.get("/getbyname/", async (req, res) => {
   const searchName = req.params.searchName;
   try {
-    const patients = await Patients.find().populate("prescription");
+    const patients = await Patients.find().populate({
+      path: "prescription",
+      match: { active: true }, // Filter prescriptions with active: true
+    });
     res.json(patients);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -162,6 +165,8 @@ router.get("/medicalinfo/:partientId", async (req, res) => {
     const patients = await Patients.findById(req.params.partientId)
       .populate({
         path: "prescription",
+        match: { active: true }, // Filter prescriptions with active: true
+
         populate: {
           path: "pharmaceutical.id",
         },
@@ -181,7 +186,10 @@ router.get("/getbyname/:searchName", async (req, res) => {
   try {
     const patients = await Patients.find({
       name: { $regex: searchName, $options: "i" },
-    }).populate("prescription");
+    }).populate({
+      path: "prescription",
+      match: { active: true }, // Filter prescriptions with active: true
+    });
     res.json(patients);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -190,7 +198,6 @@ router.get("/getbyname/:searchName", async (req, res) => {
 router.post("/queryselect/", async (req, res) => {
   try {
     console.log(req.body);
-
     const [minAge, maxAge] = req.body.ageQuery.split("-").map(Number);
     const query = {};
     if (req.body.ageQuery) {
@@ -208,7 +215,10 @@ router.post("/queryselect/", async (req, res) => {
       const endDate = new Date(req.body.dateQuery[0].endDate);
       query.updatedAt = { $gte: startDate, $lte: endDate };
     }
-    const patients = await Patients.find(query).populate("prescription");
+    const patients = await Patients.find(query).populate({
+      path: "prescription",
+      match: { active: true }, // Filter prescriptions with active: true
+    });
     res.json(patients);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -245,6 +255,57 @@ router.get(
     }
   }
 );
+router.get('/today', async (req, res) => {
+  try {
+    // Get the current date
+    const currentDate = new Date();
+    
+    // Set the current date to the beginning of the day (midnight)
+    currentDate.setHours(0, 0, 0, 0);
+
+    // Set the end date to the end of the day (11:59:59 PM)
+    const endDate = new Date(currentDate);
+    endDate.setHours(23, 59, 59, 999);
+
+    // Define the query to find patients with a visit scheduled for today
+    const query = {
+      'visitDate.date': {
+        $gte: currentDate,
+        $lte: endDate,
+      },
+    };
+
+    // Use the Patients model to find patients with visits today
+    const patients = await Patients.find(query);
+
+    res.json(patients);
+  } catch (err) {
+    console.error('Error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+router.get('/upcoming', async (req, res) => {
+  try {
+    // Get the current date
+    const currentDate = new Date();
+    
+    // Define the query to find patients with a nextVisit date greater than or equal to the current date
+    const query = {
+      'nextVisit': {
+        $gte: currentDate,
+      },
+    };
+
+    // Use the Patients model to find patients with upcoming appointments
+    const patients = await Patients.find(query);
+
+    res.json(patients);
+  } catch (err) {
+    console.error('Error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 router.post("/galaryimage", upload.single("image"), async (req, res, next) => {
   console.log(req.body.id);
   console.log(req.body);
@@ -270,7 +331,6 @@ router.post("/galaryimage", upload.single("image"), async (req, res, next) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 router.put("/edit/:id", async (req, res) => {
   try {
     const patients = await Patients.findByIdAndUpdate(req.params.id, req.body, {

@@ -13,9 +13,10 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import { useEffect, useState } from "react";
 import Sidebaritems from "../../components/Sidebar/Sidebaritems";
 import LanguageSelector from "./lanquageSelector";
-import { Home } from "@mui/icons-material";
+import { Home, Paragliding, Surfing } from "@mui/icons-material";
 import { FormattedMessage } from "react-intl";
 import logo from "../../logo.png"; // Tell webpack this JS file uses this image
+import AirlineSeatFlatAngledIcon from "@mui/icons-material/AirlineSeatFlatAngled";
 
 function SideBarMenu(props) {
   const [collapsedMode, setCollapsedMode] = useState(true);
@@ -59,16 +60,17 @@ function SideBarMenu(props) {
             <>
               <Sidebaritems
                 title="home"
-                active={activeSubmenu === "home"}
+                active={activeSubmenu === "dashboard"}
                 icon={<Home style={{ fontSize: "28px" }} />}
                 router="/dashboard"
-                onClick={() => setActiveSubmenu("home")}
+                onClick={() => setActiveSubmenu("dashboard")}
               ></Sidebaritems>
               <Sidebaritems
+                active={activeSubmenu === "patients"}
                 title="patients"
                 icon={<AssignmentIndIcon style={{ fontSize: "28px" }} />}
                 router="/patients"
-                onClick={() => setActiveSubmenu("main")}
+                onClick={() => setActiveSubmenu("patients")}
               ></Sidebaritems>
             </>
           ) : (
@@ -83,7 +85,7 @@ function SideBarMenu(props) {
           new Date(props.currentUser.expireDate) > new Date() ? (
             <>
               <SubMenu
-                // active={activeSubmenu === "main"}
+                active={activeSubmenu === "medications"}
                 icon={<VaccinesIcon style={{ fontSize: "28px" }} />}
                 label={
                   <FormattedMessage
@@ -96,17 +98,17 @@ function SideBarMenu(props) {
                 <Sidebaritems
                   title="medications"
                   router="/pharmaceutical"
-                  onClick={() => setActiveSubmenu("main")}
+                  onClick={() => setActiveSubmenu("medications")}
                 ></Sidebaritems>
                 <Sidebaritems
                   title="categories"
                   // icon={<CategoryIcon style={{ fontSize: "28px" }} />}
                   router="/category"
-                  onClick={() => setActiveSubmenu("main")}
+                  onClick={() => setActiveSubmenu("medications")}
                 ></Sidebaritems>
               </SubMenu>
               <SubMenu
-                // active={activeSubmenu === "main"}
+                active={activeSubmenu === "PrescriptionDesign"}
                 icon={<AssignmentIcon style={{ fontSize: "28px" }} />}
                 label={
                   <FormattedMessage
@@ -116,16 +118,47 @@ function SideBarMenu(props) {
                 }
                 className=" py-3"
               >
-                {/* <Sidebaritems
-            title="prescriptions"
-            router="/prescriptions"
-            onClick={() => setActiveSubmenu("main")}
-          ></Sidebaritems> */}
                 <Sidebaritems
                   title="PrescriptionDesign"
                   router="/Prescriptiondesign"
-                  onClick={() => setActiveSubmenu("main")}
+                  onClick={() => setActiveSubmenu("PrescriptionDesign")}
                 ></Sidebaritems>
+              </SubMenu>
+
+              <SubMenu
+                active={activeSubmenu === "surgery"}
+                icon={
+                  <AirlineSeatFlatAngledIcon style={{ fontSize: "28px" }} />
+                }
+                label={
+                  <FormattedMessage
+                    id={"surgery"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
+                className=" py-3"
+              >
+                {/* <Sidebaritems
+                  title="Partients Surgery list"
+                  router="/surgen/list"
+                  onClick={() => setActiveSubmenu("surgery")}
+                ></Sidebaritems>
+                <Sidebaritems
+                  title="Surgery name list"
+                  router="/surgen/type"
+                  onClick={() => setActiveSubmenu("surgery")}
+                ></Sidebaritems>
+                <Sidebaritems
+                  title="takder list"
+                  router="/surgen/Narcosis"
+                  onClick={() => setActiveSubmenu("surgery")}
+                ></Sidebaritems>
+
+                <Sidebaritems
+                  title="Device list"
+                  router="/surgen/device"
+                  onClick={() => setActiveSubmenu("surgery")}
+                ></Sidebaritems> */}
               </SubMenu>
             </>
           ) : (
@@ -138,10 +171,11 @@ function SideBarMenu(props) {
         {props.currentUser ? (
           new Date(props.currentUser.expireDate) > new Date() ? (
             <Sidebaritems
+              active={activeSubmenu === "messaging"}
               title="messaging"
               icon={<MailOutlineIcon style={{ fontSize: "28px" }} />}
               router="/chats"
-              onClick={() => setActiveSubmenu("main")}
+              onClick={() => setActiveSubmenu("messaging")}
             ></Sidebaritems>
           ) : (
             ""
@@ -155,19 +189,21 @@ function SideBarMenu(props) {
             <>
               {new Date(props.currentUser.expireDate) > new Date() ? (
                 <Sidebaritems
+                  active={activeSubmenu === "account"}
                   title="account"
                   icon={<AccountCircleIcon style={{ fontSize: "28px" }} />}
                   router="/doctorprofile"
-                  onClick={() => setActiveSubmenu("main")}
+                  onClick={() => setActiveSubmenu("account")}
                 ></Sidebaritems>
               ) : (
                 ""
               )}
               <Sidebaritems
+                active={activeSubmenu === "settings"}
                 title="settings"
                 icon={<SettingsIcon style={{ fontSize: "28px" }} />}
                 router="/setting"
-                onClick={() => setActiveSubmenu("main")}
+                onClick={() => setActiveSubmenu("settings")}
               ></Sidebaritems>
             </>
           ) : (

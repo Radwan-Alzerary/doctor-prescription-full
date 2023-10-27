@@ -75,7 +75,6 @@ function PatientReport(props) {
           }}
         >
           <p className="h-0"> {props.medicalReportsStype.mainNameHeaderknia}</p>
-          <br></br>
           {props.medicalReportsStype.signature}
         </div>
         {/* Your content to be printed */}
@@ -247,10 +246,10 @@ function PatientReport(props) {
             )}
           </div>
           {props.medicalReportsStype.linesActive ? (
-              <div className="w-full h-0.5 bg-slate-100 mt-2"></div>
-            ) : (
-              ""
-            )}
+            <div className="w-full h-0.5 bg-slate-100 mt-2"></div>
+          ) : (
+            ""
+          )}
 
           <div className=" w-full h-1/2  ">
             <div class="relative ">
@@ -441,7 +440,13 @@ function PatientReport(props) {
                                     color: `${props.medicalReportsStype.tableContentColor}`,
                                   }}
                                 >
-                                  {drug.id.name}
+                                  {drug.id.tradeName 
+                                   ? (
+                                    <div>{drug.id.tradeName}</div>
+                                  ) : (
+                                    ""
+                                  )}
+                                  <div>{drug.id.name}</div>
                                 </td>
                               ) : (
                                 ""
@@ -482,7 +487,7 @@ function PatientReport(props) {
           </div>
 
           <div className=" w-full  absolute bottom-0 ">
-          {props.medicalReportsStype.linesActive ? (
+            {props.medicalReportsStype.linesActive ? (
               <div className="w-full h-0.5 bg-slate-100 mt-2"></div>
             ) : (
               ""

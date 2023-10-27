@@ -10,6 +10,7 @@ const axios = require("axios");
 
 router.post("/postpharmaceutical", async (req, res) => {
   try {
+    console.log(req.body);
     const billData = {};
     if (req.body.inTakeTime == "other") {
       billData.anotherIntaketime = req.body.inTakeTimeOther;
@@ -17,6 +18,7 @@ router.post("/postpharmaceutical", async (req, res) => {
       billData.inTakeTime = req.body.inTakeTime;
     }
     billData.dose = req.body.dose;
+    billData.tradeName = req.body.tradeName;
     billData.doseNum = req.body.doseNum;
     billData.description = req.body.description;
 
@@ -44,6 +46,7 @@ router.post("/postpharmaceutical", async (req, res) => {
       { _id: billData.id },
       {
         dose: billData.dose,
+        tradeName: billData.tradeName,
         intaketime: billData.inTakeTime,
         anotherIntaketime: billData.anotherIntaketime,
         doseCount: billData.doseNum,
@@ -52,7 +55,6 @@ router.post("/postpharmaceutical", async (req, res) => {
       { new: true } // Set to true to return the updated document
     );
     await prescription.save();
-    // console.log(prescription);
     res.status(201).json("prescription");
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -89,7 +91,6 @@ router.delete(
 
 router.post("/ubdateData", async (req, res) => {
   try {
-    console.log(req.body);
     const prescription = await Prescription.findById(req.body.data.id);
 
     if (!prescription) {
@@ -99,6 +100,11 @@ router.post("/ubdateData", async (req, res) => {
     if (prescription.MedicalDiagnosis) {
       prescription.MedicalDiagnosis = req.body.data.diagnosis;
     }
+
+    // if (prescription.nextVisit) {
+    //   prescription.MedicalDiagnosis = req.body.data.diagnosis;
+    // }
+
     prescription.active = true;
     await prescription.save();
 
@@ -130,7 +136,10 @@ router.post("/ubdateData", async (req, res) => {
         prescriptionCount: 1,
       });
     }
-
+    console.log(req.body.data)
+    if (req.body.data.nextVisit && req.body.data.nextVisit.length > 0) {
+      patient.nextVisit = req.body.data.nextVisit;
+    }
     // Save the updated patient data
     await patient.save();
 
@@ -143,7 +152,6 @@ router.post("/ubdateData", async (req, res) => {
 
 router.post("/new", async (req, res) => {
   try {
-    // console.log(req.body);
     const patientId = req.body.PartientsId; // Assuming you have prescription data in req.body
 
     // Create a new prescription
@@ -160,13 +168,15 @@ router.post("/new", async (req, res) => {
     }
 
     // Push the new prescription's ID into the patient's prescription field
-    // console.log(newPrescription._id.toString());
     patient.prescription.push(newPrescription._id.toString());
 
     // Save the updated patient
     await patient.save();
 
     res.status(200).json({
+      patientId: patient._id,
+
+      patientFumbling: patient.fumbling,
       prescriptionId: newPrescription._id.toString(),
       message: "Prescription added to patient successfully",
     });
@@ -183,15 +193,12 @@ router.get("/getbills/:prescriptionId", async (req, res) => {
     const prescription = await Prescription.findById(prescriptionId).populate(
       "pharmaceutical.id"
     );
-    // console.log(prescription);
-    console.log(prescription.pharmaceutical);
     let medscapeId = "";
     prescription.pharmaceutical.forEach((element) => {
       if (element.id.midScapeId === "non") {
         return;
       }
       medscapeId += element.id.midScapeId + ","; // Use += to append values to medscapeId
-      console.log(element.id.midScapeId);
     });
     res.json({ prescription: prescription.pharmaceutical });
   } catch (error) {
@@ -205,8 +212,6 @@ router.get("/medscapecheck/:prescriptionId", async (req, res) => {
     const prescription = await Prescription.findById(prescriptionId).populate(
       "pharmaceutical.id"
     );
-    // console.log(prescription);
-    console.log(prescription.pharmaceutical);
     let medscapeId = "";
     prescription.pharmaceutical.forEach((element) => {
       if (
@@ -216,10 +221,8 @@ router.get("/medscapecheck/:prescriptionId", async (req, res) => {
         return;
       }
       medscapeId += element.id.midScapeId + ","; // Use += to append values to medscapeId
-      console.log(element.id.midScapeId);
     });
     medscapeId = medscapeId.slice(0, -1); // Remove the trailing comma
-    console.log(medscapeId);
     const midscapeData = await makeRequest(medscapeId);
     res.json({ midscapeData: midscapeData.multiInteractions });
   } catch (error) {
@@ -234,11 +237,9 @@ const makeRequest = async (medscapeId) => {
     );
     const data = response.data; // Access the response data
 
-    console.log(`Received data:`, data);
     // Here, you can process the 'data' as needed.
     return data;
   } catch (error) {
-    console.error(`Error: ${error.message}`);
     return 0;
   }
 };

@@ -28,6 +28,10 @@ import { Icon, IconButton } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { blue } from "@mui/material/colors";
 import VoiceRecoed from "./screens/global/VoiceRecoed";
+import SurgenList from "./screens/surgeon/SurgenList";
+import SurgenType from "./screens/surgeon/SurgenType";
+import SurgenDevice from "./screens/surgeon/SurgenDevice";
+import SurgenNarcosis from "./screens/surgeon/SurgenNarcosis";
 function Layout({ children }) {
   return (
     <div
@@ -131,6 +135,21 @@ function App() {
                   <Route exact path="/tst" element={<VoiceRecoed />} />
                   <Route exact path="/" element={<PrivateRoute />}>
                     <Route exact path="/" element={<Dashboard />}></Route>
+                    <Route exact path="surgen">
+                      <Route exact path="list" element={<SurgenList />}></Route>
+                      <Route exact path="type" element={<SurgenType />}></Route>
+                      <Route
+                        exact
+                        path="device"
+                        element={<SurgenDevice />}
+                      ></Route>
+                      <Route
+                        exact
+                        path="Narcosis"
+                        element={<SurgenNarcosis />}
+                      ></Route>
+                    </Route>
+
                     <Route exact path="Chats" element={<Chats />} />
                     <Route
                       exact

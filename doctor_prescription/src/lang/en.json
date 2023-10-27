@@ -86,6 +86,12 @@
   "welcome": "welcome",
   "startMassage": "Please select a conversation to start chatting",
   "backup data": "backup data",
-  "restor data": "restor data"
-
+  "restor data": "restor data",
+  "surgery": "surgery",
+  "Partients Surgery list": "Partients Surgery list",
+  "Surgery name list": "Surgery name list",
+  "Device list": "Device list",
+  "takder list": "Narcosis list",
+  "Trade name": "Trade name",
+  "NextVisitDate": "Next Visit Date"
 }

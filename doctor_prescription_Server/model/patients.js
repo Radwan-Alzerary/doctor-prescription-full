@@ -53,6 +53,8 @@ const PatientsSchema = new mongoose.Schema(
     ],
     labory: [{ type: mongoose.Schema.Types.ObjectId, ref: "labory" }],
 
+    nextVisit: { type: Date },
+
     Medicine: [{ type: mongoose.Schema.Types.ObjectId, ref: "Medicine" }],
 
     MedicalAnalysis: {
