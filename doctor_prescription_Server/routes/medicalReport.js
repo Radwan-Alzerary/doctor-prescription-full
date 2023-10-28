@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const Medicalreports = require("../model/medicalReports"); // Make sure to adjust the path as needed
+const Medicalreports = require("../model/medicalReport"); // Make sure to adjust the path as needed
 const Patients = require("../model/patients"); // Make sure to adjust the path as needed
 
 // Add a new Medicalreports
