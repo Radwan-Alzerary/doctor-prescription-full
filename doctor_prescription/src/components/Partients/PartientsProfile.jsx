@@ -51,7 +51,6 @@ function PartientsProfile(props) {
         <Avatar
           className="w-full"
           alt={partientsProfile.name}
-          src="/static/images/avatar/1.jpg"
           sx={{ width: 120, height: 120 }}
         />{" "}
         <h5>المريض : {partientsProfile.name}</h5>
