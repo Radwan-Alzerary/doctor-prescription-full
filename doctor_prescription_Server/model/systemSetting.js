@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const SystemSettingSchema = new mongoose.Schema(
   {
+    ownerId:{
+      type:String 
+     },
+ 
     pharmaceuticalLoded: { type: Boolean, default: false },
     expireDate: { type: Date },
     active: { type: Boolean, default: false },

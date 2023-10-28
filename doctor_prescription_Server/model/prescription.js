@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const PrescriptionSchema = new mongoose.Schema(
   {
+    ownerId:{
+      type:String 
+     },
+ 
     name: {
       type: String,
     },

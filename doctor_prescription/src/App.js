@@ -78,8 +78,11 @@ function App() {
 
   const navigate = useNavigate();
   const [userAvailable, setUserAvailable] = useState(false);
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+
   axios
-    .get("http://localhost:5000/users/checkAvailable")
+    .get(`${serverAddress}/users/checkAvailable`)
     .then((response) => {
       console.log(response.data);
       setUserAvailable(response.data);
@@ -91,8 +94,11 @@ function App() {
 
   useEffect(() => {
     const verifyUser = async () => {
+      const currentURL = window.location.origin; // Get the current URL
+      const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+
       const { data } = await axios.post(
-        "http://localhost:5000/users",
+        `${serverAddress}/users`,
         {},
         {
           withCredentials: true,

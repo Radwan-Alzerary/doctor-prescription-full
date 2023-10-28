@@ -12,11 +12,13 @@ function DoctorProfileView(props) {
   const [currentUser, setCurrentUser] = useState(undefined);
   const [cookies, removeCookie] = useCookies([]);
   const [doctor, setDoctorData] = useState([]);
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
 
   useEffect(() => {
     const verifyUser = async () => {
       const { data } = await axios.post(
-        "http://localhost:5000/users",
+        `${serverAddress}/users`,
         {},
         {
           withCredentials: true,
@@ -27,7 +29,7 @@ function DoctorProfileView(props) {
         Navigate("/login");
       } else setCurrentUser(data);
       axios
-        .get(`http://localhost:5000/users/getone/${props.doctorId}`)
+        .get(`${serverAddress}/users/getone/${props.doctorId}`)
         .then((response) => {
           console.log(response.data);
           setDoctorData(response.data);
@@ -70,7 +72,7 @@ function DoctorProfileView(props) {
                   <img
                   className=" rounded-full"
                     src={
-                      "http://localhost:5000" +
+                      `${serverAddress}` +
                       doctor.profileImg
                     }
                     alt=""

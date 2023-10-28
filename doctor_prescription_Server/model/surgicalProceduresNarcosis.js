@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const surgicalProceduresNarcosis = new mongoose.Schema(
   {
+    ownerId:{
+        type:String 
+       },
+   
     name: {
       type: String,
     },

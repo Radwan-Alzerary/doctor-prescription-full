@@ -12,10 +12,12 @@ function PartientsProfile(props) {
   const [partientsProfile, setPartientsProfile] = useState([]);
   const [diseasesProfile, setDiseasesProfile] = useState([]);
   const [profileSelect, setProfileSelect] = useState("mainInfoSite");
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/patients/medicalinfo/${props.partientId}`)
+      .get(`${serverAddress}/patients/medicalinfo/${props.partientId}`)
       .then((response) => {
         setPartientsProfile(response.data); // Update the categories state with the fetched data
         setDiseasesProfile(response.data.diseases);
@@ -31,7 +33,7 @@ function PartientsProfile(props) {
   }, []);
   const refreshPaitent = () => {
     axios
-      .get(`http://localhost:5000/patients/medicalinfo/${props.partientId}`)
+      .get(`${serverAddress}/patients/medicalinfo/${props.partientId}`)
       .then((response) => {
         setPartientsProfile(response.data); // Update the categories state with the fetched data
         setDiseasesProfile(response.data.diseases);

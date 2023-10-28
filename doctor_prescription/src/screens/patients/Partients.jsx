@@ -365,13 +365,16 @@ function Partients() {
       key: "selection",
     },
   ]);
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+
   const [midscapeData, setMidscapeData] = useState([]);
 
   const navigate = useNavigate();
   useEffect(() => {
     const verifyUser = async () => {
       const { data } = await axios.post(
-        "http://localhost:5000/users",
+        `${serverAddress}/users`,
         {},
         {
           withCredentials: true,
@@ -389,7 +392,7 @@ function Partients() {
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
   const getMedicalReportsStyle = () => {
     axios
-      .get("http://localhost:5000/medicaleeportstyle/getmedicalreportstype")
+      .get(`${serverAddress}/medicaleeportstyle/getmedicalreportstype`)
       .then((response) => {
         setMedicalReportsStype(response.data[0]); // Update the categories state with the fetched data
         console.log(response.data[0]);
@@ -402,7 +405,7 @@ function Partients() {
   const handlePrint = () => {
     axios
       .get(
-        `http://localhost:5000/patients/printpatientsdata/${partientsSelectId}/prescription/${PrescriptionId}`
+        `${serverAddress}/patients/printpatientsdata/${partientsSelectId}/prescription/${PrescriptionId}`
       )
       .then((response) => {
         setDataToPrint(response.data); // Update the categories state with the fetched data
@@ -415,7 +418,7 @@ function Partients() {
   };
   useEffect(() => {
     axios
-      .get("http://localhost:5000/category/getall")
+      .get(`${serverAddress}/category/getall`)
       .then((response) => {
         setCategoryList(response.data); // Update the categories state with the fetched data
         console.log(response.data);
@@ -429,7 +432,7 @@ function Partients() {
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
   const getPharmaceApi = () => {
     axios
-      .get("http://localhost:5000/pharmaceutical/getall")
+      .get(`${serverAddress}/pharmaceutical/getall`)
       .then((response) => {
         setPharmaceList(response.data); // Update the categories state with the fetched data
       })
@@ -439,7 +442,7 @@ function Partients() {
   };
   useEffect(() => {
     axios
-      .get("http://localhost:5000/intaketime/getall")
+      .get(`${serverAddress}/intaketime/getall`)
       .then((response) => {
         setInTakeTime(response.data); // Update the categories state with the fetched data
       })
@@ -449,7 +452,7 @@ function Partients() {
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
   useEffect(() => {
     axios
-      .get("http://localhost:5000/constantdiseases/getall")
+      .get(`${serverAddress}/constantdiseases/getall`)
       .then((response) => {
         setConstantDiseases(response.data); // Update the categories state with the fetched data
       })
@@ -462,7 +465,7 @@ function Partients() {
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
   const getPatientsList = () => {
     axios
-      .get("http://localhost:5000/patients/getall")
+      .get(`${serverAddress}/patients/getall`)
       .then((response) => {
         setPatientsList(response.data); // Update the categories state with the fetched data
         console.log(response.data);
@@ -484,7 +487,7 @@ function Partients() {
 
     axios
       .delete(
-        `http://localhost:5000/prescription/removebill/${PrescriptionId}/pharmaceutical/${id}`
+        `${serverAddress}/prescription/removebill/${PrescriptionId}/pharmaceutical/${id}`
       )
       .then((response) => {
         setLoading(() => true);
@@ -504,7 +507,7 @@ function Partients() {
   const onDeleteHande = (id) => {
     setLoading(false);
     axios
-      .delete(`http://localhost:5000/patients/delete/${id}`)
+      .delete(`${serverAddress}/patients/delete/${id}`)
       .then((response) => {
         setLoading(true);
         getPatientsList();
@@ -521,7 +524,7 @@ function Partients() {
   };
   const onEditHande = (id) => {
     axios
-      .get(`http://localhost:5000/patients/medicalinfo/${id}`)
+      .get(`${serverAddress}/patients/medicalinfo/${id}`)
       .then((response) => {
         console.log(response.data);
         setUserEditData(response.data);
@@ -535,7 +538,7 @@ function Partients() {
   };
   const onPrescriptionShowHande = (id) => {
     axios
-      .post("http://localhost:5000/prescription/new", { PartientsId: id })
+      .post(`${serverAddress}/prescription/new`, { PartientsId: id })
       .then((response) => {
         // Handle the response if needed
         console.log("POST request successful:", response.data.prescriptionId);
@@ -565,7 +568,7 @@ function Partients() {
   };
   const onMedicalFormShowHandle = (id) => {
     axios
-      .get(`http://localhost:5000/patients/medicalinfo/${id}`)
+      .get(`${serverAddress}/patients/medicalinfo/${id}`)
       .then((response) => {
         setUserEditData(response.data);
         console.log(response.data);
@@ -581,7 +584,7 @@ function Partients() {
   const handleNewPatientData = (data) => {
     console.log(data);
     axios
-      .post("http://localhost:5000/patients/new", data)
+      .post(`${serverAddress}/patients/new`, data)
       .then((response) => {
         // Handle the response if needed
         getPharmaceApi();
@@ -601,7 +604,7 @@ function Partients() {
     data.id = partientsSelectId;
     console.log(data);
     axios
-      .post("http://localhost:5000/patients/edit", data)
+      .post(`${serverAddress}/patients/edit`, data)
       .then((response) => {
         // Handle the response if needed
         getPharmaceApi();
@@ -617,7 +620,7 @@ function Partients() {
   };
   const handleOnBillAdded = (data) => {
     axios
-      .post("http://localhost:5000/prescription/postpharmaceutical", data)
+      .post(`${serverAddress}/prescription/postpharmaceutical`, data)
       .then((response) => {
         // Handle the response if needed
         console.log("POST request successful:", response.data);
@@ -630,7 +633,7 @@ function Partients() {
   };
   const getAllPrescription = (PrescriptionId) => {
     axios
-      .get(`http://localhost:5000/prescription/getbills/${PrescriptionId}`)
+      .get(`${serverAddress}/prescription/getbills/${PrescriptionId}`)
       .then((response) => {
         setPharmaceListInside(() => response.data.prescription); // Update the categories state with the fetched data
         medscapecheck(PrescriptionId);
@@ -641,7 +644,7 @@ function Partients() {
   };
   const medscapecheck = (PrescriptionId) => {
     axios
-      .get(`http://localhost:5000/prescription/medscapecheck/${PrescriptionId}`)
+      .get(`${serverAddress}/prescription/medscapecheck/${PrescriptionId}`)
       .then((response) => {
         setMidscapeData(() => response.data.midscapeData);
       })
@@ -656,7 +659,7 @@ function Partients() {
   const handleNewPrescriptionData = (data) => {
     data.patientId = partientsSelectId;
     axios
-      .post("http://localhost:5000/prescription/ubdateData", { data })
+      .post(`${serverAddress}/prescription/ubdateData`, { data })
       .then((response) => {
         // Handle the response if needed
         getPatientsList();
@@ -675,7 +678,7 @@ function Partients() {
   };
   const HandleonPrinterClickText = (data) => {
     axios
-      .get(`http://localhost:5000/patients/medicalinfo/${partientsSelectId}`)
+      .get(`${serverAddress}/patients/medicalinfo/${partientsSelectId}`)
       .then((response) => {
         setDataToPrint({ patients: response.data, textonly: true, data: data }); // Update the categories state with the fetched data
         setprints(true);
@@ -686,7 +689,7 @@ function Partients() {
   };
   const handleNewReportData = (data) => {
     axios
-      .post("http://localhost:5000/medicalreports/new", { data })
+      .post(`${serverAddress}/medicalreports/new`, { data })
       .then((response) => {
         // Handle the response if needed
         getPatientsList();
@@ -699,7 +702,7 @@ function Partients() {
   };
   const handleNewLaboryData = (data) => {
     axios
-      .post("http://localhost:5000/labory/new", { data })
+      .post(`${serverAddress}/labory/new`, { data })
       .then((response) => {
         // Handle the response if needed
         getPatientsList();
@@ -713,7 +716,7 @@ function Partients() {
   const handeSearchInput = (event) => {
     const searchInputValue = event.target.value;
     axios
-      .get(`http://localhost:5000/patients/getbyname/${searchInputValue}`)
+      .get(`${serverAddress}/patients/getbyname/${searchInputValue}`)
       .then((response) => {
         setPatientsList(response.data); // Update the categories state with the fetched data
         console.log(response.data);
@@ -726,7 +729,7 @@ function Partients() {
   const HandleOnPrescriptionDeleteHande = (patientsId, prescriptionId) => {
     axios
       .delete(
-        `http://localhost:5000/patients/Patientsid/${patientsId}/prescriptionid/${prescriptionId}
+        `${serverAddress}/patients/Patientsid/${patientsId}/prescriptionid/${prescriptionId}
       `
       )
       .then((response) => {
@@ -740,7 +743,7 @@ function Partients() {
   };
   const onPrescriptionEditHandel = (patientsId, prescriptionId) => {
     axios
-      .get(`http://localhost:5000/prescription/getone/${prescriptionId}?`)
+      .get(`${serverAddress}/prescription/getone/${prescriptionId}?`)
       .then((response) => {
         console.log(response.data);
         setPrescriptionId(response.data._id);
@@ -770,7 +773,7 @@ function Partients() {
   useEffect(() => {
     const onQueryChange = () => {
       axios
-        .post("http://localhost:5000/patients/queryselect", {
+        .post(`${serverAddress}/patients/queryselect`, {
           ageQuery: ageQuery,
           genderQuery: genderQuery,
           stateQuery: stateQuery,

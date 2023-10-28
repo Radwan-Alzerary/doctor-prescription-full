@@ -9,8 +9,11 @@ function PrivateRoute() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const currentURL = window.location.origin; // Get the current URL
+    const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+
     axios
-      .get("http://localhost:5000/users/usercheck")
+      .get(`${serverAddress}/users/usercheck`)
       .then((response) => {
         setLoading(false); // Set loading to false when data is available
         console.log(response.data);
@@ -26,8 +29,7 @@ function PrivateRoute() {
   if (loading) {
     // Render a loading indicator while waiting for data
     return <p>Loading...</p>;
-  }   
-
+  }
 
   if (userData.expireDate) {
     const expireDate = new Date(userData.expireDate);

@@ -8,9 +8,12 @@ export default function Cards() {
   const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies([]);
   useEffect(() => {
+    const currentURL = window.location.origin; // Get the current URL
+    const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+
     const verifyUser = async () => {
       const { data } = await axios.post(
-        "http://localhost:5000/users",
+        `${serverAddress}/users`,
         {},
         {
           withCredentials: true,

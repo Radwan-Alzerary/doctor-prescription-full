@@ -27,6 +27,7 @@
     "js-cookie": "^3.0.5",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
+    "million": "^2.6.4",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
     "react-auth-kit": "^2.12.6",

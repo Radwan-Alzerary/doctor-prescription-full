@@ -40,6 +40,9 @@ function PrescriptionsDesign() {
     useState([]);
   const [medicalRightTextReportsStype, setMedicalTextRightReportsStype] =
     useState([]);
+    const currentURL = window.location.origin; // Get the current URL
+    const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+
   useEffect(() => {
     getMedicalReportsStyle();
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
@@ -50,7 +53,7 @@ function PrescriptionsDesign() {
 
   const ubdateStyle = () => {
     axios
-      .get("http://localhost:5000/medicaleeportstyle/getmedicalreportstype")
+      .get(`${serverAddress}/medicaleeportstyle/getmedicalreportstype`)
       .then((response) => {
         setMedicalReportsStype(response.data[0]); // Update the categories state with the fetched data
         setMedicalTextMiddleReportsStype(response.data[0].HeaderMidleText);
@@ -69,7 +72,7 @@ function PrescriptionsDesign() {
     console.log(data);
     console.log(medicalReportsStype);
     axios
-      .post("http://localhost:5000/medicaleeportstyle/update", {
+      .post(`${serverAddress}/medicaleeportstyle/update`, {
         id: medicalReportsStype._id,
         data: data,
       })
@@ -90,7 +93,7 @@ function PrescriptionsDesign() {
 
   const HandleOnTextRemove = (lineType, hederlineid) => {
     axios
-      .post("http://localhost:5000/medicaleeportstyle/removeline", {
+      .post(`${serverAddress}/medicaleeportstyle/removeline`, {
         id: medicalReportsStype._id,
         type: lineType,
         hederlineid: hederlineid,
@@ -110,7 +113,7 @@ function PrescriptionsDesign() {
 
   const onMiddleLineInput = (text, data, index, type) => {
     axios
-      .post("http://localhost:5000/medicaleeportstyle/updatemiddle", {
+      .post(`${serverAddress}/medicaleeportstyle/updatemiddle`, {
         id: medicalReportsStype._id,
         text: text,
         data: data,
@@ -130,7 +133,7 @@ function PrescriptionsDesign() {
 
   const addNewCenterText = (type) => {
     axios
-      .post("http://localhost:5000/medicaleeportstyle/newmiddleline", {
+      .post(`${serverAddress}/medicaleeportstyle/newmiddleline`, {
         id: medicalReportsStype._id,
         type: type,
       })
@@ -163,7 +166,7 @@ function PrescriptionsDesign() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/medicaleeportstyle/backgroundImage",
+        `${serverAddress}/medicaleeportstyle/backgroundImage`,
         {
           method: "POST",
           body: formData,

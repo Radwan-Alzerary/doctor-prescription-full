@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
+  onlineId: { type: String },
   email: {
     type: String,
     required: [true, "Email is Required"],
@@ -19,7 +20,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "UserName is Required"],
   },
-  expireDate:{type:Date},
+  expireDate: { type: Date },
   image: { type: String },
   Specialization: { type: String, default: "التخصص" },
   university: { type: String, default: "الجامعة" },

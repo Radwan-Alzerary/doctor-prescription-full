@@ -37,12 +37,14 @@ function Pharmaceutical() {
   const [inTakeTimeList, setInTakeTime] = useState([]);
   const [loading,setLoading] = useState(true)
   const [addFormData, setAddFormData] = useState({});
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
 
   // Create a function to receive data from NewCategoryForm
   const handleFormData = (data) => {
     console.log(data);
     axios
-      .post("http://localhost:5000/pharmaceutical/new", data)
+      .post(`${serverAddress}/pharmaceutical/new`, data)
       .then((response) => {
         // Handle the response if needed
         console.log("POST request successful:", response.data);
@@ -58,7 +60,7 @@ function Pharmaceutical() {
   const handleEditFormData = (data) => {
     console.log(data);
     axios
-      .post("http://localhost:5000/pharmaceutical/edit", data)
+      .post(`${serverAddress}/pharmaceutical/edit`, data)
       .then((response) => {
         // Handle the response if needed
         console.log("POST request successful:", response.data);
@@ -75,7 +77,7 @@ function Pharmaceutical() {
   const onDeleteHandle = (id) => {
     console.log(id)
     axios
-      .delete(`http://localhost:5000/pharmaceutical/delete/${id}`)
+      .delete(`${serverAddress}/pharmaceutical/delete/${id}`)
       .then((response) => {
         // Handle success, e.g., show a success message or update the categories list
         getAllBill();
@@ -92,7 +94,7 @@ function Pharmaceutical() {
   const onEditHandle = (id) => {
     console.log(id)
     axios
-      .get(`http://localhost:5000/pharmaceutical//getone/${id}`)
+      .get(`${serverAddress}/pharmaceutical//getone/${id}`)
       .then((response) => {
         // Handle success, e.g., show a success message or update the categories list
         console.log(response.data)
@@ -109,7 +111,7 @@ function Pharmaceutical() {
 
   const onFavoriteHandle=(id)=>{
     axios
-      .post("http://localhost:5000/pharmaceutical/favorite", {id:id})
+      .post(`${serverAddress}/pharmaceutical/favorite`, {id:id})
       .then((response) => {
         getAllBill();
         console.log("POST request successful:", response.data);
@@ -123,7 +125,7 @@ function Pharmaceutical() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/category/getall")
+      .get(`${serverAddress}/category/getall`)
       .then((response) => {
         setCategoryList(response.data); // Update the categories state with the fetched data
         console.log(response.data);
@@ -138,7 +140,7 @@ function Pharmaceutical() {
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
   const getAllBill = () => {
     axios
-      .get("http://localhost:5000/pharmaceutical/getall")
+      .get(`${serverAddress}/pharmaceutical/getall`)
       .then((response) => {
         setPharmaceList(response.data); // Update the categories state with the fetched data
         console.log(response.data);
@@ -150,7 +152,7 @@ function Pharmaceutical() {
   };
   useEffect(() => {
     axios
-      .get("http://localhost:5000/intaketime/getall")
+      .get(`${serverAddress}/intaketime/getall`)
       .then((response) => {
         setInTakeTime(response.data); // Update the categories state with the fetched data
         console.log(response.data);
@@ -167,7 +169,7 @@ function Pharmaceutical() {
   const handeSearchInput = (event) => {
     const searchInputValue = event.target.value;
     axios
-      .get(`http://localhost:5000/pharmaceutical/getbyname/${searchInputValue}`)
+      .get(`${serverAddress}/pharmaceutical/getbyname/${searchInputValue}`)
       .then((response) => {
         setPharmaceList(response.data); // Update the categories state with the fetched data
         console.log(response.data);

@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const MedicalReportSchema = new mongoose.Schema(
   {
+    ownerId:{
+      type:String 
+     },
+ 
     report: { type: String },
     patients: { type: mongoose.Schema.Types.ObjectId, ref: "Patients" },
   },

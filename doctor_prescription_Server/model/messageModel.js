@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const messageSchema = mongoose.Schema(
   {
+    ownerId:{
+      type:String 
+     },
+ 
     message: {
       text: { type: String, required: true },
     },

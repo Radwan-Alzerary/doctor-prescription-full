@@ -34,7 +34,14 @@ const socket = require("socket.io");
 //use flash
 app.use(flash());
 const corsOptions = {
-  origin: ["http://localhost:8080", "http://localhost:3000"],
+  origin: [
+    /^(http:\/\/.+:8080)$/,
+    /^(http:\/\/.+:80)$/,
+
+    /^(http:\/\/.+:3000)$/,
+    /^(http:\/\/.+:5000)$/,
+  ],
+  methods: "GET,POST",
   credentials: true,
   "Access-Control-Allow-Credentials": true,
 };
@@ -342,13 +349,11 @@ MedicalReportsStype.countDocuments()
     console.error("Error checking Storge collection:", err);
   });
 
-
-  SystemSettingSchema.countDocuments()
+SystemSettingSchema.countDocuments()
   .then((count) => {
     if (count === 0) {
       // Create default documents
-      const systemSettingSchema = new SystemSettingSchema({
-      });
+      const systemSettingSchema = new SystemSettingSchema({});
 
       // Save the default documents to the database
       systemSettingSchema
@@ -365,14 +370,18 @@ MedicalReportsStype.countDocuments()
     console.error("Error checking Storge collection:", err);
   });
 
-
 const server = app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
 
 const io = socket(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: [
+      /^(http:\/\/.+:8080)$/,
+      /^(http:\/\/.+:80)$/,
+      /^(http:\/\/.+:3000)$/,
+      /^(http:\/\/.+:5000)$/,
+    ],
     credentials: true,
   },
 });

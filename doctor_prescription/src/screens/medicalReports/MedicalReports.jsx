@@ -31,9 +31,12 @@ function MedicalReports() {
 
   // Create a function to receive data from NewCategoryForm
   const handleFormData = (data) => {
+    const currentURL = window.location.origin; // Get the current URL
+    const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+
     console.log(data);
     axios
-      .post("http://localhost:5000/category/new", data)
+      .post(`${serverAddress}/category/new`, data)
       .then((response) => {
         // Handle the response if needed
         console.log("POST request successful:", response.data);
@@ -48,8 +51,11 @@ function MedicalReports() {
   };
 
   useEffect(() => {
+    const currentURL = window.location.origin; // Get the current URL
+    const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+
     axios
-      .get("http://localhost:5000/medicalreports/getall")
+      .get(`${serverAddress}/medicalreports/getall`)
       .then((response) => {
         setMedicalReportsTable(response.data); // Update the categories state with the fetched data
         console.log(response.data);

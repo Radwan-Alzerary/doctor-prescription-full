@@ -5,6 +5,9 @@ import { useState } from "react";
 
 export default function PatientPictures(props) {
   const [file, setFile] = useState(null);
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+
   const handleFileChange = async (file) => {
     const selectedFile = file;
     setFile(selectedFile);
@@ -20,7 +23,7 @@ export default function PatientPictures(props) {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/patients/galaryimage/",
+        `${serverAddress}/patients/galaryimage/`,
         {
           method: "POST",
           body: formData,
@@ -45,7 +48,7 @@ export default function PatientPictures(props) {
           <img
             alt="2"
             className=" w-full  h-80 object-cover"
-            src={`http://localhost:5000/${value}`}
+            src={`${serverAddress}/${value}`}
             ></img>
         ))}
         <ImageInput handleFileChange={handleFileChange}></ImageInput>

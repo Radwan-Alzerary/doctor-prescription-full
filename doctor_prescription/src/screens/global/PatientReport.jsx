@@ -8,6 +8,9 @@ function PatientReport(props) {
   const [middleText, setMiddleText] = useState([]);
   const [rightText, setRightText] = useState([]);
   const [leftText, setLeftText] = useState([]);
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+
   useEffect(() => {
     console.log("dataToPrint");
     async function updateTextAndPrint() {
@@ -60,7 +63,7 @@ function PatientReport(props) {
         <img
           className="z-0 opacity-30 absolute flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5  rounded-xl "
           src={
-            "http://localhost:5000" + props.medicalReportsStype.backgroundImg
+            `${serverAddress}` + props.medicalReportsStype.backgroundImg
           }
           alt=""
         ></img>

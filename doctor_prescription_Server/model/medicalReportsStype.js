@@ -1,8 +1,11 @@
 const mongoose = require("mongoose");
 const MedicalReportsStyleSchema = new mongoose.Schema(
   {
+    ownerId:{
+      type:String 
+     },
+ 
     name: { type: String },
-
     xPading: { type: String, default: 0 },
     rightPading: { type: String, default: 0 },
     leftPading: { type: String, default: 0 },
@@ -59,7 +62,7 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
       line4Active: { type: Boolean, default: true },
       line4Height: { type: Number },
     },
-    linesActive :{type:Boolean,default:true},
+    linesActive: { type: Boolean, default: true },
     tableHeaderActive: { type: Boolean, default: true },
     tableHeaderColor: {
       type: String,

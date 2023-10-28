@@ -16,6 +16,8 @@ function DoctorProfile() {
   const [editFormData, setEditFormData] = useState("");
   const [doctor, setDoctorData] = useState([]);
   const [file, setFile] = useState(null);
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
 
   const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
@@ -30,7 +32,7 @@ function DoctorProfile() {
     formData.append("id", currentUser.userId);
 
     try {
-      const response = await fetch("http://localhost:5000/users/update/image", {
+      const response = await fetch(`${serverAddress}/users/update/image`, {
         method: "POST",
         body: formData,
       });
@@ -38,7 +40,7 @@ function DoctorProfile() {
       if (response.ok) {
         setFile(null);
         axios
-          .get(`http://localhost:5000/users/getone/${currentUser.userId}`)
+          .get(`${serverAddress}/users/getone/${currentUser.userId}`)
           .then((response) => {
             console.log(response.data);
             setDoctorData(response.data);
@@ -57,7 +59,7 @@ function DoctorProfile() {
   useEffect(() => {
     const verifyUser = async () => {
       const { data } = await axios.post(
-        "http://localhost:5000/users",
+        `${serverAddress}/users`,
         {},
         {
           withCredentials: true,
@@ -68,7 +70,7 @@ function DoctorProfile() {
         Navigate("/login");
       } else setCurrentUser(data);
       axios
-        .get(`http://localhost:5000/users/getone/${data.userId}`)
+        .get(`${serverAddress}/users/getone/${data.userId}`)
         .then((response) => {
           console.log(response.data);
           setDoctorData(response.data);
@@ -82,7 +84,7 @@ function DoctorProfile() {
 
   const onFormSubmit = (data, imgData) => {
     axios
-      .post("http://localhost:5000/users/update", {
+      .post(`${serverAddress}/users/update`, {
         id: currentUser.userId,
         data: data,
       })
@@ -90,7 +92,7 @@ function DoctorProfile() {
         // Handle the response if needed
         console.log("POST request successful:", response.data);
         axios
-          .get(`http://localhost:5000/users/getone/${currentUser.userId}`)
+          .get(`${serverAddress}/users/getone/${currentUser.userId}`)
           .then((response) => {
             console.log(response.data);
             setDoctorData(response.data);
@@ -136,7 +138,7 @@ function DoctorProfile() {
               {doctor.profileImg ? (
                 <img
                   className=" rounded-full h-full w-full overflow-hidden object-cover"
-                  src={"http://localhost:5000" + doctor.profileImg}
+                  src={`${serverAddress}` + doctor.profileImg}
                   alt=""
                 ></img>
               ) : (

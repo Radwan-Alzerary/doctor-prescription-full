@@ -37,6 +37,9 @@ function stringAvatar(name) {
 export default function Contacts({ contacts, currentUser, changeChat,searchInputHandle }) {
   const [currentUserName, setCurrentUserName] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+
   console.log(contacts);
   useEffect(() => {
     if (currentUser) {
@@ -82,7 +85,7 @@ export default function Contacts({ contacts, currentUser, changeChat,searchInput
                   <img
                   className=" rounded-full"
                     src={
-                      "http://localhost:5000" +
+                      `${serverAddress}` +
                       contact.profileImg
                     }
                     alt=""

@@ -117,7 +117,7 @@ router.get("/import", async (req, res) => {
     }
 
     console.log("Import completed.");
-    await SystemSetting.findOneAndUpdate({}, { pharmaceuticalLoaded: true });
+    await SystemSetting.findOneAndUpdate({}, { pharmaceuticalLoded: true });
     res.status(200).json({ message: "Import completed." });
   } catch (error) {
     console.error(`Error reading JSON file: ${error.message}`);

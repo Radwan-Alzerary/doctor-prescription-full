@@ -7,31 +7,36 @@ import Loading from "../../components/pageCompond/Loading";
 
 function Dashboard() {
   // Declare componentRef at the component level
+
   const [dashboardCount, setDashboardCount] = useState({});
   const [todayPatient, setTodayPatient] = useState([]);
   const [UpcomingPatient, setUpcomingPatient] = useState([]);
   const [loading, setLoding] = useState(false);
+
   const fetchData = async () => {
     try {
-      // Fetch dashboard data first
+      const currentURL = window.location.origin; // Get the current URL
+      const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
       const dashboardResponse = await axios.get(
-        "http://localhost:5000/dashboard/getcount"
+        `${serverAddress}/dashboard/getcount`
       );
       setDashboardCount(dashboardResponse.data);
 
       // Fetch today's patients
       const todayPatientResponse = await axios.get(
-        "http://localhost:5000/patients/today"
+        `${serverAddress}/patients/today`
       );
       setTodayPatient(todayPatientResponse.data);
 
       // Fetch upcoming patients
       const upcomingPatientResponse = await axios.get(
-        "http://localhost:5000/patients/upcoming"
+        `${serverAddress}/patients/upcoming`
       );
       setUpcomingPatient(upcomingPatientResponse.data);
       setLoding(true);
     } catch (error) {
+      setLoding(true);
+
       console.error("Error fetching data:", error);
     }
   };
@@ -145,7 +150,7 @@ function Dashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {UpcomingPatient.map((patient, index) => (
+                    {todayPatient.map((patient, index) => (
                       <tr class="bg-white border-b hover:bg-slate-50 ">
                         <th
                           scope="row"
@@ -155,15 +160,23 @@ function Dashboard() {
                         </th>
                         <td class="px-6 py-4">
                           {" "}
-                          {formatDate(
-                            patient.visitDate[patient.visitDate.length - 1].date
-                          )}
+                          {patient.visitDate[patient.visitDate.length - 1] &&
+                          patient.visitDate
+                            ? formatDate(
+                                patient.visitDate[patient.visitDate.length - 1]
+                                  .date
+                              )
+                            : ""}
                         </td>
                         <td class="px-6 py-4">
                           {" "}
-                          {formatDate(
-                            patient.visitDate[patient.visitDate.length - 2].date
-                          )}
+                          {patient.visitDate[patient.visitDate.length - 2] &&
+                          patient.visitDate
+                            ? formatDate(
+                                patient.visitDate[patient.visitDate.length - 2]
+                                  .date
+                              )
+                            : "لا يوجد"}
                         </td>
                         <td class="px-6 py-4">{patient.visitDate.length}</td>
                       </tr>
@@ -209,9 +222,13 @@ function Dashboard() {
                         </td>
                         <td class="px-6 py-4">
                           {" "}
-                          {formatDate(
-                            patient.visitDate[patient.visitDate.length - 1].date
-                          )}
+                          {patient.visitDate[patient.visitDate.length - 1] &&
+                          patient.visitDate
+                            ? formatDate(
+                                patient.visitDate[patient.visitDate.length - 1]
+                                  .date
+                              )
+                            : ""}
                         </td>
                         <td class="px-6 py-4">{patient.visitDate.length}</td>
                       </tr>

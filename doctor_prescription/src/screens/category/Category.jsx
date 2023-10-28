@@ -31,26 +31,28 @@ function Category() {
 
   // Create a function to receive data from NewCategoryForm
   const handleFormData = (data) => {
-    console.log(data);
+    const currentURL = window.location.origin; // Get the current URL
+    const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
     axios
-    .post("http://localhost:5000/category/new", data)
-    .then((response) => {
-      // Handle the response if needed
-      console.log("POST request successful:", response.data);
-    })
-    .catch((error) => {
-      // Handle errors if the request fails
-      console.error("Error making POST request:", error);
-    });
+      .post(`${serverAddress}/category/new`, data)
+      .then((response) => {
+        // Handle the response if needed
+        console.log("POST request successful:", response.data);
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
 
     // Update the state or perform actions with the data as needed
     setAddFormData(data);
   };
 
   useEffect(() => {
-    console.log("xcxxx");
+    const currentURL = window.location.origin; // Get the current URL
+    const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
     axios
-      .get("http://localhost:5000/category/getall")
+      .get(`${serverAddress}/category/getall`)
       .then((response) => {
         setCategoryList(response.data); // Update the categories state with the fetched data
         console.log(response.data);
@@ -67,7 +69,7 @@ function Category() {
   const handleHideClick = () => {
     setShowAddForm(false);
   };
-  
+
   return (
     <div className=" h-[92vh] overflow-auto">
       <CustomizedInputBase></CustomizedInputBase>

@@ -13,6 +13,9 @@ function Setting(props) {
   const [drugImported, setDrugImported] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+
   useEffect(() => {
     getAllCashire();
     checkDrugImported();
@@ -20,7 +23,7 @@ function Setting(props) {
 
   const checkDrugImported = () => {
     axios
-      .get("http://localhost:5000/setting/getdata")
+      .get(`${serverAddress}/setting/getdata`)
       .then((response) => {
         console.log(response.data);
         setDrugImported(response.data.pharmaceuticalLoded);
@@ -32,7 +35,7 @@ function Setting(props) {
 
   const getAllCashire = () => {
     axios
-      .get("http://localhost:5000/users/allUsers")
+      .get(`${serverAddress}/users/allUsers`)
       .then((response) => {
         setCashire(response.data); // Update the categories state with the fetched data
       })
@@ -43,7 +46,7 @@ function Setting(props) {
   const onCashireFormSubmit = (data) => {
     console.log(data);
     axios
-      .post("http://localhost:5000/users/addcashire", data)
+      .post(`${serverAddress}/users/addcashire`, data)
       .then((response) => {
         // Handle the response if needed
         getAllCashire();
@@ -58,7 +61,7 @@ function Setting(props) {
   const onUserUbdateSubmit = (data) => {
     data.id = props.currentUser.userId;
     axios
-      .post("http://localhost:5000/users/edit", data)
+      .post(`${serverAddress}/users/edit`, data)
       .then((response) => {
         // Handle the response if needed
         // getAllCashire();
@@ -84,7 +87,7 @@ function Setting(props) {
         futureDate.setDate(today.getDate() + response.data.dayNum);
         const data = { expireDate: futureDate, id: props.currentUser.userId };
         axios
-          .post("http://localhost:5000/users/edit", data)
+          .post(`${serverAddress}/users/edit`, data)
           .then((response) => {
             // Handle the response if needed
             window.location.href = "/";
@@ -106,7 +109,7 @@ function Setting(props) {
 
   const backUpclickHandle = () => {
     axios
-      .get("http://localhost:5000/setting/exportdata")
+      .get(`${serverAddress}/setting/exportdata`)
       .then((response) => {
         if (response.data.message === "Import completed.") {
           setDrugImported(true);
@@ -118,7 +121,7 @@ function Setting(props) {
   };
   const restorClickHandle = () => {
     axios
-      .get("http://localhost:5000/setting/importdata")
+      .get(`${serverAddress}/setting/importdata`)
       .then((response) => {})
       .catch((error) => {
         console.error("Error fetching categories:", error);
@@ -128,7 +131,7 @@ function Setting(props) {
   const import3000Drag = () => {
     setLoading(true);
     axios
-      .get("http://localhost:5000/pharmaceutical/import")
+      .get(`${serverAddress}/pharmaceutical/import`)
       .then((response) => {
         setLoading(false);
       })

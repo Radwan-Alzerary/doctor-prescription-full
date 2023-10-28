@@ -22,12 +22,15 @@ export default function Chats() {
   const [doctorId, setDoctorId] = useState("");
   const [showDoctorProfile, setShowDoctorProfile] = useState(false);
   const [cookies, removeCookie] = useCookies([]);
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
 
   const searchInputHandle = (value) => {
     const getCurrentUser = async () => {
       if (currentUser) {
+    
         const data = await axios.get(
-          `http://localhost:5000/users/allUsers/${currentUser.userId}/name/${value}`
+          `${serverAddress}/users/allUsers/${currentUser.userId}/name/${value}`
         );
         setContacts(data.data);
       }
@@ -38,7 +41,7 @@ export default function Chats() {
   useEffect(() => {
     const verifyUser = async () => {
       const { data } = await axios.post(
-        "http://localhost:5000/users",
+        `${serverAddress}/users`,
         {},
         {
           withCredentials: true,
@@ -67,7 +70,7 @@ export default function Chats() {
     const getCurrentUser = async () => {
       if (currentUser) {
         const data = await axios.get(
-          `http://localhost:5000/users/allUsers/${
+          `${serverAddress}/users/allUsers/${
             currentUser.userId
           }/name/${""}`
         );

@@ -52,12 +52,15 @@ function Header() {
   };
 
   useEffect(() => {
+    const currentURL = window.location.origin; // Get the current URL
+    const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+  
     const verifyUser = async () => {
       if (!cookies.jwt) {
         navigate("/login");
       } else {
         const { data } = await axios.post(
-          "http://localhost:5000/users",
+          `${serverAddress}/users`,
           {},
           {
             withCredentials: true,
