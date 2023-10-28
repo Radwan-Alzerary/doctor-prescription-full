@@ -13,7 +13,7 @@ router.use('/labory', require('./labory'));
 router.use('/dashboard', require('./dashboard'));
 router.use('/setting', require('./setting'));
 router.use("/medicaleeportstyle", require("./medicalReportsStyle"));
-router.use("/medicalreports", require("./medicalreports"));
+// router.use("/medicalreports", require("./medicalreports"));
 router.use("/medicine", require("./medicine"));
 // router.use('/costemers', require('./costemers'));
 router.use("/", require("./routes"));
