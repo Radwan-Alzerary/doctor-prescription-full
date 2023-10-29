@@ -62,6 +62,34 @@ function Row(props) {
   const { row } = props;
   console.log(row);
   const [open, setOpen] = React.useState(false);
+  const getPharmaceuticalName = (params) => {
+    console.log(params);
+
+    const pharmaceuticalArray = params;
+    // Extract the id and name properties from each item in the array
+    if (pharmaceuticalArray) {
+      const pharmaceuticalNames = pharmaceuticalArray.map((item) => {
+        if (item.id !== null) {
+          return item.id.name;
+        }
+        // You can choose to handle the case when item.id is null here,
+        // for example, return a default value or an empty string.
+        return "لا يوجد";
+      });
+      console.log(pharmaceuticalNames);
+      console.log(pharmaceuticalNames);
+      console.log(pharmaceuticalNames);
+      console.log(pharmaceuticalNames);
+      console.log(pharmaceuticalNames);
+      console.log(pharmaceuticalNames);
+      console.log(pharmaceuticalNames);
+      console.log(pharmaceuticalNames);
+      // Join the extracted names into a string and display it in the cell
+      return pharmaceuticalNames.join(", ");
+    } else {
+      return "";
+    }
+  };
 
   return (
     <React.Fragment>
@@ -80,8 +108,7 @@ function Row(props) {
         </TableCell>
         <TableCell component="th" scope="row" align="center">
           <div className="bg-green-200 w-full flex justify-center items-center h-6 rounded-full">
-          {new Date(row.createdAt).toLocaleString()}
-
+            {new Date(row.createdAt).toLocaleString()}
           </div>
         </TableCell>
         <TableCell component="th" scope="row" align="center">
@@ -250,6 +277,7 @@ function Row(props) {
                     <TableCell align="center">عدد الادوية</TableCell>
                     <TableCell align="center">التشخيص</TableCell>
                     <TableCell align="center">التاريخ</TableCell>
+                    <TableCell align="center">الاودية</TableCell>
                     <TableCell align="center">الخيارات</TableCell>
                   </TableRow>
                 </TableHead>
@@ -265,6 +293,10 @@ function Row(props) {
                       <TableCell align="center">
                         {prescription.createdAt}
                       </TableCell>
+                      <TableCell align="center">
+                        {getPharmaceuticalName(prescription.pharmaceutical)}
+                      </TableCell>
+
                       <TableCell align="center">
                         <IconButton
                           onClick={() => {

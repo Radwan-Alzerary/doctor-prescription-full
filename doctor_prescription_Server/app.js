@@ -37,11 +37,9 @@ const corsOptions = {
   origin: [
     /^(http:\/\/.+:8080)$/,
     /^(http:\/\/.+:80)$/,
-
     /^(http:\/\/.+:3000)$/,
     /^(http:\/\/.+:5000)$/,
   ],
-  methods: "GET,POST",
   credentials: true,
   "Access-Control-Allow-Credentials": true,
 };

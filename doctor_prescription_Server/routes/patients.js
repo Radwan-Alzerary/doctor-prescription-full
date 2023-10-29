@@ -109,6 +109,9 @@ router.get("/getall", async (req, res) => {
       .populate({
         path: "prescription",
         match: { active: true }, // Filter prescriptions with active: true
+        populate: {
+          path: "pharmaceutical.id",
+        },
       })
       .sort({ updatedAt: -1 }); // Sort by 'updatedAt' field in descending order
     res.json(patients);
@@ -166,7 +169,6 @@ router.get("/medicalinfo/:partientId", async (req, res) => {
       .populate({
         path: "prescription",
         match: { active: true }, // Filter prescriptions with active: true
-
         populate: {
           path: "pharmaceutical.id",
         },
@@ -255,11 +257,11 @@ router.get(
     }
   }
 );
-router.get('/today', async (req, res) => {
+router.get("/today", async (req, res) => {
   try {
     // Get the current date
     const currentDate = new Date();
-    
+
     // Set the current date to the beginning of the day (midnight)
     currentDate.setHours(0, 0, 0, 0);
 
@@ -269,7 +271,7 @@ router.get('/today', async (req, res) => {
 
     // Define the query to find patients with a visit scheduled for today
     const query = {
-      'visitDate.date': {
+      "visitDate.date": {
         $gte: currentDate,
         $lte: endDate,
       },
@@ -280,18 +282,18 @@ router.get('/today', async (req, res) => {
 
     res.json(patients);
   } catch (err) {
-    console.error('Error:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
-router.get('/upcoming', async (req, res) => {
+router.get("/upcoming", async (req, res) => {
   try {
     // Get the current date
     const currentDate = new Date();
-    
+
     // Define the query to find patients with a nextVisit date greater than or equal to the current date
     const query = {
-      'nextVisit': {
+      nextVisit: {
         $gte: currentDate,
       },
     };
@@ -301,8 +303,8 @@ router.get('/upcoming', async (req, res) => {
 
     res.json(patients);
   } catch (err) {
-    console.error('Error:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

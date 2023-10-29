@@ -16,20 +16,7 @@ function PartientsProfile(props) {
   const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
 
   useEffect(() => {
-    axios
-      .get(`${serverAddress}/patients/medicalinfo/${props.partientId}`)
-      .then((response) => {
-        setPartientsProfile(response.data); // Update the categories state with the fetched data
-        setDiseasesProfile(response.data.diseases);
-
-        console.log(response.data);
-        console.log(response.data.medicalReport);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-
-    // console.log();
+    refreshPaitent();
   }, []);
   const refreshPaitent = () => {
     axios
@@ -37,9 +24,6 @@ function PartientsProfile(props) {
       .then((response) => {
         setPartientsProfile(response.data); // Update the categories state with the fetched data
         setDiseasesProfile(response.data.diseases);
-
-        console.log(response.data);
-        console.log(response.data.medicalReport);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
@@ -163,7 +147,7 @@ function PartientsProfile(props) {
       {profileSelect === "patientPictures" ? (
         <>
           <PatientPictures
-          refreshPaitent={refreshPaitent}
+            refreshPaitent={refreshPaitent}
             id={partientsProfile._id}
             images={partientsProfile.galary}
           ></PatientPictures>

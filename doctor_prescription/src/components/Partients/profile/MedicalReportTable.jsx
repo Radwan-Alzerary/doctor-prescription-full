@@ -9,7 +9,6 @@ const columns = [
     width: 170,
     valueGetter: (params) => {
       const createdAt = new Date(params.row.createdAt);
-
       // Format the date to include year, month, day, and time
       const formattedDate = `${createdAt.getFullYear()}-${String(
         createdAt.getMonth() + 1
@@ -33,7 +32,6 @@ export default function MedicalReportTable(props) {
         rows={props.medicalReportData}
         columns={columns}
         getRowId={(row) => row._id} // Use _id as the custom id
-
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 5 },

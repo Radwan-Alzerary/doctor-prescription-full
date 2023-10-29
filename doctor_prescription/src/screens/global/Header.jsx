@@ -16,7 +16,6 @@ function Header() {
   const [cookies, setCookie, removeCookie] = useCookies([]);
 
   const [isFullscreen, setIsFullscreen] = useState(false);
-
   // Function to toggle fullscreen mode
   const toggleFullscreen = () => {
     if (!isFullscreen) {

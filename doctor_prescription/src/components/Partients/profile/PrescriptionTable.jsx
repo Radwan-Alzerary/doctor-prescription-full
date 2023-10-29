@@ -8,7 +8,6 @@ const columns = [
     width: 170,
     valueGetter: (params) => {
       const createdAt = new Date(params.row.createdAt);
-
       // Format the date to include year, month, day, and time
       const formattedDate = `${createdAt.getFullYear()}-${String(
         createdAt.getMonth() + 1
