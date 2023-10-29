@@ -363,7 +363,7 @@ function NewPatientForm(props) {
         className="w-full"
         color="success"
       >
-        <FormattedMessage id={"New Patient"} defaultMessage="Hello, World!" />
+        <FormattedMessage id={"New patient"} defaultMessage="Hello, World!" />
       </Button>
     </form>
   );
