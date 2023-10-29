@@ -1,13 +1,17 @@
 const mongoose = require("mongoose");
 const SurgicalProceduresDeviceSchema = new mongoose.Schema(
   {
-    ownerId:{
-        type:String 
-       },
-   
+    ownerId: {
+      type: String,
+    },
+
     name: {
       type: String,
     },
+    description: {
+      type: String,
+    },
+
     manufacureName: {
       type: String,
     },

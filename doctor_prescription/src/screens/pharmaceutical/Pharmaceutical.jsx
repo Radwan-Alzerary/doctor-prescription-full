@@ -35,7 +35,7 @@ function Pharmaceutical() {
   const [pharmaceList, setPharmaceList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   const [inTakeTimeList, setInTakeTime] = useState([]);
-  const [loading,setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
   const [addFormData, setAddFormData] = useState({});
   const currentURL = window.location.origin; // Get the current URL
   const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
@@ -75,7 +75,7 @@ function Pharmaceutical() {
   };
 
   const onDeleteHandle = (id) => {
-    console.log(id)
+    console.log(id);
     axios
       .delete(`${serverAddress}/pharmaceutical/delete/${id}`)
       .then((response) => {
@@ -92,14 +92,14 @@ function Pharmaceutical() {
   };
 
   const onEditHandle = (id) => {
-    console.log(id)
+    console.log(id);
     axios
       .get(`${serverAddress}/pharmaceutical//getone/${id}`)
       .then((response) => {
         // Handle success, e.g., show a success message or update the categories list
-        console.log(response.data)
-        setShowEditForm(true)
-        setEditingData(response.data)
+        console.log(response.data);
+        setShowEditForm(true);
+        setEditingData(response.data);
       })
       .catch((error) => {
         // Handle error, e.g., show an error message
@@ -109,9 +109,9 @@ function Pharmaceutical() {
     console.log(`Delete clicked for id ${id}`);
   };
 
-  const onFavoriteHandle=(id)=>{
+  const onFavoriteHandle = (id) => {
     axios
-      .post(`${serverAddress}/pharmaceutical/favorite`, {id:id})
+      .post(`${serverAddress}/pharmaceutical/favorite`, { id: id })
       .then((response) => {
         getAllBill();
         console.log("POST request successful:", response.data);
@@ -120,8 +120,7 @@ function Pharmaceutical() {
         // Handle errors if the request fails
         console.error("Error making POST request:", error);
       });
-
-  }
+  };
 
   useEffect(() => {
     axios
@@ -144,7 +143,7 @@ function Pharmaceutical() {
       .then((response) => {
         setPharmaceList(response.data); // Update the categories state with the fetched data
         console.log(response.data);
-        setLoading(false)
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
@@ -180,10 +179,9 @@ function Pharmaceutical() {
     console.log(event.target.value);
   };
 
-
   const handleHideClick = () => {
     setShowAddForm(false);
-    setShowEditForm(false)
+    setShowEditForm(false);
   };
   return (
     <div className=" h-[92vh] overflow-auto">
@@ -226,7 +224,7 @@ function Pharmaceutical() {
       ) : (
         ""
       )}
-            {showEditForm ? (
+      {showEditForm ? (
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <EditPharmaceForm
@@ -239,7 +237,6 @@ function Pharmaceutical() {
       ) : (
         ""
       )}
-
     </div>
   );
 }

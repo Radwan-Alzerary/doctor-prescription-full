@@ -15,6 +15,11 @@ router.use('/setting', require('./setting'));
 router.use("/medicaleeportstyle", require("./medicalReportsStyle"));
 router.use("/medicalreports", require("./medicalReport"));
 router.use("/medicine", require("./medicine"));
+router.use("/surgicalProcedures", require("./surgicalProcedures"));
+router.use("/surgicalprocedurestype", require("./surgicalProceduresType"));
+router.use("/surgicalProceduresNarcosis", require("./surgicalProceduresNarcosis"));
+router.use("/surgicalProceduresDevice", require("./surgicalProceduresDevice"));
+
 // router.use('/costemers', require('./costemers'));
 router.use("/", require("./routes"));
 module.exports = router;
