@@ -76,14 +76,6 @@ function Row(props) {
         // for example, return a default value or an empty string.
         return "لا يوجد";
       });
-      console.log(pharmaceuticalNames);
-      console.log(pharmaceuticalNames);
-      console.log(pharmaceuticalNames);
-      console.log(pharmaceuticalNames);
-      console.log(pharmaceuticalNames);
-      console.log(pharmaceuticalNames);
-      console.log(pharmaceuticalNames);
-      console.log(pharmaceuticalNames);
       // Join the extracted names into a string and display it in the cell
       return pharmaceuticalNames.join(", ");
     } else {

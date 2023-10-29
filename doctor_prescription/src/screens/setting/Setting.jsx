@@ -11,6 +11,7 @@ import Loading from "../../components/pageCompond/Loading";
 function Setting(props) {
   const [cashire, setCashire] = useState([]);
   const [drugImported, setDrugImported] = useState(false);
+  const [settingData, setsettingData] = useState({});
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const currentURL = window.location.origin; // Get the current URL
@@ -26,13 +27,13 @@ function Setting(props) {
       .get(`${serverAddress}/setting/getdata`)
       .then((response) => {
         console.log(response.data);
+        setsettingData(response.data);
         setDrugImported(response.data.pharmaceuticalLoded);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
   };
-
   const getAllCashire = () => {
     axios
       .get(`${serverAddress}/users/allUsers`)
@@ -73,6 +74,7 @@ function Setting(props) {
       });
   };
   const onActiveSubmit = async (SerialNumber) => {
+    setLoading(true);
     try {
       const response = await axios.post(
         "http://95.179.178.183:4000/checkToken",
@@ -81,6 +83,8 @@ function Setting(props) {
       console.log(response);
 
       if (response.data.result) {
+        setLoading(false);
+
         console.log("POST request successful:", response.data);
         const today = new Date();
         const futureDate = new Date(today);
@@ -99,31 +103,47 @@ function Setting(props) {
             console.error("Error making POST request:", error);
           });
       } else {
+        setLoading(false);
+
         console.log("accessDone");
       }
     } catch (error) {
+      setLoading(false);
+
       setErrorMsg("التوكين غير صالح او منتهي الصلاحية");
       console.error("Error making POST request:", error);
     }
   };
 
   const backUpclickHandle = () => {
+    setLoading(true);
+
     axios
       .get(`${serverAddress}/setting/exportdata`)
       .then((response) => {
+        setLoading(false);
+
         if (response.data.message === "Import completed.") {
           setDrugImported(true);
         }
       })
       .catch((error) => {
+        setLoading(false);
+
         console.error("Error fetching categories:", error);
       });
   };
   const restorClickHandle = () => {
+    setLoading(true);
+
     axios
       .get(`${serverAddress}/setting/importdata`)
-      .then((response) => {})
+      .then((response) => {
+        setLoading(false);
+      })
       .catch((error) => {
+        setLoading(false);
+
         console.error("Error fetching categories:", error);
       });
   };
@@ -133,14 +153,15 @@ function Setting(props) {
     axios
       .get(`${serverAddress}/pharmaceutical/import`)
       .then((response) => {
+        setDrugImported(true);
         setLoading(false);
       })
       .catch((error) => {
         setLoading(false);
-
         console.error("Error fetching categories:", error);
       });
   };
+
   return (
     <div>
       {loading ? <Loading></Loading> : ""}
@@ -171,6 +192,7 @@ function Setting(props) {
           <div>
             <div>النسخ الاحتياطي</div>
             <BackUp
+              settingData={settingData}
               backUpclickHandle={backUpclickHandle}
               restorClickHandle={restorClickHandle}
             ></BackUp>

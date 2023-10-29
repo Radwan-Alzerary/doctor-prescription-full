@@ -17,7 +17,7 @@ router.get("/exportdata", async (req, res) => {
     const modelNames = mongoose.modelNames();
 
     // Ensure the data directory exists
-    const dataDirectory = '../data';
+    const dataDirectory = '../backup';
     if (!fs.existsSync(dataDirectory)) {
       fs.mkdirSync(dataDirectory);
     }
@@ -25,7 +25,7 @@ router.get("/exportdata", async (req, res) => {
     const exportPromises = modelNames.map(async (modelName) => {
       const Model = mongoose.model(modelName);
       const data = await Model.find({});
-      const dataPath = `../data/${modelName}.json`;
+      const dataPath = `../backup/${modelName}.json`;
 
       // Write the data to the file
       fs.writeFileSync(dataPath, JSON.stringify(data));
@@ -51,7 +51,7 @@ router.get("/importdata", async (req, res) => {
     const modelNames = mongoose.modelNames();
 
     for (const modelName of modelNames) {
-      const dataPath = `../data/${modelName}.json`;
+      const dataPath = `../backup/${modelName}.json`;
 
       // Read the JSON data from the file
       const rawData = fs.readFileSync(dataPath, 'utf8');
