@@ -15,10 +15,7 @@ function SurgenType() {
   const [surgicalProceduresTypeList, setSurgicalProceduresTypeList] = useState(
     []
   );
-  const [categoryList, setCategoryList] = useState([]);
-  const [inTakeTimeList, setInTakeTime] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [addFormData, setAddFormData] = useState({});
   const currentURL = window.location.origin; // Get the current URL
   const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
 
@@ -26,8 +23,11 @@ function SurgenType() {
   const handleFormData = (data) => {
     console.log(data);
     axios
-      .post(`${serverAddress}/pharmaceutical/new`, data)
+      .post(`${serverAddress}/surgicalprocedurestype/types`, data)
       .then((response) => {
+        getAllSurgenType();
+        setShowAddForm(false);
+
         // Handle the response if needed
         console.log("POST request successful:", response.data);
       })
@@ -35,21 +35,24 @@ function SurgenType() {
         // Handle errors if the request fails
         console.error("Error making POST request:", error);
       });
-    setAddFormData(data);
   };
   const handleEditFormData = (data) => {
     console.log(data);
     axios
-      .post(`${serverAddress}/surgicalprocedurestype/types`, data)
+      .put(
+        `${serverAddress}/surgicalprocedurestype/types/${editingData._id}`,
+        data
+      )
       .then((response) => {
-        // Handle the response if needed
+        getAllSurgenType();
+        setShowEditForm(false);
+    
         console.log("POST request successful:", response.data);
       })
       .catch((error) => {
         // Handle errors if the request fails
         console.error("Error making POST request:", error);
       });
-    setAddFormData(data);
   };
 
   const onDeleteHandle = (id) => {
@@ -58,7 +61,7 @@ function SurgenType() {
       .delete(`${serverAddress}/surgicalprocedurestype/types/${id}`)
       .then((response) => {
         // Handle success, e.g., show a success message or update the categories list
-        getAllBill();
+        getAllSurgenType();
         // You might want to update the categories list here to reflect the changes
       })
       .catch((error) => {
@@ -88,9 +91,9 @@ function SurgenType() {
   };
 
   useEffect(() => {
-    getAllBill();
+    getAllSurgenType();
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
-  const getAllBill = () => {
+  const getAllSurgenType = () => {
     axios
       .get(`${serverAddress}/surgicalprocedurestype/types`)
       .then((response) => {
@@ -127,7 +130,21 @@ function SurgenType() {
             {" "}
             <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
             <NewSugenTypeForm
+              type={"new"}
               onFormSubmit={handleFormData}
+            ></NewSugenTypeForm>
+          </>
+        ) : (
+          ""
+        )}
+        {showEditForm ? (
+          <>
+            {" "}
+            <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
+            <NewSugenTypeForm
+              type={"edit"}
+              data={editingData}
+              onFormSubmit={handleEditFormData}
             ></NewSugenTypeForm>
           </>
         ) : (

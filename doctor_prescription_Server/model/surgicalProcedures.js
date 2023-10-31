@@ -1,41 +1,27 @@
 const mongoose = require("mongoose");
 const SurgicalProceduresSchema = new mongoose.Schema(
   {
-    ownerId:{
-        type:String 
-       },
-   
-    name: {
+    ownerId: {
       type: String,
-      required: true,
     },
     SurgicalProceduresDevice: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "SurgicalProceduresDevice",
     },
     SurgicalProceduresNarcosis: {
-      name: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "SurgicalProceduresNarcosis",
-      },
-      startTime: {
-        type: Date,
-      },
-      endTime: {
-        type: Date,
-      },
     },
+    NarcosisStartTime: {
+      type: Date,
+    },
+    NarcosisEndTime: {
+      type: Date,
+    },
+
     SurgicalProceduresType: {
-      name: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "SurgicalProceduresType",
-      },
-      startTime: {
-        type: Date,
-      },
-      endTime: {
-        type: Date,
-      },
     },
     Patients: {
       type: mongoose.Schema.Types.ObjectId,
@@ -47,9 +33,12 @@ const SurgicalProceduresSchema = new mongoose.Schema(
     SurgeryName: {
       type: String,
     },
-    SurgeryAssistantName: [{ type: String }],
+    SurgeryDate: { type: Date },
+    SurgeryAssistantName: { type: String },
     SurgeryResult: { type: String },
-    SurgeryCost: { type: Number },
+    SurgeryCost: { type: String },
+    SurgeryStartTime : {type:Date},
+    SurgeryEndTime : {type:Date},
     beforeSurgeryImage: [{ type: String }],
     afterSurgeryImage: [{ type: String }],
     active: { type: Boolean, default: true },
@@ -58,6 +47,7 @@ const SurgicalProceduresSchema = new mongoose.Schema(
     diagnosis: { type: String },
     procedure: { type: String },
     dangerLevel: { type: String },
+    active: { type: Boolean, default: false },
   },
   {
     timestamps: true,

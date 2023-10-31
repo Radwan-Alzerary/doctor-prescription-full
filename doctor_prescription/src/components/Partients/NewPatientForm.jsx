@@ -1,36 +1,19 @@
 import {
   Autocomplete,
-  Box,
   Button,
   Chip,
   FormControl,
   InputLabel,
   MenuItem,
-  OutlinedInput,
   Select,
   TextField,
-  useTheme,
 } from "@mui/material";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-// اضافة مريض جديد
 function NewPatientForm(props) {
-  const [personName, setPersonName] = useState([]);
   const [historyPatient, setHistoryPatient] = useState([]);
-
   const [locale, setLocale] = useState(() => {
     return Cookies.get("locale") || "ar";
   });
@@ -123,14 +106,12 @@ function NewPatientForm(props) {
               defaultMessage="Hello, World!"
             />
           }
-          // defaultValue="Hello World"
           type="number"
           InputProps={{
             style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
           }}
         />
         <TextField
-          // required
           id="outlined-required"
           size="small"
           onChange={(event) =>
@@ -144,7 +125,6 @@ function NewPatientForm(props) {
           label={
             <FormattedMessage id={"Address"} defaultMessage="Hello, World!" />
           }
-          // defaultValue="Hello World"
         />
       </div>
       <div className=" text-right w-full">
@@ -159,7 +139,6 @@ function NewPatientForm(props) {
       <div className=" flex w-full gap-4 items-center">
         <FormControl className=" w-1/3 bg-whiteh" size="small">
           <InputLabel id="demo-simple-select-helper-label">
-            {" "}
             <FormattedMessage id={"Gender"} defaultMessage="Hello, World!" />
           </InputLabel>
           <Select
@@ -172,14 +151,11 @@ function NewPatientForm(props) {
             label={
               <FormattedMessage id={"Gender"} defaultMessage="Hello, World!" />
             }
-            // onChange={handleAgeChange}
           >
             <MenuItem value={"ذكر"}>
-              {" "}
               <FormattedMessage id={"male"} defaultMessage="Hello, World!" />
             </MenuItem>
             <MenuItem value={"انثى"}>
-              {" "}
               <FormattedMessage id={"female"} defaultMessage="Hello, World!" />
             </MenuItem>
           </Select>
@@ -194,7 +170,6 @@ function NewPatientForm(props) {
           }}
           label={<FormattedMessage id={"Age"} defaultMessage="Hello, World!" />}
           type="number" // Specifies that the input should accept numeric values
-          // defaultValue="Hello World"
         />
         <TextField
           // required
@@ -209,11 +184,9 @@ function NewPatientForm(props) {
             <FormattedMessage id={"Weight"} defaultMessage="Hello, World!" />
           }
           type="number" // Specifies that the input should accept numeric values
-          // defaultValue="Hello World"
         />
         <TextField
           dir="rtl"
-          // required
           id="outlined-required"
           size="small"
           onChange={(event) => handleInputChange("length", event.target.value)} // Update the name state
@@ -225,52 +198,18 @@ function NewPatientForm(props) {
             <FormattedMessage id={"Length"} defaultMessage="Hello, World!" />
           }
           type="number" // Specifies that the input should accept numeric values
-          // defaultValue="Hello World"
         />
       </div>
       {props.currentUser.role === "doctor" ? (
         <>
           <div className=" text-right w-full">
             <h5>
-              {" "}
               <FormattedMessage
                 id={"Medical History"}
                 defaultMessage="Hello, World!"
               />
             </h5>
           </div>
-          {/* <FormControl sx={{ m: 1, width: "100%" }}>
-            <InputLabel id="demo-multiple-chip-label">الامراض</InputLabel>
-            <Select
-              labelId="demo-multiple-chip-label"
-              id="demo-multiple-chip"
-              multiple
-              value={personName}
-              onChange={handleChange}
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip
-                      key={value.constantDiseasesId}
-                      color="success"
-                      label={JSON.parse(value).constantDiseasesName}
-                    />
-                  ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {props.constantDiseases.map((constantDiseases) => (
-                <MenuItem
-                  key={constantDiseases._id}
-                  value={`{"constantDiseasesId":"${constantDiseases._id}","constantDiseasesName":"${constantDiseases.name}"}`}
-                >
-                  {constantDiseases.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl> */}
           <div className=" w-full">
             <Autocomplete
               multiple
@@ -308,7 +247,6 @@ function NewPatientForm(props) {
               )}
             />
           </div>
-
           <div className=" text-right w-full">
             <h5>
               {" "}
@@ -320,11 +258,9 @@ function NewPatientForm(props) {
           </div>
           <TextField
             dir="rtl"
-            // required
             id="outlined-required"
             size="small"
             onChange={(event) =>
-              
               handleInputChange("fumbling", event.target.value)
             } // Update the name state
             sx={{
@@ -337,14 +273,12 @@ function NewPatientForm(props) {
                 defaultMessage="Hello, World!"
               />
             }
-            // defaultValue="Hello World"
           />
         </>
       ) : (
         ""
       )}
       <TextField
-        // id="outlined-required"
         size="small"
         onChange={(event) =>
           handleInputChange("description", event.target.value)
@@ -354,7 +288,6 @@ function NewPatientForm(props) {
           color: "#fff",
         }}
         label={<FormattedMessage id={"Notes"} defaultMessage="Hello, World!" />}
-        // defaultValue="Hello World"
       />
 
       <Button

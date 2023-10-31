@@ -1,17 +1,17 @@
 const mongoose = require("mongoose");
 const PatientsSchema = new mongoose.Schema(
   {
-    ownerId:{
-      type:String 
-     },
- 
+    ownerId: {
+      type: String,
+    },
+
     name: {
       type: String,
-      required: true,
+      // required: true,
     },
     gender: {
       type: String,
-      required: true,
+      // required: true,
     },
     age: {
       type: Number,
@@ -52,9 +52,14 @@ const PatientsSchema = new mongoose.Schema(
     prescription: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Prescription" },
     ],
+    surgery: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "SurgicalProcedures" },
+    ],
+
     medicalReport: [
       { type: mongoose.Schema.Types.ObjectId, ref: "MedicalReportS" },
     ],
+
     labory: [{ type: mongoose.Schema.Types.ObjectId, ref: "labory" }],
 
     nextVisit: { type: Date },

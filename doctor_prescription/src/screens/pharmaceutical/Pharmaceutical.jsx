@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import PharmaceuticalTable from "../../components/pharmaceutical/PharmaceuticalTable";
 import { Fab, IconButton, InputBase } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
@@ -108,7 +108,6 @@ function Pharmaceutical() {
 
     console.log(`Delete clicked for id ${id}`);
   };
-
   const onFavoriteHandle = (id) => {
     axios
       .post(`${serverAddress}/pharmaceutical/favorite`, { id: id })
@@ -183,6 +182,8 @@ function Pharmaceutical() {
     setShowAddForm(false);
     setShowEditForm(false);
   };
+  const memoizedPharmaceList = useMemo(() => pharmaceList, [pharmaceList]);
+
   return (
     <div className=" h-[92vh] overflow-auto">
       {loading ? <Loading></Loading> : ""}
@@ -203,7 +204,7 @@ function Pharmaceutical() {
         onDeleteHandle={onDeleteHandle}
         onEditHandle={onEditHandle}
         onFavoriteHandle={onFavoriteHandle}
-        rows={pharmaceList}
+        rows={memoizedPharmaceList}
       ></PharmaceuticalTable>
       <div className=" absolute z-50 bottom-4 left-6">
         <Fab onClick={handleAddButtonClick} color="secondary" aria-label="add">
@@ -213,7 +214,6 @@ function Pharmaceutical() {
 
       {showAddForm ? (
         <>
-          {" "}
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewPharmaceuticalForm
             inTakeTimeList={inTakeTimeList}

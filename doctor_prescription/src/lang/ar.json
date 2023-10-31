@@ -90,7 +90,15 @@
   "Surgery name list": "اسماء العمليات",
   "Device list": "اسماء الاجهزة",
   "takder list": "مواد التخدير",
-  "Trade name": "الاسم العلمي",
+  "Trade name": "الاسم التجاري",
   "NextVisitDate": "موعد الزيارة القادمة",
-  "New patient": "اضافة مريض جديد"
+  "New patient": "اضافة مريض جديد",
+  "description": "الوصف",
+  "SurgenTypeName": "اسم العملية",
+  "new": "اضافة",
+  "edit": "تعديل",
+  "manufacureName": "المصنع",
+  "serialNumber": "الرقم التسلسلي",
+  "SurgenNarcosisName":"اسم المخدر"
+
 }

@@ -1,26 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   // ... (your other imports)
   Button,
   TextField,
 } from "@mui/material";
+import { FormattedMessage } from "react-intl";
 
-function NewSugenTypeForm({ onFormSubmit }) {
+function NewSugenTypeForm(props) {
   // Define state to store form input data
   const [formData, setFormData] = useState({
     name: "",
     description: "",
   });
+  useEffect(() => {
+    if (props.type === "edit") {
+      setFormData({
+        ...formData,
+        name: props.data.name,
+        description: props.data.description,
+      });
+    }
+  }, []);
 
   // Handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
     // Call the onFormSubmit function passed as a prop with the formData
-    onFormSubmit(formData);
+    props.onFormSubmit(formData);
   };
 
   // Handle changes in form fields
-  const handleInputChange = (name, value) => {
+  const handleInputChange = async (name, value) => {
     // Update the formData state with the input data
     setFormData({
       ...formData,
@@ -40,6 +50,7 @@ function NewSugenTypeForm({ onFormSubmit }) {
         <TextField
           dir="rtl" // Set the direction to RTL
           required
+          value={formData.name}
           onChange={(event) => handleInputChange("name", event.target.value)} // Update the name state
           id="outlined-required"
           size="small"
@@ -49,8 +60,7 @@ function NewSugenTypeForm({ onFormSubmit }) {
             textAlign: "right",
             color: "#fff",
           }}
-          label="اسم الصنف"
-          // defaultValue="Hello World"
+          label="اسم العملية"
           InputProps={{
             style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
           }}
@@ -59,6 +69,7 @@ function NewSugenTypeForm({ onFormSubmit }) {
           dir="rtl"
           id="outlined-required"
           size="small"
+          value={formData.description}
           onChange={(event) =>
             handleInputChange("description", event.target.value)
           } // Update the name state
@@ -81,7 +92,11 @@ function NewSugenTypeForm({ onFormSubmit }) {
         className="w-full"
         color="success"
       >
-        اضافة قسم
+        {props.type === "edit" ? (
+          <FormattedMessage id={"edit"} defaultMessage="Hello, World!" />
+        ) : (
+          <FormattedMessage id={"new"} defaultMessage="Hello, World!" />
+        )}
       </Button>
     </form>
   );

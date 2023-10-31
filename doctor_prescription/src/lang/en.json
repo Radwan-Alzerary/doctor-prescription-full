@@ -94,6 +94,13 @@
   "takder list": "Narcosis list",
   "Trade name": "Trade name",
   "NextVisitDate": "Next Visit Date",
-  "New patient": "New patient"
+  "New patient": "New patient",
+  "description": "description",
+  "SurgenTypeName": "Surgen Type",
+  "new": "new",
+  "edit": "edit",
+  "manufacureName": "manufacture Name",
+  "serialNumber": "serial Number",
+  "SurgenNarcosisName":"Narcosis Name"
 
 }

@@ -101,10 +101,6 @@ router.post("/ubdateData", async (req, res) => {
       prescription.MedicalDiagnosis = req.body.data.diagnosis;
     }
 
-    // if (prescription.nextVisit) {
-    //   prescription.MedicalDiagnosis = req.body.data.diagnosis;
-    // }
-
     prescription.active = true;
     await prescription.save();
 
@@ -175,7 +171,6 @@ router.post("/new", async (req, res) => {
 
     res.status(200).json({
       patientId: patient._id,
-
       patientFumbling: patient.fumbling,
       prescriptionId: newPrescription._id.toString(),
       message: "Prescription added to patient successfully",

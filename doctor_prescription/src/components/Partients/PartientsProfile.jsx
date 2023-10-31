@@ -62,7 +62,6 @@ function PartientsProfile(props) {
         >
           معرض المريض
         </div>
-
         <div
           onClick={() => {
             setProfileSelect("prescriptionSite");

@@ -138,7 +138,7 @@ function SideBarMenu(props) {
                 }
                 className=" py-3"
               >
-                {/* <Sidebaritems
+                <Sidebaritems
                   title="Partients Surgery list"
                   router="/surgen/list"
                   onClick={() => setActiveSubmenu("surgery")}
@@ -153,12 +153,11 @@ function SideBarMenu(props) {
                   router="/surgen/Narcosis"
                   onClick={() => setActiveSubmenu("surgery")}
                 ></Sidebaritems>
-
                 <Sidebaritems
                   title="Device list"
                   router="/surgen/device"
                   onClick={() => setActiveSubmenu("surgery")}
-                ></Sidebaritems> */}
+                ></Sidebaritems>
               </SubMenu>
             </>
           ) : (

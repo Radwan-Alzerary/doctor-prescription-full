@@ -17,22 +17,14 @@ import { Delete, Edit, Favorite } from "@mui/icons-material";
 import { FormattedMessage } from "react-intl";
 import { red } from "@mui/material/colors";
 
-const Drugnamet = () => {
-  return <FormattedMessage id={"Drug name"} defaultMessage="Hello, World!" />;
+const SurgenTypeName = () => {
+  return <FormattedMessage id={"SurgenTypeName"} defaultMessage="Hello, World!" />;
 };
-const CategoryTr = () => {
-  return <FormattedMessage id={"Category"} defaultMessage="Hello, World!" />;
-};
-const DosageTr = () => {
-  return <FormattedMessage id={"Dosage"} defaultMessage="Hello, World!" />;
-};
-
-const NodosageTr = () => {
-  return <FormattedMessage id={"No.dosage"} defaultMessage="Hello, World!" />;
-};
-const TakeTimeTr = () => {
-  return <FormattedMessage id={"Take time"} defaultMessage="Hello, World!" />;
-};
+const description = () => {
+    return <FormattedMessage id={"description"} defaultMessage="Hello, World!" />;
+  };
+  
+  
 const optionTr = () => {
   return <FormattedMessage id={"Options"} defaultMessage="Hello, World!" />;
 };
@@ -40,33 +32,15 @@ const optionTr = () => {
 const headCells = [
   {
     id: "name",
-    numeric: true,
-    disablePadding: false,
-    label: Drugnamet(),
-  },
-  {
-    id: "category",
     numeric: false,
     disablePadding: false,
-    label: CategoryTr(),
+    label: SurgenTypeName(),
   },
   {
-    id: "dose",
+    id: "description",
     numeric: false,
     disablePadding: false,
-    label: DosageTr(),
-  },
-  {
-    id: "doseCount",
-    numeric: false,
-    disablePadding: false,
-    label: NodosageTr(),
-  },
-  {
-    id: "intaketime",
-    numeric: false,
-    disablePadding: false,
-    label: TakeTimeTr(),
+    label: description(),
   },
   {
     id: "tools",
@@ -78,7 +52,6 @@ const headCells = [
 
 function EnhancedTableHead(props) {
   const { order, orderBy, onRequestSort } = props;
-
   const createSortHandler = (property) => (event) => {
     onRequestSort(property);
   };
@@ -202,16 +175,7 @@ export default function SurgenTypeTable(props) {
                       >
                         {row.name}
                       </TableCell>
-                      <TableCell align="center">
-                        {row.category ? row.category.name : ""}
-                      </TableCell>
-                      <TableCell align="center">{row.dose}</TableCell>
-                      <TableCell align="center">{row.doseCount}</TableCell>
-                      <TableCell align="center">
-                        {row.intaketime
-                          ? row.intaketime.name
-                          : row.anotherIntaketime}
-                      </TableCell>
+                      <TableCell align="center">{row.description}</TableCell>
                       <TableCell align="center">
                         <IconButton
                           onClick={() => {
@@ -228,19 +192,6 @@ export default function SurgenTypeTable(props) {
                           aria-label="edit"
                         >
                           <Edit fontSize="inherit" />
-                        </IconButton>
-                        <IconButton
-                          onClick={() => {
-                            onFavoriteHandle(row._id);
-                          }}
-                          sx={
-                            row.favorite
-                              ? { color: red[500] }
-                              : { color: red[100] }
-                          }
-                          aria-label="edit"
-                        >
-                          <Favorite fontSize="inherit" />
                         </IconButton>
                       </TableCell>
                     </TableRow>

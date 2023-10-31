@@ -17,22 +17,18 @@ import { Delete, Edit, Favorite } from "@mui/icons-material";
 import { FormattedMessage } from "react-intl";
 import { red } from "@mui/material/colors";
 
-const Drugnamet = () => {
-  return <FormattedMessage id={"Drug name"} defaultMessage="Hello, World!" />;
+const SurgenNarcosisName = () => {
+  return (
+    <FormattedMessage
+      id={"SurgenNarcosisName"}
+      defaultMessage="Hello, World!"
+    />
+  );
 };
-const CategoryTr = () => {
-  return <FormattedMessage id={"Category"} defaultMessage="Hello, World!" />;
-};
-const DosageTr = () => {
-  return <FormattedMessage id={"Dosage"} defaultMessage="Hello, World!" />;
+const description = () => {
+  return <FormattedMessage id={"description"} defaultMessage="Hello, World!" />;
 };
 
-const NodosageTr = () => {
-  return <FormattedMessage id={"No.dosage"} defaultMessage="Hello, World!" />;
-};
-const TakeTimeTr = () => {
-  return <FormattedMessage id={"Take time"} defaultMessage="Hello, World!" />;
-};
 const optionTr = () => {
   return <FormattedMessage id={"Options"} defaultMessage="Hello, World!" />;
 };
@@ -40,34 +36,66 @@ const optionTr = () => {
 const headCells = [
   {
     id: "name",
-    numeric: true,
-    disablePadding: false,
-    label: Drugnamet(),
-  },
-  {
-    id: "category",
     numeric: false,
     disablePadding: false,
-    label: CategoryTr(),
+    label: "اسم المريض",
   },
   {
-    id: "dose",
+    id: "description",
     numeric: false,
     disablePadding: false,
-    label: DosageTr(),
+    label: "اسم العملية",
   },
   {
-    id: "doseCount",
+    id: "HospitalName",
     numeric: false,
     disablePadding: false,
-    label: NodosageTr(),
+    label: "اسم الجراح",
   },
   {
-    id: "intaketime",
+    id: "description",
     numeric: false,
     disablePadding: false,
-    label: TakeTimeTr(),
+    label: "اسم المخدر",
   },
+  {
+    id: "HospitalName",
+    numeric: false,
+    disablePadding: false,
+    label: "اسم المستشفى",
+  },
+  {
+    id: "dangerLevel",
+    numeric: false,
+    disablePadding: false,
+    label: "مستوى الخطورة",
+  },
+  {
+    id: "dangerLevel",
+    numeric: false,
+    disablePadding: false,
+    label: "الاولوية",
+  },
+
+  {
+    id: "SurgeryDate",
+    numeric: false,
+    disablePadding: false,
+    label: "تاريخ العملية",
+  },
+  {
+    id: "description",
+    numeric: false,
+    disablePadding: false,
+    label: "وقت بدء العملية",
+  },
+  {
+    id: "description",
+    numeric: false,
+    disablePadding: false,
+    label: "وقت انتهاء العملية",
+  },
+
   {
     id: "tools",
     numeric: false,
@@ -109,7 +137,6 @@ function EnhancedTableHead(props) {
 
 export default function SurgenListTable(props) {
   const { rows, onDeleteHandle, onEditHandle, onFavoriteHandle } = props;
-
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);
@@ -163,6 +190,21 @@ export default function SurgenListTable(props) {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows = Math.max(0, rowsPerPage - rows.length);
+  function formatDate(dateString) {
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    return new Date(dateString).toLocaleDateString("en-US", options);
+  }
+  function formatTime(timeString) {
+    const options = {
+      hour: "2-digit",
+      minute: "2-digit",
+    };
+    return new Date(timeString).toLocaleTimeString("en-US", options);
+  }
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -201,17 +243,26 @@ export default function SurgenListTable(props) {
                         scope="row"
                         padding="none"
                       >
-                        {row.name}
+                        {row.Patients.name}
                       </TableCell>
                       <TableCell align="center">
-                        {row.category ? row.category.name : ""}
+                        {row.SurgicalProceduresType.name}
                       </TableCell>
-                      <TableCell align="center">{row.dose}</TableCell>
-                      <TableCell align="center">{row.doseCount}</TableCell>
+                      <TableCell align="center">{row.SurgeryName}</TableCell>
                       <TableCell align="center">
-                        {row.intaketime
-                          ? row.intaketime.name
-                          : row.anotherIntaketime}
+                        {row.SurgicalProceduresNarcosis.name}
+                      </TableCell>
+                      <TableCell align="center">{row.HospitalName}</TableCell>
+                      <TableCell align="center">{row.dangerLevel}</TableCell>
+                      <TableCell align="center">{row.priority}</TableCell>
+                      <TableCell align="center">
+                        {formatDate(row.SurgeryDate)}
+                      </TableCell>
+                      <TableCell align="center">
+                        {formatTime(row.SurgeryStartTime)}
+                      </TableCell>
+                      <TableCell align="center">
+                        {formatTime(row.SurgeryEndTime)}
                       </TableCell>
                       <TableCell align="center">
                         <IconButton
@@ -229,19 +280,6 @@ export default function SurgenListTable(props) {
                           aria-label="edit"
                         >
                           <Edit fontSize="inherit" />
-                        </IconButton>
-                        <IconButton
-                          onClick={() => {
-                            onFavoriteHandle(row._id);
-                          }}
-                          sx={
-                            row.favorite
-                              ? { color: red[500] }
-                              : { color: red[100] }
-                          }
-                          aria-label="edit"
-                        >
-                          <Favorite fontSize="inherit" />
                         </IconButton>
                       </TableCell>
                     </TableRow>
