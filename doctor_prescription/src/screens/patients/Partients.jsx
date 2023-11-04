@@ -291,7 +291,6 @@ function Row(props) {
                       <TableCell align="center">
                         {getPharmaceuticalName(prescription.pharmaceutical)}
                       </TableCell>
-
                       <TableCell align="center">
                         <IconButton
                           onClick={() => {

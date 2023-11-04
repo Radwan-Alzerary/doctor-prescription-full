@@ -91,8 +91,125 @@ function PatientReport(props) {
           </div>
         ))}
 
+        {props.medicalReportsStype.nameActive && props.medicalReportsStype.nameAbsoulateActive ? (
+          <div
+            className={`flex gap-2 ${
+              props.medicalReportsStype.nameAbsoulateActive ? "absolute" : ""
+            }`}
+            style={{
+              top: `${props.medicalReportsStype.nameY}px`,
+              left: `${props.medicalReportsStype.nameX}px`,
+            }}
+          >
+            <h2
+              className=" text-red-500 font-semibold"
+              style={{
+                fontSize: `${props.medicalReportsStype.nameSize}rem`,
+                color: `${props.medicalReportsStype.nameMainTitleColor}`,
+              }}
+            >
+              {props.medicalReportsStype.patientsTitleActive &&
+              props.medicalReportsStype.nameMainTitleActive
+                ? "اسم المريض : "
+                : ""}
+            </h2>
+            <h2
+              className="font-semibold"
+              style={{
+                fontSize: `${props.medicalReportsStype.nameSize}rem`,
+                color: `${props.medicalReportsStype.nameColor}`,
+              }}
+            >
+              {props.dataToPrint.patients.name}
+            </h2>
+          </div>
+        ) : (
+          ""
+        )}
+        {props.medicalReportsStype.ageActive && props.medicalReportsStype.ageAbsoulateActive ? (
+          <div
+            className={`flex gap-2 ${
+              props.medicalReportsStype.ageAbsoulateActive ? "absolute" : ""
+            }`}
+            style={{
+              top: `${props.medicalReportsStype.ageY}px`,
+              left: `${props.medicalReportsStype.ageX}px`,
+            }}
+          >
+            <h2
+              className=" text-red-500 font-semibold"
+              style={{
+                fontSize: `${props.medicalReportsStype.ageSize}rem`,
+                color: `${props.medicalReportsStype.ageMainTitleColor}`,
+              }}
+            >
+              {props.medicalReportsStype.patientsTitleActive &&
+              props.medicalReportsStype.ageMainTitleActive
+                ? "العمر : "
+                : ""}
+            </h2>
+            <h2
+              className="font-semibold"
+              style={{
+                fontSize: `${props.medicalReportsStype.ageSize}rem`,
+                color: `${props.medicalReportsStype.ageColor}`,
+              }}
+            >
+              {" "}
+              {props.dataToPrint.patients.age}
+            </h2>
+          </div>
+        ) : (
+          ""
+        )}
+        {props.medicalReportsStype.dateActive && props.medicalReportsStype.dateAbsoulateActive ? (
+          <div
+            className={`flex gap-2 ${
+              props.medicalReportsStype.dateAbsoulateActive ? "absolute" : ""
+            }`}
+            style={{
+              top: `${props.medicalReportsStype.dateY}px`,
+              left: `${props.medicalReportsStype.dateX}px`,
+            }}
+          >
+            <h2
+              className=" text-red-500 font-semibold"
+              style={{
+                fontSize: `${props.medicalReportsStype.dateSize}rem`,
+                color: `${props.medicalReportsStype.dateMainTitleColor}`,
+              }}
+            >
+              {props.medicalReportsStype.patientsTitleActive &&
+              props.medicalReportsStype.dateMainTitleActive
+                ? "التاريخ : "
+                : ""}
+            </h2>
+            <h2
+              className="font-semibold"
+              style={{
+                fontSize: `${props.medicalReportsStype.dateSize}rem`,
+                color: `${props.medicalReportsStype.dateColor}`,
+              }}
+            >
+              {" "}
+              {!props.dataToPrint.textonly
+                ? new Date(
+                    props.dataToPrint.prescription.createdAt
+                  ).toLocaleDateString()
+                : ""}
+            </h2>
+          </div>
+        ) : (
+          ""
+        )}
+
         {/* Your content to be printed */}
-        <div className="  h-[96vh] relative flex flex-col z-1" style={{backgroundColor:`${props.medicalReportsStype.backgroundColor}`}}>
+        <div
+          className="  h-[96vh] flex flex-col z-1"
+          style={{
+            backgroundColor: `${props.medicalReportsStype.backgroundColor}`,
+          }}
+        >
           <div className="flex w-full  flex-col justify-center items-center">
             <div
               style={{ height: `${props.medicalReportsStype.topPading}px` }}
@@ -180,7 +297,7 @@ function PatientReport(props) {
             )}
           </div>
           <div className="flex justify-around items-center my-2 ">
-            {props.medicalReportsStype.nameActive ? (
+            {props.medicalReportsStype.nameActive   && !props.medicalReportsStype.ageAbsoulateActive? (
               <div
                 className={`flex gap-2 ${
                   props.medicalReportsStype.nameAbsoulateActive
@@ -199,7 +316,8 @@ function PatientReport(props) {
                     color: `${props.medicalReportsStype.nameMainTitleColor}`,
                   }}
                 >
-                  {props.medicalReportsStype.patientsTitleActive && props.medicalReportsStype.nameMainTitleActive
+                  {props.medicalReportsStype.patientsTitleActive &&
+                  props.medicalReportsStype.nameMainTitleActive
                     ? "اسم المريض : "
                     : ""}
                 </h2>
@@ -216,7 +334,7 @@ function PatientReport(props) {
             ) : (
               ""
             )}
-            {props.medicalReportsStype.ageActive ? (
+            {props.medicalReportsStype.ageActive && !props.medicalReportsStype.ageAbsoulateActive ? (
               <div
                 className={`flex gap-2 ${
                   props.medicalReportsStype.ageAbsoulateActive ? "absolute" : ""
@@ -233,7 +351,8 @@ function PatientReport(props) {
                     color: `${props.medicalReportsStype.ageMainTitleColor}`,
                   }}
                 >
-                  {props.medicalReportsStype.patientsTitleActive && props.medicalReportsStype.ageMainTitleActive
+                  {props.medicalReportsStype.patientsTitleActive &&
+                  props.medicalReportsStype.ageMainTitleActive
                     ? "العمر : "
                     : ""}
                 </h2>
@@ -251,7 +370,7 @@ function PatientReport(props) {
             ) : (
               ""
             )}
-            {props.medicalReportsStype.dateActive ? (
+            {props.medicalReportsStype.dateActive  && !props.medicalReportsStype.dateAbsoulateActive ? (
               <div
                 className={`flex gap-2 ${
                   props.medicalReportsStype.dateAbsoulateActive
@@ -270,7 +389,8 @@ function PatientReport(props) {
                     color: `${props.medicalReportsStype.dateMainTitleColor}`,
                   }}
                 >
-                  {props.medicalReportsStype.patientsTitleActive  && props.medicalReportsStype.dateMainTitleActive
+                  {props.medicalReportsStype.patientsTitleActive &&
+                  props.medicalReportsStype.dateMainTitleActive
                     ? "التاريخ : "
                     : ""}
                 </h2>
@@ -300,7 +420,7 @@ function PatientReport(props) {
           )}
 
           <div className=" w-full h-1/2  ">
-            <div class="relative ">
+            <div class=" ">
               <table class="w-full text-sm  text-center text-gray-500 ">
                 {!props.dataToPrint.textonly ? (
                   <thead class="text-xs text-center text-gray-700 uppercase   ">
@@ -533,7 +653,7 @@ function PatientReport(props) {
             </div>
           </div>
 
-          <div className=" w-full  absolute bottom-0 ">
+          <div className=" w-full absolute bottom-0 ">
             {props.medicalReportsStype.linesActive ? (
               <div className="w-full h-0.5 bg-slate-100 mt-2"></div>
             ) : (
