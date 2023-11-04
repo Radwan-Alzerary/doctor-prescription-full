@@ -85,8 +85,6 @@ PatientsSchema.pre("save", async function (next) {
     if (lastPrescription && lastPrescription.date) {
       const currentDate = new Date();
       const lastPrescriptionDate = new Date(lastPrescription.date);
-
-      // Check if the last prescription date is different from the current date
       if (
         lastPrescriptionDate.getFullYear() !== currentDate.getFullYear() ||
         lastPrescriptionDate.getMonth() !== currentDate.getMonth() ||

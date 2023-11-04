@@ -92,7 +92,7 @@ function PatientReport(props) {
         ))}
 
         {/* Your content to be printed */}
-        <div className="  h-[96vh] relative flex flex-col z-10 ">
+        <div className="  h-[96vh] relative flex flex-col z-1" style={{backgroundColor:`${props.medicalReportsStype.backgroundColor}`}}>
           <div className="flex w-full  flex-col justify-center items-center">
             <div
               style={{ height: `${props.medicalReportsStype.topPading}px` }}

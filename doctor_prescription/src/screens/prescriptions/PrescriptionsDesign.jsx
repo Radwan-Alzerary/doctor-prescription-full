@@ -152,7 +152,6 @@ function PrescriptionsDesign() {
         console.error("Error making POST request:", error);
       });
   };
-
   const addNewCenterText = (type) => {
     axios
       .post(`${serverAddress}/medicaleeportstyle/newmiddleline`, {
@@ -169,7 +168,6 @@ function PrescriptionsDesign() {
         console.error("Error making POST request:", error);
       });
   };
-
   const addNewRandomText = (type) => {
     axios
       .post(`${serverAddress}/medicaleeportstyle/textRandom`, {
@@ -185,13 +183,11 @@ function PrescriptionsDesign() {
         console.error("Error making POST request:", error);
       });
   };
-
   const [file, setFile] = useState(null);
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
