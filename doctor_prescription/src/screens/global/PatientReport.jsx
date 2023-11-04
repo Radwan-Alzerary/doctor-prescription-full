@@ -97,8 +97,8 @@ function PatientReport(props) {
               props.medicalReportsStype.nameAbsoulateActive ? "absolute" : ""
             }`}
             style={{
-              top: `${props.medicalReportsStype.nameY}px`,
-              left: `${props.medicalReportsStype.nameX}px`,
+              top: `${props.medicalReportsStype.nameY}%`,
+              left: `${props.medicalReportsStype.nameX}%`,
             }}
           >
             <h2
@@ -132,8 +132,8 @@ function PatientReport(props) {
               props.medicalReportsStype.ageAbsoulateActive ? "absolute" : ""
             }`}
             style={{
-              top: `${props.medicalReportsStype.ageY}px`,
-              left: `${props.medicalReportsStype.ageX}px`,
+              top: `${props.medicalReportsStype.ageY}%`,
+              left: `${props.medicalReportsStype.ageX}%`,
             }}
           >
             <h2
@@ -168,8 +168,8 @@ function PatientReport(props) {
               props.medicalReportsStype.dateAbsoulateActive ? "absolute" : ""
             }`}
             style={{
-              top: `${props.medicalReportsStype.dateY}px`,
-              left: `${props.medicalReportsStype.dateX}px`,
+              top: `${props.medicalReportsStype.dateY}%`,
+              left: `${props.medicalReportsStype.dateX}%`,
             }}
           >
             <h2
