@@ -42,6 +42,77 @@ router.post(
   }
 );
 
+router.post("/imagesRandom", upload.single("image"), async (req, res, next) => {
+  console.log(req.body);
+  const { filename, path } = req.file;
+  const { name } = req.body;
+  console.log(filename, path, name);
+  const url = req.protocol + "://" + req.get("host");
+  const imagePath = req.file ? "/img/" + req.file.filename : null;
+  console.log(imagePath);
+  try {
+    const medicalReportsStype = await MedicalReportsStype.findOneAndUpdate(
+      {},
+      { imagesRandom: imagePath }
+    );
+    if (!medicalReportsStype) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+    res.json(medicalReportsStype);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/textRandom", async (req, res, next) => {
+  try {
+    let update = "";
+    update = { $push: { textRandom: {} } };
+    console.log(req.body);
+    const updatedDocument = await MedicalReportsStype.findByIdAndUpdate(
+      req.body.id,
+      update,
+      { new: true } // This option returns the updated document
+    );
+    res.json(updatedDocument);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/updatetextRandom", async (req, res) => {
+  try {
+    console.log(req.body);
+    // Find the document by its ID
+    const doc = await MedicalReportsStype.findById(req.body.id);
+
+    // Check if the document was found
+    if (!doc) {
+      return res.status(404).json({ message: "Document not found" });
+    }
+    if (req.body.text == "title") {
+      doc.textRandom[req.body.index].title = req.body.data;
+    } else if (req.body.text == "size") {
+      doc.textRandom[req.body.index].size = req.body.data;
+    } else if (req.body.text == "x") {
+      doc.textRandom[req.body.index].x = req.body.data;
+    } else if (req.body.text == "y") {
+      doc.textRandom[req.body.index].y = req.body.data;
+    } else if (req.body.text == "color") {
+      doc.textRandom[req.body.index].color = req.body.data;
+    }
+    await doc.save();
+
+    return res.status(200).json({
+      message: "Element updated successfully",
+      updatedElement: doc.textRandom[req.body.index],
+    });
+  } catch (error) {
+    console.error("Error updating element:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 router.get("/getmedicalreportstype", async (req, res) => {
   try {
     const medicalReportsStype = await MedicalReportsStype.find({
@@ -108,6 +179,11 @@ router.post("/removeline", async (req, res) => {
       const updatedDocument = await MedicalReportsStype.updateOne(
         { _id: req.body.id },
         { $pull: { HeaderLeftText: { _id: req.body.hederlineid } } }
+      );
+    } else if (req.body.type == "randomText") {
+      const updatedDocument = await MedicalReportsStype.updateOne(
+        { _id: req.body.id },
+        { $pull: { textRandom: { _id: req.body.hederlineid } } }
       );
     }
 

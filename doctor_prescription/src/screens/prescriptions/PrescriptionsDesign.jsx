@@ -24,6 +24,7 @@ const data = {
     diseases: [],
     description: "",
     prescription: [],
+
     __v: 27,
   },
   prescription: {
@@ -40,8 +41,10 @@ function PrescriptionsDesign() {
     useState([]);
   const [medicalRightTextReportsStype, setMedicalTextRightReportsStype] =
     useState([]);
-    const currentURL = window.location.origin; // Get the current URL
-    const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+  const [textRandom, setTextRandom] = useState([]);
+
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
 
   useEffect(() => {
     getMedicalReportsStyle();
@@ -59,6 +62,7 @@ function PrescriptionsDesign() {
         setMedicalTextMiddleReportsStype(response.data[0].HeaderMidleText);
         setMedicalTextLeftReportsStype(response.data[0].HeaderLeftText);
         setMedicalTextRightReportsStype(response.data[0].HeaderRightText);
+        setTextRandom(response.data[0].textRandom);
         console.log(response.data[0]);
         setLoading(true);
       })
@@ -130,12 +134,46 @@ function PrescriptionsDesign() {
         console.error("Error making POST request:", error);
       });
   };
+  const onRandomTextInput = (text, data, index) => {
+    axios
+      .post(`${serverAddress}/medicaleeportstyle/updatetextRandom`, {
+        id: medicalReportsStype._id,
+        text: text,
+        data: data,
+        index: index,
+      })
+      .then((response) => {
+        // Handle the response if needed
+        console.log("POST request successful:", response.data);
+        ubdateStyle();
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+  };
 
   const addNewCenterText = (type) => {
     axios
       .post(`${serverAddress}/medicaleeportstyle/newmiddleline`, {
         id: medicalReportsStype._id,
         type: type,
+      })
+      .then((response) => {
+        // Handle the response if needed
+        ubdateStyle();
+        console.log("POST request successful:", response.data);
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+  };
+
+  const addNewRandomText = (type) => {
+    axios
+      .post(`${serverAddress}/medicaleeportstyle/textRandom`, {
+        id: medicalReportsStype._id,
       })
       .then((response) => {
         // Handle the response if needed
@@ -189,7 +227,7 @@ function PrescriptionsDesign() {
     <div className=" h-[91vh] overflow-auto">
       {loading ? (
         <div className="flex justify-around p-3">
-          <div className="">
+          <div className="w-[60%]">
             <div className="flex w-full mt-4 font-bold">
               <p>معلومات الكنية</p>
             </div>
@@ -214,7 +252,6 @@ function PrescriptionsDesign() {
                 label="حجم الخط"
                 size="small"
               ></TextField>
-
               <div className="flex flex-col justify-center items-center">
                 <p>اللون</p>
                 <input
@@ -307,7 +344,6 @@ function PrescriptionsDesign() {
               />
             </div>
             <hr></hr>
-
             <div className="flex w-full  mt-4 font-bold">
               <p>معلومات الطبيب الوسطية</p>
             </div>
@@ -578,119 +614,31 @@ function PrescriptionsDesign() {
               </div>
             </div>
 
-            {/* <div className="flex w-full  mt-4 font-bold">
-              <p>معلومات الطبيب اليمنى</p>
+            <div className="flex w-full  mt-4 font-bold">
+              <p>معلومات المريض</p>
             </div>
-            <div>
-              {medicalTextReportsStype.map((medicalText, index) => (
-                <>
-                  <div>السطر {index + 1}</div>
-                  <div className="flex justify-between items-center w-full">
-                    <TextField
-                      value={medicalReportsStype.HeaderMidleText[index].text}
-                      onChange={(event) => {
-                        onMiddleLineInput("text", event.target.value, index);
-                        console.log(event.target.value);
-                      }}
-                      label="معلومات السطر"
-                      size="small"
-                    ></TextField>
-                    <TextField
-                      type="number"
-                      label="حجم الخط"
-                      size="small"
-                      value={medicalReportsStype.HeaderMidleText[index].size}
-                      onChange={(event) => {
-                        onMiddleLineInput("size", event.target.value, index);
-                        console.log(event.target.value);
-                      }}
-                    ></TextField>
-
-                    <div className="flex flex-col justify-center items-center">
-                      <p>اللون</p>
-                      <input
-                        type="color"
-                        className=" border-none rounded-full"
-                        value={medicalReportsStype.HeaderMidleText[index].Color}
-                        onChange={(event) => {
-                          onMiddleLineInput("Color", event.target.value, index);
-                          console.log(event.target.value);
-                        }}
-                      />
-                    </div>
-                    <IconButton
-                      onClick={() => {
-                        HandleOnTextRemove("middle", medicalText._id);
-                      }}
-                      type="button"
-                      sx={{ p: "10px" }}
-                      aria-label="search"
-                    >
-                      <DeleteIcon></DeleteIcon>
-                    </IconButton>
-                    <FormControlLabel
-                      sx={{
-                        display: "block",
-                      }}
-                      control={
-                        <Switch
-                          //   checked={loading}
-                          //   onChange={() => setLoading(!loading)}
-                          color="primary"
-                        />
-                      }
-                    />
-                  </div>
-                </>
-              ))}
-              <div
-                onClick={()=>{addNewCenterText("right")}}
-                className="w-full bg-blue-300 h-8 rounded-full justify-center items-center flex cursor-pointer hover:bg-blue-400"
-              >
-                اضافة سطر
-              </div>
-            </div>
-            <div>
-              <div>السطر 1</div>
-              <div className="flex justify-between items-center w-full">
-                <TextField label="معلومات السطر" size="small"></TextField>
-                <TextField
-                  type="number"
-                  label="حجم الخط"
-                  size="small"
-                ></TextField>
-
-                <div className="flex flex-col justify-center items-center">
-                  <p>اللون</p>
-                  <input
-                    type="color"
-                    className=" border-none rounded-full"
-                    // value={color} onChange={e => setColor(e.target.value)}
-                  />
-                </div>
+            <div className="flex justify-between items-center">
+              <div className="flex justify-center items-center flex-col">
+                <p>تفعيل العوان الرئيسي</p>
                 <FormControlLabel
                   sx={{
                     display: "block",
                   }}
                   control={
                     <Switch
-                      //   checked={loading}
-                      //   onChange={() => setLoading(!loading)}
+                      checked={medicalReportsStype.patientsTitleActive}
+                      onChange={(event) => {
+                        handleInputChange(
+                          "patientsTitleActive",
+                          !medicalReportsStype.patientsTitleActive
+                        );
+                      }}
                       color="primary"
                     />
                   }
                 />
               </div>
-              <div className="w-full bg-blue-300 h-8 rounded-full justify-center items-center flex cursor-pointer hover:bg-blue-400">
-                اضافة سطر
-              </div>
-            </div> */}
-
-            <div className="flex w-full  mt-4 font-bold">
-              <p>معلومات المريض</p>
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="flex justify-center items-center flex-col">
+              <div className="  flex justify-center items-center flex-col">
                 <p>تفعيل العمر</p>
                 <FormControlLabel
                   sx={{
@@ -709,7 +657,101 @@ function PrescriptionsDesign() {
                     />
                   }
                 />
+                <p> تفعيل العنوان</p>
+                <FormControlLabel
+                  sx={{
+                    display: "block",
+                  }}
+                  control={
+                    <Switch
+                      checked={medicalReportsStype.ageMainTitleActive}
+                      onChange={(event) => {
+                        handleInputChange(
+                          "ageMainTitleActive",
+                          !medicalReportsStype.ageMainTitleActive
+                        );
+                      }}
+                      color="primary"
+                    />
+                  }
+                />
+
+                <p>تفعيل الاحداثي</p>
+                <FormControlLabel
+                  sx={{
+                    display: "block",
+                  }}
+                  control={
+                    <Switch
+                      checked={medicalReportsStype.ageAbsoulateActive}
+                      onChange={(event) => {
+                        handleInputChange(
+                          "ageAbsoulateActive",
+                          !medicalReportsStype.ageAbsoulateActive
+                        );
+                      }}
+                      color="primary"
+                    />
+                  }
+                />
+
+                <div className="flex justify-center items-center flex-col gap-2">
+                  <TextField
+                    type="number"
+                    label="x"
+                    size="small"
+                    value={medicalReportsStype.ageX}
+                    onChange={(event) => {
+                      handleInputChange("ageX", event.target.value);
+                    }}
+                    inputProps={{ min: "0", max: "100" }}
+                  ></TextField>
+                  <TextField
+                    type="number"
+                    label="y"
+                    size="small"
+                    value={medicalReportsStype.ageY}
+                    onChange={(event) => {
+                      handleInputChange("ageY", event.target.value);
+                    }}
+                    inputProps={{ min: "0", max: "100" }}
+                  ></TextField>
+                  <TextField
+                    type="number"
+                    label="الحجم"
+                    size="small"
+                    value={medicalReportsStype.ageSize}
+                    onChange={(event) => {
+                      handleInputChange("ageSize", event.target.value);
+                    }}
+                    inputProps={{ min: "0", max: "100" }}
+                  ></TextField>
+
+                  <p>اللون</p>
+                  <input
+                    type="color"
+                    className=" border-none rounded-full"
+                    value={medicalReportsStype.ageColor}
+                    onChange={(event) => {
+                      handleInputChange("ageColor", event.target.value);
+                    }}
+                  />
+
+                  <p>اللون العنوان</p>
+                  <input
+                    type="color"
+                    className=" border-none rounded-full"
+                    value={medicalReportsStype.ageMainTitleColor}
+                    onChange={(event) => {
+                      handleInputChange(
+                        "ageMainTitleColor",
+                        event.target.value
+                      );
+                    }}
+                  />
+                </div>
               </div>
+
               <div className="flex justify-center items-center flex-col">
                 <p>تفعيل اسم </p>
                 <FormControlLabel
@@ -729,6 +771,99 @@ function PrescriptionsDesign() {
                     />
                   }
                 />
+                <p> تفعيل العنوان</p>
+                <FormControlLabel
+                  sx={{
+                    display: "block",
+                  }}
+                  control={
+                    <Switch
+                      checked={medicalReportsStype.nameMainTitleActive}
+                      onChange={(event) => {
+                        handleInputChange(
+                          "nameMainTitleActive",
+                          !medicalReportsStype.nameMainTitleActive
+                        );
+                      }}
+                      color="primary"
+                    />
+                  }
+                />
+
+                <p>تفعيل الاحداثي</p>
+                <FormControlLabel
+                  sx={{
+                    display: "block",
+                  }}
+                  control={
+                    <Switch
+                      checked={medicalReportsStype.nameAbsoulateActive}
+                      onChange={(event) => {
+                        handleInputChange(
+                          "nameAbsoulateActive",
+                          !medicalReportsStype.nameAbsoulateActive
+                        );
+                      }}
+                      color="primary"
+                    />
+                  }
+                />
+
+                <div className="flex justify-center items-center flex-col gap-2">
+                  <TextField
+                    type="number"
+                    label="x"
+                    size="small"
+                    value={medicalReportsStype.nameX}
+                    onChange={(event) => {
+                      handleInputChange("nameX", event.target.value);
+                    }}
+                    inputProps={{ min: "0", max: "100" }}
+                  ></TextField>
+                  <TextField
+                    type="number"
+                    label="y"
+                    size="small"
+                    value={medicalReportsStype.nameY}
+                    onChange={(event) => {
+                      handleInputChange("nameY", event.target.value);
+                    }}
+                    inputProps={{ min: "0", max: "100" }}
+                  ></TextField>
+                  <TextField
+                    type="number"
+                    label="الحجم"
+                    size="small"
+                    value={medicalReportsStype.nameSize}
+                    onChange={(event) => {
+                      handleInputChange("nameSize", event.target.value);
+                    }}
+                    inputProps={{ min: "0", max: "100" }}
+                  ></TextField>
+
+                  <p>اللون</p>
+                  <input
+                    type="color"
+                    className=" border-none rounded-full"
+                    value={medicalReportsStype.nameColor}
+                    onChange={(event) => {
+                      handleInputChange("nameColor", event.target.value);
+                    }}
+                  />
+
+                  <p>لون العنوان</p>
+                  <input
+                    type="color"
+                    className=" border-none rounded-full"
+                    value={medicalReportsStype.nameMainTitleColor}
+                    onChange={(event) => {
+                      handleInputChange(
+                        "nameMainTitleColor",
+                        event.target.value
+                      );
+                    }}
+                  />
+                </div>
               </div>
               <div className="flex justify-center items-center flex-col">
                 <p> تفعيل التاريخ</p>
@@ -749,8 +884,100 @@ function PrescriptionsDesign() {
                     />
                   }
                 />
+                <p> تفعيل العنوان</p>
+                <FormControlLabel
+                  sx={{
+                    display: "block",
+                  }}
+                  control={
+                    <Switch
+                      checked={medicalReportsStype.dateMainTitleActive}
+                      onChange={(event) => {
+                        handleInputChange(
+                          "dateMainTitleActive",
+                          !medicalReportsStype.dateMainTitleActive
+                        );
+                      }}
+                      color="primary"
+                    />
+                  }
+                />
+
+                <p>تفعيل الاحداثي</p>
+                <FormControlLabel
+                  sx={{
+                    display: "block",
+                  }}
+                  control={
+                    <Switch
+                      checked={medicalReportsStype.dateAbsoulateActive}
+                      onChange={(event) => {
+                        handleInputChange(
+                          "dateAbsoulateActive",
+                          !medicalReportsStype.dateAbsoulateActive
+                        );
+                      }}
+                      color="primary"
+                    />
+                  }
+                />
+                <div className="flex justify-center items-center flex-col gap-2">
+                  <TextField
+                    type="number"
+                    label="x"
+                    size="small"
+                    value={medicalReportsStype.dateX}
+                    onChange={(event) => {
+                      handleInputChange("dateX", event.target.value);
+                    }}
+                    inputProps={{ min: "0", max: "100" }}
+                  ></TextField>
+                  <TextField
+                    type="number"
+                    label="y"
+                    size="small"
+                    value={medicalReportsStype.dateY}
+                    onChange={(event) => {
+                      handleInputChange("dateY", event.target.value);
+                    }}
+                    inputProps={{ min: "0", max: "100" }}
+                  ></TextField>
+                  <TextField
+                    type="number"
+                    label="الحجم"
+                    size="small"
+                    value={medicalReportsStype.dateSize}
+                    onChange={(event) => {
+                      handleInputChange("dateSize", event.target.value);
+                    }}
+                    inputProps={{ min: "0", max: "100" }}
+                  ></TextField>
+
+                  <p>اللون</p>
+                  <input
+                    type="color"
+                    className=" border-none rounded-full"
+                    value={medicalReportsStype.dateColor}
+                    onChange={(event) => {
+                      handleInputChange("dateColor", event.target.value);
+                    }}
+                  />
+
+                  <p>لون العنوان</p>
+                  <input
+                    type="color"
+                    className=" border-none rounded-full"
+                    value={medicalReportsStype.dateMainTitleColor}
+                    onChange={(event) => {
+                      handleInputChange(
+                        "dateMainTitleColor",
+                        event.target.value
+                      );
+                    }}
+                  />
+                </div>
               </div>
-              <div>
+              {/* <div>
                 <div className="flex flex-col justify-center items-center">
                   <p>اللون العنوان</p>
                   <input
@@ -780,7 +1007,7 @@ function PrescriptionsDesign() {
                     // value={color} onChange={e => setColor(e.target.value)}
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="flex w-full  mt-4 font-bold">
@@ -1257,28 +1484,138 @@ function PrescriptionsDesign() {
               ></TextField>
             </div>
             <div className="flex justify-center items-center flex-col">
-                <p>تفعيل الخطوط </p>
-                <FormControlLabel
-                  sx={{
-                    display: "block",
-                  }}
-                  control={
-                    <Switch
-                      checked={medicalReportsStype.linesActive}
-                      onChange={(event) => {
-                        handleInputChange(
-                          "linesActive",
-                          !medicalReportsStype.linesActive
-                        );
-                      }}
-                      color="primary"
-                    />
-                  }
-                />
-              </div>
+              <p>تفعيل الخطوط </p>
+              <FormControlLabel
+                sx={{
+                  display: "block",
+                }}
+                control={
+                  <Switch
+                    checked={medicalReportsStype.linesActive}
+                    onChange={(event) => {
+                      handleInputChange(
+                        "linesActive",
+                        !medicalReportsStype.linesActive
+                      );
+                    }}
+                    color="primary"
+                  />
+                }
+              />
+            </div>
+            <div className="flex w-full  mt-4 font-bold">
+              <p>اضافة كتابات اضافية</p>
+            </div>
+            <div>
+              {textRandom
+                ? textRandom.map((textData, index) => (
+                    <>
+                      <div>السطر {index + 1}</div>
+                      <div className="flex justify-between items-center w-full">
+                        <TextField
+                          value={medicalReportsStype.textRandom[index].title}
+                          onChange={(event) => {
+                            onRandomTextInput(
+                              "title",
+                              event.target.value,
+                              index
+                            );
+                            console.log(event.target.value);
+                          }}
+                          label="معلومات السطر"
+                          size="small"
+                        ></TextField>
+                        <TextField
+                          type="number"
+                          label="حجم الخط"
+                          size="small"
+                          value={medicalReportsStype.textRandom[index].size}
+                          onChange={(event) => {
+                            onRandomTextInput(
+                              "size",
+                              event.target.value,
+                              index
+                            );
+                            console.log(event.target.value);
+                          }}
+                        ></TextField>
+                        <TextField
+                          type="number"
+                          label="x"
+                          size="small"
+                          value={medicalReportsStype.textRandom[index].x}
+                          onChange={(event) => {
+                            onRandomTextInput(
+                              "x",
+                              event.target.value,
+                              index,
+                              onRandomTextInput
+                            );
 
+                            console.log(event.target.value);
+                          }}
+                          inputProps={{ min: "0", max: "100" }}
+                        ></TextField>
+                        <TextField
+                          type="number"
+                          label="y"
+                          size="small"
+                          value={medicalReportsStype.textRandom[index].y}
+                          onChange={(event) => {
+                            onRandomTextInput("y", event.target.value, index);
+                            console.log(event.target.value);
+                          }}
+                          inputProps={{ min: "0", max: "100" }}
+                        ></TextField>
+
+                        <div className="flex flex-col justify-center items-center">
+                          <p>اللون</p>
+                          <input
+                            type="color"
+                            className=" border-none rounded-full"
+                            value={medicalReportsStype.textRandom[index].color}
+                            onChange={(event) => {
+                              onRandomTextInput(
+                                "color",
+                                event.target.value,
+                                index
+                              );
+                              console.log(event.target.value);
+                            }}
+                          />
+                        </div>
+                        <IconButton
+                          onClick={() => {
+                            HandleOnTextRemove("randomText", textData._id);
+                          }}
+                          type="button"
+                          sx={{ p: "10px" }}
+                          aria-label="search"
+                        >
+                          <DeleteIcon></DeleteIcon>
+                        </IconButton>
+                        <FormControlLabel
+                          sx={{
+                            display: "block",
+                          }}
+                          control={<Switch color="primary" />}
+                        />
+                      </div>
+                    </>
+                  ))
+                : ""}
+              <div
+                onClick={() => {
+                  addNewRandomText("right");
+                }}
+                className="w-full bg-blue-300 h-8 rounded-full justify-center items-center flex cursor-pointer hover:bg-blue-400"
+              >
+                اضافة نص جديد
+              </div>
+            </div>
           </div>
-          <div className="h-[100vh] w-[500px] bg-white">
+
+          <div className="h-[100vh] sticky left-0 w-[500px] bg-white">
             <PatientReport
               medicalReportsStype={medicalReportsStype}
               dataToPrint={data}

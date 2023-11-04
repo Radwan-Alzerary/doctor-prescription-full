@@ -87,7 +87,7 @@ function Header() {
   };
 
   return (
-    <header className="flex h-14 bg-[white] w-full justify-between items-center px-4">
+    <header className="flex h-14 bg-[white] w-full justify-between items-center px-4 z-30">
       <div>
         <Button onClick={logOut} variant="contained" color="error">
           <FormattedMessage id={"signOut"} defaultMessage="Hello, World!" />

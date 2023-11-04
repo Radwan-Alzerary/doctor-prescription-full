@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 const MedicalReportsStyleSchema = new mongoose.Schema(
   {
-    ownerId:{
-      type:String 
-     },
- 
+    ownerId: {
+      type: String,
+    },
     name: { type: String },
     xPading: { type: String, default: 0 },
     rightPading: { type: String, default: 0 },
@@ -81,6 +80,26 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
       default: "1",
     },
 
+    imagesRandom: [
+      {
+        url: { type: String },
+        width: { type: Number },
+        height: { type: Number },
+        x: { type: Number, default: 0 },
+        y: { type: Number, default: 0 },
+      },
+    ],
+
+    textRandom: [
+      {
+        title: { type: String },
+        size: { type: Number, default: 1 },
+        color: { type: String, default: "#000" },
+        x: { type: Number, default: 0 },
+        y: { type: Number, default: 0 },
+      },
+    ],
+
     col1: { type: String, default: "NO." },
     col1Active: { type: Boolean, default: true },
     col2: { type: String, default: "DRUG NAME" },
@@ -104,9 +123,38 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
       default: "#000",
     },
 
+    patientsTitleActive: {
+      type: Boolean,
+      default: true,
+    },
+
     nameActive: { type: Boolean, default: true },
+    nameX: { type: Number, default: 0 },
+    namey: { type: Number, default: 0 },
+    nameAbsoulateActive: { type: Boolean, default: false },
+    nameColor: { type: String, default: "#000" },
+    nameSize: { type: Number, default: 1 },
+    nameMainTitleActive: { type: Boolean, default: true },
+    nameMainTitleColor: { type: String, default: "#000" },
+
     ageActive: { type: Boolean, default: true },
+    ageX: { type: Number, default: 0 },
+    ageY: { type: Number, default: 0 },
+    ageAbsoulateActive: { type: Boolean, default: false },
+    ageColor: { type: String, default: "#000" },
+    ageSize: { type: Number, default: 1 },
+    ageMainTitleActive: { type: Boolean, default: true },
+    ageMainTitleColor: { type: String, default: "#000" },
+
     dateActive: { type: Boolean, default: true },
+    dateX: { type: Number, default: 0 },
+    dateY: { type: Number, default: 0 },
+    dateAbsoulateActive: { type: Boolean, default: false },
+    dateColor: { type: String, default: "#000" },
+    dateSize: { type: Number, default: 1 },
+    dateMainTitleActive: { type: Boolean, default: true },
+    dateMainTitleColor: { type: String, default: "#000" },
+
     backgroundImgActive: { type: Boolean, default: true },
     backgroundImg: { type: String },
     signatureActive: { type: Boolean, default: true },

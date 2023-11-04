@@ -123,7 +123,7 @@ function Dashboard() {
               </h1>
             </div>
           </div>
-          <div className=" rounded-xl shadow-lg bg-white p-4">
+          <div className=" rounded-xl shadow-lg bg-white p-4 z-0">
             <VisitChart
               dashboardVisitCount={dashboardCount.dailyVisitCounts}
             ></VisitChart>

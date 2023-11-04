@@ -60,11 +60,8 @@ import CancelAlert from "../../components/pageCompond/CancelAlert";
 
 function Row(props) {
   const { row } = props;
-  console.log(row);
   const [open, setOpen] = React.useState(false);
   const getPharmaceuticalName = (params) => {
-    console.log(params);
-
     const pharmaceuticalArray = params;
     // Extract the id and name properties from each item in the array
     if (pharmaceuticalArray) {
@@ -140,7 +137,6 @@ function Row(props) {
                     props.onMedicalFormShowHandle(row._id);
                   }}
                   aria-label="delete"
-                  // size="large"
                 >
                   <ContentPasteIcon
                     aria-label="expand row"
@@ -157,17 +153,14 @@ function Row(props) {
                     props.onPrescriptionShowHande(row._id);
                   }}
                   aria-label="delete"
-                  // size="large"
                 >
                   <img
                     src={process.env.PUBLIC_URL + "/rx-icon.svg"}
                     alt=""
                     className="w-7 h-7"
                   />
-                  {/* <Vaccines aria-label="expand row" size="small"></Vaccines> */}
                 </IconButton>
               </TableCell>
-
               <TableCell align="center">
                 <IconButton
                   sx={{ color: blue[800] }}
@@ -176,7 +169,6 @@ function Row(props) {
                     props.onReportShowHandel(row._id);
                   }}
                   aria-label="delete"
-                  // size="large"
                 >
                   <SummarizeIcon
                     aria-label="expand row"
@@ -184,7 +176,6 @@ function Row(props) {
                   ></SummarizeIcon>
                 </IconButton>
               </TableCell>
-
               <TableCell align="center">
                 <IconButton
                   sx={{ color: blue[800] }}
@@ -193,7 +184,6 @@ function Row(props) {
                     props.onLaboryShowHandel(row._id);
                   }}
                   aria-label="delete"
-                  // size="large"
                 >
                   <BiotechIcon size={"small"} />
                 </IconButton>
@@ -275,7 +265,20 @@ function Row(props) {
                 </TableHead>
                 <TableBody>
                   {row.prescription.map((prescription) => (
-                    <TableRow key={prescription._id}>
+                    <TableRow
+                      key={prescription._id}
+                      className="hover:bg-gray-50"
+                      onClick={() => {
+                        if (
+                          props.settingData.openEditPrescriptionByClick 
+                        ) {
+                          props.onPrescriptionEditHandel(
+                            row._id,
+                            prescription._id
+                          );
+                      }
+                      }}
+                    >
                       <TableCell align="center">
                         {prescription.pharmaceutical.length}
                       </TableCell>
@@ -377,6 +380,7 @@ function Partients() {
   const [genderQuery, setGenderQuery] = useState("");
   const [stateQuery, setStateQuery] = useState("");
   const [dateQuery, setDateQuery] = useState("");
+  const [settingData, setSettingData] = useState({});
 
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -407,9 +411,22 @@ function Partients() {
       setCurrentUser(data);
       setIsLoaded(true);
     };
-    console.log(currentUser);
     verifyUser();
   }, [Cookies, navigate]);
+
+  useEffect(() => {
+    const getSettingApi = () => {
+      axios
+        .get(`${serverAddress}/setting/getdata`)
+        .then((response) => {
+          setSettingData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    };
+    getSettingApi();
+  }, []);
 
   useEffect(() => {
     getMedicalReportsStyle();
@@ -419,7 +436,6 @@ function Partients() {
       .get(`${serverAddress}/medicaleeportstyle/getmedicalreportstype`)
       .then((response) => {
         setMedicalReportsStype(response.data[0]); // Update the categories state with the fetched data
-        console.log(response.data[0]);
         setLoading(true);
       })
       .catch((error) => {
@@ -433,7 +449,6 @@ function Partients() {
       )
       .then((response) => {
         setDataToPrint(response.data); // Update the categories state with the fetched data
-        console.log(response.data);
         setprints(true);
       })
       .catch((error) => {
@@ -445,7 +460,6 @@ function Partients() {
       .get(`${serverAddress}/category/getall`)
       .then((response) => {
         setCategoryList(response.data); // Update the categories state with the fetched data
-        console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
@@ -492,7 +506,6 @@ function Partients() {
       .get(`${serverAddress}/patients/getall`)
       .then((response) => {
         setPatientsList(response.data); // Update the categories state with the fetched data
-        console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
@@ -504,7 +517,11 @@ function Partients() {
   };
   const handleHideClick = () => {
     setPharmaceListInside([]);
-    setCanceleAlert(true);
+    if (settingData.abortProssesMsg) {
+      setCanceleAlert(true);
+    } else {
+      onCancelHande();
+    }
   };
   const handleOnBillInsideRemove = (id) => {
     setLoading(() => false);
@@ -550,7 +567,6 @@ function Partients() {
     axios
       .get(`${serverAddress}/patients/medicalinfo/${id}`)
       .then((response) => {
-        console.log(response.data);
         setUserEditData(response.data);
         setShowPartientsEditForm(true);
       })
@@ -565,7 +581,6 @@ function Partients() {
       .post(`${serverAddress}/prescription/new`, { PartientsId: id })
       .then((response) => {
         // Handle the response if needed
-        console.log("POST request successful:", response.data.prescriptionId);
         setPrescriptionId(response.data.prescriptionId);
         setPartientsSelectId(id);
         setShowPartientsAddForm(true);
@@ -595,7 +610,6 @@ function Partients() {
       .get(`${serverAddress}/patients/medicalinfo/${id}`)
       .then((response) => {
         setUserEditData(response.data);
-        console.log(response.data);
         setPartientsSelectId(id);
         setShowMidicalForm(true);
       })
@@ -606,7 +620,6 @@ function Partients() {
     console.log(`Prescription Show clicked for id ${id}`);
   };
   const handleNewPatientData = (data) => {
-    console.log(data);
     axios
       .post(`${serverAddress}/patients/new`, data)
       .then((response) => {
@@ -614,7 +627,6 @@ function Partients() {
         getPharmaceApi();
         getPatientsList();
         setShowAddForm(false);
-        console.log("POST request successful:", response.data);
       })
       .catch((error) => {
         // Handle errors if the request fails
@@ -626,7 +638,6 @@ function Partients() {
 
   const handleEditPatientData = (data) => {
     data.id = partientsSelectId;
-    console.log(data);
     axios
       .post(`${serverAddress}/patients/edit`, data)
       .then((response) => {
@@ -635,7 +646,6 @@ function Partients() {
         getPatientsList();
         setShowPartientsEditForm(false);
         setShowMidicalForm(false);
-        console.log("POST request successful:", response.data);
       })
       .catch((error) => {
         // Handle errors if the request fails
@@ -647,7 +657,6 @@ function Partients() {
       .post(`${serverAddress}/prescription/postpharmaceutical`, data)
       .then((response) => {
         // Handle the response if needed
-        console.log("POST request successful:", response.data);
         getAllPrescription(data.PrescriptionId);
       })
       .catch((error) => {
@@ -743,12 +752,10 @@ function Partients() {
       .get(`${serverAddress}/patients/getbyname/${searchInputValue}`)
       .then((response) => {
         setPatientsList(response.data); // Update the categories state with the fetched data
-        console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
-    console.log(event.target.value);
   };
   const HandleOnPrescriptionDeleteHande = (patientsId, prescriptionId) => {
     axios
@@ -769,7 +776,6 @@ function Partients() {
     axios
       .get(`${serverAddress}/prescription/getone/${prescriptionId}?`)
       .then((response) => {
-        console.log(response.data);
         setPrescriptionId(response.data._id);
         getAllPrescription(response.data._id);
         setPartientsSelectId(patientsId);
@@ -807,7 +813,6 @@ function Partients() {
           setPatientsList(response.data); // Update the categories state with the fetched data
 
           // Handle the response if needed
-          console.log("POST request successful:", response.data);
         })
         .catch((error) => {
           // Handle errors if the request fails
@@ -1052,6 +1057,7 @@ function Partients() {
                 <Row
                   onPrescriptionEditHandel={onPrescriptionEditHandel}
                   onShareHande={onShareHande}
+                  settingData={settingData}
                   onDeleteHande={onDeleteHande}
                   currentUser={currentUser}
                   onPrescriptionDeleteHande={HandleOnPrescriptionDeleteHande}

@@ -1,6 +1,6 @@
 const SystemSetting = require("../model/systemSetting"); // Make sure to adjust the path as needed
 const mongoose = require("mongoose");
-const fs = require('fs');
+const fs = require("fs");
 
 const router = require("express").Router();
 router.get("/getdata", async (req, res) => {
@@ -17,7 +17,7 @@ router.get("/exportdata", async (req, res) => {
     const modelNames = mongoose.modelNames();
 
     // Ensure the data directory exists
-    const dataDirectory = '../backup';
+    const dataDirectory = "../backup";
     if (!fs.existsSync(dataDirectory)) {
       fs.mkdirSync(dataDirectory);
     }
@@ -34,15 +34,27 @@ router.get("/exportdata", async (req, res) => {
     });
 
     await Promise.all(exportPromises);
-    await SystemSetting.findOneAndUpdate(
-      {},
-      { lastBackup: Date.now() }
-    );
+    await SystemSetting.findOneAndUpdate({}, { lastBackup: Date.now() });
 
     res.status(200).json({ message: "All models exported successfully" });
   } catch (error) {
     console.error("Error exporting models", error);
     res.status(500).json({ error: "Error exporting models", details: error });
+  }
+});
+
+router.post("/update", async (req, res) => {
+  try {
+    const systemSetting = await SystemSetting.findOneAndUpdate(
+      {},
+      req.body.data
+    );
+    if (!systemSetting) {
+      return res.status(404).json({ error: "systemSetting not found" });
+    }
+    res.json(systemSetting);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -54,7 +66,7 @@ router.get("/importdata", async (req, res) => {
       const dataPath = `../backup/${modelName}.json`;
 
       // Read the JSON data from the file
-      const rawData = fs.readFileSync(dataPath, 'utf8');
+      const rawData = fs.readFileSync(dataPath, "utf8");
       const data = JSON.parse(rawData);
 
       const Model = mongoose.model(modelName);

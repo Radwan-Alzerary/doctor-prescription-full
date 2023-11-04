@@ -4,10 +4,10 @@ import { useReactToPrint } from "react-to-print";
 
 function PatientReport(props) {
   const componentRef = useRef();
-
   const [middleText, setMiddleText] = useState([]);
   const [rightText, setRightText] = useState([]);
   const [leftText, setLeftText] = useState([]);
+  const [randomText, setRandomText] = useState([]);
   const currentURL = window.location.origin; // Get the current URL
   const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
 
@@ -18,15 +18,13 @@ function PatientReport(props) {
         setMiddleText(props.medicalReportsStype.HeaderMidleText);
         setRightText(props.medicalReportsStype.HeaderRightText);
         setLeftText(props.medicalReportsStype.HeaderLeftText);
+        setRandomText(props.medicalReportsStype.textRandom);
         // Introduce a 1-second delay
         await new Promise((resolve) => setTimeout(resolve, 300));
-
         await handlePrint(); // Wait for handlePrint() to finish
-
         props.feedback(); // After handlePrint() has finished, call feedback()
       }
     }
-
     updateTextAndPrint();
   }, [props.prints]);
 
@@ -34,6 +32,7 @@ function PatientReport(props) {
     setMiddleText(props.medicalReportsStype.HeaderMidleText);
     setRightText(props.medicalReportsStype.HeaderRightText);
     setLeftText(props.medicalReportsStype.HeaderLeftText);
+    setRandomText(props.medicalReportsStype.textRandom);
   }, [props.medicalReportsStype]);
 
   const handlePrint = useReactToPrint({
@@ -62,9 +61,7 @@ function PatientReport(props) {
       >
         <img
           className="z-0 opacity-30 absolute flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5  rounded-xl "
-          src={
-            `${serverAddress}` + props.medicalReportsStype.backgroundImg
-          }
+          src={`${serverAddress}` + props.medicalReportsStype.backgroundImg}
           alt=""
         ></img>
         <div
@@ -80,6 +77,20 @@ function PatientReport(props) {
           <p className="h-0"> {props.medicalReportsStype.mainNameHeaderknia}</p>
           {props.medicalReportsStype.signature}
         </div>
+        {randomText.map((textData, index) => (
+          <div
+            className={`z-20 h-0 w-40 absolute text-center flex flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center  rounded-xl `}
+            style={{
+              left: `${textData.x}%`,
+              top: `${textData.y}%`,
+              fontSize: `${textData.size}rem`,
+              color: `${textData.color}`,
+            }}
+          >
+            {textData.title}
+          </div>
+        ))}
+
         {/* Your content to be printed */}
         <div className="  h-[96vh] relative flex flex-col z-10 ">
           <div className="flex w-full  flex-col justify-center items-center">
@@ -170,21 +181,33 @@ function PatientReport(props) {
           </div>
           <div className="flex justify-around items-center my-2 ">
             {props.medicalReportsStype.nameActive ? (
-              <div className="flex gap-2">
+              <div
+                className={`flex gap-2 ${
+                  props.medicalReportsStype.nameAbsoulateActive
+                    ? "absolute"
+                    : ""
+                }`}
+                style={{
+                  top: `${props.medicalReportsStype.nameY}px`,
+                  left: `${props.medicalReportsStype.nameX}px`,
+                }}
+              >
                 <h2
                   className=" text-red-500 font-semibold"
                   style={{
-                    // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
-                    color: `${props.medicalReportsStype.patientsTitleColor}`,
+                    fontSize: `${props.medicalReportsStype.nameSize}rem`,
+                    color: `${props.medicalReportsStype.nameMainTitleColor}`,
                   }}
                 >
-                  اسم المريض :{" "}
+                  {props.medicalReportsStype.patientsTitleActive && props.medicalReportsStype.nameMainTitleActive
+                    ? "اسم المريض : "
+                    : ""}
                 </h2>
                 <h2
                   className="font-semibold"
                   style={{
-                    // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
-                    color: `${props.medicalReportsStype.patientsSubTitleColor}`,
+                    fontSize: `${props.medicalReportsStype.nameSize}rem`,
+                    color: `${props.medicalReportsStype.nameColor}`,
                   }}
                 >
                   {props.dataToPrint.patients.name}
@@ -194,21 +217,31 @@ function PatientReport(props) {
               ""
             )}
             {props.medicalReportsStype.ageActive ? (
-              <div className="flex gap-2">
+              <div
+                className={`flex gap-2 ${
+                  props.medicalReportsStype.ageAbsoulateActive ? "absolute" : ""
+                }`}
+                style={{
+                  top: `${props.medicalReportsStype.ageY}px`,
+                  left: `${props.medicalReportsStype.ageX}px`,
+                }}
+              >
                 <h2
                   className=" text-red-500 font-semibold"
                   style={{
-                    // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
-                    color: `${props.medicalReportsStype.patientsTitleColor}`,
+                    fontSize: `${props.medicalReportsStype.ageSize}rem`,
+                    color: `${props.medicalReportsStype.ageMainTitleColor}`,
                   }}
                 >
-                  العمر :{" "}
+                  {props.medicalReportsStype.patientsTitleActive && props.medicalReportsStype.ageMainTitleActive
+                    ? "العمر : "
+                    : ""}
                 </h2>
                 <h2
                   className="font-semibold"
                   style={{
-                    // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
-                    color: `${props.medicalReportsStype.patientsSubTitleColor}`,
+                    fontSize: `${props.medicalReportsStype.ageSize}rem`,
+                    color: `${props.medicalReportsStype.ageColor}`,
                   }}
                 >
                   {" "}
@@ -219,21 +252,33 @@ function PatientReport(props) {
               ""
             )}
             {props.medicalReportsStype.dateActive ? (
-              <div className="flex gap-2">
+              <div
+                className={`flex gap-2 ${
+                  props.medicalReportsStype.dateAbsoulateActive
+                    ? "absolute"
+                    : ""
+                }`}
+                style={{
+                  top: `${props.medicalReportsStype.dateY}px`,
+                  left: `${props.medicalReportsStype.dateX}px`,
+                }}
+              >
                 <h2
                   className=" text-red-500 font-semibold"
                   style={{
-                    // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
-                    color: `${props.medicalReportsStype.patientsTitleColor}`,
+                    fontSize: `${props.medicalReportsStype.dateSize}rem`,
+                    color: `${props.medicalReportsStype.dateMainTitleColor}`,
                   }}
                 >
-                  التاريخ :{" "}
+                  {props.medicalReportsStype.patientsTitleActive  && props.medicalReportsStype.dateMainTitleActive
+                    ? "التاريخ : "
+                    : ""}
                 </h2>
                 <h2
                   className="font-semibold"
                   style={{
-                    // fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
-                    color: `${props.medicalReportsStype.patientsSubTitleColor}`,
+                    fontSize: `${props.medicalReportsStype.dateSize}rem`,
+                    color: `${props.medicalReportsStype.dateColor}`,
                   }}
                 >
                   {" "}
@@ -443,8 +488,7 @@ function PatientReport(props) {
                                     color: `${props.medicalReportsStype.tableContentColor}`,
                                   }}
                                 >
-                                  {drug.id.tradeName 
-                                   ? (
+                                  {drug.id.tradeName ? (
                                     <div>{drug.id.tradeName}</div>
                                   ) : (
                                     ""

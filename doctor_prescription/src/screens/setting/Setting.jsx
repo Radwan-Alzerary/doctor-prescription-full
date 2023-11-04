@@ -7,6 +7,7 @@ import UserSetting from "../../components/setting/UserSetting";
 import ProgramActive from "../../components/setting/ProgramActive";
 import BackUp from "../../components/setting/BackUp";
 import Loading from "../../components/pageCompond/Loading";
+import PropertySetting from "../../components/setting/PropertySetting";
 
 function Setting(props) {
   const [cashire, setCashire] = useState([]);
@@ -196,6 +197,10 @@ function Setting(props) {
               backUpclickHandle={backUpclickHandle}
               restorClickHandle={restorClickHandle}
             ></BackUp>
+          </div>
+          <div className="my-5">
+            <div>تخصيصات النضام</div>
+            <PropertySetting></PropertySetting>
           </div>
           <div>
             <div>تفعيل النسخة</div>

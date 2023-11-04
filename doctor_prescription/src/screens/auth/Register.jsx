@@ -60,11 +60,13 @@ function Register() {
     }
   };
   const checkToken = async (event) => {
+    const currentURL = window.location.origin; // Get the current URL
+    const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+
     try {
-      const response = await axios.post(
-        "http://95.179.178.183:4000/checkToken",
-        { token: serialNumber }
-      );
+      const response = await axios.post(`${serverAddress}/checkToken`, {
+        token: serialNumber,
+      });
       console.log(response);
 
       if (response.data.result) {

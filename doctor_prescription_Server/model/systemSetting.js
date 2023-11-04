@@ -10,6 +10,9 @@ const SystemSettingSchema = new mongoose.Schema(
     active: { type: Boolean, default: false },
     mangerDoctor: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
     lastBackup: { type: Date },
+    abortProssesMsg :{type:Boolean,default:false},
+    openEditPrescriptionByClick :{type:Boolean,default:false},
+    autoBackUp :{type:Boolean,default:false}
   },
   {
     timestamps: true,
