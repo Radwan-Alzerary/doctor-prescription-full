@@ -28,7 +28,20 @@ const data = {
     __v: 27,
   },
   prescription: {
-    __v: 0,
+    pharmaceutical: [
+      {
+        id: { name: "اسم الدواء", tradeName: "الاسم العلمي" },
+        dose: "الجرعة",
+        doseNum: "عدد الجرع",
+        inTakeTime: { name: "وقت التناول" },
+      },
+      {
+        id: { name: "اسم الدواء", tradeName: "الاسم العلمي" },
+        dose: "الجرعة",
+        doseNum: "عدد الجرع",
+        inTakeTime: { name: "وقت التناول" },
+      },
+    ],
   },
 };
 
@@ -1010,24 +1023,34 @@ function PrescriptionsDesign() {
               <p>معلومات الجدول</p>
             </div>
             <div className="flex justify-between items-center">
-              <TextField
-                label=" حجم خط العناوين"
-                size="small"
-                value={medicalReportsStype.tableHeaderTextSize}
-                onChange={(event) => {
-                  handleInputChange("tableHeaderTextSize", event.target.value);
-                }}
-                sx={{ width: "10%" }}
-              ></TextField>
-              <TextField
-                label=" حجم خط المحتوى"
-                size="small"
-                value={medicalReportsStype.tableContentTextSize}
-                onChange={(event) => {
-                  handleInputChange("tableContentTextSize", event.target.value);
-                }}
-                sx={{ width: "10%" }}
-              ></TextField>
+              <div className="flex flex-col gap-4">
+                <div>
+                  <TextField
+                    label=" حجم خط العناوين"
+                    size="small"
+                    value={medicalReportsStype.tableHeaderTextSize}
+                    onChange={(event) => {
+                      handleInputChange(
+                        "tableHeaderTextSize",
+                        event.target.value
+                      );
+                    }}
+                  ></TextField>
+                </div>
+                <div>
+                  <TextField
+                    label=" حجم خط المحتوى"
+                    size="small"
+                    value={medicalReportsStype.tableContentTextSize}
+                    onChange={(event) => {
+                      handleInputChange(
+                        "tableContentTextSize",
+                        event.target.value
+                      );
+                    }}
+                  ></TextField>
+                </div>
+              </div>
 
               <div className="flex justify-center items-center flex-col">
                 <p>تفعيل الهيدر</p>
@@ -1197,6 +1220,43 @@ function PrescriptionsDesign() {
                   type="color"
                   className=" border-none rounded-full"
                 />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex w-full  mt-4 font-bold">
+                <p>معلومات اسم الدواء</p>
+              </div>
+              <div className="flex justify-between items-center">
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <TextField
+                      label=" حجم خط اسم الدواء"
+                      size="small"
+                      value={medicalReportsStype.tableHeaderTextSize}
+                      onChange={(event) => {
+                        handleInputChange(
+                          "tableHeaderTextSize",
+                          event.target.value
+                        );
+                      }}
+                    ></TextField>
+                  </div>
+                  <div>
+                    <TextField
+                      label=" حجم خط المحتوى"
+                      size="small"
+                      value={medicalReportsStype.tableContentTextSize}
+                      onChange={(event) => {
+                        handleInputChange(
+                          "tableContentTextSize",
+                          event.target.value
+                        );
+                      }}
+                    ></TextField>
+                  </div>
+                </div>
+
               </div>
             </div>
 

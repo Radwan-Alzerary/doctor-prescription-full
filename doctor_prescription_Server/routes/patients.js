@@ -309,16 +309,8 @@ router.get("/upcoming", async (req, res) => {
 });
 
 router.post("/galaryimage", upload.single("image"), async (req, res, next) => {
-  console.log(req.body.id);
-  console.log(req.body);
-  console.log(req.body);
-  console.log(req.body);
-  const { filename, path } = req.file;
-  const { name } = req.body;
-  console.log(filename, path, name);
-  const url = req.protocol + "://" + req.get("host");
+
   const imagePath = req.file ? "/img/" + req.file.filename : null;
-  console.log(imagePath);
   try {
     const medicalReportsStype = await Patients.findByIdAndUpdate(
       req.body.id,

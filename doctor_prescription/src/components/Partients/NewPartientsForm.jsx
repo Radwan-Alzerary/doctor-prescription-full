@@ -57,6 +57,8 @@ function EditPartients(props) {
     matchFrom: "start",
     limit: 20,
   });
+  
+
 
   useEffect(() => {
     console.log(inputValue);
@@ -169,7 +171,10 @@ function EditPartients(props) {
           className=" w-full"
           dateAdapter={AdapterDayjs}
         >
-          <DateTimePicker onChange={(newValue) => setNextVisit(newValue.$d)} className="w-full" />
+          <DateTimePicker
+            onChange={(newValue) => setNextVisit(newValue.$d)}
+            className="w-full"
+          />
         </LocalizationProvider>
       </div>
 
@@ -195,10 +200,11 @@ function EditPartients(props) {
               disablePortal
               id="combo-box-demo"
               options={props.pharmaceList}
-              getOptionLabel={(option) => option.name} // Specify the field to use as the label
-              filterOptions={filterOptions}
+              getOptionLabel={(option) => {
+                return `${option.name} ${option.tradeName ? `(${option.tradeName})` : ''}`;
+              }}
+                          filterOptions={filterOptions}
               sx={{ width: "33%" }}
-              //   value={value}
               onChange={(event, newValue) => {
                 setValue(newValue);
               }}
@@ -208,6 +214,9 @@ function EditPartients(props) {
                 setBillId("");
                 setInputValue(newInputValue);
               }}
+              isOptionEqualToValue={(option, value) =>
+                option.name === value || option.tradeName === value
+              }
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -219,6 +228,7 @@ function EditPartients(props) {
                   }
                 />
               )}
+              
             />
             {pharmaceuticalInputs ? (
               <>
@@ -228,7 +238,6 @@ function EditPartients(props) {
                   value={tradeName}
                   onChange={(event) => {
                     setTradeName(event.target.value);
-                    // handleBillInputChange("dose", event.target.value);
                   }} // Update the name state
                   sx={{
                     width: "42%",
@@ -244,7 +253,6 @@ function EditPartients(props) {
                 />
 
                 <TextField
-                  required
                   id="outlined-required"
                   size="small"
                   value={dose}
@@ -267,7 +275,6 @@ function EditPartients(props) {
                 {/* First TextField */}
 
                 <TextField
-                  required
                   id="outlined-required"
                   size="small"
                   value={doseNumSecend}
@@ -281,7 +288,6 @@ function EditPartients(props) {
                 />
                 <span>X</span>
                 <TextField
-                  required
                   id="outlined-required"
                   size="small"
                   value={doseNumFirst}
@@ -340,7 +346,6 @@ function EditPartients(props) {
                 </FormControl>
                 {showInTakeOtherInput ? (
                   <TextField
-                    required
                     id="outlined-required"
                     size="small"
                     value={inTakeTimeOther}

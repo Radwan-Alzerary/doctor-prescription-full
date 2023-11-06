@@ -269,14 +269,12 @@ function Row(props) {
                       key={prescription._id}
                       className="hover:bg-gray-50"
                       onClick={() => {
-                        if (
-                          props.settingData.openEditPrescriptionByClick 
-                        ) {
+                        if (props.settingData.openEditPrescriptionByClick) {
                           props.onPrescriptionEditHandel(
                             row._id,
                             prescription._id
                           );
-                      }
+                        }
                       }}
                     >
                       <TableCell align="center">
@@ -366,6 +364,7 @@ function Partients() {
   const [partientsSelectId, setPartientsSelectId] = useState("");
   const [PrescriptionId, setPrescriptionId] = useState("");
   const [pharmaceList, setPharmaceList] = useState([]);
+  const [tradNamepharmaceList, setTradNamePharmaceList] = useState([]);
   const [pharmaceListInside, setPharmaceListInside] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   const [inTakeTimeList, setInTakeTime] = useState([]);
@@ -477,6 +476,17 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   };
+  const getPharmaceTradeNameApi = () => {
+    axios
+      .get(`${serverAddress}/pharmaceutical/getallwithtrandname`)
+      .then((response) => {
+        tradNamepharmaceList(response.data); // Update the categories state with the fetched data
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
+
   useEffect(() => {
     axios
       .get(`${serverAddress}/intaketime/getall`)

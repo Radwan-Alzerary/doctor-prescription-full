@@ -85,6 +85,23 @@ router.get("/getall", async (req, res) => {
   }
 });
 
+router.get("/getallwithtrandname", async (req, res) => {
+  try {
+    const pharmaceutical = await Pharmaceutical.find({
+      active: { $ne: false },
+      tradeName: { $exists: true, $ne: "" }, // Filter by tradeName existence and non-empty value
+    })
+      .populate("category")
+      .populate("intaketime")
+      .sort({ favorite: -1, name: 1 });
+
+    // console.log(pharmaceutical)
+    res.json(pharmaceutical);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 router.get("/import", async (req, res) => {
   try {
     // Replace 'your-json-file.json' with the path to your JSON file
@@ -106,7 +123,6 @@ router.get("/import", async (req, res) => {
         midScapetype: item.type,
         midScapeHasInteractions: item.has_interactions,
       });
-
       try {
         // Save the pharmaceutical document to the database
         await pharmaceutical.save();
@@ -115,7 +131,6 @@ router.get("/import", async (req, res) => {
         console.error(`Error adding ${item.text}: ${error.message}`);
       }
     }
-
     console.log("Import completed.");
     await SystemSetting.findOneAndUpdate({}, { pharmaceuticalLoded: true });
     res.status(200).json({ message: "Import completed." });

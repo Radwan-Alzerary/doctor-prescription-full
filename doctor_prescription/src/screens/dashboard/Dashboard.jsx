@@ -4,14 +4,22 @@ import VisitChart from "../../components/dashboard/VisitChart";
 import { FormattedMessage } from "react-intl";
 import axios from "axios";
 import Loading from "../../components/pageCompond/Loading";
+import BackGroundShadow from "../../components/pageCompond/BackGroundShadow";
+import PartientsProfile from "../../components/Partients/PartientsProfile";
 
 function Dashboard() {
   // Declare componentRef at the component level
+  const [showPartientProfile, setShowPartientProfile] = useState(false);
 
   const [dashboardCount, setDashboardCount] = useState({});
   const [todayPatient, setTodayPatient] = useState([]);
   const [UpcomingPatient, setUpcomingPatient] = useState([]);
   const [loading, setLoding] = useState(false);
+  const [partientsSelectId, setPartientsSelectId] = useState("");
+  const onNameClickHandle = (id) => {
+    setPartientsSelectId(id);
+    setShowPartientProfile(true);
+  };
 
   const fetchData = async () => {
     try {
@@ -151,7 +159,7 @@ function Dashboard() {
                   </thead>
                   <tbody>
                     {todayPatient.map((patient, index) => (
-                      <tr class="bg-white border-b hover:bg-slate-50 ">
+                      <tr class="bg-white border-b hover:bg-slate-50 cursor-pointer" onClick={()=>{onNameClickHandle(patient._id)}}>
                         <th
                           scope="row"
                           class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
@@ -191,7 +199,7 @@ function Dashboard() {
               </div>
               <div class="relative overflow-x-auto sm:rounded-lg ">
                 <table class="w-full text-sm text-right text-gray-500 ">
-                  <thead class="text-xs text-gray-700 uppercase bg-gray-50 ">
+                  <thead class="text-xs text-gray-700  uppercase bg-gray-50 ">
                     <tr>
                       <th scope="col" class="px-6 py-3">
                         اسم المريض
@@ -209,7 +217,12 @@ function Dashboard() {
                   </thead>
                   <tbody>
                     {UpcomingPatient.map((patient, index) => (
-                      <tr class="bg-white border-b hover:bg-slate-50 ">
+                      <tr
+                        class="bg-white border-b hover:bg-slate-50 cursor-pointer "
+                        onClick={() => {
+                          onNameClickHandle(patient._id);
+                        }}
+                      >
                         <th
                           scope="row"
                           class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
@@ -217,7 +230,6 @@ function Dashboard() {
                           {patient.name}
                         </th>
                         <td class="px-6 py-4">
-                          {" "}
                           {formatDate(patient.nextVisit)}
                         </td>
                         <td class="px-6 py-4">
@@ -241,6 +253,18 @@ function Dashboard() {
         </div>
       ) : (
         <Loading></Loading>
+      )}
+      {showPartientProfile ? (
+        <>
+          <BackGroundShadow
+            onClick={() => {
+              setShowPartientProfile(false);
+            }}
+          ></BackGroundShadow>
+          <PartientsProfile partientId={partientsSelectId}></PartientsProfile>
+        </>
+      ) : (
+        ""
       )}
     </div>
   );
