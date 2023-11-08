@@ -112,7 +112,15 @@ function PartientsProfile(props) {
             <div className=" bg-white shadow p-3 rounded-2xl">
               <div className=" font-medium text-xl">المعلومات الشخصية</div>
               <div className=" flex justify-between w-full my-2">
-                <p>العمر : {partientsProfile.age}</p>
+                {partientsProfile.age ? (
+                  <p>
+                    العمر :{partientsProfile.age ? partientsProfile.age : 0} سنة
+                    <p> {partientsProfile.monthAge ? partientsProfile.monthAge : 0} شهر</p>
+                  </p>
+                ) : (
+                  ""
+                )}
+
                 <p>الوزن : {partientsProfile.weight} كيلو</p>
                 <p>الطول : {partientsProfile.length}</p>
                 <p>الجنس : {partientsProfile.gender}</p>

@@ -16,6 +16,10 @@ const PatientsSchema = new mongoose.Schema(
     age: {
       type: Number,
     },
+    monthAge: {
+      type: Number,
+    },
+
     weight: {
       type: Number,
     },

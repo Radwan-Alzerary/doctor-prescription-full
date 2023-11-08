@@ -57,8 +57,6 @@ function EditPartients(props) {
     matchFrom: "start",
     limit: 20,
   });
-  
-
 
   useEffect(() => {
     console.log(inputValue);
@@ -201,9 +199,11 @@ function EditPartients(props) {
               id="combo-box-demo"
               options={props.pharmaceList}
               getOptionLabel={(option) => {
-                return `${option.name} ${option.tradeName ? `(${option.tradeName})` : ''}`;
+                return `${option.name} ${
+                  option.tradeName ? `(${option.tradeName})` : ""
+                }`;
               }}
-                          filterOptions={filterOptions}
+              filterOptions={filterOptions}
               sx={{ width: "33%" }}
               onChange={(event, newValue) => {
                 setValue(newValue);
@@ -228,7 +228,6 @@ function EditPartients(props) {
                   }
                 />
               )}
-              
             />
             {pharmaceuticalInputs ? (
               <>

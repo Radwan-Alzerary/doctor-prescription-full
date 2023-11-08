@@ -31,9 +31,10 @@ function NewPatientForm(props) {
     adresses: "",
     gender: "ذكر",
     age: "",
+    monthAge: "",
     weight: "",
     description: "",
-    fumbling:"",
+    fumbling: "",
     diseases: [],
   });
 
@@ -171,6 +172,22 @@ function NewPatientForm(props) {
           label={<FormattedMessage id={"Age"} defaultMessage="Hello, World!" />}
           type="number" // Specifies that the input should accept numeric values
         />
+        <TextField
+          id="outlined-required"
+          size="small"
+          onChange={(event) =>
+            handleInputChange("monthAge", event.target.value)
+          } // Update the name state
+          sx={{
+            width: "33%",
+            color: "#fff",
+          }}
+          label={
+            <FormattedMessage id={"monthAge"} defaultMessage="Hello, World!" />
+          }
+          type="number" // Specifies that the input should accept numeric values
+        />
+
         <TextField
           // required
           id="outlined-required"

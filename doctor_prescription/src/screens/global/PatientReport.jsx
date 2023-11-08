@@ -91,7 +91,8 @@ function PatientReport(props) {
           </div>
         ))}
 
-        {props.medicalReportsStype.nameActive && props.medicalReportsStype.nameAbsoulateActive ? (
+        {props.medicalReportsStype.nameActive &&
+        props.medicalReportsStype.nameAbsoulateActive ? (
           <div
             className={`flex gap-2 ${
               props.medicalReportsStype.nameAbsoulateActive ? "absolute" : ""
@@ -126,7 +127,8 @@ function PatientReport(props) {
         ) : (
           ""
         )}
-        {props.medicalReportsStype.ageActive && props.medicalReportsStype.ageAbsoulateActive ? (
+        {props.medicalReportsStype.ageActive &&
+        props.medicalReportsStype.ageAbsoulateActive ? (
           <div
             className={`flex gap-2 ${
               props.medicalReportsStype.ageAbsoulateActive ? "absolute" : ""
@@ -156,13 +158,18 @@ function PatientReport(props) {
               }}
             >
               {" "}
-              {props.dataToPrint.patients.age}
+              {props.dataToPrint.patients.age > 0
+                ? props.dataToPrint.patients.age
+                : props.dataToPrint.patients.monthAge
+                ? props.dataToPrint.patients.monthAge + " شهر "
+                : "غير معرف"}
             </h2>
           </div>
         ) : (
           ""
         )}
-        {props.medicalReportsStype.dateActive && props.medicalReportsStype.dateAbsoulateActive ? (
+        {props.medicalReportsStype.dateActive &&
+        props.medicalReportsStype.dateAbsoulateActive ? (
           <div
             className={`flex gap-2 ${
               props.medicalReportsStype.dateAbsoulateActive ? "absolute" : ""
@@ -297,7 +304,8 @@ function PatientReport(props) {
             )}
           </div>
           <div className="flex justify-around items-center my-2 ">
-            {props.medicalReportsStype.nameActive   && !props.medicalReportsStype.ageAbsoulateActive? (
+            {props.medicalReportsStype.nameActive &&
+            !props.medicalReportsStype.ageAbsoulateActive ? (
               <div
                 className={`flex gap-2 ${
                   props.medicalReportsStype.nameAbsoulateActive
@@ -334,7 +342,8 @@ function PatientReport(props) {
             ) : (
               ""
             )}
-            {props.medicalReportsStype.ageActive && !props.medicalReportsStype.ageAbsoulateActive ? (
+            {props.medicalReportsStype.ageActive &&
+            !props.medicalReportsStype.ageAbsoulateActive ? (
               <div
                 className={`flex gap-2 ${
                   props.medicalReportsStype.ageAbsoulateActive ? "absolute" : ""
@@ -364,13 +373,18 @@ function PatientReport(props) {
                   }}
                 >
                   {" "}
-                  {props.dataToPrint.patients.age}
+                  {props.dataToPrint.patients.age > 0
+                    ? props.dataToPrint.patients.age
+                    : props.dataToPrint.patients.monthAge
+                    ? props.dataToPrint.patients.monthAge + " شهر "
+                    : "غير معرف"}
                 </h2>
               </div>
             ) : (
               ""
             )}
-            {props.medicalReportsStype.dateActive  && !props.medicalReportsStype.dateAbsoulateActive ? (
+            {props.medicalReportsStype.dateActive &&
+            !props.medicalReportsStype.dateAbsoulateActive ? (
               <div
                 className={`flex gap-2 ${
                   props.medicalReportsStype.dateAbsoulateActive

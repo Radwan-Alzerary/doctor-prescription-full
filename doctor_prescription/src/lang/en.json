@@ -16,6 +16,8 @@
   "PatientName": "Patient Name",
   "Date": "Date",
   "Age": "Age",
+  "monthAge": "age-month",
+
   "Gender": "Gender",
   "Address": "Address",
   "Weight": "Weight",
@@ -101,6 +103,5 @@
   "edit": "edit",
   "manufacureName": "manufacture Name",
   "serialNumber": "serial Number",
-  "SurgenNarcosisName":"Narcosis Name"
-
+  "SurgenNarcosisName": "Narcosis Name"
 }

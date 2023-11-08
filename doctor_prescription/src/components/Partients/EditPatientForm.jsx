@@ -60,6 +60,7 @@ function EditPatientForm(props) {
     adresses: "",
     gender: "ذكر",
     age: "",
+    monthAge: "",
     weight: "",
     description: "",
     diseases: "",
@@ -174,6 +175,21 @@ function EditPatientForm(props) {
           type="number" // Specifies that the input should accept numeric values
           // defaultValue="Hello World"
         />
+                <TextField
+          // required
+          id="outlined-required"
+          size="small"
+          value={formData.monthAge}
+          onChange={(event) => handleInputChange("monthAge", event.target.value)} // Update the name state
+          sx={{
+            width: "33%",
+            color: "#fff",
+          }}
+          label="العمر بالاشهر"
+          type="number" // Specifies that the input should accept numeric values
+          // defaultValue="Hello World"
+        />
+
         <TextField
           // required
           id="outlined-required"

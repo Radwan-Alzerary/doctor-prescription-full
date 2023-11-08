@@ -26,6 +26,7 @@ router.post("/new", async (req, res) => {
     patientsDate.adresses = req.body.adresses;
     patientsDate.gender = req.body.gender;
     patientsDate.age = req.body.age;
+    patientsDate.monthAge = req.body.monthAge;
     patientsDate.length = req.body.length;
     patientsDate.weight = req.body.weight;
     patientsDate.description = req.body.description;
@@ -67,6 +68,7 @@ router.post("/edit", async (req, res) => {
       adresses: req.body.adresses,
       gender: req.body.gender,
       age: req.body.age,
+      monthAge: req.body.monthAge,
       length: req.body.length,
       weight: req.body.weight,
       description: req.body.description,

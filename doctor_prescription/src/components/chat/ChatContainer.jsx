@@ -101,7 +101,6 @@ export default function ChatContainer({ currentChat, currentUser, socket ,onName
                     )}
                     <div className="content ">
                       <div className="avatar"></div>
-
                       <p>{message.message}</p>
                     </div>
                     {message.fromSelf ? (
