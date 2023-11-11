@@ -102,11 +102,13 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
 
     col1: { type: String, default: "NO." },
     col1Active: { type: Boolean, default: true },
-    drugNameSize :{type:Number,default:1},
-    drugNameColor :{type:String,default:"#000"},
-    drugTradeNameSize :{type:Number,default:1},
-    drugTradeNameColor :{type:String,default:"#000"},
-
+    drugNameSize: { type: Number, default: 1 },
+    drugNameColor: { type: String, default: "#000" },
+    drugTradeNameSize: { type: Number, default: 1 },
+    drugTradeNameColor: { type: String, default: "#000" },
+    reportAligne: { type: String, default: "center" },
+    reportTextDistance: { type: Number },
+    reportTextSize: { type: Number, default: 1 },
     col2: { type: String, default: "DRUG NAME" },
     col2Active: { type: Boolean, default: true },
     col3: { type: String, default: "DOSES" },

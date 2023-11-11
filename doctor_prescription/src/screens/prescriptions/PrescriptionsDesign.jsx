@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import PatientReport from "../global/PatientReport";
 import {
   Checkbox,
+  FormControl,
   FormControlLabel,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
   Switch,
   TextField,
   ToggleButton,
@@ -1256,7 +1260,6 @@ function PrescriptionsDesign() {
                     ></TextField>
                   </div>
                 </div>
-
               </div>
             </div>
 
@@ -1668,6 +1671,44 @@ function PrescriptionsDesign() {
               >
                 اضافة نص جديد
               </div>
+              <TextField
+                value={medicalReportsStype.reportTextDistance}
+                onChange={(event) => {
+                  handleInputChange("reportTextDistance", event.target.value);
+                }}
+                label="المسافة بين الكلمات في التقرير"
+                size="small"
+                type="number"
+                sx={{ width: "60%" }}
+              ></TextField>
+              <FormControl className=" w-1/3 bg-whiteh" size="small">
+                <InputLabel id="demo-simple-select-helper-label">
+                  محاذاه التقرير
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-helper-label"
+                  id="demo-simple-select-helper"
+                  value={medicalReportsStype.reportAligne}
+                  onChange={(event) =>
+                    handleInputChange("reportAligne", event.target.value)
+                  } // Update the name state
+                  label="المسافة بين الكلمات في التقرير"
+                >
+                  <MenuItem value={"right"}>يمين</MenuItem>
+                  <MenuItem value={"left"}>يسار </MenuItem>
+                  <MenuItem value={"center"}>وسط </MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                value={medicalReportsStype.reportTextSize}
+                onChange={(event) => {
+                  handleInputChange("reportTextSize", event.target.value);
+                }}
+                label="حجم خط التقرير"
+                size="small"
+                type="number"
+                sx={{ width: "60%" }}
+              ></TextField>
             </div>
           </div>
 

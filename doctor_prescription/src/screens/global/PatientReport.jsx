@@ -656,9 +656,13 @@ function PatientReport(props) {
                 ) : (
                   <p
                     style={{
-                      fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
+                      fontSize: `${props.medicalReportsStype.reportTextSize}rem`,
                       color: `${props.medicalReportsStype.tableContentColor}`,
+                      textAlign: `${props.medicalReportsStype.reportAligne}`,
+                      lineHeight: `${props.medicalReportsStype.reportTextDistance}`,
+                      overflow: "auto",
                     }}
+                    className="px-4"
                   >
                     {props.dataToPrint.data}
                   </p>
