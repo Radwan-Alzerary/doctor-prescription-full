@@ -97,7 +97,7 @@ router.post("/ubdateData", async (req, res) => {
       // Handle the case where the prescription is not found
       return res.status(404).json({ message: "Prescription not found" });
     }
-    if (prescription.MedicalDiagnosis) {
+    if (req.body.data.diagnosis.length > 0) {
       prescription.MedicalDiagnosis = req.body.data.diagnosis;
     }
 
@@ -132,7 +132,7 @@ router.post("/ubdateData", async (req, res) => {
         prescriptionCount: 1,
       });
     }
-    console.log(req.body.data)
+    console.log(req.body.data);
     if (req.body.data.nextVisit && req.body.data.nextVisit.length > 0) {
       patient.nextVisit = req.body.data.nextVisit;
     }
