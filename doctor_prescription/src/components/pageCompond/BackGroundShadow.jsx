@@ -10,7 +10,7 @@ function BackGroundShadow(props) {
   return (
     <div
       onClick={handleItemClick}
-      className=" fixed  right-0 w-screen h-screen top-0 bg-black opacity-10 z-10"
+      className=" fixed  right-0 w-screen h-screen top-0 bg-black opacity-10 z-30"
     ></div>
   );
 }

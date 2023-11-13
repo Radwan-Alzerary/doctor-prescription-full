@@ -352,6 +352,7 @@ function Partients() {
 
   const [showCalendar, setShowCalendar] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [profileRefresh, setProfileRefresh] = useState(false);
   const [showPartientsAddForm, setShowPartientsAddForm] = useState(false);
   const [showPartientsEditForm, setShowPartientsEditForm] = useState(false);
   const [showAddReportForm, setShowAddReportForm] = useState(false);
@@ -360,6 +361,8 @@ function Partients() {
   const [showMidicalForm, setShowMidicalForm] = useState(false);
   const [userEditData, setUserEditData] = useState([]);
   const [userData, setUserData] = useState([]);
+  const [showReportEditForm, setShowReportEditForm] = useState(false);
+  const [showLabReportEditForm, setShowLabReportEditForm] = useState(false);
 
   const [partientsSelectId, setPartientsSelectId] = useState("");
   const [PrescriptionId, setPrescriptionId] = useState("");
@@ -391,10 +394,87 @@ function Partients() {
       key: "selection",
     },
   ]);
+  const [selectedReport, setSelectedReport] = useState({});
+  const [selectedaLabory, setSelectedaLabory] = useState({});
   const currentURL = window.location.origin; // Get the current URL
   const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
-
   const [midscapeData, setMidscapeData] = useState([]);
+
+  const handleReportDelete = (id) => {
+    axios
+      .delete(`${serverAddress}/medicalreports/delete/${id}/`)
+      .then((response) => {
+        setProfileRefresh(!profileRefresh);
+      })
+      .catch((error) => {
+        setLoading(() => true);
+        console.error(`Error deleting category with ID ${id}:`, error);
+      });
+  };
+  const handleEditReportData = (data) => {
+    axios
+      .post(`${serverAddress}/medicalreports/editone`, {
+        id: selectedReport._id,
+        data: data,
+      })
+      .then((response) => {
+        setProfileRefresh(!profileRefresh);
+        setShowReportEditForm(false);
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+  };
+  const handleReportEdit = (id) => {
+    axios
+      .get(`${serverAddress}/medicalreports/getone/${id}`)
+      .then((response) => {
+        setSelectedReport(response.data);
+        setShowReportEditForm(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
+
+  const handleLabReportEdit = (id) => {
+    axios
+      .get(`${serverAddress}/labory/getone/${id}`)
+      .then((response) => {
+        setSelectedaLabory(response.data);
+        setShowLabReportEditForm(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
+  const handleLabReportDelete = (id) => {
+    axios
+      .delete(`${serverAddress}/labory/delete/${id}/`)
+      .then((response) => {
+        setProfileRefresh(!profileRefresh);
+      })
+      .catch((error) => {
+        setLoading(() => true);
+        console.error(`Error deleting category with ID ${id}:`, error);
+      });
+  };
+  const handleEditLabReportData = (data) => {
+    axios
+      .post(`${serverAddress}/labory/editone`, {
+        id: selectedaLabory._id,
+        data: data,
+      })
+      .then((response) => {
+        setProfileRefresh(!profileRefresh);
+        setShowLabReportEditForm(false);
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+  };
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -773,6 +853,7 @@ function Partients() {
       `
       )
       .then((response) => {
+        setProfileRefresh(!profileRefresh)
         // Handle success, e.g., show a success message or update the categories list
         getPatientsList();
         // You might want to update the categories list here to reflect the changes
@@ -1153,7 +1234,16 @@ function Partients() {
               setShowPartientProfile(false);
             }}
           ></BackGroundShadow>
-          <PartientsProfile partientId={partientsSelectId}></PartientsProfile>
+          <PartientsProfile
+            refresh={profileRefresh}
+            handleReportEdit={handleReportEdit}
+            handleReportDelete={handleReportDelete}
+            handleLabReportEdit={handleLabReportEdit}
+            handleLabReportDelete={handleLabReportDelete}
+            partientId={partientsSelectId}
+            onPrescriptionDeleteHande={HandleOnPrescriptionDeleteHande}
+            onPrescriptionEditHandel={onPrescriptionEditHandel}
+          ></PartientsProfile>
         </>
       ) : (
         ""
@@ -1188,7 +1278,26 @@ function Partients() {
           <NewMedicalReporyForm
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterClickText}
+            type="new"
             onFormSubmit={handleNewReportData}
+          ></NewMedicalReporyForm>
+        </>
+      ) : (
+        ""
+      )}
+
+      {showReportEditForm ? (
+        <>
+          <BackGroundShadow
+            onClick={() => {
+              setShowReportEditForm(false);
+            }}
+          ></BackGroundShadow>
+          <NewMedicalReporyForm
+            partientsSelectId={partientsSelectId}
+            type="edit"
+            data={selectedReport}
+            onFormSubmit={handleEditReportData}
           ></NewMedicalReporyForm>
         </>
       ) : (
@@ -1206,6 +1315,26 @@ function Partients() {
       ) : (
         ""
       )}
+      {showLabReportEditForm ? (
+        <>
+          <BackGroundShadow
+            onClick={() => {
+              setShowLabReportEditForm(false);
+            }}
+          ></BackGroundShadow>
+          <AddLaboratoryExamination
+            partientsSelectId={partientsSelectId}
+            onPrinterClick={HandleonPrinterClickText}
+            onFormSubmit={handleEditLabReportData}
+            
+            type="edit"
+            data={selectedaLabory}
+          ></AddLaboratoryExamination>
+        </>
+      ) : (
+        ""
+      )}
+
       {canceleAlert ? (
         <CancelAlert
           onCancelHande={onCancelHande}

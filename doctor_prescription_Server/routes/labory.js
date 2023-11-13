@@ -58,6 +58,31 @@ router.get("/getall", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+router.get("/getone/:id", async (req, res) => {
+  try {
+    const medicalreports = await Labory.findById(req.params.id);
+    res.json(medicalreports);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+router.post("/editone/", async (req, res) => {
+  try {
+    console.log(req.body)
+    console.log(req.body)
+    console.log(req.body)
+    console.log(req.body)
+    console.log(req.body)
+    const medicalreports = await Labory.findByIdAndUpdate(req.body.id,{report : req.body.data.report});
+    res.json(medicalreports);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Delete one Medicalreports by ID
 
 // Delete one Medicalreports by ID
 router.delete("/delete/:id", async (req, res) => {

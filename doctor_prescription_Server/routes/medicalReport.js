@@ -50,10 +50,31 @@ router.post("/new", async (req, res) => {
   }
 });
 
+
 // Get all Medicalreports
 router.get("/getall", async (req, res) => {
   try {
     const medicalreports = await Medicalreports.find();
+    res.json(medicalreports);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/getone/:id", async (req, res) => {
+  try {
+    const medicalreports = await Medicalreports.findById(req.params.id);
+    res.json(medicalreports);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+router.post("/editone/", async (req, res) => {
+  try {
+    console.log(req.body)
+    const medicalreports = await Medicalreports.findByIdAndUpdate(req.body.id,{report : req.body.data.report});
     res.json(medicalreports);
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -18,6 +18,10 @@ function PartientsProfile(props) {
   useEffect(() => {
     refreshPaitent();
   }, []);
+  useEffect(() => {
+    refreshPaitent();
+  }, [props.refresh]);
+
   const refreshPaitent = () => {
     axios
       .get(`${serverAddress}/patients/medicalinfo/${props.partientId}`)
@@ -30,7 +34,7 @@ function PartientsProfile(props) {
       });
   };
   return (
-    <form className="fixed flex flex-col  left-[50%] top-[50%]  transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 h-[85%] bg-slate-50 p-5 rounded-xl z-50">
+    <form className="fixed flex flex-col  left-[50%] top-[50%]  transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 h-[85%] bg-slate-50 p-5 rounded-xl z-30">
       <div className="  w-full flex flex-col  text-center items-center">
         <Avatar
           className="w-full"
@@ -115,7 +119,13 @@ function PartientsProfile(props) {
                 {partientsProfile.age ? (
                   <p>
                     العمر :{partientsProfile.age ? partientsProfile.age : 0} سنة
-                    <p> {partientsProfile.monthAge ? partientsProfile.monthAge : 0} شهر</p>
+                    <p>
+                      {" "}
+                      {partientsProfile.monthAge
+                        ? partientsProfile.monthAge
+                        : 0}{" "}
+                      شهر
+                    </p>
                   </p>
                 ) : (
                   ""
@@ -166,7 +176,9 @@ function PartientsProfile(props) {
       {profileSelect === "prescriptionSite" ? (
         <>
           <PrescriptionTable
-            prescriptionData={partientsProfile.prescription}
+            prescriptionData={partientsProfile.prescription} partientsProfileId={partientsProfile._id}
+            onPrescriptionEditHandel={props.onPrescriptionEditHandel}
+            onPrescriptionDeleteHande={props.onPrescriptionDeleteHande}
           ></PrescriptionTable>
         </>
       ) : (
@@ -175,6 +187,8 @@ function PartientsProfile(props) {
       {profileSelect === "reportSite" ? (
         <>
           <MedicalReportTable
+            handleReportDelete={props.handleReportDelete}
+            handleReportEdit={props.handleReportEdit}
             medicalReportData={partientsProfile.medicalReport}
           ></MedicalReportTable>
         </>
@@ -185,6 +199,8 @@ function PartientsProfile(props) {
         <>
           <LaboryReportTable
             laboryData={partientsProfile.labory}
+            handleLabReportEdit={props.handleLabReportEdit}
+            handleLabReportDelete={props.handleLabReportDelete}
           ></LaboryReportTable>
         </>
       ) : (

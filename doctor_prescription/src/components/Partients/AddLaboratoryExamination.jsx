@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   // ... (your other imports)
   Button,
@@ -13,12 +13,24 @@ function AddLaboratoryExamination({
   onFormSubmit,
   partientsSelectId,
   onPrinterClick,
+  type,
+  data
 }) {
   // Define state to store form input data
   const [formData, setFormData] = useState({
     report: "",
     patientId: partientsSelectId,
   });
+  useEffect(() => {
+    if (type === "edit") {
+      setFormData({
+        ...formData,
+        report: data.report,
+      });
+    }
+  }, []);
+
+
   const [locale, setLocale] = useState(() => {
     return Cookies.get("locale") || "ar";
   });
@@ -61,6 +73,7 @@ function AddLaboratoryExamination({
         <TextField
           id="outlined-required"
           size="small"
+          value={formData.report}
           onChange={(event) => handleInputChange("report", event.target.value)} // Update the name state
           sx={{
             width: "100%",

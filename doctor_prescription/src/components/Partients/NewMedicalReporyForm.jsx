@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   // ... (your other imports)
   Button,
@@ -14,6 +14,8 @@ function NewMedicalReporyForm({
   onFormSubmit,
   partientsSelectId,
   onPrinterClick,
+  type,
+  data
 }) {
   // Define state to store form input data
   const [formData, setFormData] = useState({
@@ -23,6 +25,14 @@ function NewMedicalReporyForm({
   const [locale, setLocale] = useState(() => {
     return Cookies.get("locale") || "ar";
   });
+  useEffect(() => {
+    if (type === "edit") {
+      setFormData({
+        ...formData,
+        report: data.report,
+      });
+    }
+  }, []);
 
   // Handle form submission
   const handleSubmit = (event) => {
@@ -60,6 +70,7 @@ function NewMedicalReporyForm({
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
           id="outlined-required"
+          value={formData.report}
           size="small"
           onChange={(event) => handleInputChange("report", event.target.value)} // Update the name state
           sx={{
@@ -98,7 +109,6 @@ function NewMedicalReporyForm({
         >
           <PrintRounded color="action"></PrintRounded>
         </IconButton>
-        {/* <VoiceRecoed setInputValue={setFormData} /> */}
       </div>{" "}
     </form>
   );
