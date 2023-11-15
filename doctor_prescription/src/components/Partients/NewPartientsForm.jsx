@@ -41,6 +41,7 @@ function EditPartients(props) {
   const handeAddBill = () => {
     const dataBillForm = {};
     dataBillForm.dose = dose;
+    dataBillForm.x = dose;
     dataBillForm.billId = billId;
     dataBillForm.tradeName = tradeName;
     dataBillForm.billName = inputValue;
@@ -116,7 +117,12 @@ function EditPartients(props) {
     // Call the onFormSubmit function passed as a prop with the formData
     props.onFormSubmit(prescriptionData);
   };
-
+  console.log(props)
+  console.log(props)
+  console.log(props)
+  console.log(props)
+  console.log(props)
+  console.log(props)
   // Handle changes in form fields
   console.log(props.partientId);
   return (
@@ -139,7 +145,7 @@ function EditPartients(props) {
       <TextField
         onChange={(event) => {
           setDiagnosis(event.target.value);
-        }}
+        }}                    
         id="outlined-multiline-static"
         size="small"
         sx={{
