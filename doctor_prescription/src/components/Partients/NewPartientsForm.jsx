@@ -60,6 +60,15 @@ function EditPartients(props) {
   });
 
   useEffect(() => {
+    if (
+      props.editPrescriptionData &&
+      props.editPrescriptionData.MedicalDiagnosis
+    ) {
+      setDiagnosis(props.editPrescriptionData.MedicalDiagnosis);
+    }
+  }, []);
+
+  useEffect(() => {
     console.log(inputValue);
     if (value !== null && typeof value === "object" && "_id" in value) {
       setBillId(value._id);
@@ -70,7 +79,6 @@ function EditPartients(props) {
         setTradeName(value.tradeName);
       }
     }
-
     if (value && value.intaketime) {
       setInTakeTime(value.intaketime._id);
       setShowInTakeOtherInput(false);
@@ -117,12 +125,12 @@ function EditPartients(props) {
     // Call the onFormSubmit function passed as a prop with the formData
     props.onFormSubmit(prescriptionData);
   };
-  console.log(props)
-  console.log(props)
-  console.log(props)
-  console.log(props)
-  console.log(props)
-  console.log(props)
+  console.log(props);
+  console.log(props);
+  console.log(props);
+  console.log(props);
+  console.log(props);
+  console.log(props);
   // Handle changes in form fields
   console.log(props.partientId);
   return (
@@ -145,7 +153,8 @@ function EditPartients(props) {
       <TextField
         onChange={(event) => {
           setDiagnosis(event.target.value);
-        }}                    
+        }}
+        value={diagnosis}
         id="outlined-multiline-static"
         size="small"
         sx={{
