@@ -52,6 +52,13 @@ function EditPartients(props) {
     dataBillForm.partientId = props.partientId;
     dataBillForm.PrescriptionId = props.PrescriptionId;
     props.onBillAdded(dataBillForm);
+    setDose("");
+    setTradeName("");
+    setDoseNumFirst("");
+    setDoseNumSecend("");
+    setInTakeTime("");
+    setInTakeTimeOther("");
+    setDescription("");
   };
   const filterOptions = createFilterOptions({
     ignoreCase: true,
@@ -342,7 +349,7 @@ function EditPartients(props) {
                       setInTakeTime(event.target.value);
 
                       handleInTakeTimeInputChange(event.target.value);
-                    }} // Update the name state
+                    }}
                   >
                     {props.inTakeTimeList.map((inTakeTime, index) => (
                       <MenuItem value={inTakeTime._id}>
