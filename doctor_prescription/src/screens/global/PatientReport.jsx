@@ -202,7 +202,11 @@ function PatientReport(props) {
               {!props.dataToPrint.textonly
                 ? new Date(
                     props.dataToPrint.prescription.createdAt
-                  ).toLocaleDateString()
+                  ).toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                  })
                 : ""}
             </h2>
           </div>
@@ -419,7 +423,11 @@ function PatientReport(props) {
                   {!props.dataToPrint.textonly
                     ? new Date(
                         props.dataToPrint.prescription.createdAt
-                      ).toLocaleDateString()
+                      ).toLocaleDateString('en-GB', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: "numeric",
+                      })
                     : ""}
                 </h2>
               </div>

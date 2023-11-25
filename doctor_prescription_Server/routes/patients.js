@@ -178,7 +178,6 @@ router.get("/medicalinfo/:partientId", async (req, res) => {
       .populate("medicalReport")
       .populate("diseases")
       .populate("labory");
-
     console.log(patients);
     res.json(patients);
   } catch (error) {
