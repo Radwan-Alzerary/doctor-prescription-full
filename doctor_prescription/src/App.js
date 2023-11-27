@@ -6,6 +6,7 @@ import Partients from "./screens/patients/Partients";
 import Dashboard from "./screens/dashboard/Dashboard";
 import Pharmaceutical from "./screens/pharmaceutical/Pharmaceutical";
 import Setting from "./screens/setting/Setting";
+import "quill/dist/quill.snow.css"; // Add css for snow theme
 
 import Header from "./screens/global/Header";
 import { IntlProvider } from "react-intl";

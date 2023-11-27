@@ -1532,6 +1532,7 @@ function PrescriptionsDesign() {
                 size="small"
                 sx={{ width: "20%" }}
               ></TextField>
+              
               <TextField
                 value={medicalReportsStype.bottomPading}
                 onChange={(event) => {

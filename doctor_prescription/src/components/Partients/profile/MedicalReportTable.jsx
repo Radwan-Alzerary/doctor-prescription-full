@@ -6,7 +6,6 @@ import { blue, red } from "@mui/material/colors";
 import { useState } from "react";
 import NewMedicalReporyForm from "../NewMedicalReporyForm";
 import BackGroundShadow from "../../pageCompond/BackGroundShadow";
-
 export default function MedicalReportTable(props) {
   const columns = [
     // { field: '_id', headerName: 'ID', width: 70 },
@@ -29,7 +28,24 @@ export default function MedicalReportTable(props) {
         return formattedDate;
       },
     },
-    { field: "report", headerName: "التقرير", width: "330" },
+    { field: "report", headerName: "التقرير", width: "330",      renderCell: (params) => (
+      <div
+      className="p-editor-content ql-container ql-snow"
+      style={{
+        border: "none",
+        borderColor: "#000",
+        direction: "ltr",
+      }}
+    >
+      <div
+        className="ql-editor"
+        dangerouslySetInnerHTML={{
+          __html: params.row.report,
+        }}
+      ></div>
+    </div>
+),
+},
     {
       field: "actions",
       headerName: "الخيارات",

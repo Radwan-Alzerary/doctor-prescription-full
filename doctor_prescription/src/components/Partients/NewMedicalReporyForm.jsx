@@ -9,14 +9,23 @@ import { PrintRounded } from "@mui/icons-material";
 import VoiceRecoed from "../../screens/global/VoiceRecoed";
 import Cookies from "js-cookie";
 import { FormattedMessage } from "react-intl";
-
+// import "quill/dist/quill.snow.css"; // Add css for snow theme
+// import "quill/dist/quill.bubble.css"; // Add css for bubble theme
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+import { Editor } from "primereact/editor";
+import axios from "axios";
 function NewMedicalReporyForm({
   onFormSubmit,
   partientsSelectId,
   onPrinterClick,
   type,
-  data
+  data,
+  medicalReportsStype,
+  changeReportHeaderName
 }) {
+const [headerName,setHeaderName]=useState(medicalReportsStype.reportHeaderName)
   // Define state to store form input data
   const [formData, setFormData] = useState({
     report: "",
@@ -33,7 +42,12 @@ function NewMedicalReporyForm({
       });
     }
   }, []);
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
 
+  useEffect(()=>{
+    changeReportHeaderName(headerName)
+  },[headerName])
   // Handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -58,6 +72,7 @@ function NewMedicalReporyForm({
         direction: locale === "en" ? "ltr" : "rtl",
       }}
     >
+      <TextField value={headerName} size="small" sx={{textAlign:"center"}} onChange={(e)=>{setHeaderName(e.target.value)}}></TextField>
       <div className=" text-right w-full">
         <h5>
           {" "}
@@ -67,23 +82,15 @@ function NewMedicalReporyForm({
           />
         </h5>
       </div>
-      <div className="flex flex-col justify-center items-center gap-4  w-full">
-        <TextField
-          id="outlined-required"
+      <div style={{ direction: "ltr" }} className="w-full my-3">
+        <Editor
           value={formData.report}
-          size="small"
-          onChange={(event) => handleInputChange("report", event.target.value)} // Update the name state
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          label={
-            <FormattedMessage id={"Report"} defaultMessage="Hello, World!" />
-          }
-          multiline
-          rows={3}
-          // defaultValue="Hello World"
-        />
+          className=" h-56"
+          onTextChange={(e) => handleInputChange("report", e.htmlValue)}
+        ></Editor>
+      </div>
+      <div className="flex flex-col justify-center items-center gap-4  w-full">
+        <div className="w-full" style={{ direction: "ltr" }}></div>
       </div>
       <div className="flex gap-6 w-full justify-between">
         <IconButton>

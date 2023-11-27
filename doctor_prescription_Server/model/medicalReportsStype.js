@@ -79,7 +79,7 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
       type: String,
       default: "1",
     },
-
+    reportHeaderName:{type:String,default:"التقرير"},
     imagesRandom: [
       {
         url: { type: String },

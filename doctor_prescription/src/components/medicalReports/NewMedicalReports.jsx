@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  // ... (your other imports)
   Button,
   FormControl,
   InputLabel,
@@ -31,7 +30,6 @@ function NewMedicalReports({ onFormSubmit }) {
       [name]: value,
     });
   };
-
   return (
     <form
       onSubmit={handleSubmit}

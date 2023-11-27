@@ -8,19 +8,6 @@ export default function AfterSurgeryImage(props) {
   const currentURL = window.location.origin; // Get the current URL
   const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
   console.log(props.images)
-  console.log(props.images)
-  console.log(props.images)
-  console.log(props.images)
-  console.log(props.images)
-  console.log(props.images)
-  console.log(props.images)
-  console.log(props.images)
-  console.log(props.images)
-  console.log(props.images)
-  console.log(props.images)
-  console.log(props.images)
-  console.log(props.images)
-  console.log(props.images)
   const handleFileChange = async (file) => {
     const selectedFile = file;
     setFile(selectedFile);

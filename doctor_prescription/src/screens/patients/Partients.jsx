@@ -475,6 +475,24 @@ function Partients() {
         console.error("Error making POST request:", error);
       });
   };
+const changeReportHeaderName = (headerName)=>{
+  const data = { "reportHeaderName": headerName };
+    console.log(medicalReportsStype);
+    axios
+      .post(`${serverAddress}/medicaleeportstyle/update`, {
+        id: medicalReportsStype._id,
+        data: data,
+      })
+      .then((response) => {
+        // Handle the response if needed
+        getMedicalReportsStyle()
+        console.log("POST request successful:", response.data);
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+}
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -1276,9 +1294,11 @@ function Partients() {
           {" "}
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewMedicalReporyForm
+          medicalReportsStype={medicalReportsStype}
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterClickText}
             type="new"
+            changeReportHeaderName={changeReportHeaderName}
             onFormSubmit={handleNewReportData}
           ></NewMedicalReporyForm>
         </>

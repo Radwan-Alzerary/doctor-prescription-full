@@ -202,10 +202,10 @@ function PatientReport(props) {
               {!props.dataToPrint.textonly
                 ? new Date(
                     props.dataToPrint.prescription.createdAt
-                  ).toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
+                  ).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
                   })
                 : ""}
             </h2>
@@ -423,9 +423,9 @@ function PatientReport(props) {
                   {!props.dataToPrint.textonly
                     ? new Date(
                         props.dataToPrint.prescription.createdAt
-                      ).toLocaleDateString('en-GB', {
-                        day: '2-digit',
-                        month: '2-digit',
+                      ).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
                         year: "numeric",
                       })
                     : ""}
@@ -553,7 +553,7 @@ function PatientReport(props) {
                         color: `${props.medicalReportsStype.tableHeaderColor}`,
                       }}
                     >
-                      التقرير
+                      {props.medicalReportsStype.reportHeaderName}
                     </p>
                   </div>
                 )}
@@ -662,18 +662,21 @@ function PatientReport(props) {
                     )}
                   </tbody>
                 ) : (
-                  <p
+                  <div
+                    className="p-editor-content ql-container ql-snow"
                     style={{
-                      fontSize: `${props.medicalReportsStype.reportTextSize}rem`,
-                      color: `${props.medicalReportsStype.tableContentColor}`,
-                      textAlign: `${props.medicalReportsStype.reportAligne}`,
-                      lineHeight: `${props.medicalReportsStype.reportTextDistance}`,
-                      overflow: "auto",
+                      border: "none",
+                      borderColor: "#000",
+                      direction: "ltr",
                     }}
-                    className="px-4"
                   >
-                    {props.dataToPrint.data}
-                  </p>
+                    <div
+                      className="ql-editor"
+                      dangerouslySetInnerHTML={{
+                        __html: props.dataToPrint.data,
+                      }}
+                    ></div>
+                  </div>
                 )}
               </table>
             </div>
