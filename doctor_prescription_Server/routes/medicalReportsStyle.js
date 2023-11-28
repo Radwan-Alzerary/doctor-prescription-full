@@ -211,6 +211,10 @@ router.post("/updatemiddle", async (req, res) => {
         doc.HeaderMidleText[req.body.index].text = req.body.data;
       } else if (req.body.text == "size") {
         doc.HeaderMidleText[req.body.index].size = req.body.data;
+      } else if (req.body.text == "textWeight") {
+        doc.HeaderMidleText[req.body.index].textWeight = req.body.data;
+      }else if (req.body.text == "marginB") {
+        doc.HeaderMidleText[req.body.index].marginB = req.body.data;
       }
     } else if (req.body.type == "right") {
       if (req.body.text == "Color") {
@@ -219,6 +223,10 @@ router.post("/updatemiddle", async (req, res) => {
         doc.HeaderRightText[req.body.index].text = req.body.data;
       } else if (req.body.text == "size") {
         doc.HeaderRightText[req.body.index].size = req.body.data;
+      } else if (req.body.text == "textWeight") {
+        doc.HeaderRightText[req.body.index].textWeight = req.body.data;
+      }else if (req.body.text == "marginB") {
+        doc.HeaderRightText[req.body.index].marginB = req.body.data;
       }
     } else if (req.body.type == "left") {
       if (req.body.text == "Color") {
@@ -227,6 +235,10 @@ router.post("/updatemiddle", async (req, res) => {
         doc.HeaderLeftText[req.body.index].text = req.body.data;
       } else if (req.body.text == "size") {
         doc.HeaderLeftText[req.body.index].size = req.body.data;
+      } else if (req.body.text == "textWeight") {
+        doc.HeaderLeftText[req.body.index].textWeight = req.body.data;
+      }else if (req.body.text == "marginB") {
+        doc.HeaderLeftText[req.body.index].marginB = req.body.data;
       }
     }
 

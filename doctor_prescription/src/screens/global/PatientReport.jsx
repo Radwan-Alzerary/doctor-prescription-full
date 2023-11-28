@@ -41,7 +41,12 @@ function PatientReport(props) {
   });
 
   return (
-    <div className="h-full ">
+    <div
+      className="h-full "
+      style={{
+        backgroundColor: `${props.medicalReportsStype.backgroundColor}`,
+      }}
+    >
       <div
         className="h-full p-4 relative"
         ref={componentRef}
@@ -225,9 +230,11 @@ function PatientReport(props) {
             <div
               style={{ height: `${props.medicalReportsStype.topPading}px` }}
             ></div>
-            <h1
-              className={` font-semibold mb-2`}
+            <div
+              className={`font-black`}
               style={{
+                marginBottom: `${props.medicalReportsStype.mainNameHeaderkniaMarginY}px`,
+
                 fontSize: `${props.medicalReportsStype.mainNameHeaderkniaSize}rem`,
                 color: `${props.medicalReportsStype.mainNameHeaderkniaColor}`,
               }}
@@ -237,10 +244,12 @@ function PatientReport(props) {
               ) : (
                 ""
               )}
-            </h1>
-            <h1
-              className={` font-semibold mb-2`}
+            </div>
+            <div
+              className={` font-black`}
               style={{
+                marginBottom: `${props.medicalReportsStype.mainNameHeaderMarginY}px`,
+
                 fontSize: `${props.medicalReportsStype.mainNameSize}rem`,
                 color: `${props.medicalReportsStype.mainNameHeaderColor}`,
               }}
@@ -250,7 +259,7 @@ function PatientReport(props) {
               ) : (
                 ""
               )}
-            </h1>
+            </div>
             {props.medicalReportsStype.linesActive ? (
               <div className="w-full h-0.5 bg-slate-100 mt-2"></div>
             ) : (
@@ -263,6 +272,10 @@ function PatientReport(props) {
                   <>
                     <p
                       style={{
+                        marginBottom: `${medicalText.marginB}px`,
+
+
+                        fontWeight:`${medicalText.textWeight}`,
                         fontSize: `${medicalText.size}rem`,
                         color: `${medicalText.Color}`,
                       }}
@@ -277,6 +290,9 @@ function PatientReport(props) {
                   <>
                     <p
                       style={{
+                        marginBottom: `${medicalText.marginB}px`,
+
+                       fontWeight:`${medicalText.textWeight}`,
                         fontSize: `${medicalText.size}rem`,
                         color: `${medicalText.Color}`,
                       }}
@@ -291,6 +307,9 @@ function PatientReport(props) {
                   <>
                     <p
                       style={{
+                        marginBottom: `${medicalText.marginB}px`,
+
+                        fontWeight:`${medicalText.textWeight}`,
                         fontSize: `${medicalText.size}rem`,
                         color: `${medicalText.Color}`,
                       }}

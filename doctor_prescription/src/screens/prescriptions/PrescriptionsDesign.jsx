@@ -240,7 +240,7 @@ function PrescriptionsDesign() {
     <div className=" h-[91vh] overflow-auto">
       {loading ? (
         <div className="flex justify-around p-3">
-          <div className="w-[60%]">
+          <div className="w-[50%]">
             <div className="flex w-full mt-4 font-bold">
               <p>معلومات الكنية</p>
             </div>
@@ -253,6 +253,19 @@ function PrescriptionsDesign() {
                   handleInputChange("mainNameHeaderknia", event.target.value);
                 }}
               ></TextField>
+              <TextField
+                value={medicalReportsStype.mainNameHeaderkniaMarginY}
+                label="ازاحة سفلية"
+                type="number"
+                size="small"
+                onChange={(event) => {
+                  handleInputChange(
+                    "mainNameHeaderkniaMarginY",
+                    event.target.value
+                  );
+                }}
+              ></TextField>
+
               <TextField
                 value={medicalReportsStype.mainNameHeaderkniaSize}
                 onChange={(event) => {
@@ -313,6 +326,19 @@ function PrescriptionsDesign() {
                   handleInputChange("mainNameHeader", event.target.value);
                 }}
               ></TextField>
+              <TextField
+                value={medicalReportsStype.mainNameHeaderMarginY}
+                label="ازاحة سفلية"
+                type="number"
+                size="small"
+                onChange={(event) => {
+                  handleInputChange(
+                    "mainNameHeaderMarginY",
+                    event.target.value
+                  );
+                }}
+              ></TextField>
+
               <TextField
                 value={medicalReportsStype.mainNameSize}
                 onChange={(event) => {
@@ -387,6 +413,48 @@ function PrescriptionsDesign() {
                       onChange={(event) => {
                         onMiddleLineInput(
                           "size",
+                          event.target.value,
+                          index,
+                          "middle"
+                        );
+                        console.log(event.target.value);
+                      }}
+                    ></TextField>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        وزن الخط
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={
+                          medicalReportsStype.HeaderMidleText[index].textWeight
+                        }
+                        label="Age"
+                        size="small"
+                        onChange={(event) => {
+                          onMiddleLineInput(
+                            "textWeight",
+                            event.target.value,
+                            index,
+                            "middle"
+                          );
+                          console.log(event.target.value);
+                        }}
+                      >
+                        <MenuItem value={"normal"}>اعتيادي</MenuItem>
+                        <MenuItem value={"bold"}>بولد</MenuItem>
+                        <MenuItem value={"lighter"}>لايت</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <TextField
+                      type="number"
+                      label="ازاحة سفلية"
+                      size="small"
+                      value={medicalReportsStype.HeaderMidleText[index].marginB}
+                      onChange={(event) => {
+                        onMiddleLineInput(
+                          "marginB",
                           event.target.value,
                           index,
                           "middle"
@@ -484,6 +552,48 @@ function PrescriptionsDesign() {
                         console.log(event.target.value);
                       }}
                     ></TextField>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        وزن الخط
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={
+                          medicalReportsStype.HeaderRightText[index].textWeight
+                        }
+                        label="Age"
+                        size="small"
+                        onChange={(event) => {
+                          onMiddleLineInput(
+                            "textWeight",
+                            event.target.value,
+                            index,
+                            "right"
+                          );
+                          console.log(event.target.value);
+                        }}
+                      >
+                        <MenuItem value={"normal"}>اعتيادي</MenuItem>
+                        <MenuItem value={"bold"}>بولد</MenuItem>
+                        <MenuItem value={"lighter"}>لايت</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <TextField
+                      type="number"
+                      label="ازاحة سفلية"
+                      size="small"
+                      value={medicalReportsStype.HeaderRightText[index].marginB}
+                      onChange={(event) => {
+                        onMiddleLineInput(
+                          "marginB",
+                          event.target.value,
+                          index,
+                          "right"
+                        );
+                        console.log(event.target.value);
+                      }}
+                    ></TextField>
 
                     <div className="flex flex-col justify-center items-center">
                       <p>اللون</p>
@@ -567,6 +677,48 @@ function PrescriptionsDesign() {
                       onChange={(event) => {
                         onMiddleLineInput(
                           "size",
+                          event.target.value,
+                          index,
+                          "left"
+                        );
+                        console.log(event.target.value);
+                      }}
+                    ></TextField>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        وزن الخط
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={
+                          medicalReportsStype.HeaderLeftText[index].textWeight
+                        }
+                        label="Age"
+                        size="small"
+                        onChange={(event) => {
+                          onMiddleLineInput(
+                            "textWeight",
+                            event.target.value,
+                            index,
+                            "left"
+                          );
+                          console.log(event.target.value);
+                        }}
+                      >
+                        <MenuItem value={"normal"}>اعتيادي</MenuItem>
+                        <MenuItem value={"bold"}>بولد</MenuItem>
+                        <MenuItem value={"lighter"}>لايت</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <TextField
+                      type="number"
+                      label="ازاحة سفلية"
+                      size="small"
+                      value={medicalReportsStype.HeaderLeftText[index].marginB}
+                      onChange={(event) => {
+                        onMiddleLineInput(
+                          "marginB",
                           event.target.value,
                           index,
                           "left"
@@ -1532,7 +1684,7 @@ function PrescriptionsDesign() {
                 size="small"
                 sx={{ width: "20%" }}
               ></TextField>
-              
+
               <TextField
                 value={medicalReportsStype.bottomPading}
                 onChange={(event) => {
@@ -1713,7 +1865,7 @@ function PrescriptionsDesign() {
             </div>
           </div>
 
-          <div className="h-[100vh] sticky left-0 w-[500px] bg-white">
+          <div className="h-[210mm] sticky left-0 w-[148mm] bg-white">
             <PatientReport
               medicalReportsStype={medicalReportsStype}
               dataToPrint={data}
