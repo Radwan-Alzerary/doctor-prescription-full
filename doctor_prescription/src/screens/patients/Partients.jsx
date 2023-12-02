@@ -475,8 +475,8 @@ function Partients() {
         console.error("Error making POST request:", error);
       });
   };
-const changeReportHeaderName = (headerName)=>{
-  const data = { "reportHeaderName": headerName };
+  const changeReportHeaderName = (headerName) => {
+    const data = { reportHeaderName: headerName };
     console.log(medicalReportsStype);
     axios
       .post(`${serverAddress}/medicaleeportstyle/update`, {
@@ -485,14 +485,14 @@ const changeReportHeaderName = (headerName)=>{
       })
       .then((response) => {
         // Handle the response if needed
-        getMedicalReportsStyle()
+        getMedicalReportsStyle();
         console.log("POST request successful:", response.data);
       })
       .catch((error) => {
         // Handle errors if the request fails
         console.error("Error making POST request:", error);
       });
-}
+  };
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -871,7 +871,7 @@ const changeReportHeaderName = (headerName)=>{
       `
       )
       .then((response) => {
-        setProfileRefresh(!profileRefresh)
+        setProfileRefresh(!profileRefresh);
         // Handle success, e.g., show a success message or update the categories list
         getPatientsList();
         // You might want to update the categories list here to reflect the changes
@@ -1269,11 +1269,13 @@ const changeReportHeaderName = (headerName)=>{
       {showPartientsEditForm ? (
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
-          <EditPatientForm
+          <NewPatientForm
+            currentUser={currentUser}
+            type={"edit"}
             constantDiseases={constantDiseases}
             onFormSubmit={handleEditPatientData}
-            userEditData={userEditData}
-          ></EditPatientForm>
+            data={userEditData}
+          ></NewPatientForm>
         </>
       ) : (
         ""
@@ -1294,7 +1296,7 @@ const changeReportHeaderName = (headerName)=>{
           {" "}
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewMedicalReporyForm
-          medicalReportsStype={medicalReportsStype}
+            medicalReportsStype={medicalReportsStype}
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterClickText}
             type="new"
@@ -1346,7 +1348,6 @@ const changeReportHeaderName = (headerName)=>{
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterClickText}
             onFormSubmit={handleEditLabReportData}
-            
             type="edit"
             data={selectedaLabory}
           ></AddLaboratoryExamination>

@@ -37,6 +37,24 @@ function NewPatientForm(props) {
     fumbling: "",
     diseases: [],
   });
+  useEffect(() => {
+    if (props.type === "edit") {
+      setFormData({
+        ...formData,
+        name: props.data.name,
+        phonNumber: props.data.phonNumber,
+        adresses:props.data.adresses,
+        gender: props.data.gender,
+        age: props.data.age,
+        monthAge: props.data.monthAge,
+        weight: props.data.weight,
+        description: props.data.description,
+        fumbling: props.data.fumbling,
+        diseases: props.data.diseases,
+      });
+      console.log(props.data)
+    }
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -72,6 +90,7 @@ function NewPatientForm(props) {
           required
           id="outlined-required"
           size="small"
+          value={formData.name}
           onChange={(event) => handleInputChange("name", event.target.value)} // Update the name state
           sx={{
             width: "30%",
@@ -93,6 +112,8 @@ function NewPatientForm(props) {
           // required
           id="outlined-required"
           size="small"
+          value={formData.phonNumber}
+
           onChange={(event) =>
             handleInputChange("phonNumber", event.target.value)
           } // Update the name state
@@ -115,6 +136,8 @@ function NewPatientForm(props) {
         <TextField
           id="outlined-required"
           size="small"
+          value={formData.adresses}
+
           onChange={(event) =>
             handleInputChange("adresses", event.target.value)
           }
@@ -164,20 +187,28 @@ function NewPatientForm(props) {
         <TextField
           id="outlined-required"
           size="small"
-          onChange={(event) => handleInputChange("age", event.target.value)} // Update the name state
+          onChange={(event) => {
+            if (/^\d*\.?\d*$/.test(event.target.value)) {
+              handleInputChange("age", event.target.value);
+            } // Update the name state
+          }}
           sx={{
             width: "33%",
             color: "#fff",
           }}
           label={<FormattedMessage id={"Age"} defaultMessage="Hello, World!" />}
-          type="number" // Specifies that the input should accept numeric values
+          type="text" // Specifies that the input should accept numeric values
         />
         <TextField
           id="outlined-required"
           size="small"
-          onChange={(event) =>
-            handleInputChange("monthAge", event.target.value)
-          } // Update the name state
+          value={formData.monthAge}
+          onChange={(event) => {
+            // Check if the parsed value is a valid number
+            if (/^\d*\.?\d*$/.test(event.target.value)) {
+              handleInputChange("monthAge", event.target.value);
+            }
+          }} // Update the name state
           sx={{
             width: "33%",
             color: "#fff",
@@ -185,14 +216,18 @@ function NewPatientForm(props) {
           label={
             <FormattedMessage id={"monthAge"} defaultMessage="Hello, World!" />
           }
-          type="number" // Specifies that the input should accept numeric values
         />
 
         <TextField
           // required
           id="outlined-required"
           size="small"
-          onChange={(event) => handleInputChange("weight", event.target.value)} // Update the name state
+          value={formData.weight}
+          onChange={(event) => {
+            if (/^\d*\.?\d*$/.test(event.target.value)) {
+              handleInputChange("weight", event.target.value);
+            } // Update the name state
+          }}
           sx={{
             width: "33%",
             color: "#fff",
@@ -200,12 +235,14 @@ function NewPatientForm(props) {
           label={
             <FormattedMessage id={"Weight"} defaultMessage="Hello, World!" />
           }
-          type="number" // Specifies that the input should accept numeric values
+          type="text" // Specifies that the input should accept numeric values
         />
         <TextField
           dir="rtl"
           id="outlined-required"
           size="small"
+          value={formData.length}
+
           onChange={(event) => handleInputChange("length", event.target.value)} // Update the name state
           sx={{
             width: "33%",
@@ -277,6 +314,7 @@ function NewPatientForm(props) {
             dir="rtl"
             id="outlined-required"
             size="small"
+            value={formData.fumbling}
             onChange={(event) =>
               handleInputChange("fumbling", event.target.value)
             } // Update the name state

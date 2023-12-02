@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import Cookies from "js-cookie";
 import { DateTimePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 function EditPartients(props) {
   const [value, setValue] = useState("");
   const [pharmaceuticalInputs, setPharmaceuticalInputs] = useState(true);
@@ -194,6 +195,16 @@ function EditPartients(props) {
           <DateTimePicker
             onChange={(newValue) => setNextVisit(newValue.$d)}
             className="w-full"
+            renderInput={(props) => (
+              <TextField
+                {...props}
+                size="small"
+                className="w-full"
+                helperText=""
+                value={props.value ? dayjs(nextVisit).format('DD/MM/YYYY') : ''}
+              />
+            )}
+        
           />
         </LocalizationProvider>
       </div>

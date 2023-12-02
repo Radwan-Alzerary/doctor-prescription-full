@@ -273,8 +273,6 @@ function PatientReport(props) {
                     <p
                       style={{
                         marginBottom: `${medicalText.marginB}px`,
-
-
                         fontWeight:`${medicalText.textWeight}`,
                         fontSize: `${medicalText.size}rem`,
                         color: `${medicalText.Color}`,
@@ -291,7 +289,6 @@ function PatientReport(props) {
                     <p
                       style={{
                         marginBottom: `${medicalText.marginB}px`,
-
                        fontWeight:`${medicalText.textWeight}`,
                         fontSize: `${medicalText.size}rem`,
                         color: `${medicalText.Color}`,
@@ -308,7 +305,6 @@ function PatientReport(props) {
                     <p
                       style={{
                         marginBottom: `${medicalText.marginB}px`,
-
                         fontWeight:`${medicalText.textWeight}`,
                         fontSize: `${medicalText.size}rem`,
                         color: `${medicalText.Color}`,

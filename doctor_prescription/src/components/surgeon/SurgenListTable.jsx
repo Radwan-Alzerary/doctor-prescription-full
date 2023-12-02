@@ -243,7 +243,9 @@ export default function SurgenListTable(props) {
                         scope="row"
                         padding="none"
                       >
-                        {row.Patients.name}
+                        {row.Patients && row.Patients.name
+                          ? row.Patients.name
+                          : ""}
                       </TableCell>
                       <TableCell align="center">
                         {row.SurgicalProceduresType.name}
