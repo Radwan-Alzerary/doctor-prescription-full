@@ -56,6 +56,7 @@ function NewPatientForm(props) {
     }
   }, []);
 
+
   const handleSubmit = (event) => {
     event.preventDefault();
     props.onFormSubmit(formData);
@@ -303,7 +304,6 @@ function NewPatientForm(props) {
           </div>
           <div className=" text-right w-full">
             <h5>
-              {" "}
               <FormattedMessage
                 id={"Allergy to medications"}
                 defaultMessage="Hello, World!"

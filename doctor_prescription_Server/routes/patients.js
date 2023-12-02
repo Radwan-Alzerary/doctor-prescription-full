@@ -79,22 +79,31 @@ router.post("/edit", async (req, res) => {
       previousSurgeries: req.body.previousSurgeries,
       familyHistory: req.body.familyHistory,
     };
-
-    if (req.body.diseases) {
-      const diseasesArrayId = [];
-      const objects = req.body.diseases.split("},{");
-      const jsonArrayString = "[" + objects.join("},{") + "]";
-      const diseasesArray = JSON.parse(jsonArrayString);
-      diseasesArray.forEach((disease) => {
-        diseasesArrayId.push(disease.constantDiseasesId);
-      });
-
-      updatedData.diseases = diseasesArrayId;
-    }
     // Find the patient by ID and update their data
-    const updatedPatient = await Patients.findByIdAndUpdate(id, updatedData, {
-      new: true,
-    });
+    console.log(id)
+    const updatedPatient = await Patients.findByIdAndUpdate(
+      id,
+      {
+        name: req.body.name,
+        phonNumber: req.body.phonNumber,
+        adresses: req.body.adresses,
+        gender: req.body.gender,
+        age: req.body.age,
+        monthAge: req.body.monthAge,
+        length: req.body.length,
+        weight: req.body.weight,
+        description: req.body.description,
+        fumbling: req.body.fumbling,
+        medicalDiagnosis: req.body.medicalDiagnosis,
+        currentMedicalHistory: req.body.currentMedicalHistory,
+        medicalHistory: req.body.medicalHistory,
+        previousSurgeries: req.body.previousSurgeries,
+        familyHistory: req.body.familyHistory,
+      },
+      {
+        new: true,
+      }
+    );
 
     if (!updatedPatient) {
       return res.status(404).json({ error: "Patient not found" });
@@ -310,7 +319,6 @@ router.get("/upcoming", async (req, res) => {
 });
 
 router.post("/galaryimage", upload.single("image"), async (req, res, next) => {
-
   const imagePath = req.file ? "/img/" + req.file.filename : null;
   try {
     const medicalReportsStype = await Patients.findByIdAndUpdate(

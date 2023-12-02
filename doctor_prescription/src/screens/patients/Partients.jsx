@@ -744,7 +744,7 @@ function Partients() {
   };
 
   const handleEditPatientData = (data) => {
-    data.id = partientsSelectId;
+    data.id = userEditData._id;
     axios
       .post(`${serverAddress}/patients/edit`, data)
       .then((response) => {
