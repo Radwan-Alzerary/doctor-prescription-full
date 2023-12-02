@@ -30,7 +30,38 @@ router.post("/new", async (req, res) => {
     patientsDate.length = req.body.length;
     patientsDate.weight = req.body.weight;
     patientsDate.description = req.body.description;
+    const diseasesArray = req.body.diseases;
+    const resultArray = [];
+    for (const diseaseName of diseasesArray) {
+      const existingDisease = await ConstantDiseases.findOne({
+        name: diseaseName,
+      });
 
+      if (existingDisease) {
+        resultArray.push(existingDisease._id.toString());
+      } else {
+        const newDisease = { name: diseaseName };
+        const insertResult = new ConstantDiseases(newDisease);
+        await insertResult.save();
+        resultArray.push(insertResult._id.toString());
+      }
+    }
+    patientsDate.diseases = resultArray;
+    console.log(resultArray);
+    const patients = new Patients(patientsDate);
+    await patients.save();
+    res.status(201).json(patients);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+router.post("/edit", async (req, res) => {
+  try {
+    console.log(req.body);
+    const id = req.body.id; // Extract the ID from the URL parameter
+    // Find the patient by ID and update their data
+    console.log(id);
+    const ubdateData = req.body;
     const diseasesArray = req.body.diseases;
     const resultArray = [];
 
@@ -48,67 +79,14 @@ router.post("/new", async (req, res) => {
         resultArray.push(insertResult._id.toString());
       }
     }
-
-    patientsDate.diseases = resultArray;
-    console.log(resultArray);
-    const patients = new Patients(patientsDate);
-    await patients.save();
-    res.status(201).json(patients);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-router.post("/edit", async (req, res) => {
-  try {
-    console.log(req.body);
-    const id = req.body.id; // Extract the ID from the URL parameter
-    const updatedData = {
-      name: req.body.name,
-      phonNumber: req.body.phonNumber,
-      adresses: req.body.adresses,
-      gender: req.body.gender,
-      age: req.body.age,
-      monthAge: req.body.monthAge,
-      length: req.body.length,
-      weight: req.body.weight,
-      description: req.body.description,
-      fumbling: req.body.fumbling,
-      medicalDiagnosis: req.body.medicalDiagnosis,
-      currentMedicalHistory: req.body.currentMedicalHistory,
-      medicalHistory: req.body.medicalHistory,
-      previousSurgeries: req.body.previousSurgeries,
-      familyHistory: req.body.familyHistory,
-    };
-    // Find the patient by ID and update their data
-    console.log(id)
-    const updatedPatient = await Patients.findByIdAndUpdate(
-      id,
-      {
-        name: req.body.name,
-        phonNumber: req.body.phonNumber,
-        adresses: req.body.adresses,
-        gender: req.body.gender,
-        age: req.body.age,
-        monthAge: req.body.monthAge,
-        length: req.body.length,
-        weight: req.body.weight,
-        description: req.body.description,
-        fumbling: req.body.fumbling,
-        medicalDiagnosis: req.body.medicalDiagnosis,
-        currentMedicalHistory: req.body.currentMedicalHistory,
-        medicalHistory: req.body.medicalHistory,
-        previousSurgeries: req.body.previousSurgeries,
-        familyHistory: req.body.familyHistory,
-      },
-      {
-        new: true,
-      }
-    );
+    ubdateData.diseases = resultArray
+    const updatedPatient = await Patients.findByIdAndUpdate(id, ubdateData, {
+      new: true,
+    });
 
     if (!updatedPatient) {
       return res.status(404).json({ error: "Patient not found" });
     }
-
     res.status(200).json(updatedPatient);
   } catch (error) {
     res.status(400).json({ error: error.message });

@@ -11,9 +11,11 @@ import {
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
+import { json } from "react-router-dom";
 
 function NewPatientForm(props) {
   const [historyPatient, setHistoryPatient] = useState([]);
+  console.log(historyPatient);
   const [locale, setLocale] = useState(() => {
     return Cookies.get("locale") || "ar";
   });
@@ -24,6 +26,9 @@ function NewPatientForm(props) {
       diseases: value, // Assuming you want them as a comma-separated string
     });
   };
+  useEffect(() => {
+    console.log(historyPatient);
+  }, [historyPatient]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -33,29 +38,39 @@ function NewPatientForm(props) {
     age: "",
     monthAge: "",
     weight: "",
+    length: "",
     description: "",
     fumbling: "",
     diseases: [],
   });
   useEffect(() => {
+    // setHistoryPatient(props.data.diseases);
+    const diseasesArray = [];
+
+    if (props.data.diseases) {
+      props.data.diseases.forEach((element) => {
+        diseasesArray.push(element.name);
+      });
+      setHistoryPatient(diseasesArray);
+    }
     if (props.type === "edit") {
       setFormData({
         ...formData,
         name: props.data.name,
         phonNumber: props.data.phonNumber,
-        adresses:props.data.adresses,
+        adresses: props.data.adresses,
         gender: props.data.gender,
         age: props.data.age,
         monthAge: props.data.monthAge,
         weight: props.data.weight,
+        length: props.data.length,
         description: props.data.description,
         fumbling: props.data.fumbling,
         diseases: props.data.diseases,
       });
-      console.log(props.data)
+      console.log(props.data);
     }
   }, []);
-
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -114,7 +129,6 @@ function NewPatientForm(props) {
           id="outlined-required"
           size="small"
           value={formData.phonNumber}
-
           onChange={(event) =>
             handleInputChange("phonNumber", event.target.value)
           } // Update the name state
@@ -138,7 +152,6 @@ function NewPatientForm(props) {
           id="outlined-required"
           size="small"
           value={formData.adresses}
-
           onChange={(event) =>
             handleInputChange("adresses", event.target.value)
           }
@@ -188,6 +201,7 @@ function NewPatientForm(props) {
         <TextField
           id="outlined-required"
           size="small"
+          value={formData.age}
           onChange={(event) => {
             if (/^\d*\.?\d*$/.test(event.target.value)) {
               handleInputChange("age", event.target.value);
@@ -243,7 +257,6 @@ function NewPatientForm(props) {
           id="outlined-required"
           size="small"
           value={formData.length}
-
           onChange={(event) => handleInputChange("length", event.target.value)} // Update the name state
           sx={{
             width: "33%",
@@ -270,6 +283,7 @@ function NewPatientForm(props) {
               multiple
               sx={{ width: "100%" }}
               id="tags-filled"
+              value={historyPatient}
               onChange={(event, newValue) => {
                 handleChange(event, newValue);
                 setHistoryPatient(newValue);
