@@ -45,15 +45,17 @@ function NewPatientForm(props) {
   });
   useEffect(() => {
     // setHistoryPatient(props.data.diseases);
-    const diseasesArray = [];
 
-    if (props.data.diseases) {
-      props.data.diseases.forEach((element) => {
-        diseasesArray.push(element.name);
-      });
-      setHistoryPatient(diseasesArray);
-    }
     if (props.type === "edit") {
+      if (props.data.diseases) {
+        const diseasesArray = [];
+
+        props.data.diseases.forEach((element) => {
+          diseasesArray.push(element.name);
+          setHistoryPatient(diseasesArray);
+        });
+      }
+
       setFormData({
         ...formData,
         name: props.data.name,
