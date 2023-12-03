@@ -58,10 +58,76 @@ function NewSurgenPatient(props) {
 
   useEffect(() => {
     if (props.type === "edit") {
+      let patientData = { id: "", name: "", age: "", gender: "" };
+      let surgeryType = { id: "", name: "", description: "" };
+      let sutrgeryNarcosis = {
+        id: "",
+        name: "",
+        description: "",
+        startTime: dayjs(),
+        endTime: dayjs(),
+      };
+      let productDevice = {
+        id: "",
+        name: "",
+        description: "",
+        manufacureName: "",
+        serialNumber: "",
+      };
+      let SurgicalProceduresType = { startTime: dayjs(), endTime: dayjs() };
+
+      if (props.data.Patients) {
+        patientData = {
+          id: props.data.Patients._id,
+          name: props.data.Patients.name,
+          age: props.data.Patients.age,
+          gender: props.data.Patients.gender,
+        };
+      }
+      if (props.data.SurgicalProceduresDevice) {
+        productDevice = {
+          id: props.data.SurgicalProceduresDevice._id,
+          name: props.data.SurgicalProceduresDevice.name,
+          description: props.data.SurgicalProceduresDevice.description,
+          manufacureName: props.data.SurgicalProceduresDevice.manufacureName,
+          serialNumber: props.data.SurgicalProceduresDevice.serialNumber,
+        };
+      }
+      if(props.data.SurgicalProceduresNarcosis){
+        sutrgeryNarcosis={
+          id: props.data.SurgicalProceduresNarcosis._id,
+          name: props.data.SurgicalProceduresNarcosis.name,
+          description: props.data.SurgicalProceduresNarcosis.description,
+          startTime: dayjs(props.data.SurgicalProceduresNarcosis.startTime),
+          endTime: dayjs(props.data.SurgicalProceduresNarcosis.endTime),
+  
+        }
+      }
+
+      console.log(props.data);
       setFormData({
         ...formData,
-        name: props.data.name,
-        description: props.data.description,
+        name: "",
+        description: "",
+        patient: patientData,
+        patientGender: "",
+        surgeryType: { id: "", name: "", description: "" },
+        sutrgeryNarcosis: sutrgeryNarcosis,
+        productDevice: productDevice,
+        SurgicalProceduresType: { startTime: dayjs(), endTime: dayjs() },
+        SurgeryDate: dayjs(),
+        startTime: dayjs(),
+        endTime: dayjs(),
+        HospitalName: "",
+        SurgeryName: "",
+        SurgeryResult: "",
+        SurgeryCost: "",
+        comment: "",
+        SurgeryAssistantName: "",
+        priority: "",
+        diagnosis: "",
+        procedure: "",
+        dangerLevel: "",
       });
     }
   }, []);
@@ -185,6 +251,7 @@ function NewSurgenPatient(props) {
             freeSolo
             size="small"
             disableListWrap
+            value={formData.patient}
             disablePortal
             id="combo-box-demo"
             options={props.patientList}

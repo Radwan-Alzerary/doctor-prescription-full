@@ -121,7 +121,11 @@ router.get("/surgery/", async (req, res) => {
 // Get a single SurgicalProceduresType by ID
 router.get("/surgery/:id", async (req, res) => {
   try {
-    const surgicalProcedures = await SurgicalProcedures.findById(req.params.id);
+    const surgicalProcedures = await SurgicalProcedures.findById(req.params.id)
+      .populate("Patients")
+      .populate("SurgicalProceduresDevice")
+      .populate("SurgicalProceduresNarcosis")
+      .populate("SurgicalProceduresType");
     if (!surgicalProcedures) {
       return res.status(404).json({ error: "SurgicalProcedures not found" });
     }

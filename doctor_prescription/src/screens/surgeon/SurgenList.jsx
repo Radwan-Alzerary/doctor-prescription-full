@@ -243,6 +243,12 @@ function SurgenList() {
                   currentNewSurgery={currentNewSurgery}
                   type={"edit"}
                   data={editingData}
+                  patientList={patientList}
+                  surgicalProceduresTypeList={surgicalProceduresTypeList}
+                  surgicalProceduresDeviceList={surgicalProceduresDeviceList}
+                  surgicalProceduresNarcosisList={
+                    surgicalProceduresNarcosisList
+                  }
                   onFormSubmit={handleEditFormData}
                   refreshCurrentSurgery={refreshCurrentSurgery}
                 ></NewSurgenPatient>

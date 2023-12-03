@@ -62,24 +62,27 @@ router.post("/edit", async (req, res) => {
     // Find the patient by ID and update their data
     console.log(id);
     const ubdateData = req.body;
-    const diseasesArray = req.body.diseases;
-    const resultArray = [];
+    if (req.body.diseases) {
+      const diseasesArray = req.body.diseases;
+      const resultArray = [];
 
-    for (const diseaseName of diseasesArray) {
-      const existingDisease = await ConstantDiseases.findOne({
-        name: diseaseName,
-      });
+      for (const diseaseName of diseasesArray) {
+        const existingDisease = await ConstantDiseases.findOne({
+          name: diseaseName,
+        });
 
-      if (existingDisease) {
-        resultArray.push(existingDisease._id.toString());
-      } else {
-        const newDisease = { name: diseaseName };
-        const insertResult = new ConstantDiseases(newDisease);
-        await insertResult.save();
-        resultArray.push(insertResult._id.toString());
+        if (existingDisease) {
+          resultArray.push(existingDisease._id.toString());
+        } else {
+          const newDisease = { name: diseaseName };
+          const insertResult = new ConstantDiseases(newDisease);
+          await insertResult.save();
+          resultArray.push(insertResult._id.toString());
+        }
       }
+      ubdateData.diseases = resultArray;
     }
-    ubdateData.diseases = resultArray
+
     const updatedPatient = await Patients.findByIdAndUpdate(id, ubdateData, {
       new: true,
     });
