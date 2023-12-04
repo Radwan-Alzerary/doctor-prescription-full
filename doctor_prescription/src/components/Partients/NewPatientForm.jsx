@@ -8,6 +8,8 @@ import {
   Select,
   TextField,
 } from "@mui/material";
+import axios from "axios";
+
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -15,6 +17,7 @@ import { json } from "react-router-dom";
 
 function NewPatientForm(props) {
   const [historyPatient, setHistoryPatient] = useState([]);
+  const [userAvailableCheck, setUserAvailableCheck] = useState(false);
   console.log(historyPatient);
   const [locale, setLocale] = useState(() => {
     return Cookies.get("locale") || "ar";
@@ -78,7 +81,21 @@ function NewPatientForm(props) {
     event.preventDefault();
     props.onFormSubmit(formData);
   };
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
 
+  const checkAvailableUser = (name) => {
+    console.log(name);
+    axios
+      .get(`${serverAddress}/patients/checkuser/${name}`)
+      .then((response) => {
+        setUserAvailableCheck(response.data.result);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
+  useEffect(() => {}, [userAvailableCheck]);
   // Handle changes in form fields
   const handleInputChange = (name, value) => {
     setFormData({
@@ -109,10 +126,16 @@ function NewPatientForm(props) {
           id="outlined-required"
           size="small"
           value={formData.name}
-          onChange={(event) => handleInputChange("name", event.target.value)} // Update the name state
+          onChange={(event) => {
+            handleInputChange("name", event.target.value);
+            checkAvailableUser(event.target.value);
+          }} // Update the name state
+          
           sx={{
             width: "30%",
+            border:"#000",
             textAlign: "right",
+            
             color: "#fff",
           }}
           label={
@@ -360,8 +383,13 @@ function NewPatientForm(props) {
         }}
         label={<FormattedMessage id={"Notes"} defaultMessage="Hello, World!" />}
       />
-
+      {userAvailableCheck ? (
+        <p className=" text-red-600 font-semibold">هذا المستخدم موجود</p>
+      ) : (
+        ""
+      )}
       <Button
+        disabled={userAvailableCheck}
         type="submit"
         variant="contained"
         className="w-full"

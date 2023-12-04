@@ -240,6 +240,25 @@ router.get("/getone/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+router.get("/checkuser/:name", async (req, res) => {
+  try {
+    const patients = await Patients.findOne({ name: req.params.name });
+    if (!patients) {
+      return res.json({ result: false });
+    } else {
+      res.json({ result: true });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+router.get("/checkuser/", async (req, res) => {
+  try {
+     res.json({ result: false });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 router.get(
   "/printpatientsdata/:Patientsid/prescription/:prescriptionId",
   async (req, res) => {
@@ -310,7 +329,6 @@ router.get("/upcoming", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 router.post("/galaryimage", upload.single("image"), async (req, res, next) => {
   const imagePath = req.file ? "/img/" + req.file.filename : null;
   try {

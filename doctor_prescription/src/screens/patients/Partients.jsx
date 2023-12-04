@@ -745,7 +745,6 @@ function Partients() {
 
     // Update the state or perform actions with the data as needed
   };
-
   const handleEditPatientData = (data) => {
     data.id = userEditData._id;
     axios
@@ -1256,6 +1255,8 @@ function Partients() {
             }}
           ></BackGroundShadow>
           <PartientsProfile
+          userEditData={userEditData}
+          handleEditPatientData={handleEditPatientData}
             refresh={profileRefresh}
             handleReportEdit={handleReportEdit}
             handleReportDelete={handleReportDelete}

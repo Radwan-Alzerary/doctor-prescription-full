@@ -19,7 +19,6 @@ const PatientsSchema = new mongoose.Schema(
     monthAge: {
       type: Number,
     },
-
     weight: {
       type: Number,
     },

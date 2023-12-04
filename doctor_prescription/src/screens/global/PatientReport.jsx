@@ -249,7 +249,10 @@ function PatientReport(props) {
                 color: `${props.medicalReportsStype.weightColor}`,
               }}
             >
-              {props.dataToPrint.patients.weight}
+              <div className="flex">
+                <div>Kg</div>
+                <div>{props.dataToPrint.patients.weight}</div>
+              </div>
             </h2>
           </div>
         ) : (
@@ -518,7 +521,10 @@ function PatientReport(props) {
                     color: `${props.medicalReportsStype.weightColor}`,
                   }}
                 >
-                  {props.dataToPrint.patients.weight}
+                  <div className="flex">
+                    <div>Kg</div>
+                    <div>{props.dataToPrint.patients.weight}</div>
+                  </div>
                 </h2>
               </div>
             ) : (
