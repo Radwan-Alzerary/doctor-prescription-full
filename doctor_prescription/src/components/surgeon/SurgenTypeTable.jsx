@@ -23,8 +23,6 @@ const SurgenTypeName = () => {
 const description = () => {
     return <FormattedMessage id={"description"} defaultMessage="Hello, World!" />;
   };
-  
-  
 const optionTr = () => {
   return <FormattedMessage id={"Options"} defaultMessage="Hello, World!" />;
 };

@@ -14,7 +14,7 @@ router.post("/narcosis", async (req, res) => {
   // Get a list of all SurgicalProceduresNarcosis
   router.get("/narcosis", async (req, res) => {
     try {
-      const narcosisList = await SurgicalProceduresNarcosis.find();
+      const narcosisList = await SurgicalProceduresNarcosis.find({ name: { $ne: '' }});
       res.json(narcosisList);
     } catch (err) {
       res.status(500).json({ error: err.message });

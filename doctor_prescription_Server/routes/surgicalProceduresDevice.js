@@ -13,7 +13,7 @@ router.post("/devices", async (req, res) => {
   // Get a list of all SurgicalProceduresDevices
   router.get("/devices", async (req, res) => {
     try {
-      const devices = await SurgicalProceduresDevice.find();
+      const devices = await SurgicalProceduresDevice.find({ name: { $ne: '' }});
       res.json(devices);
     } catch (err) {
       res.status(500).json({ error: err.message });

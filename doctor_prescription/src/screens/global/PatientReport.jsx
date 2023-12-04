@@ -219,6 +219,43 @@ function PatientReport(props) {
           ""
         )}
 
+        {props.medicalReportsStype.weightActive &&
+        props.medicalReportsStype.weightAbsoulateActive ? (
+          <div
+            className={`flex gap-2 ${
+              props.medicalReportsStype.weightAbsoulateActive ? "absolute" : ""
+            }`}
+            style={{
+              top: `${props.medicalReportsStype.weightY}%`,
+              left: `${props.medicalReportsStype.weightX}%`,
+            }}
+          >
+            <h2
+              className=" text-red-500 font-semibold"
+              style={{
+                fontSize: `${props.medicalReportsStype.weightSize}rem`,
+                color: `${props.medicalReportsStype.weightMainTitleColor}`,
+              }}
+            >
+              {props.medicalReportsStype.patientsTitleActive &&
+              props.medicalReportsStype.weightMainTitleActive
+                ? "الوزن : "
+                : ""}
+            </h2>
+            <h2
+              className="font-semibold"
+              style={{
+                fontSize: `${props.medicalReportsStype.weightSize}rem`,
+                color: `${props.medicalReportsStype.weightColor}`,
+              }}
+            >
+              {props.dataToPrint.patients.weight}
+            </h2>
+          </div>
+        ) : (
+          ""
+        )}
+
         {/* Your content to be printed */}
         <div
           className="  h-[96vh] flex flex-col z-1"
@@ -273,7 +310,7 @@ function PatientReport(props) {
                     <p
                       style={{
                         marginBottom: `${medicalText.marginB}px`,
-                        fontWeight:`${medicalText.textWeight}`,
+                        fontWeight: `${medicalText.textWeight}`,
                         fontSize: `${medicalText.size}rem`,
                         color: `${medicalText.Color}`,
                       }}
@@ -289,7 +326,7 @@ function PatientReport(props) {
                     <p
                       style={{
                         marginBottom: `${medicalText.marginB}px`,
-                       fontWeight:`${medicalText.textWeight}`,
+                        fontWeight: `${medicalText.textWeight}`,
                         fontSize: `${medicalText.size}rem`,
                         color: `${medicalText.Color}`,
                       }}
@@ -305,7 +342,7 @@ function PatientReport(props) {
                     <p
                       style={{
                         marginBottom: `${medicalText.marginB}px`,
-                        fontWeight:`${medicalText.textWeight}`,
+                        fontWeight: `${medicalText.textWeight}`,
                         fontSize: `${medicalText.size}rem`,
                         color: `${medicalText.Color}`,
                       }}
@@ -444,6 +481,44 @@ function PatientReport(props) {
                         year: "numeric",
                       })
                     : ""}
+                </h2>
+              </div>
+            ) : (
+              ""
+            )}
+            {props.medicalReportsStype.weightActive &&
+            !props.medicalReportsStype.weightAbsoulateActive ? (
+              <div
+                className={`flex gap-2 ${
+                  props.medicalReportsStype.weightAbsoulateActive
+                    ? "absolute"
+                    : ""
+                }`}
+                style={{
+                  top: `${props.medicalReportsStype.weightY}%`,
+                  left: `${props.medicalReportsStype.weightX}%`,
+                }}
+              >
+                <h2
+                  className=" text-red-500 font-semibold"
+                  style={{
+                    fontSize: `${props.medicalReportsStype.weightSize}rem`,
+                    color: `${props.medicalReportsStype.weightMainTitleColor}`,
+                  }}
+                >
+                  {props.medicalReportsStype.patientsTitleActive &&
+                  props.medicalReportsStype.weightMainTitleActive
+                    ? "الوزن : "
+                    : ""}
+                </h2>
+                <h2
+                  className="font-semibold"
+                  style={{
+                    fontSize: `${props.medicalReportsStype.weightSize}rem`,
+                    color: `${props.medicalReportsStype.weightColor}`,
+                  }}
+                >
+                  {props.dataToPrint.patients.weight}
                 </h2>
               </div>
             ) : (

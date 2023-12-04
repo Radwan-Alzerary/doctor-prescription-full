@@ -95,6 +95,7 @@ function SurgenList() {
       .then((response) => {
         getAllSurgenList();
         setShowAddForm(false);
+        setShowEditForm(false);
 
         // Handle the response if needed
         console.log("POST request successful:", response.data);
@@ -148,6 +149,7 @@ function SurgenList() {
         // Handle success, e.g., show a success message or update the categories list
         console.log(response.data);
         setShowEditForm(true);
+        setCurrentNewSurgery(response.data)
         setEditingData(response.data);
       })
       .catch((error) => {
@@ -249,7 +251,7 @@ function SurgenList() {
                   surgicalProceduresNarcosisList={
                     surgicalProceduresNarcosisList
                   }
-                  onFormSubmit={handleEditFormData}
+                  onFormSubmit={handleFormData}
                   refreshCurrentSurgery={refreshCurrentSurgery}
                 ></NewSurgenPatient>
               </>

@@ -97,7 +97,7 @@ router.post("/edit", async (req, res) => {
 });
 router.get("/getall", async (req, res) => {
   try {
-    const patients = await Patients.find()
+    const patients = await Patients.find({ name: { $ne: "" } })
       .populate({
         path: "prescription",
         match: { active: true }, // Filter prescriptions with active: true
@@ -146,10 +146,16 @@ router.get("/checktoken", async (req, res) => {
 router.get("/getbyname/", async (req, res) => {
   const searchName = req.params.searchName;
   try {
-    const patients = await Patients.find().populate({
-      path: "prescription",
-      match: { active: true }, // Filter prescriptions with active: true
-    });
+    const patients = await Patients.find()
+      .populate({
+        path: "prescription",
+        match: { active: true }, // Filter prescriptions with active: true
+        populate: {
+          path: "pharmaceutical.id",
+        },
+      })
+      .sort({ updatedAt: -1 }); // Sort by 'updatedAt' field in descending order
+
     res.json(patients);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -179,10 +185,16 @@ router.get("/getbyname/:searchName", async (req, res) => {
   try {
     const patients = await Patients.find({
       name: { $regex: searchName, $options: "i" },
-    }).populate({
-      path: "prescription",
-      match: { active: true }, // Filter prescriptions with active: true
-    });
+    })
+      .populate({
+        path: "prescription",
+        match: { active: true }, // Filter prescriptions with active: true
+        populate: {
+          path: "pharmaceutical.id",
+        },
+      })
+      .sort({ updatedAt: -1 }); // Sort by 'updatedAt' field in descending order
+
     res.json(patients);
   } catch (error) {
     res.status(500).json({ error: error.message });

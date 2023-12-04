@@ -47,7 +47,6 @@ function NewSurgenPatient(props) {
     SurgeryName: "",
     SurgeryResult: "",
     SurgeryCost: "",
-    SurgeryResult: "",
     comment: "",
     SurgeryAssistantName: "",
     priority: "",
@@ -84,6 +83,12 @@ function NewSurgenPatient(props) {
           gender: props.data.Patients.gender,
         };
       }
+      if (props.data.SurgicalProceduresType) {
+        surgeryType = {
+          id: props.data.SurgicalProceduresType._id,
+          name: props.data.SurgicalProceduresType.name,
+        };
+      }
       if (props.data.SurgicalProceduresDevice) {
         productDevice = {
           id: props.data.SurgicalProceduresDevice._id,
@@ -93,15 +98,14 @@ function NewSurgenPatient(props) {
           serialNumber: props.data.SurgicalProceduresDevice.serialNumber,
         };
       }
-      if(props.data.SurgicalProceduresNarcosis){
-        sutrgeryNarcosis={
+      if (props.data.SurgicalProceduresNarcosis) {
+        sutrgeryNarcosis = {
           id: props.data.SurgicalProceduresNarcosis._id,
           name: props.data.SurgicalProceduresNarcosis.name,
           description: props.data.SurgicalProceduresNarcosis.description,
-          startTime: dayjs(props.data.SurgicalProceduresNarcosis.startTime),
-          endTime: dayjs(props.data.SurgicalProceduresNarcosis.endTime),
-  
-        }
+          startTime: dayjs(props.data.NarcosisStartTime),
+          endTime: dayjs(props.data.NarcosisEndTime),
+        };
       }
 
       console.log(props.data);
@@ -110,24 +114,23 @@ function NewSurgenPatient(props) {
         name: "",
         description: "",
         patient: patientData,
-        patientGender: "",
-        surgeryType: { id: "", name: "", description: "" },
+        surgeryType: surgeryType,
         sutrgeryNarcosis: sutrgeryNarcosis,
         productDevice: productDevice,
         SurgicalProceduresType: { startTime: dayjs(), endTime: dayjs() },
-        SurgeryDate: dayjs(),
-        startTime: dayjs(),
-        endTime: dayjs(),
-        HospitalName: "",
-        SurgeryName: "",
-        SurgeryResult: "",
-        SurgeryCost: "",
-        comment: "",
-        SurgeryAssistantName: "",
-        priority: "",
+        SurgeryDate: dayjs(props.data.SurgeryDate),
+        startTime: dayjs(props.data.SurgeryStartTime),
+        endTime: dayjs(props.data.SurgeryEndTime),
+        HospitalName: props.data.HospitalName,
+        SurgeryName: props.data.SurgeryName,
+        SurgeryResult: props.data.SurgeryResult,
+        SurgeryCost: props.data.SurgeryCost,
+        comment: props.data.comment,
+        SurgeryAssistantName: props.data.SurgeryAssistantName,
+        priority: props.data.priority,
         diagnosis: "",
         procedure: "",
-        dangerLevel: "",
+        dangerLevel: props.data.dangerLevel,
       });
     }
   }, []);
@@ -359,9 +362,9 @@ function NewSurgenPatient(props) {
             dir="rtl"
             id="outlined-required"
             size="small"
-            value={formData.description}
+            value={formData.comment}
             onChange={(event) =>
-              handleInputChange("description", event.target.value)
+              handleInputChange("comment", event.target.value)
             }
             sx={{
               width: "100%",
@@ -387,7 +390,33 @@ function NewSurgenPatient(props) {
             disableListWrap
             disablePortal
             id="combo-box-demo"
+            value={formData.surgeryType}
             options={props.surgicalProceduresTypeList}
+            onChange={(event, newValue) => {
+              if (newValue && newValue._id) {
+                // Check if newValue is not null or undefined
+                setFormData((prev) => ({
+                  ...prev,
+                  surgeryType: {
+                    ...prev.surgeryType,
+                    id: newValue._id,
+                    name: newValue.name,
+                  },
+                }));
+              }
+              console.log(formData);
+            }}
+            onInputChange={(event, newInputValue) => {
+              setFormData((prev) => ({
+                ...prev,
+                surgeryType: {
+                  ...prev.surgeryType,
+                  id: "",
+                  name: newInputValue,
+                },
+              }));
+              console.log(formData);
+            }}
             getOptionLabel={(option) => option.name} // Specify the field to use as the label
             sx={{ width: "100%" }}
             renderInput={(params) => (
@@ -554,6 +583,7 @@ function NewSurgenPatient(props) {
             disablePortal
             id="combo-box-demo"
             options={props.surgicalProceduresNarcosisList}
+            value={formData.sutrgeryNarcosis}
             getOptionLabel={(option) => option.name} // Specify the field to use as the label
             onChange={(event, newValue) => {
               if (newValue && newValue._id) {
@@ -654,6 +684,7 @@ function NewSurgenPatient(props) {
             disableListWrap
             disablePortal
             id="combo-box-demo"
+            value={formData.productDevice}
             options={props.surgicalProceduresDeviceList}
             getOptionLabel={(option) => option.name} // Specify the field to use as the label
             onChange={(event, newValue) => {

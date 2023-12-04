@@ -14,7 +14,7 @@ router.post("/types", async (req, res) => {
   // Get a list of all SurgicalProceduresTypes
   router.get("/types", async (req, res) => {
     try {
-      const types = await SurgicalProceduresType.find();
+      const types = await SurgicalProceduresType.find({name: { $ne:''}});
       res.json(types);
     } catch (err) {
       res.status(500).json({ error: err.message });

@@ -595,7 +595,7 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
-  useEffect(() => {
+  const getConstDiseasesApi = ()=>{
     axios
       .get(`${serverAddress}/constantdiseases/getall`)
       .then((response) => {
@@ -604,8 +604,10 @@ function Partients() {
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
-  }, []); // The empty array [] means this effect runs only once, like componentDidMount
+
+  }
   useEffect(() => {
+    getConstDiseasesApi()
     getPatientsList();
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
   const getPatientsList = () => {
@@ -731,6 +733,7 @@ function Partients() {
       .post(`${serverAddress}/patients/new`, data)
       .then((response) => {
         // Handle the response if needed
+        getConstDiseasesApi()
         getPharmaceApi();
         getPatientsList();
         setShowAddForm(false);

@@ -37,9 +37,12 @@ router.post("/new", async (req, res) => {
 // Create a new SurgicalProceduresType
 router.post("/surgery/", async (req, res) => {
   try {
-    console.log(req.body.data);
-
+console.log(req.body.id)
     const currentSurgery = await SurgicalProcedures.findById(req.body.id);
+    if (!currentSurgery) {
+      return res.status(404).json({ error: "Surgery not found" });
+    }
+
     let PatintId = "";
     let narcosisId = "";
     let typeId = "";
@@ -47,36 +50,70 @@ router.post("/surgery/", async (req, res) => {
     if (req.body.data.patient.id) {
       PatintId = req.body.data.patient.id;
     } else {
-      const newPatint = await Patients.create({
+      const checkExisPatients = await Patients.findOne({
         name: req.body.data.patient.name,
-        age: req.body.data.patient.age,
-        gender: req.body.data.patient.gender,
       });
-      PatintId = newPatint._id.toString();
+      if (checkExisPatients) {
+        PatintId = checkExisPatients._id.toString();
+      } else {
+        const newPatint = await Patients.create({
+          name: req.body.data.patient.name,
+          age: req.body.data.patient.age,
+          gender: req.body.data.patient.gender,
+        });
+        PatintId = newPatint._id.toString();
+      }
     }
     if (req.body.data.sutrgeryNarcosis.id) {
       narcosisId = req.body.data.sutrgeryNarcosis.id;
     } else {
-      const newNarcosis = await SurgicalProceduresNarcosis.create({
+      const checkExisNacrosis = await SurgicalProceduresNarcosis.findOne({
         name: req.body.data.sutrgeryNarcosis.name,
       });
-      narcosisId = newNarcosis._id.toString();
+      if (checkExisNacrosis) {
+        narcosisId = checkExisNacrosis._id.toString();
+      } else {
+        const newNarcosis = await SurgicalProceduresNarcosis.create({
+          name: req.body.data.sutrgeryNarcosis.name,
+          description: req.body.data.sutrgeryNarcosis.description,
+        });
+        narcosisId = newNarcosis._id.toString();
+      }
     }
     if (req.body.data.surgeryType.id) {
       typeId = req.body.data.surgeryType.id;
     } else {
-      const newType = await SurgicalProceduresType.create({
+      const checkExisType = await SurgicalProceduresType.findOne({
         name: req.body.data.surgeryType.name,
       });
-      typeId = newType._id.toString();
+      if (checkExisType) {
+        typeId = checkExisType._id.toString();
+      } else {
+        const newType = await SurgicalProceduresType.create({
+          name: req.body.data.surgeryType.name,
+        });
+        typeId = newType._id.toString();
+      }
     }
     if (req.body.data.productDevice.id) {
       productDeviceId = req.body.data.productDevice.id;
     } else {
-      const productDevice = await SurgicalProceduresDevice.create({
+      const checkExisDevice = await SurgicalProceduresDevice.findOne({
         name: req.body.data.productDevice.name,
       });
-      productDeviceId = productDevice._id.toString();
+      console.log(checkExisDevice)
+      if (checkExisDevice) {
+        
+        productDeviceId = checkExisDevice._id.toString();
+      } else {
+        const productDevice = await SurgicalProceduresDevice.create({
+          name: req.body.data.productDevice.name,
+          description: req.body.data.surgeryType.description,
+          manufacureName: req.body.data.surgeryType.manufacureName,
+          serialNumber: req.body.data.surgeryType.serialNumber,
+        });
+        productDeviceId = productDevice._id.toString();
+      }
     }
     currentSurgery.SurgicalProceduresDevice = productDeviceId;
     currentSurgery.SurgicalProceduresNarcosis = narcosisId;
@@ -111,7 +148,9 @@ router.get("/surgery/", async (req, res) => {
       .populate("Patients")
       .populate("SurgicalProceduresDevice")
       .populate("SurgicalProceduresNarcosis")
-      .populate("SurgicalProceduresType");
+      .populate("SurgicalProceduresType")
+      .sort({ updatedAt: -1 }); // Sort by 'updatedAt' field in descending order
+
     res.json(surgicalProcedures);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -126,6 +165,7 @@ router.get("/surgery/:id", async (req, res) => {
       .populate("SurgicalProceduresDevice")
       .populate("SurgicalProceduresNarcosis")
       .populate("SurgicalProceduresType");
+
     if (!surgicalProcedures) {
       return res.status(404).json({ error: "SurgicalProcedures not found" });
     }

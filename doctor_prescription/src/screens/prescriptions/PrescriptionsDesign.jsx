@@ -1142,6 +1142,119 @@ function PrescriptionsDesign() {
                   />
                 </div>
               </div>
+              <div className="flex justify-center items-center flex-col">
+                <p> تفعيل الوزن</p>
+                <FormControlLabel
+                  sx={{
+                    display: "block",
+                  }}
+                  control={
+                    <Switch
+                      checked={medicalReportsStype.weightActive}
+                      onChange={(event) => {
+                        handleInputChange(
+                          "weightActive",
+                          !medicalReportsStype.weightActive
+                        );
+                      }}
+                      color="primary"
+                    />
+                  }
+                />
+                <p> تفعيل العنوان</p>
+                <FormControlLabel
+                  sx={{
+                    display: "block",
+                  }}
+                  control={
+                    <Switch
+                      checked={medicalReportsStype.weightMainTitleActive}
+                      onChange={(event) => {
+                        handleInputChange(
+                          "weightMainTitleActive",
+                          !medicalReportsStype.weightMainTitleActive
+                        );
+                      }}
+                      color="primary"
+                    />
+                  }
+                />
+
+                <p>تفعيل الاحداثي</p>
+                <FormControlLabel
+                  sx={{
+                    display: "block",
+                  }}
+                  control={
+                    <Switch
+                      checked={medicalReportsStype.weightAbsoulateActive}
+                      onChange={(event) => {
+                        handleInputChange(
+                          "weightAbsoulateActive",
+                          !medicalReportsStype.weightAbsoulateActive
+                        );
+                      }}
+                      color="primary"
+                    />
+                  }
+                />
+                <div className="flex justify-center items-center flex-col gap-2">
+                  <TextField
+                    type="number"
+                    label="x"
+                    size="small"
+                    value={medicalReportsStype.weightX}
+                    onChange={(event) => {
+                      handleInputChange("weightX", event.target.value);
+                    }}
+                    inputProps={{ min: "0", max: "100" }}
+                  ></TextField>
+                  <TextField
+                    type="number"
+                    label="y"
+                    size="small"
+                    value={medicalReportsStype.weightY}
+                    onChange={(event) => {
+                      handleInputChange("weightY", event.target.value);
+                    }}
+                    inputProps={{ min: "0", max: "100" }}
+                  ></TextField>
+                  <TextField
+                    type="number"
+                    label="الحجم"
+                    size="small"
+                    value={medicalReportsStype.weightSize}
+                    onChange={(event) => {
+                      handleInputChange("weightSize", event.target.value);
+                    }}
+                    inputProps={{ min: "0", max: "100" }}
+                  ></TextField>
+
+                  <p>اللون</p>
+                  <input
+                    type="color"
+                    className=" border-none rounded-full"
+                    value={medicalReportsStype.weightColor}
+                    onChange={(event) => {
+                      handleInputChange("weightColor", event.target.value);
+                    }}
+                  />
+
+                  <p>لون العنوان</p>
+                  <input
+                    type="color"
+                    className=" border-none rounded-full"
+                    value={medicalReportsStype.weightMainTitleColor}
+                    onChange={(event) => {
+                      handleInputChange(
+                        "weightMainTitleColor",
+                        event.target.value
+                      );
+                    }}
+                  />
+                </div>
+              </div>
+
               {/* <div>
                 <div className="flex flex-col justify-center items-center">
                   <p>اللون العنوان</p>

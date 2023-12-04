@@ -161,6 +161,17 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
     ageMainTitleActive: { type: Boolean, default: true },
     ageMainTitleColor: { type: String, default: "#000" },
 
+    weightActive: { type: Boolean, default: false },
+    weightX: { type: Number, default: 0 },
+    weightY: { type: Number, default: 0 },
+    weightAbsoulateActive: { type: Boolean, default: false },
+    weightColor: { type: String, default: "#000" },
+    weightSize: { type: Number, default: 1 },
+    weightMainTitleActive: { type: Boolean, default: true },
+    weightMainTitleColor: { type: String, default: "#000" },
+
+
+
     dateActive: { type: Boolean, default: true },
     dateX: { type: Number, default: 0 },
     dateY: { type: Number, default: 0 },
