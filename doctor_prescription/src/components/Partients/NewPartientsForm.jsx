@@ -193,9 +193,10 @@ function EditPartients(props) {
           dateAdapter={AdapterDayjs}
         >
           <DateTimePicker
+            renderInput={(props) => <TextField {...props} />}
+            format="DD/MM/YYYY HH:mm"
             onChange={(newValue) => setNextVisit(newValue.$d)}
             className="w-full"
-        
           />
         </LocalizationProvider>
       </div>

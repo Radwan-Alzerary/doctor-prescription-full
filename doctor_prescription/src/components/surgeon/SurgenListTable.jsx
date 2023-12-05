@@ -250,7 +250,7 @@ export default function SurgenListTable(props) {
                       <TableCell align="center">
                         {row.SurgicalProceduresType && row.SurgicalProceduresType.name ? row.SurgicalProceduresType.name : ""}
                       </TableCell>
-                      <TableCell align="center">{row.SurgeryName}</TableCell>
+                      <TableCell align="center">{row.SurgeryName ? row.SurgeryName : ""}</TableCell>
                       <TableCell align="center">
                         {row.SurgicalProceduresNarcosis && row.SurgicalProceduresNarcosis.name ? row.SurgicalProceduresNarcosis.name : ""}
                       </TableCell>

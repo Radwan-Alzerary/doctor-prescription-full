@@ -117,10 +117,10 @@ function Row(props) {
           {row.adresses}
         </TableCell>
         <TableCell component="th" scope="row" align="center">
-          {row.weight}
+          {row.weight ? row.weight+"kg" : ""}
         </TableCell>
         <TableCell component="th" scope="row" align="center">
-          {row.length}
+          {row.length ? row.length+"cm" : ""}
         </TableCell>
         <TableCell component="th" scope="row" align="center">
           {row.visitDate.length}

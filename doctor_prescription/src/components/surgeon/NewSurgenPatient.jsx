@@ -448,6 +448,10 @@ function NewSurgenPatient(props) {
               <DatePicker
                 className="w-full"
                 label="تاريخ العملية"
+                renderInput={(props) => <TextField {...props} />}
+
+                format="DD/MM/YYYY"
+
                 value={formData.SurgeryDate}
                 onChange={(SurgeryDate) =>
                   handleInputChange("SurgeryDate", SurgeryDate)
@@ -658,7 +662,9 @@ function NewSurgenPatient(props) {
               <TimeField
                 className=" w-full "
                 label="وقت انتهاء التخدير"
+
                 value={formData.sutrgeryNarcosis.endTime}
+
                 onChange={(SurgeryDate) => {
                   setFormData({
                     ...formData,
