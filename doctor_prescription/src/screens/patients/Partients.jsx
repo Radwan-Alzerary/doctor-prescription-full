@@ -101,7 +101,8 @@ function Row(props) {
           </div>
         </TableCell>
         <TableCell component="th" scope="row" align="center">
-          {row.age}
+          <div>{row.age ? row.age : 0} سنة</div>
+          <div>{row.monthAge ? row.monthAge : 0} شهر</div>
         </TableCell>
         <TableCell component="th" scope="row" align="center">
           <div
@@ -595,7 +596,7 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
-  const getConstDiseasesApi = ()=>{
+  const getConstDiseasesApi = () => {
     axios
       .get(`${serverAddress}/constantdiseases/getall`)
       .then((response) => {
@@ -604,10 +605,9 @@ function Partients() {
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
-
-  }
+  };
   useEffect(() => {
-    getConstDiseasesApi()
+    getConstDiseasesApi();
     getPatientsList();
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
   const getPatientsList = () => {
@@ -733,7 +733,7 @@ function Partients() {
       .post(`${serverAddress}/patients/new`, data)
       .then((response) => {
         // Handle the response if needed
-        getConstDiseasesApi()
+        getConstDiseasesApi();
         getPharmaceApi();
         getPatientsList();
         setShowAddForm(false);
@@ -1255,8 +1255,8 @@ function Partients() {
             }}
           ></BackGroundShadow>
           <PartientsProfile
-          userEditData={userEditData}
-          handleEditPatientData={handleEditPatientData}
+            userEditData={userEditData}
+            handleEditPatientData={handleEditPatientData}
             refresh={profileRefresh}
             handleReportEdit={handleReportEdit}
             handleReportDelete={handleReportDelete}

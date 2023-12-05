@@ -242,11 +242,20 @@ router.get("/getone/:id", async (req, res) => {
 });
 router.get("/checkuser/:name", async (req, res) => {
   try {
-    const patients = await Patients.findOne({ name: req.params.name });
+    const regex = new RegExp(`^\\s*${req.params.name}`, "i"); // Case-insensitive regex
+
+    const patients = await Patients.findOne({ name: { $regex: regex } });
     if (!patients) {
       return res.json({ result: false });
     } else {
-      res.json({ result: true });
+      console.log(patients.name.replace(/\s/g, ''));
+      console.log(req.params.name.replace(/\s/g, ''))
+      if (patients.name.replace(/\s/g, '') === req.params.name.replace(/\s/g, '')) {
+        console.log("xx");
+        res.json({ result: true });
+      } else {
+        res.json({ result: false });
+      }
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -254,7 +263,7 @@ router.get("/checkuser/:name", async (req, res) => {
 });
 router.get("/checkuser/", async (req, res) => {
   try {
-     res.json({ result: false });
+    res.json({ result: false });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
