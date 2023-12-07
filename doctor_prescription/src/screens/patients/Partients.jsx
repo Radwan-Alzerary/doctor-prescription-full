@@ -57,6 +57,7 @@ import { FormattedMessage } from "react-intl";
 import DateRangePickerComp from "../global/DateRangePickerComp";
 import Loading from "../../components/pageCompond/Loading";
 import CancelAlert from "../../components/pageCompond/CancelAlert";
+import DeleteAlert from "../../components/pageCompond/DeleteAlert";
 
 function Row(props) {
   const { row } = props;
@@ -97,7 +98,14 @@ function Row(props) {
         </TableCell>
         <TableCell component="th" scope="row" align="center">
           <div className="bg-green-200 w-full flex justify-center items-center h-6 rounded-full">
-            {new Date(row.createdAt).toLocaleString()}
+            {new Date(row.createdAt).toLocaleString("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true, // Include this option for AM/PM format
+            })}
           </div>
         </TableCell>
         <TableCell component="th" scope="row" align="center">
@@ -117,10 +125,10 @@ function Row(props) {
           {row.adresses}
         </TableCell>
         <TableCell component="th" scope="row" align="center">
-          {row.weight ? row.weight+"kg" : ""}
+          {row.weight ? row.weight + "kg" : ""}
         </TableCell>
         <TableCell component="th" scope="row" align="center">
-          {row.length ? row.length+"cm" : ""}
+          {row.length ? row.length + "cm" : ""}
         </TableCell>
         <TableCell component="th" scope="row" align="center">
           {row.visitDate.length}
@@ -334,23 +342,6 @@ function Row(props) {
   );
 }
 function Partients() {
-  const defaultFrom = {
-    year: 2019,
-    month: 3,
-    day: 4,
-  };
-
-  const defaultTo = {
-    year: 2019,
-    month: 3,
-    day: 7,
-  };
-
-  const defaultRange = {
-    from: defaultFrom,
-    to: defaultTo,
-  };
-
   const [showCalendar, setShowCalendar] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [profileRefresh, setProfileRefresh] = useState(false);
@@ -383,15 +374,15 @@ function Partients() {
   const [stateQuery, setStateQuery] = useState("");
   const [dateQuery, setDateQuery] = useState("");
   const [settingData, setSettingData] = useState({});
+  const [deleteInfo, setDeleteInfo] = useState({ id: "", type: "" });
 
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [isLoaded, setIsLoaded] = useState(false);
   const [canceleAlert, setCanceleAlert] = useState(false);
+  const [deleteAlert, setDeleteAlert] = useState(false);
   const [range, setRange] = useState([
     {
-      //   startDate: new Date(),
-      //   endDate: addDays(new Date(), 7),
       key: "selection",
     },
   ]);
@@ -402,15 +393,20 @@ function Partients() {
   const [midscapeData, setMidscapeData] = useState([]);
 
   const handleReportDelete = (id) => {
-    axios
-      .delete(`${serverAddress}/medicalreports/delete/${id}/`)
-      .then((response) => {
-        setProfileRefresh(!profileRefresh);
-      })
-      .catch((error) => {
-        setLoading(() => true);
-        console.error(`Error deleting category with ID ${id}:`, error);
-      });
+    if (settingData.abortProssesMsg) {
+      setDeleteInfo({ id: id, type: "reportDelete" });
+      setDeleteAlert(true);
+    } else {
+      axios
+        .delete(`${serverAddress}/medicalreports/delete/${id}/`)
+        .then((response) => {
+          setProfileRefresh(!profileRefresh);
+        })
+        .catch((error) => {
+          setLoading(() => true);
+          console.error(`Error deleting category with ID ${id}:`, error);
+        });
+    }
   };
   const handleEditReportData = (data) => {
     axios
@@ -451,15 +447,20 @@ function Partients() {
       });
   };
   const handleLabReportDelete = (id) => {
-    axios
-      .delete(`${serverAddress}/labory/delete/${id}/`)
-      .then((response) => {
-        setProfileRefresh(!profileRefresh);
-      })
-      .catch((error) => {
-        setLoading(() => true);
-        console.error(`Error deleting category with ID ${id}:`, error);
-      });
+    if (settingData.abortProssesMsg) {
+      setDeleteInfo({ id: id, type: "labDelete" });
+      setDeleteAlert(true);
+    } else {
+      axios
+        .delete(`${serverAddress}/labory/delete/${id}/`)
+        .then((response) => {
+          setProfileRefresh(!profileRefresh);
+        })
+        .catch((error) => {
+          setLoading(() => true);
+          console.error(`Error deleting category with ID ${id}:`, error);
+        });
+    }
   };
   const handleEditLabReportData = (data) => {
     axios
@@ -633,44 +634,53 @@ function Partients() {
     }
   };
   const handleOnBillInsideRemove = (id) => {
-    setLoading(() => false);
-
-    axios
-      .delete(
-        `${serverAddress}/prescription/removebill/${PrescriptionId}/pharmaceutical/${id}`
-      )
-      .then((response) => {
-        setLoading(() => true);
-        // Handle success, e.g., show a success message or update the categories list
-        console.log(`Category with ID ${id} has been deleted.`);
-        getAllPrescription(PrescriptionId);
-        // You might want to update the categories list here to reflect the changes
-      })
-      .catch((error) => {
-        setLoading(() => true);
-        console.error(`Error deleting category with ID ${id}:`, error);
-      });
+    if (settingData.abortProssesMsg) {
+      setDeleteInfo({ id: id, type: "prescriptioBillnDelete" });
+      setDeleteAlert(true);
+    } else {
+      setLoading(() => false);
+      axios
+        .delete(
+          `${serverAddress}/prescription/removebill/${PrescriptionId}/pharmaceutical/${id}`
+        )
+        .then((response) => {
+          setLoading(() => true);
+          // Handle success, e.g., show a success message or update the categories list
+          console.log(`Category with ID ${id} has been deleted.`);
+          getAllPrescription(PrescriptionId);
+          // You might want to update the categories list here to reflect the changes
+        })
+        .catch((error) => {
+          setLoading(() => true);
+          console.error(`Error deleting category with ID ${id}:`, error);
+        });
+    }
   };
   const onShareHande = (id) => {
     console.log(`Share clicked for id ${id}`);
   };
   const onDeleteHande = (id) => {
-    setLoading(false);
-    axios
-      .delete(`${serverAddress}/patients/delete/${id}`)
-      .then((response) => {
-        setLoading(true);
-        getPatientsList();
-        // You might want to update the categories list here to reflect the changes
-      })
-      .catch((error) => {
-        setLoading(true);
+    if (settingData.abortProssesMsg) {
+      setDeleteInfo({ id: id, type: "patientsDelete" });
+      setDeleteAlert(true);
+    } else {
+      setLoading(false);
+      axios
+        .delete(`${serverAddress}/patients/delete/${id}`)
+        .then((response) => {
+          setLoading(true);
+          getPatientsList();
+          // You might want to update the categories list here to reflect the changes
+        })
+        .catch((error) => {
+          setLoading(true);
 
-        // Handle error, e.g., show an error message
-        console.error(`Error deleting category with ID ${id}:`, error);
-      });
+          // Handle error, e.g., show an error message
+          console.error(`Error deleting category with ID ${id}:`, error);
+        });
 
-    console.log(`Delete clicked for id ${id}`);
+      console.log(`Delete clicked for id ${id}`);
+    }
   };
   const onEditHande = (id) => {
     axios
@@ -867,20 +877,28 @@ function Partients() {
       });
   };
   const HandleOnPrescriptionDeleteHande = (patientsId, prescriptionId) => {
-    axios
-      .delete(
-        `${serverAddress}/patients/Patientsid/${patientsId}/prescriptionid/${prescriptionId}
-      `
-      )
-      .then((response) => {
-        setProfileRefresh(!profileRefresh);
-        // Handle success, e.g., show a success message or update the categories list
-        getPatientsList();
-        // You might want to update the categories list here to reflect the changes
-      })
-      .catch((error) => {
-        // Handle error, e.g., show an error message
+    if (settingData.abortProssesMsg) {
+      setDeleteInfo({
+        id: { patientsId, prescriptionId },
+        type: "prescriptioDelete",
       });
+      setDeleteAlert(true);
+    } else {
+      axios
+        .delete(
+          `${serverAddress}/patients/Patientsid/${patientsId}/prescriptionid/${prescriptionId}
+      `
+        )
+        .then((response) => {
+          setProfileRefresh(!profileRefresh);
+          // Handle success, e.g., show a success message or update the categories list
+          getPatientsList();
+          // You might want to update the categories list here to reflect the changes
+        })
+        .catch((error) => {
+          // Handle error, e.g., show an error message
+        });
+    }
   };
   const onPrescriptionEditHandel = (patientsId, prescriptionId) => {
     axios
@@ -902,6 +920,8 @@ function Partients() {
     setShowLaporyReportForm(false);
     setShowPartientsEditForm(false);
     setShowPartientProfile(false);
+    setDeleteAlert(false);
+
     setShowAddReportForm(false);
     setShowMidicalForm(false);
     setShowAddForm(false);
@@ -932,6 +952,85 @@ function Partients() {
 
     onQueryChange();
   }, [ageQuery, stateQuery, genderQuery, dateQuery, range]);
+
+  const onDeleteConfirmHandel = (id, type) => {
+    console.log(id, type);
+    if (type === "patientsDelete") {
+      setLoading(false);
+      axios
+        .delete(`${serverAddress}/patients/delete/${id}`)
+        .then((response) => {
+          setLoading(true);
+          setDeleteAlert(false);
+          getPatientsList();
+          // You might want to update the categories list here to reflect the changes
+        })
+        .catch((error) => {
+          setLoading(true);
+
+          // Handle error, e.g., show an error message
+          console.error(`Error deleting category with ID ${id}:`, error);
+        });
+
+      console.log(`Delete clicked for id ${id}`);
+    } else if (type === "reportDelete") {
+      axios
+        .delete(`${serverAddress}/medicalreports/delete/${id}/`)
+        .then((response) => {
+          setProfileRefresh(!profileRefresh);
+          setDeleteAlert(false);
+        })
+        .catch((error) => {
+          setLoading(() => true);
+          console.error(`Error deleting category with ID ${id}:`, error);
+        });
+    } else if (type === "labDelete") {
+      axios
+        .delete(`${serverAddress}/labory/delete/${id}/`)
+        .then((response) => {
+          setProfileRefresh(!profileRefresh);
+          setDeleteAlert(false);
+        })
+        .catch((error) => {
+          setLoading(() => true);
+          console.error(`Error deleting category with ID ${id}:`, error);
+        });
+    } else if (type === "prescriptioBillnDelete") {
+      axios
+        .delete(
+          `${serverAddress}/prescription/removebill/${PrescriptionId}/pharmaceutical/${id}`
+        )
+        .then((response) => {
+          setLoading(() => true);
+          // Handle success, e.g., show a success message or update the categories list
+          console.log(`Category with ID ${id} has been deleted.`);
+          getAllPrescription(PrescriptionId);
+          // You might want to update the categories list here to reflect the changes
+        })
+        .catch((error) => {
+          setLoading(() => true);
+          console.error(`Error deleting category with ID ${id}:`, error);
+        });
+    } else if (type === "prescriptioDelete") {
+      console.log(id);
+      axios
+        .delete(
+          `${serverAddress}/patients/Patientsid/${id.patientsId}/prescriptionid/${id.prescriptionId}
+      `
+        )
+        .then((response) => {
+          setProfileRefresh(!profileRefresh);
+          setDeleteAlert(false);
+
+          // Handle success, e.g., show a success message or update the categories list
+          getPatientsList();
+          // You might want to update the categories list here to reflect the changes
+        })
+        .catch((error) => {
+          // Handle error, e.g., show an error message
+        });
+    }
+  };
 
   return (
     <div className="p-7 relative h-[93vh] overflow-scroll">
@@ -1360,6 +1459,18 @@ function Partients() {
         ""
       )}
 
+      {deleteAlert ? (
+        <DeleteAlert
+          deleteInfo={deleteInfo}
+          onShadowClick={() => {
+            setDeleteAlert(false);
+          }}
+          onDeleteConfirmHandel={onDeleteConfirmHandel}
+          onCancelAborteHande={onCancelHande}
+        ></DeleteAlert>
+      ) : (
+        ""
+      )}
       {canceleAlert ? (
         <CancelAlert
           onCancelHande={onCancelHande}

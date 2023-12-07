@@ -103,5 +103,7 @@
   "edit": "edit",
   "manufacureName": "manufacture Name",
   "serialNumber": "serial Number",
-  "SurgenNarcosisName": "Narcosis Name"
+  "SurgenNarcosisName": "Narcosis Name",
+  "surgeryCalender" : "Surgery Calender"
+
 }

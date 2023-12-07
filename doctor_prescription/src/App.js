@@ -33,6 +33,7 @@ import SurgenList from "./screens/surgeon/SurgenList";
 import SurgenType from "./screens/surgeon/SurgenType";
 import SurgenDevice from "./screens/surgeon/SurgenDevice";
 import SurgenNarcosis from "./screens/surgeon/SurgenNarcosis";
+import SurgenDate from "./screens/surgeon/SurgenDate";
 function Layout({ children }) {
   return (
     <div
@@ -145,6 +146,7 @@ function App() {
                     <Route exact path="surgen">
                       <Route exact path="list" element={<SurgenList />}></Route>
                       <Route exact path="type" element={<SurgenType />}></Route>
+                      <Route exact path="calender" element={<SurgenDate/>}></Route>
                       <Route
                         exact
                         path="device"

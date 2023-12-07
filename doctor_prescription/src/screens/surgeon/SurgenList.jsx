@@ -9,6 +9,7 @@ import SurgenNarcosisTable from "../../components/surgeon/SurgenNarcosisTable";
 import NewSurgenPatient from "../../components/surgeon/NewSurgenPatient";
 import Loading from "../../components/pageCompond/Loading";
 import SurgenListTable from "../../components/surgeon/SurgenListTable";
+import DeleteAlert from "../../components/pageCompond/DeleteAlert";
 
 function SurgenList() {
   const { isAuthenticated } = useIsAuthenticated();
@@ -21,8 +22,13 @@ function SurgenList() {
   const [surgicalProceduresTypeList, setSurgicalProceduresTypeList] = useState(
     []
   );
+  const [settingData, setSettingData] = useState({});
+
   const [surgicalProceduresDeviceList, setSurgicalProceduresDeviceList] =
     useState([]);
+  const [deleteAlert, setDeleteAlert] = useState(false);
+  const [deleteInfo, setDeleteInfo] = useState({ id: "", type: "" });
+
   const [surgicalProceduresNarcosisList, setSurgicalProceduresNarcosisList] =
     useState([]);
   const [loading, setLoading] = useState(true);
@@ -64,6 +70,40 @@ function SurgenList() {
       setLoading(false);
 
       console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    const getSettingApi = () => {
+      axios
+        .get(`${serverAddress}/setting/getdata`)
+        .then((response) => {
+          setSettingData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    };
+    getSettingApi();
+  }, []);
+
+  const onDeleteConfirmHandel = (id, type) => {
+    console.log(id, type);
+    if (type === "surgenDelete") {
+      console.log(id);
+      axios
+        .delete(`${serverAddress}/surgicalProcedures/surgery/${id}`)
+        .then((response) => {
+          // Handle success, e.g., show a success message or update the categories list
+          getAllSurgenList();
+          setDeleteAlert(false);
+          // You might want to update the categories list here to reflect the changes
+        })
+        .catch((error) => {
+          // Handle error, e.g., show an error message
+          console.error(`Error deleting category with ID ${id}:`, error);
+        });
+
+      console.log(`Delete clicked for id ${id}`);
     }
   };
 
@@ -123,22 +163,30 @@ function SurgenList() {
         console.error("Error making POST request:", error);
       });
   };
+  const onCancelHande = () => {
+    setDeleteAlert(false);
+  };
 
   const onDeleteHandle = (id) => {
-    console.log(id);
-    axios
-      .delete(`${serverAddress}/surgicalProcedures/surgery/${id}`)
-      .then((response) => {
-        // Handle success, e.g., show a success message or update the categories list
-        getAllSurgenList();
-        // You might want to update the categories list here to reflect the changes
-      })
-      .catch((error) => {
-        // Handle error, e.g., show an error message
-        console.error(`Error deleting category with ID ${id}:`, error);
-      });
+    if (settingData.abortProssesMsg) {
+      setDeleteInfo({ id: id, type: "surgenDelete" });
+      setDeleteAlert(true);
+    } else {
+      console.log(id);
+      axios
+        .delete(`${serverAddress}/surgicalProcedures/surgery/${id}`)
+        .then((response) => {
+          // Handle success, e.g., show a success message or update the categories list
+          getAllSurgenList();
+          // You might want to update the categories list here to reflect the changes
+        })
+        .catch((error) => {
+          // Handle error, e.g., show an error message
+          console.error(`Error deleting category with ID ${id}:`, error);
+        });
 
-    console.log(`Delete clicked for id ${id}`);
+      console.log(`Delete clicked for id ${id}`);
+    }
   };
 
   const onEditHandle = (id) => {
@@ -149,7 +197,7 @@ function SurgenList() {
         // Handle success, e.g., show a success message or update the categories list
         console.log(response.data);
         setShowEditForm(true);
-        setCurrentNewSurgery(response.data)
+        setCurrentNewSurgery(response.data);
         setEditingData(response.data);
       })
       .catch((error) => {
@@ -260,6 +308,18 @@ function SurgenList() {
             )}
           </div>
         </>
+      )}
+      {deleteAlert ? (
+        <DeleteAlert
+          deleteInfo={deleteInfo}
+          onShadowClick={() => {
+            setDeleteAlert(false);
+          }}
+          onDeleteConfirmHandel={onDeleteConfirmHandel}
+          onCancelAborteHande={onCancelHande}
+        ></DeleteAlert>
+      ) : (
+        ""
       )}
     </>
   );

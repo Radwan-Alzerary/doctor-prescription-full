@@ -158,6 +158,12 @@ function SideBarMenu(props) {
                   router="/surgen/device"
                   onClick={() => setActiveSubmenu("surgery")}
                 ></Sidebaritems>
+                                <Sidebaritems
+                  title="surgeryCalender"
+                  router="/surgen/calender"
+                  onClick={() => setActiveSubmenu("surgeryCalender")}
+                ></Sidebaritems>
+
               </SubMenu>
             </>
           ) : (

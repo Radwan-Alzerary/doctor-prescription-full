@@ -225,7 +225,6 @@ export default function SurgenListTable(props) {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
-
                   return (
                     <TableRow
                       hover
