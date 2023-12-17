@@ -101,6 +101,17 @@
   "manufacureName": "المصنع",
   "serialNumber": "الرقم التسلسلي",
   "SurgenNarcosisName":"اسم المخدر",
-  "surgeryCalender" : "جدولة العمليات"
+  "surgeryCalender" : "جدولة العمليات",
+  "bloodType" : "فصيلة الدم",
+  "MaritalStatus":"الحالة الزوجية",
+  "numberOfChildren":"عدد الاطفال",
+  "fractures": "الكسور",
+  "pulseRate": "نبضات القلب",
+  "spo2": "معدل الاوكسجين في الدم",
+  "temperature": "درجه الحرارة",
+  "bloodPressure": "ضغط الدم",
+  "bloodSugar": "السكر في الدم",
+  "ExaminationFindining": "العلامات السريرية",
+  "InvestigationFinding": "نتائج الفحوصات"
 
 }

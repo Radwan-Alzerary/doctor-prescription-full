@@ -1,4 +1,15 @@
-import { Autocomplete, Button, IconButton, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Button,
+  FormControl,
+  FormControlLabel,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  Switch,
+  TextField,
+} from "@mui/material";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -28,9 +39,67 @@ function MedicalForm(props) {
       [name]: value,
     });
   };
+  const handleChildrenDataChange = (childIndex, property, value) => {
+    const updatedChildrenData = [...formData.MiscarriageData];
+    updatedChildrenData[childIndex] = {
+      ...updatedChildrenData[childIndex],
+      [property]: value,
+    };
+
+    setFormData({
+      ...formData,
+      MiscarriageData: updatedChildrenData,
+    });
+  };
+  const renderChildFields = () => {
+    const childFields = [];
+
+    for (let i = 0; i < formData.MiscarriageNo; i++) {
+      childFields.push(
+        <div key={i} className="flex flex-col gap-4">
+          <TextField
+            id={`child-reason-${i}`}
+            size="small"
+            value={formData.MiscarriageData[i]?.reason || ""}
+            onChange={(event) =>
+              handleChildrenDataChange(i, "reason", event.target.value)
+            }
+            label={`${i + 1} سبب الاسقاطات`}
+            sx={{
+              textAlign: "right",
+              color: "#fff",
+            }}
+            InputProps={{
+              style: { textAlign: "right" },
+            }}
+          />
+
+          <TextField
+            id={`child-date-${i}`}
+            size="small"
+            value={formData.MiscarriageData[i]?.date || ""}
+            onChange={(event) =>
+              handleChildrenDataChange(i, "date", event.target.value)
+            }
+            sx={{
+              textAlign: "right",
+              color: "#fff",
+            }}
+            type="date"
+            InputProps={{
+              style: { textAlign: "right" },
+            }}
+          />
+        </div>
+      );
+    }
+
+    return childFields;
+  };
+
   return (
     <form
-      className="fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
+      className="fixed flex flex-col overflow-scroll h-[90%] left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
@@ -176,6 +245,222 @@ function MedicalForm(props) {
         // defaultValue="Hello World"
       />
 
+      <TextField
+        value={formData.InvestigationFinding}
+        onChange={(event) => {
+          handleInputChange("InvestigationFinding", event.target.value);
+        }}
+        id="outlined-multiline-static"
+        size="small"
+        sx={{
+          width: "100%",
+          color: "#fff",
+        }}
+        multiline
+        rows={2}
+        label={
+          <FormattedMessage
+            id={"InvestigationFinding"}
+            defaultMessage="Hello, World!"
+          />
+        }
+        // defaultValue="Hello World"
+      />
+      <TextField
+        value={formData.fractures}
+        onChange={(event) => {
+          handleInputChange("fractures", event.target.value);
+        }}
+        id="outlined-multiline-static"
+        size="small"
+        sx={{
+          width: "100%",
+          color: "#fff",
+        }}
+        multiline
+        rows={2}
+        label={
+          <FormattedMessage id={"fractures"} defaultMessage="Hello, World!" />
+        }
+        // defaultValue="Hello World"
+      />
+      <TextField
+        value={formData.ExaminationFindining}
+        onChange={(event) => {
+          handleInputChange("ExaminationFindining", event.target.value);
+        }}
+        id="outlined-multiline-static"
+        size="small"
+        sx={{
+          width: "100%",
+          color: "#fff",
+        }}
+        multiline
+        rows={2}
+        label={
+          <FormattedMessage
+            id={"ExaminationFindining"}
+            defaultMessage="Hello, World!"
+          />
+        }
+        // defaultValue="Hello World"
+      />
+      <TextField
+        value={formData.ExaminationFindining}
+        onChange={(event) => {
+          handleInputChange("ExaminationFindining", event.target.value);
+        }}
+        id="outlined-multiline-static"
+        size="small"
+        sx={{
+          width: "100%",
+          color: "#fff",
+        }}
+        multiline
+        rows={2}
+        label={
+          <FormattedMessage
+            id={"ExaminationFindining"}
+            defaultMessage="Hello, World!"
+          />
+        }
+        // defaultValue="Hello World"
+      />
+      <TextField
+        value={formData.pulseRate}
+        onChange={(event) => {
+          handleInputChange("pulseRate", event.target.value);
+        }}
+        id="outlined-multiline-static"
+        size="small"
+        sx={{
+          width: "100%",
+          color: "#fff",
+        }}
+        multiline
+        rows={2}
+        label={
+          <FormattedMessage id={"pulseRate"} defaultMessage="Hello, World!" />
+        }
+        // defaultValue="Hello World"
+      />
+      <TextField
+        value={formData.spo2}
+        onChange={(event) => {
+          handleInputChange("spo2", event.target.value);
+        }}
+        id="outlined-multiline-static"
+        size="small"
+        sx={{
+          width: "100%",
+          color: "#fff",
+        }}
+        multiline
+        rows={2}
+        label={<FormattedMessage id={"spo2"} defaultMessage="Hello, World!" />}
+        // defaultValue="Hello World"
+      />
+      <TextField
+        value={formData.temperature}
+        onChange={(event) => {
+          handleInputChange("temperature", event.target.value);
+        }}
+        id="outlined-multiline-static"
+        size="small"
+        sx={{
+          width: "100%",
+          color: "#fff",
+        }}
+        multiline
+        rows={2}
+        label={
+          <FormattedMessage id={"temperature"} defaultMessage="Hello, World!" />
+        }
+        // defaultValue="Hello World"
+      />
+      <TextField
+        value={formData.bloodPressure}
+        onChange={(event) => {
+          handleInputChange("bloodPressure", event.target.value);
+        }}
+        id="outlined-multiline-static"
+        size="small"
+        sx={{
+          width: "100%",
+          color: "#fff",
+        }}
+        multiline
+        rows={2}
+        label={
+          <FormattedMessage
+            id={"bloodPressure"}
+            defaultMessage="Hello, World!"
+          />
+        }
+        // defaultValue="Hello World"
+      />
+      <TextField
+        value={formData.bloodSugar}
+        onChange={(event) => {
+          handleInputChange("bloodSugar", event.target.value);
+        }}
+        id="outlined-multiline-static"
+        size="small"
+        sx={{
+          width: "100%",
+          color: "#fff",
+        }}
+        multiline
+        rows={2}
+        label={
+          <FormattedMessage id={"bloodSugar"} defaultMessage="Hello, World!" />
+        }
+        // defaultValue="Hello World"
+      />
+      <p> اسقاط حمل</p>
+      <FormControlLabel
+        sx={{
+          display: "block",
+        }}
+        control={
+          <Switch
+            checked={formData.miscarriageState}
+            onChange={(event) => {
+              handleInputChange("miscarriageState", !formData.miscarriageState);
+            }}
+            color="primary"
+          />
+        }
+      />
+      {formData.miscarriageState ? (
+        <>
+          <TextField
+            value={formData.MiscarriageNo}
+            onChange={(event) => {
+              handleInputChange("MiscarriageNo", event.target.value);
+            }}
+            id="outlined-multiline-static"
+            size="small"
+            sx={{
+              width: "100%",
+              color: "#fff",
+            }}
+            type="number"
+            multiline
+            // label={
+            //   <FormattedMessage
+            //     id={"bloodSugar"}
+            //     defaultMessage="Hello, World!"
+            //   />
+            // }
+            label={"عدد الاسقاطات"}
+            // defaultValue="Hello World"
+          />
+          <div className="flex gap-4 flex-wrap">{renderChildFields()}</div>
+        </>
+      ) : (
+        ""
+      )}
       <div className="flex gap-6 w-full justify-between">
         <IconButton>
           {/* <PrintRounded color="action"></PrintRounded> */}

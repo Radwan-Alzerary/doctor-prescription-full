@@ -104,6 +104,16 @@
   "manufacureName": "manufacture Name",
   "serialNumber": "serial Number",
   "SurgenNarcosisName": "Narcosis Name",
-  "surgeryCalender" : "Surgery Calender"
-
+  "surgeryCalender": "Surgery Calender",
+  "bloodType": "blood Type",
+  "MaritalStatus": "Marital Status",
+  "numberOfChildren": "number of children",
+  "fractures": "fractures",
+  "pulseRate": "pulse rate",
+  "spo2": "spo2",
+  "temperature": "temperature",
+  "bloodPressure": "blood pressure",
+  "bloodSugar": "blood sugar",
+  "ExaminationFindining": "Examination Findining",
+  "InvestigationFinding": "Investigation Finding"
 }

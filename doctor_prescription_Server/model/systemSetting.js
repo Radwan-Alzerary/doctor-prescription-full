@@ -12,7 +12,9 @@ const SystemSettingSchema = new mongoose.Schema(
     lastBackup: { type: Date },
     abortProssesMsg :{type:Boolean,default:false},
     openEditPrescriptionByClick :{type:Boolean,default:false},
-    autoBackUp :{type:Boolean,default:false}
+    autoBackUp :{type:Boolean,default:false},
+    isForWoman : {type:Boolean,default:false},
+    isForSurgery : {type:Boolean,default:false}
   },
   {
     timestamps: true,

@@ -7,7 +7,7 @@ function VisitChart(props) {
 
   useEffect(() => {
     if (props.dashboardVisitCount && Array.isArray(props.dashboardVisitCount)) {
-      setLoading(false); // Set loading to false when the data is available
+      setLoading(false);
       const seriesData = props.dashboardVisitCount.map((entry) => entry.count);
       const dateLabels = props.dashboardVisitCount.map((entry) => entry.date);
 

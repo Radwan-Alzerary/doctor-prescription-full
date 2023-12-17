@@ -19,6 +19,7 @@ const PatientsSchema = new mongoose.Schema(
     monthAge: {
       type: Number,
     },
+
     weight: {
       type: Number,
     },
@@ -46,29 +47,38 @@ const PatientsSchema = new mongoose.Schema(
     medicalHistory: { type: String },
     previousSurgeries: { type: String },
     familyHistory: { type: String },
+    fractures: { type: String },
+    pulseRate: { type: String },
+    spo2: { type: String },
+    temperature: { type: String },
+    bloodPressure: { type: String },
+    bloodSugar: { type: String },
+    miscarriageState: { type: Boolean,default:false },
+    MiscarriageNo: { type: Number },
+    MiscarriageData: [{ reason: { type: String }, date: { type: String } }],
+    ExaminationFindining: { type: String },
+    InvestigationFinding: { type: String },
     visitCount: { type: Number, default: 0 },
     diseases: [
       { type: mongoose.Schema.Types.ObjectId, ref: "ConstantDiseases" },
     ],
     description: { type: String },
-
     prescription: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Prescription" },
     ],
     surgery: [
       { type: mongoose.Schema.Types.ObjectId, ref: "SurgicalProcedures" },
     ],
-
     medicalReport: [
       { type: mongoose.Schema.Types.ObjectId, ref: "MedicalReportS" },
     ],
-
     labory: [{ type: mongoose.Schema.Types.ObjectId, ref: "labory" }],
-
     nextVisit: { type: Date },
-
     Medicine: [{ type: mongoose.Schema.Types.ObjectId, ref: "Medicine" }],
-
+    bloodType: { type: String },
+    MaritalStatus: { type: String },
+    numberOfChildren: { type: Number },
+    childrenData: [{ date: { type: Date }, type: { type: String } }],
     MedicalAnalysis: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "MedicalAnalysis",
@@ -78,6 +88,7 @@ const PatientsSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
 PatientsSchema.pre("save", async function (next) {
   if (this.isModified("prescription") || this.isModified("medicalReport")) {
     // Get the last prescription and medicalReport

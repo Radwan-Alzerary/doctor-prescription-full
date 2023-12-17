@@ -389,7 +389,7 @@ function Partients() {
   const [selectedReport, setSelectedReport] = useState({});
   const [selectedaLabory, setSelectedaLabory] = useState({});
   const currentURL = window.location.origin; // Get the current URL
-  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000
   const [midscapeData, setMidscapeData] = useState([]);
 
   const handleReportDelete = (id) => {
@@ -1298,7 +1298,7 @@ function Partients() {
       </div>
       {showAddForm ? (
         <>
-          {" "}
+          
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewPatientForm
             currentUser={currentUser}

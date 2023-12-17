@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-function PatentMedicalForm(props) {
+function PregmentData(props) {
   const [formData, setFormData] = useState({});
   const [locale, setLocale] = useState(() => {
     return Cookies.get("locale") || "ar";
@@ -355,4 +355,4 @@ function PatentMedicalForm(props) {
   );
 }
 
-export default PatentMedicalForm;
+export default PregmentData;

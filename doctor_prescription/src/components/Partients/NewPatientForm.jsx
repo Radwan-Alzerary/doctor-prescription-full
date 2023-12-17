@@ -39,10 +39,14 @@ function NewPatientForm(props) {
     adresses: "",
     gender: "ذكر",
     age: "",
+    numberOfChildren: "",
     monthAge: "",
     weight: "",
+    childrenData: [], // Array to store data for each child
     length: "",
     description: "",
+    bloodType: "",
+    MaritalStatus: "",
     fumbling: "",
     diseases: [],
   });
@@ -65,8 +69,12 @@ function NewPatientForm(props) {
         phonNumber: props.data.phonNumber,
         adresses: props.data.adresses,
         gender: props.data.gender,
+        bloodType: props.data.bloodType,
+        MaritalStatus: props.data.MaritalStatus,
         age: props.data.age,
+        childrenData: props.data.childrenData, // Array to store data for each child
         monthAge: props.data.monthAge,
+        numberOfChildren: props.data.numberOfChildren,
         weight: props.data.weight,
         length: props.data.length,
         description: props.data.description,
@@ -103,10 +111,75 @@ function NewPatientForm(props) {
       [name]: value,
     });
   };
+  const handleChildrenDataChange = (childIndex, property, value) => {
+    const updatedChildrenData = [...formData.childrenData];
+    updatedChildrenData[childIndex] = {
+      ...updatedChildrenData[childIndex],
+      [property]: value,
+    };
+
+    setFormData({
+      ...formData,
+      childrenData: updatedChildrenData,
+    });
+  };
+  const renderChildFields = () => {
+    const childFields = [];
+
+    for (let i = 0; i < formData.numberOfChildren; i++) {
+      childFields.push(
+        <div key={i} className="flex flex-col gap-4">
+          <FormControl className=" bg-whiteh" size="small">
+            <InputLabel id="demo-simple-select-helper-label">
+              <FormattedMessage
+                id={`childTypeLabel-${i}`}
+                defaultMessage={`نوع ولادة الطفل ${i + 1}`}
+              />
+            </InputLabel>
+            <Select
+              id={`child-type-${i}`}
+              size="small"
+              value={formData.childrenData[i]?.type || ""}
+              onChange={(event) =>
+                handleChildrenDataChange(i, "type", event.target.value)
+              }
+              label={
+                <FormattedMessage
+                  id={`childTypeLabel-${i}`}
+                  defaultMessage={`نوع ولادة الطفل ${i + 1}`}
+                />
+              }
+            >
+              <MenuItem value={"طبيعية"}>طبيعية</MenuItem>
+              <MenuItem value={"قيصرية"}>قيصرية</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            id={`child-date-${i}`}
+            size="small"
+            value={formData.childrenData[i]?.date || ""}
+            onChange={(event) =>
+              handleChildrenDataChange(i, "date", event.target.value)
+            }
+            sx={{
+              textAlign: "right",
+              color: "#fff",
+            }}
+            type="date"
+            InputProps={{
+              style: { textAlign: "right" },
+            }}
+          />
+        </div>
+      );
+    }
+
+    return childFields;
+  };
 
   return (
     <form
-      className="fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
+      className="fixed overflow-scroll h-[90%] flex flex-col  left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
@@ -130,12 +203,11 @@ function NewPatientForm(props) {
             handleInputChange("name", event.target.value);
             checkAvailableUser(event.target.value);
           }} // Update the name state
-          
           sx={{
             width: "30%",
-            border:"#000",
+            border: "#000",
             textAlign: "right",
-            
+
             color: "#fff",
           }}
           label={
@@ -293,6 +365,105 @@ function NewPatientForm(props) {
           type="number" // Specifies that the input should accept numeric values
         />
       </div>
+
+      <div className=" flex w-full gap-4 items-center">
+        <FormControl className=" w-1/3 bg-whiteh" size="small">
+          <InputLabel id="demo-simple-select-helper-label">
+            <FormattedMessage id={"bloodType"} defaultMessage="Hello, World!" />
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-helper-label"
+            id="demo-simple-select-helper"
+            value={formData.bloodType}
+            onChange={(event) =>
+              handleInputChange("bloodType", event.target.value)
+            } // Update the name state
+            label={
+              <FormattedMessage
+                id={"bloodType"}
+                defaultMessage="Hello, World!"
+              />
+            }
+          >
+            <MenuItem value={"A+"}>A+</MenuItem>
+            <MenuItem value={"A-"}>A-</MenuItem>
+            <MenuItem value={"B+"}>B+</MenuItem>
+            <MenuItem value={"B-"}>B-</MenuItem>
+            <MenuItem value={"AB+"}>AB+</MenuItem>
+            <MenuItem value={"AB-"}>AB-</MenuItem>
+            <MenuItem value={"O+"}>o+</MenuItem>
+            <MenuItem value={"O-"}>o-</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl className=" w-1/3 bg-whiteh" size="small">
+          <InputLabel id="demo-simple-select-helper-label">
+            <FormattedMessage
+              id={"MaritalStatus"}
+              defaultMessage="Hello, World!"
+            />
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-helper-label"
+            id="demo-simple-select-helper"
+            value={formData.MaritalStatus}
+            onChange={(event) =>
+              handleInputChange("MaritalStatus", event.target.value)
+            } // Update the name state
+            label={
+              <FormattedMessage
+                id={"MaritalStatus"}
+                defaultMessage="Hello, World!"
+              />
+            }
+          >
+            <MenuItem value={"متزوج"}>متزوج</MenuItem>
+            <MenuItem value={"اعزب"}>اعزب</MenuItem>
+            <MenuItem value={"مطلق"}>مطلق</MenuItem>
+            <MenuItem value={"ارمل"}>ارمل</MenuItem>
+          </Select>
+        </FormControl>
+        <TextField
+          // required
+          id="outlined-required"
+          size="small"
+          value={formData.numberOfChildren}
+          onChange={(event) =>
+            handleInputChange("numberOfChildren", event.target.value)
+          } // Update the name state
+          sx={{
+            width: "20%",
+            textAlign: "right",
+            color: "#fff",
+          }}
+          label={
+            <FormattedMessage
+              id={"numberOfChildren"}
+              defaultMessage="Hello, World!"
+            />
+          }
+          type="number"
+          InputProps={{
+            style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
+          }}
+        />
+      </div>
+      {formData.numberOfChildren > 0 ? (
+        <div className=" text-right w-full">
+          <h5>
+            {/* <FormattedMessage
+                id={"additional information"}
+                defaultMessage="Hello, World!"
+              /> */}
+            تفاصيل الولادات
+          </h5>
+        </div>
+      ) : (
+        ""
+      )}
+      <div className=" flex flex-wrap w-full gap-4 items-center">
+        {renderChildFields()}
+      </div>
+
       {props.currentUser.role === "doctor" ? (
         <>
           <div className=" text-right w-full">

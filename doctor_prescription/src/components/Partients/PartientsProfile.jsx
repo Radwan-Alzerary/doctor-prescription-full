@@ -8,6 +8,7 @@ import LaboryReportTable from "./profile/LaboryReportTable";
 import VisitDateTable from "./profile/VisitDateTable";
 import PatientPictures from "./profile/PatientPictures";
 import PatentMedicalForm from "./profile/PatentMedicalForm";
+import PregmentData from "./profile/PregmentData";
 
 function PartientsProfile(props) {
   const [partientsProfile, setPartientsProfile] = useState([]);
@@ -36,16 +37,6 @@ function PartientsProfile(props) {
   };
   const handleEditPatientData = (data) => {
     data.id = partientsProfile._id;
-    
-    // axios
-    //   .post(`${serverAddress}/patients/edit`, data)
-    //   .then((response) => {
-    //     // Handle the response if needed
-    //   })
-    //   .catch((error) => {
-    //     // Handle errors if the request fails
-    //     console.error("Error making POST request:", error);
-    //   });
   };
 
   return (
@@ -69,6 +60,17 @@ function PartientsProfile(props) {
         >
           المعلومات الشخصية
         </div>
+        {/* <div
+          onClick={() => {
+            setProfileSelect("pregmentSite");
+          }}
+          className={`${
+            profileSelect === "pregmentSite" ? "bg-green-200" : "bg-slate-200"
+          }  p-2 w-48 rounded-full hover:bg-slate-100 cursor-pointer`}
+        >
+          معلومات الحمل{" "}
+        </div> */}
+
         <div
           onClick={() => {
             setProfileSelect("midicalInfo");
@@ -137,7 +139,7 @@ function PartientsProfile(props) {
         </div>
       </div>
       {profileSelect === "mainInfoSite" ? (
-        <div className="w-full  h-full py-4">
+        <div className="w-full  overflow-scroll  h-full py-4">
           <div className="">
             <div className=" bg-white shadow p-3 rounded-2xl">
               <div className=" font-medium text-xl">المعلومات الشخصية</div>
@@ -156,10 +158,11 @@ function PartientsProfile(props) {
                 ) : (
                   ""
                 )}
-
                 <p>الوزن : {partientsProfile.weight} كيلو</p>
                 <p>الطول : {partientsProfile.length}</p>
                 <p>الجنس : {partientsProfile.gender}</p>
+                <p>صنف الدم : {partientsProfile.bloodType}</p>
+                <p>الحالة الزوجية : {partientsProfile.MaritalStatus}</p>
               </div>
             </div>
             <div className=" bg-white p-3 rounded-2xl shadow my-2">
@@ -182,8 +185,33 @@ function PartientsProfile(props) {
                 <p>{partientsProfile.fumbling} </p>
               </div>
             </div>
+            <div className=" bg-white p-3 rounded-2xl shadow my-4">
+              <div className=" font-medium text-xl">الاطفال</div>
+              <div className="w-full">
+                <div className="flex justify-between items-center w-full">
+                  {partientsProfile.childrenData
+                    ? partientsProfile.childrenData.map((child,index) => (
+                        <div className="">
+                          <div>{`طفل رقم ${index+1}`}</div>
+                          <div>{`نوع الولادة  : ${child.type}`}</div>
+                          <div>
+                            {new Date(child.date).toLocaleDateString("en-GB")}
+                          </div>
+                        </div>
+                      ))
+                    : ""}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      ) : (
+        ""
+      )}
+      {profileSelect === "pregmentSite" ? (
+        <>
+          <div>xz</div>
+        </>
       ) : (
         ""
       )}

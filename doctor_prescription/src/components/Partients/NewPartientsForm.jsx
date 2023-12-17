@@ -136,10 +136,6 @@ function EditPartients(props) {
   console.log(props);
   console.log(props);
   console.log(props);
-  console.log(props);
-  console.log(props);
-  console.log(props);
-  // Handle changes in form fields
   console.log(props.partientId);
   return (
     <form

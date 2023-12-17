@@ -17,7 +17,6 @@ const storage = multer.diskStorage({
 
 // Create multer instance for uploading image
 const upload = multer({ storage: storage });
-
 router.post("/new", async (req, res) => {
   const patientsDate = {};
   try {
@@ -29,6 +28,9 @@ router.post("/new", async (req, res) => {
     patientsDate.monthAge = req.body.monthAge;
     patientsDate.length = req.body.length;
     patientsDate.weight = req.body.weight;
+    patientsDate.numberOfChildren = req.body.numberOfChildren;
+    patientsDate.childrenData = req.body.childrenData;
+    patientsDate.bloodType = req.body.bloodType;
     patientsDate.description = req.body.description;
     const diseasesArray = req.body.diseases;
     const resultArray = [];
