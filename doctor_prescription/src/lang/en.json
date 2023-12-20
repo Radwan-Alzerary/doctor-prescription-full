@@ -110,10 +110,13 @@
   "numberOfChildren": "number of children",
   "fractures": "fractures",
   "pulseRate": "pulse rate",
+  "AgeTitle":"age",
   "spo2": "spo2",
   "temperature": "temperature",
   "bloodPressure": "blood pressure",
   "bloodSugar": "blood sugar",
   "ExaminationFindining": "Examination Findining",
-  "InvestigationFinding": "Investigation Finding"
+  "InvestigationFinding": "Investigation Finding",
+  "dayAge":"day Age"
+
 }

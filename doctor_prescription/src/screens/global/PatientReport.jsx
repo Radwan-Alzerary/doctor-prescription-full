@@ -203,7 +203,6 @@ function PatientReport(props) {
                 color: `${props.medicalReportsStype.dateColor}`,
               }}
             >
-              {" "}
               {!props.dataToPrint.textonly
                 ? new Date(
                     props.dataToPrint.prescription.createdAt
@@ -434,8 +433,14 @@ function PatientReport(props) {
                   {" "}
                   {props.dataToPrint.patients.age > 0
                     ? props.dataToPrint.patients.age
-                    : props.dataToPrint.patients.monthAge
+                    : props.dataToPrint.patients.monthAge >= 2
                     ? props.dataToPrint.patients.monthAge + " شهر "
+                    : props.dataToPrint.patients.monthAge &&
+                      props.dataToPrint.patients.monthAge < 2
+                    ?(props.dataToPrint.patients.monthAge * 30 +
+                      props.dataToPrint.patients.dayAge ) + " يوم "
+                    : props.dataToPrint.patients.dayAge 
+                    ? props.dataToPrint.patients.dayAge + " يوم "
                     : "غير معرف"}
                 </h2>
               </div>

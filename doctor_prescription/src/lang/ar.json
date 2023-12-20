@@ -14,13 +14,14 @@
   "settings": "الإعدادات",
   "PatientName": "اسم المريض",
   "Date": "التاريخ",
-  "Age": "العمر",
+  "Age": "العمر بالسنوات",
+  "AgeTitle":"العمر",
   "monthAge": "العمر بالاشهر",
   "Gender": "الجنس",
   "Address": "العنوان",
   "Weight": "الوزن",
   "Length": "الطول",
-  "VisitNumber": "عدد الزيارات",
+  "VisitNumber": "الزيارات",
   "PatientPage": "صفحة المريض",
   "Rx": "Rx",
   "Report": "التقرير",
@@ -112,6 +113,7 @@
   "bloodPressure": "ضغط الدم",
   "bloodSugar": "السكر في الدم",
   "ExaminationFindining": "العلامات السريرية",
-  "InvestigationFinding": "نتائج الفحوصات"
+  "InvestigationFinding": "نتائج الفحوصات",
+  "dayAge":"العمر بالايام"
 
 }

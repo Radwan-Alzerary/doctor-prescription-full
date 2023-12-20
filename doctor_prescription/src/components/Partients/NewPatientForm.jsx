@@ -8,7 +8,14 @@ import {
   Select,
   TextField,
 } from "@mui/material";
+import {
+  DatePicker,
+  DateTimePicker,
+  LocalizationProvider,
+} from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import axios from "axios";
+import dayjs from "dayjs";
 
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
@@ -41,6 +48,7 @@ function NewPatientForm(props) {
     age: "",
     numberOfChildren: "",
     monthAge: "",
+    dayAge: "",
     weight: "",
     childrenData: [], // Array to store data for each child
     length: "",
@@ -62,7 +70,6 @@ function NewPatientForm(props) {
           setHistoryPatient(diseasesArray);
         });
       }
-
       setFormData({
         ...formData,
         name: props.data.name,
@@ -74,6 +81,7 @@ function NewPatientForm(props) {
         age: props.data.age,
         childrenData: props.data.childrenData, // Array to store data for each child
         monthAge: props.data.monthAge,
+        dayAge: props.data.dayAge,
         numberOfChildren: props.data.numberOfChildren,
         weight: props.data.weight,
         length: props.data.length,
@@ -123,6 +131,35 @@ function NewPatientForm(props) {
       childrenData: updatedChildrenData,
     });
   };
+  const handleDateChange = (newValue) => {
+    var birthDate = new Date(newValue);
+
+    // الحصول على تاريخ اليوم الحالي
+    var currentDate = new Date();
+
+    // حساب الفارق بين التاريخين بالأمثال
+    var ageInMilliseconds = currentDate - birthDate;
+
+    // تحويل الفارق إلى سنوات والباقي يكون في الأيام
+    var ageInSeconds = ageInMilliseconds / 1000;
+    var ageInMinutes = ageInSeconds / 60;
+    var ageInHours = ageInMinutes / 60;
+    var ageInDays = ageInHours / 24;
+    var ageInYears = Math.floor(ageInDays / 365.25);
+    var remainingDays = Math.floor(ageInDays % 365.25);
+    var remainingMonths = Math.floor(remainingDays / 30);
+    remainingDays = remainingDays % 30;
+    console.log(ageInYears);
+    console.log(remainingMonths);
+    console.log(remainingDays);
+    setFormData({
+      ...formData,
+      age: ageInYears,
+      monthAge: remainingMonths,
+      dayAge: remainingDays, // Assuming you want them as a comma-separated string
+    });
+  };
+
   const renderChildFields = () => {
     const childFields = [];
 
@@ -136,6 +173,7 @@ function NewPatientForm(props) {
                 defaultMessage={`نوع ولادة الطفل ${i + 1}`}
               />
             </InputLabel>
+
             <Select
               id={`child-type-${i}`}
               size="small"
@@ -154,6 +192,7 @@ function NewPatientForm(props) {
               <MenuItem value={"قيصرية"}>قيصرية</MenuItem>
             </Select>
           </FormControl>
+
           <TextField
             id={`child-date-${i}`}
             size="small"
@@ -179,7 +218,7 @@ function NewPatientForm(props) {
 
   return (
     <form
-      className="fixed overflow-scroll h-[90%] flex flex-col  left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
+      className="fixed overflow-scroll h-[90%] flex flex-col  left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-[70%] bg-white p-5 rounded-xl z-50"
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
@@ -207,7 +246,6 @@ function NewPatientForm(props) {
             width: "30%",
             border: "#000",
             textAlign: "right",
-
             color: "#fff",
           }}
           label={
@@ -295,43 +333,8 @@ function NewPatientForm(props) {
             </MenuItem>
           </Select>
         </FormControl>
-        <TextField
-          id="outlined-required"
-          size="small"
-          value={formData.age}
-          onChange={(event) => {
-            if (/^\d*\.?\d*$/.test(event.target.value)) {
-              handleInputChange("age", event.target.value);
-            } // Update the name state
-          }}
-          sx={{
-            width: "33%",
-            color: "#fff",
-          }}
-          label={<FormattedMessage id={"Age"} defaultMessage="Hello, World!" />}
-          type="text" // Specifies that the input should accept numeric values
-        />
-        <TextField
-          id="outlined-required"
-          size="small"
-          value={formData.monthAge}
-          onChange={(event) => {
-            // Check if the parsed value is a valid number
-            if (/^\d*\.?\d*$/.test(event.target.value)) {
-              handleInputChange("monthAge", event.target.value);
-            }
-          }} // Update the name state
-          sx={{
-            width: "33%",
-            color: "#fff",
-          }}
-          label={
-            <FormattedMessage id={"monthAge"} defaultMessage="Hello, World!" />
-          }
-        />
 
         <TextField
-          // required
           id="outlined-required"
           size="small"
           value={formData.weight}
@@ -364,9 +367,6 @@ function NewPatientForm(props) {
           }
           type="number" // Specifies that the input should accept numeric values
         />
-      </div>
-
-      <div className=" flex w-full gap-4 items-center">
         <FormControl className=" w-1/3 bg-whiteh" size="small">
           <InputLabel id="demo-simple-select-helper-label">
             <FormattedMessage id={"bloodType"} defaultMessage="Hello, World!" />
@@ -422,30 +422,109 @@ function NewPatientForm(props) {
             <MenuItem value={"ارمل"}>ارمل</MenuItem>
           </Select>
         </FormControl>
+        {formData.gender === "انثى" ? (
+          <TextField
+            // required
+            id="outlined-required"
+            size="small"
+            value={formData.numberOfChildren}
+            onChange={(event) =>
+              handleInputChange("numberOfChildren", event.target.value)
+            } // Update the name state
+            sx={{
+              width: "20%",
+              textAlign: "right",
+              color: "#fff",
+            }}
+            label={
+              <FormattedMessage
+                id={"numberOfChildren"}
+                defaultMessage="Hello, World!"
+              />
+            }
+            type="number"
+            InputProps={{
+              style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
+            }}
+          />
+        ) : (
+          ""
+        )}
+      </div>
+
+      <div className=" flex w-full gap-4 items-center">
         <TextField
-          // required
           id="outlined-required"
           size="small"
-          value={formData.numberOfChildren}
-          onChange={(event) =>
-            handleInputChange("numberOfChildren", event.target.value)
-          } // Update the name state
+          value={formData.age}
+          onChange={(event) => {
+            if (/^\d*\.?\d*$/.test(event.target.value)) {
+              handleInputChange("age", event.target.value);
+            } // Update the name state
+          }}
           sx={{
-            width: "20%",
-            textAlign: "right",
+            width: "33%",
+            color: "#fff",
+          }}
+          label={<FormattedMessage id={"Age"} defaultMessage="Hello, World!" />}
+          type="text" // Specifies that the input should accept numeric values
+        />
+        <TextField
+          id="outlined-required"
+          size="small"
+          value={formData.monthAge}
+          onChange={(event) => {
+            // Check if the parsed value is a valid number
+            if (/^\d*\.?\d*$/.test(event.target.value)) {
+              handleInputChange("monthAge", event.target.value);
+            }
+          }} // Update the name state
+          sx={{
+            width: "33%",
             color: "#fff",
           }}
           label={
-            <FormattedMessage
-              id={"numberOfChildren"}
-              defaultMessage="Hello, World!"
-            />
+            <FormattedMessage id={"monthAge"} defaultMessage="Hello, World!" />
           }
-          type="number"
-          InputProps={{
-            style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
-          }}
         />
+        <TextField
+          id="outlined-required"
+          size="small"
+          value={formData.dayAge}
+          onChange={(event) => {
+            // Check if the parsed value is a valid number
+            if (/^\d*\.?\d*$/.test(event.target.value)) {
+              handleInputChange("dayAge", event.target.value);
+            }
+          }} // Update the name state
+          sx={{
+            width: "33%",
+            color: "#fff",
+          }}
+          label={
+            <FormattedMessage id={"dayAge"} defaultMessage="Hello, World!" />
+          }
+        />
+        <div style={{ direction: "ltr" }}>
+          <LocalizationProvider
+            size="small"
+            className=" w-full"
+            sx={{ height: 10 }}
+            dateAdapter={AdapterDayjs}
+          >
+            <DatePicker
+              openTo="year"
+              views={["year", "month", "day"]}
+              label="المواليد"
+              format="DD/MM/YYYY"
+              onChange={(newValue) => {
+                handleDateChange(newValue.$d);
+              }}
+              size="small"
+              // defaultValue={dayjs()}
+            />
+          </LocalizationProvider>
+        </div>
       </div>
       {formData.numberOfChildren > 0 ? (
         <div className=" text-right w-full">

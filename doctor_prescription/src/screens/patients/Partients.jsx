@@ -5,6 +5,7 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
+  Pagination,
   Select,
   TableCell,
   TableRow,
@@ -32,6 +33,8 @@ import {
   Add,
   Delete,
   Edit,
+  Female,
+  Male,
   Medication,
   Report,
   Share,
@@ -83,10 +86,13 @@ function Row(props) {
 
   return (
     <React.Fragment>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+      <TableRow
+        className="hover:bg-blue-50"
+        sx={{ "& > *": { borderBottom: "unset" } }}
+      >
         <TableCell>{props.index + 1}</TableCell>
         <TableCell
-          className=" cursor-pointer hover:bg-blue-50"
+          className=" cursor-pointer hover:bg-blue-100"
           onClick={() => {
             props.onNameClickHandle(row._id);
           }}
@@ -97,28 +103,33 @@ function Row(props) {
           {row.name}
         </TableCell>
         <TableCell component="th" scope="row" align="center">
-          <div className="bg-green-200 w-full flex justify-center items-center h-6 rounded-full">
+          <div className="bg-green-100 w-full flex justify-center items-center h-6 rounded-full">
             {new Date(row.createdAt).toLocaleString("en-GB", {
               day: "2-digit",
               month: "2-digit",
               year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: true, // Include this option for AM/PM format
+              // hour: "2-digit",
+              // minute: "2-digit",
+              // hour12: true, // Include this option for AM/PM format
             })}
           </div>
         </TableCell>
         <TableCell component="th" scope="row" align="center">
           <div>{row.age ? row.age : 0} سنة</div>
           <div>{row.monthAge ? row.monthAge : 0} شهر</div>
+          <div>{row.dayAge ? row.dayAge : 0} يوم</div>
         </TableCell>
         <TableCell component="th" scope="row" align="center">
           <div
-            className={`p-0.5 rounded-full w-20 ${
+            className={`p-0.5 rounded-full  ${
               row.gender === "ذكر" ? "bg-blue-200" : "bg-pink-200"
             }`}
           >
-            {row.gender}
+            {row.gender === "ذكر" ? (
+              <Male className=" text-blue-700"></Male>
+            ) : (
+              <Female className=" text-pink-700"></Female>
+            )}
           </div>
         </TableCell>
         <TableCell component="th" scope="row" align="center">
@@ -250,7 +261,7 @@ function Row(props) {
       <TableRow>
         <TableCell
           style={{ paddingBottom: 0, paddingTop: 0, border: "none" }}
-          colSpan={15}
+          colSpan={16}
         >
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
@@ -391,7 +402,8 @@ function Partients() {
   const currentURL = window.location.origin; // Get the current URL
   const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000
   const [midscapeData, setMidscapeData] = useState([]);
-
+  const [pageSelect, SetPageSelect] = useState(1);
+  const [patientCount, setPatientCount] = useState(20);
   const handleReportDelete = (id) => {
     if (settingData.abortProssesMsg) {
       setDeleteInfo({ id: id, type: "reportDelete" });
@@ -576,16 +588,6 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   };
-  const getPharmaceTradeNameApi = () => {
-    axios
-      .get(`${serverAddress}/pharmaceutical/getallwithtrandname`)
-      .then((response) => {
-        tradNamepharmaceList(response.data); // Update the categories state with the fetched data
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-  };
 
   useEffect(() => {
     axios
@@ -610,10 +612,11 @@ function Partients() {
   useEffect(() => {
     getConstDiseasesApi();
     getPatientsList();
+    getPatientsCount();
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
   const getPatientsList = () => {
     axios
-      .get(`${serverAddress}/patients/getall`)
+      .get(`${serverAddress}/patients/getall/${pageSelect}`)
       .then((response) => {
         setPatientsList(response.data); // Update the categories state with the fetched data
       })
@@ -621,7 +624,16 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   };
-  // Function to handle the button click to toggle the calendar visibility
+  const getPatientsCount = () => {
+    axios
+      .get(`${serverAddress}/patients/getcount/`)
+      .then((response) => {
+        setPatientCount(response.data); // Update the categories state with the fetched data
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
   const handleAddButtonClick = () => {
     setShowAddForm(true);
   };
@@ -700,6 +712,7 @@ function Partients() {
       .post(`${serverAddress}/prescription/new`, { PartientsId: id })
       .then((response) => {
         // Handle the response if needed
+        setPharmaceListInside([]);
         setPrescriptionId(response.data.prescriptionId);
         setPartientsSelectId(id);
         setShowPartientsAddForm(true);
@@ -806,6 +819,15 @@ function Partients() {
   };
   const onNameClickHandle = (id) => {
     setPartientsSelectId(id);
+    axios
+      .get(`${serverAddress}/patients/medicalinfo/${id}`)
+      .then((response) => {
+        setUserEditData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+
     setShowPartientProfile(true);
   };
   const handleNewPrescriptionData = (data) => {
@@ -867,14 +889,18 @@ function Partients() {
   };
   const handeSearchInput = (event) => {
     const searchInputValue = event.target.value;
-    axios
-      .get(`${serverAddress}/patients/getbyname/${searchInputValue}`)
-      .then((response) => {
-        setPatientsList(response.data); // Update the categories state with the fetched data
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
+    if (searchInputValue === "") {
+      getPatientsList();
+    } else {
+      axios
+        .get(`${serverAddress}/patients/getbyname/${searchInputValue}`)
+        .then((response) => {
+          setPatientsList(response.data); // Update the categories state with the fetched data
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    }
   };
   const HandleOnPrescriptionDeleteHande = (patientsId, prescriptionId) => {
     if (settingData.abortProssesMsg) {
@@ -921,7 +947,6 @@ function Partients() {
     setShowPartientsEditForm(false);
     setShowPartientProfile(false);
     setDeleteAlert(false);
-
     setShowAddReportForm(false);
     setShowMidicalForm(false);
     setShowAddForm(false);
@@ -1032,8 +1057,11 @@ function Partients() {
     }
   };
 
+  useEffect(() => {
+    getPatientsList();
+  }, [pageSelect]);
   return (
-    <div className="p-7 relative h-[93vh] overflow-scroll">
+    <div className="p-2 relative h-[93vh] overflow-scroll">
       <div className=" bg-white overflow-scroll shadow-sm h-full rounded-md pb-4">
         <div className="flex gap-4 justify-center items-center w-full">
           <div className=" flex flex-col justify-center items-center p-4">
@@ -1158,7 +1186,7 @@ function Partients() {
           /> */}
           </div>
         </div>
-        <TableContainer dir="rtl" className="p-4 border shadow">
+        <TableContainer dir="rtl" className="p-2  shadow">
           <Table size="small">
             <TableHead>
               <TableRow>
@@ -1177,7 +1205,7 @@ function Partients() {
                 </TableCell>
                 <TableCell align="center">
                   {" "}
-                  <FormattedMessage id={"Age"} defaultMessage="Hello, World!" />
+                  <FormattedMessage id={"AgeTitle"} defaultMessage="Hello, World!" />
                 </TableCell>
                 <TableCell align="center">
                   {" "}
@@ -1285,7 +1313,23 @@ function Partients() {
             </TableBody>
           </Table>
         </TableContainer>
+        <div
+          style={{ direction: "ltr" }}
+          className="flex justify-center items-center mt-2"
+        >
+          <Pagination
+            count={Math.ceil(patientCount / 20)}
+            variant="outlined"
+            defaultPage={pageSelect}
+            color="primary"
+            onChange={(event, value) => {
+              SetPageSelect(value);
+              console.log(value);
+            }}
+          />
+        </div>
       </div>
+
       <div className=" fixed z-50 bottom-5 left-6">
         <Fab
           color="primary"
@@ -1298,7 +1342,6 @@ function Partients() {
       </div>
       {showAddForm ? (
         <>
-          
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewPatientForm
             currentUser={currentUser}
@@ -1354,8 +1397,8 @@ function Partients() {
             }}
           ></BackGroundShadow>
           <PartientsProfile
-            userEditData={userEditData}
             handleEditPatientData={handleEditPatientData}
+            userEditData={userEditData}
             refresh={profileRefresh}
             handleReportEdit={handleReportEdit}
             handleReportDelete={handleReportDelete}

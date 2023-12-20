@@ -26,6 +26,7 @@ router.post("/new", async (req, res) => {
     patientsDate.gender = req.body.gender;
     patientsDate.age = req.body.age;
     patientsDate.monthAge = req.body.monthAge;
+    patientsDate.dayAge = req.body.dayAge;
     patientsDate.length = req.body.length;
     patientsDate.weight = req.body.weight;
     patientsDate.numberOfChildren = req.body.numberOfChildren;
@@ -59,20 +60,17 @@ router.post("/new", async (req, res) => {
 });
 router.post("/edit", async (req, res) => {
   try {
-    console.log(req.body);
     const id = req.body.id; // Extract the ID from the URL parameter
-    // Find the patient by ID and update their data
-    console.log(id);
     const ubdateData = req.body;
     if (req.body.diseases) {
       const diseasesArray = req.body.diseases;
       const resultArray = [];
 
       for (const diseaseName of diseasesArray) {
+        console.log(diseaseName.name);
         const existingDisease = await ConstantDiseases.findOne({
-          name: diseaseName,
+          name: diseaseName.name,
         });
-
         if (existingDisease) {
           resultArray.push(existingDisease._id.toString());
         } else {
@@ -108,6 +106,38 @@ router.get("/getall", async (req, res) => {
         },
       })
       .sort({ updatedAt: -1 }); // Sort by 'updatedAt' field in descending order
+    res.json(patients);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+router.get("/getcount", async (req, res) => {
+  try {
+    const count = await Patients.countDocuments({ name: { $ne: "" } });
+    res.json(count);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+router.get("/getall/:page", async (req, res) => {
+  try {
+    const page = parseInt(req.params.page) || 1; // Get the requested page number, default to 1 if not provided
+    const perPage = 20; // Number of documents to display per page
+
+    const skip = (page - 1) * perPage; // Calculate the number of documents to skip
+
+    const patients = await Patients.find({ name: { $ne: "" } })
+      .populate({
+        path: "prescription",
+        match: { active: true }, // Filter prescriptions with active: true
+        populate: {
+          path: "pharmaceutical.id",
+        },
+      })
+      .sort({ updatedAt: -1 }) // Sort by 'updatedAt' field in descending order
+      .skip(skip)
+      .limit(perPage);
     res.json(patients);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -195,7 +225,8 @@ router.get("/getbyname/:searchName", async (req, res) => {
           path: "pharmaceutical.id",
         },
       })
-      .sort({ updatedAt: -1 }); // Sort by 'updatedAt' field in descending order
+      .sort({ updatedAt: -1 }) // Sort by 'updatedAt' field in descending order
+      .limit(10);
 
     res.json(patients);
   } catch (error) {
@@ -250,9 +281,11 @@ router.get("/checkuser/:name", async (req, res) => {
     if (!patients) {
       return res.json({ result: false });
     } else {
-      console.log(patients.name.replace(/\s/g, ''));
-      console.log(req.params.name.replace(/\s/g, ''))
-      if (patients.name.replace(/\s/g, '') === req.params.name.replace(/\s/g, '')) {
+      console.log(patients.name.replace(/\s/g, ""));
+      console.log(req.params.name.replace(/\s/g, ""));
+      if (
+        patients.name.replace(/\s/g, "") === req.params.name.replace(/\s/g, "")
+      ) {
         console.log("xx");
         res.json({ result: true });
       } else {
