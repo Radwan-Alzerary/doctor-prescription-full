@@ -8,6 +8,7 @@ import ProgramActive from "../../components/setting/ProgramActive";
 import BackUp from "../../components/setting/BackUp";
 import Loading from "../../components/pageCompond/Loading";
 import PropertySetting from "../../components/setting/PropertySetting";
+import ExaminationSetting from "../../components/setting/ExaminationSetting";
 
 function Setting(props) {
   const [cashire, setCashire] = useState([]);
@@ -164,22 +165,26 @@ function Setting(props) {
   };
 
   return (
-    <div>
+    <div className="h-full">
       {loading ? <Loading></Loading> : ""}
-      <div className="p-4">
-        <div className="">
-          <div className=" text-lg">
-            <FormattedMessage
-              id={"Add new secretary"}
-              defaultMessage="Hello, World!"
-            />
-          </div>
-          <div className="flex justify-between w-full">
-            <AddCashir
-              cashireData={cashire}
-              onCashireFormSubmit={onCashireFormSubmit}
-            ></AddCashir>
-            <div>
+      <div className="p-4 overflow-scroll h-full">
+        <div className=" flex flex-col gap-3 h-full ">
+          <div className="flex gap-3">
+            <div className="  w-1/2 rounded-xl p-4  bg-white">
+              <div className=" text-right">
+                <FormattedMessage
+                  id={"Add new secretary"}
+                  defaultMessage="Hello, World!"
+                />
+              </div>
+              <div className="flex flex-col justify-center items-center">
+                <AddCashir
+                  cashireData={cashire}
+                  onCashireFormSubmit={onCashireFormSubmit}
+                ></AddCashir>
+              </div>
+            </div>
+            <div className=" bg-white rounded-xl p-4">
               <FormattedMessage
                 id={"account info"}
                 defaultMessage="Hello, World!"
@@ -189,18 +194,25 @@ function Setting(props) {
                 onUserUbdateSubmit={onUserUbdateSubmit}
               ></UserSetting>
             </div>
+            <div className=" bg-white w-96 p-2 rounded-xl">
+              <div>النسخ الاحتياطي</div>
+              <BackUp
+                settingData={settingData}
+                backUpclickHandle={backUpclickHandle}
+                restorClickHandle={restorClickHandle}
+              ></BackUp>
+            </div>
           </div>
-          <div>
-            <div>النسخ الاحتياطي</div>
-            <BackUp
-              settingData={settingData}
-              backUpclickHandle={backUpclickHandle}
-              restorClickHandle={restorClickHandle}
-            ></BackUp>
+          <div className="flex gap-3">
+            <div className=" bg-white rounded-xl p-4 w-72">
+              <div>تخصيصات النضام</div>
+              <PropertySetting></PropertySetting>
+            </div>
+            <div className=" bg-white rounded-xl p-4 w-full">
+            <div>تخصيصات الطبلة</div>
+            <ExaminationSetting></ExaminationSetting>
           </div>
-          <div className="my-5">
-            <div>تخصيصات النضام</div>
-            <PropertySetting></PropertySetting>
+
           </div>
           <div>
             <div>تفعيل النسخة</div>

@@ -26,6 +26,8 @@
   "Rx": "Rx",
   "Report": "التقرير",
   "Examination": "الطبلة",
+  "Examination for": "الطبلة الخاصة بالمريض ",
+
   "Options": "الخيارات",
   "Drugs": "الادوية",
   "DrugsCategory": "اصناف الادوية",
@@ -113,7 +115,8 @@
   "bloodPressure": "ضغط الدم",
   "bloodSugar": "السكر في الدم",
   "ExaminationFindining": "العلامات السريرية",
-  "InvestigationFinding": "نتائج الفحوصات",
-  "dayAge":"العمر بالايام"
-
+  "InvestigationFinding": "نتائج الفحوصات السريرية",
+  "dayAge":"العمر بالايام",
+  "miscarriageState":"حالة الاجهاض",
+  "pregnancyCurrent" : "حمل حالي"
 }

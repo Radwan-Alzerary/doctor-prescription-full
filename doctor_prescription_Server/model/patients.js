@@ -22,7 +22,6 @@ const PatientsSchema = new mongoose.Schema(
     dayAge: {
       type: Number,
     },
-
     weight: {
       type: Number,
     },
@@ -56,9 +55,18 @@ const PatientsSchema = new mongoose.Schema(
     temperature: { type: String },
     bloodPressure: { type: String },
     bloodSugar: { type: String },
-    miscarriageState: { type: Boolean,default:false },
+    miscarriageState: { type: Boolean, default: false },
     MiscarriageNo: { type: Number },
     MiscarriageData: [{ reason: { type: String }, date: { type: String } }],
+    pregnancyState: { type: Boolean, default: false },
+    pregnancyData: {
+      DateOfLastPeriod: { type: Date },
+      PregnancySequence: { type: Number },
+      TypeOfPreviousBirth: { type: String },
+      comment:{type:String},
+      HusbandsBloodType : {type:String}
+    },
+
     ExaminationFindining: { type: String },
     InvestigationFinding: { type: String },
     visitCount: { type: Number, default: 0 },

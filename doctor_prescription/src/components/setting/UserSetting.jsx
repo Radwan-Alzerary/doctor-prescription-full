@@ -27,13 +27,12 @@ function UserSetting(props) {
   return (
     <form
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
-      className="mb-8"
+      className=""
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
       }}
-
     >
-      <div>
+      <div className="flex flex-col gap-4 justify-center items-center">
         <TextField
           required
           id="outlined-required"
@@ -43,7 +42,7 @@ function UserSetting(props) {
             handleInputChange("userName", event.target.value);
           }} // Update the name state
           sx={{
-            width: "50%",
+            width: "100%",
             color: "#fff",
           }}
           label={
@@ -63,7 +62,7 @@ function UserSetting(props) {
             handleInputChange("email", event.target.value);
           }} // Update the name state
           sx={{
-            width: "50%",
+            width: "100%",
             color: "#fff",
           }}
           label={
@@ -71,21 +70,20 @@ function UserSetting(props) {
           }
           type="email"
         />
+        <Button
+          type="submit"
+          variant="contained"
+          className="w-full"
+          color="success"
+        >
+          {
+            <FormattedMessage
+              id={"Information edit"}
+              defaultMessage="Hello, World!"
+            />
+          }
+        </Button>
       </div>
-
-      <Button
-        type="submit"
-        variant="contained"
-        className="w-full"
-        color="success"
-      >
-        {
-          <FormattedMessage
-            id={"Information edit"}
-            defaultMessage="Hello, World!"
-          />
-        }
-      </Button>
     </form>
   );
 }

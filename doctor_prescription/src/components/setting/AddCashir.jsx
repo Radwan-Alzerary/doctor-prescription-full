@@ -28,12 +28,12 @@ function AddCashir(props) {
   return (
     <form
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
-      className="mb-8"
+      className=""
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
       }}
     >
-      <div>
+      <div className="flex justify-between items-center">
         <TextField
           required
           id="outlined-required"
@@ -103,24 +103,24 @@ function AddCashir(props) {
           }}
         />
       </div>
-
-      <Button
-        type="submit"
-        variant="contained"
-        className="w-full"
-        color="success"
-      >
-        {
-          <FormattedMessage
-            id={"Information edit"}
-            defaultMessage="Hello, World!"
-          />
-        }
-      </Button>
+      <div className="mt-4">
+        <Button
+          type="submit"
+          variant="contained"
+          className="w-full "
+          color="success"
+        >
+          {
+            <FormattedMessage
+              id={"Information edit"}
+              defaultMessage="Hello, World!"
+            />
+          }
+        </Button>
+      </div>
 
       <div className="flex justify-between px-6 items-center w-full h-12 rounded-xl bg-white">
         <div>
-          {" "}
           {
             <FormattedMessage
               id={"Secretary name"}
@@ -134,7 +134,7 @@ function AddCashir(props) {
         </div>
       </div>
       {props.cashireData.map((cashire, index) => (
-        <div className="flex justify-between px-6 items-center w-full h-12 rounded-xl my-2 bg-white">
+        <div className="flex justify-between px-6 items-center w-full h-12 rounded-xl my- bg-gray-100">
           <div>{cashire.userName}</div>
           <div>{cashire.email}</div>
         </div>

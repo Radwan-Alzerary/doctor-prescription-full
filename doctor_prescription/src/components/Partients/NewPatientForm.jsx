@@ -162,7 +162,13 @@ function NewPatientForm(props) {
 
   const renderChildFields = () => {
     const childFields = [];
+    const formatDate = (date) => {
 
+      if (!date) return "";
+      const formattedDate = new Date(date).toISOString().split("T")[0];
+      return formattedDate;
+    };
+  
     for (let i = 0; i < formData.numberOfChildren; i++) {
       childFields.push(
         <div key={i} className="flex flex-col gap-4">
@@ -196,7 +202,7 @@ function NewPatientForm(props) {
           <TextField
             id={`child-date-${i}`}
             size="small"
-            value={formData.childrenData[i]?.date || ""}
+            value={formatDate(formData.childrenData[i]?.date) || ""}
             onChange={(event) =>
               handleChildrenDataChange(i, "date", event.target.value)
             }

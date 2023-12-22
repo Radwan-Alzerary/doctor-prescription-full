@@ -217,6 +217,8 @@ function PartientsProfile(props) {
       )}
       {profileSelect === "midicalInfo" ? (
         <PatentMedicalForm
+        settingData={props.settingData}
+
         handleEditPatientData={props.handleEditPatientData}
           onFormSubmit={handleEditPatientData}
           userEditData={partientsProfile}

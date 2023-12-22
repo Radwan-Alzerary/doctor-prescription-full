@@ -26,6 +26,7 @@ function PregmentData(props) {
       [name]: value,
     });
   };
+  
   return (
     <form
       className="flex w-full flex-col overflow-scroll gap-5 items-center bg-white p-5 rounded-xl z-50"

@@ -50,8 +50,8 @@ function PropertySetting(props) {
 
   return (
     <div>
-      <div className="flex justify-between">
-        <div className="flex flex-col justify-center items-center">
+      <div className="">
+        <div className="flex w-full justify-between   items-center">
           <div>تفعيل نافذة طلب الالغاء</div>
           <FormControlLabel
             sx={{
@@ -71,7 +71,7 @@ function PropertySetting(props) {
             }
           />
         </div>
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex w-full justify-between items-center">
           <div>تفعيل فتح الوصفه عند الضغط</div>
           <FormControlLabel
             sx={{
@@ -91,7 +91,7 @@ function PropertySetting(props) {
             }
           />
         </div>
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex w-full justify-between items-center">
           <div>تفعيل النسخ الاحتياطي التلقائي</div>
           <FormControlLabel
             sx={{

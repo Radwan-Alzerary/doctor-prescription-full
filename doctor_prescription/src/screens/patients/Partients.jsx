@@ -122,7 +122,9 @@ function Row(props) {
         <TableCell component="th" scope="row" align="center">
           <div
             className={`p-0.5 rounded-full  ${
-              row.gender === "ذكر" ? "bg-blue-200" : "bg-pink-200"
+              row.gender === "ذكر"
+                ? "bg-blue-200 hover:bg-blue-300"
+                : "bg-pink-200 hover:bg-pink-300"
             }`}
           >
             {row.gender === "ذكر" ? (
@@ -957,26 +959,27 @@ function Partients() {
   };
   useEffect(() => {
     const onQueryChange = () => {
-      axios
-        .post(`${serverAddress}/patients/queryselect`, {
-          ageQuery: ageQuery,
-          genderQuery: genderQuery,
-          stateQuery: stateQuery,
-          dateQuery: range,
-        })
-        .then((response) => {
-          setPatientsList(response.data); // Update the categories state with the fetched data
-
-          // Handle the response if needed
-        })
-        .catch((error) => {
-          // Handle errors if the request fails
-          console.error("Error making POST request:", error);
-        });
+      if (ageQuery || stateQuery || genderQuery || range[0].startDate) {
+        axios
+          .post(`${serverAddress}/patients/queryselect`, {
+            ageQuery: ageQuery,
+            genderQuery: genderQuery,
+            stateQuery: stateQuery,
+            dateQuery: range,
+          })
+          .then((response) => {
+            setPatientsList(response.data); // Update the categories state with the fetched data
+            // Handle the response if needed
+          })
+          .catch((error) => {
+            // Handle errors if the request fails
+            console.error("Error making POST request:", error);
+          });
+      }
     };
 
     onQueryChange();
-  }, [ageQuery, stateQuery, genderQuery, dateQuery, range]);
+  }, [ageQuery, stateQuery, genderQuery, range]);
 
   const onDeleteConfirmHandel = (id, type) => {
     console.log(id, type);
@@ -1096,8 +1099,15 @@ function Partients() {
                 }}
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
+                label={
+                  <FormattedMessage
+                    id={"ageSort"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
+
               >
-                <MenuItem value="">
+                <MenuItem value="all">
                   <em>الكل</em>
                 </MenuItem>
                 <MenuItem value={"1-10"}>1-10</MenuItem>
@@ -1132,8 +1142,14 @@ function Partients() {
                 onChange={(event) => {
                   setStateQuery(event.target.value);
                 }}
+                label={
+                  <FormattedMessage
+                    id={"stateSort"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
               >
-                <MenuItem value="">
+                <MenuItem value="all">
                   <em>الكل</em>
                 </MenuItem>
                 {constantDiseases.map((diseases, index) => (
@@ -1161,8 +1177,14 @@ function Partients() {
                 onChange={(event) => {
                   setGenderQuery(() => event.target.value);
                 }}
+                label={
+                  <FormattedMessage
+                    id={"genderSort"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
               >
-                <MenuItem value="">
+                <MenuItem value="all">
                   <em>الكل</em>
                 </MenuItem>
                 <MenuItem value={"ذكر"}>ذكر</MenuItem>
@@ -1205,7 +1227,10 @@ function Partients() {
                 </TableCell>
                 <TableCell align="center">
                   {" "}
-                  <FormattedMessage id={"AgeTitle"} defaultMessage="Hello, World!" />
+                  <FormattedMessage
+                    id={"AgeTitle"}
+                    defaultMessage="Hello, World!"
+                  />
                 </TableCell>
                 <TableCell align="center">
                   {" "}
@@ -1397,6 +1422,7 @@ function Partients() {
             }}
           ></BackGroundShadow>
           <PartientsProfile
+             settingData={settingData}
             handleEditPatientData={handleEditPatientData}
             userEditData={userEditData}
             refresh={profileRefresh}
@@ -1430,6 +1456,7 @@ function Partients() {
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <MedicalForm
+            settingData={settingData}
             onFormSubmit={handleEditPatientData}
             userEditData={userEditData}
           ></MedicalForm>

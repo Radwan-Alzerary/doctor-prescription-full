@@ -15,21 +15,21 @@ function BackUp(props) {
   }
 
   return (
-    <div className="flex gap-6">
+    <div className="gap-2 flex flex-col justify-center items-center">
       <Button
         variant="contained"
-        className="w-full"
+        className="w-1/2"
         color="success"
         onClick={() => props.backUpclickHandle()}
       >
         {<FormattedMessage id={"backup data"} defaultMessage="Hello, World!" />}
       </Button>
       {props.settingData ? (
-        <div className="w-full flex flex-col justify-center items-center">
+        <div className="gap-2 w-full flex flex-col justify-center items-center">
           <Button
             variant="contained"
-            className="w-full"
-            color="success"
+            className="w-1/2"
+            // color="success"
             onClick={() => props.restorClickHandle()}
           >
             {
@@ -39,7 +39,7 @@ function BackUp(props) {
               />
             }
           </Button>
-          <div>اخر نسخ احتياطي {formatDate(props.settingData.lastBackup)}  </div>
+          <div>اخر نسخ احتياطي {formatDate(props.settingData.lastBackup)} </div>
         </div>
       ) : (
         ""

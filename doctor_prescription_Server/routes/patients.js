@@ -60,6 +60,7 @@ router.post("/new", async (req, res) => {
 });
 router.post("/edit", async (req, res) => {
   try {
+    console.log(req.body)
     const id = req.body.id; // Extract the ID from the URL parameter
     const ubdateData = req.body;
     if (req.body.diseases) {
@@ -115,7 +116,6 @@ router.get("/getcount", async (req, res) => {
   try {
     const count = await Patients.countDocuments({ name: { $ne: "" } });
     res.json(count);
-
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -239,24 +239,37 @@ router.post("/queryselect/", async (req, res) => {
     const [minAge, maxAge] = req.body.ageQuery.split("-").map(Number);
     const query = {};
     if (req.body.ageQuery) {
-      query.age = { $gte: minAge, $lte: maxAge };
+      if (req.body.ageQuery == "all") {
+      } else {
+        query.age = { $gte: minAge, $lte: maxAge };
+      }
     }
     if (req.body.stateQuery) {
-      const diseaseIds = [req.body.stateQuery]; // Replace with actual disease IDs
-      query.diseases = { $all: diseaseIds };
+      if (req.body.stateQuery == "all") {
+        // query.diseases = "";
+      } else {
+        const diseaseIds = [req.body.stateQuery]; // Replace with actual disease IDs
+        query.diseases = { $all: diseaseIds };
+      }
     }
     if (req.body.genderQuery) {
-      query.gender = req.body.genderQuery;
+      if (req.body.genderQuery == "all") {
+        // query.gender = "";
+      } else {
+        query.gender = req.body.genderQuery;
+      }
     }
     if (req.body.dateQuery[0].startDate) {
       const startDate = new Date(req.body.dateQuery[0].startDate);
       const endDate = new Date(req.body.dateQuery[0].endDate);
       query.updatedAt = { $gte: startDate, $lte: endDate };
     }
-    const patients = await Patients.find(query).populate({
-      path: "prescription",
-      match: { active: true }, // Filter prescriptions with active: true
-    });
+    const patients = await Patients.find(query)
+      .populate({
+        path: "prescription",
+        match: { active: true }, // Filter prescriptions with active: true
+      })
+      .sort({ updatedAt: -1 }); // Sort by 'updatedAt' field in descending order
     res.json(patients);
   } catch (error) {
     res.status(500).json({ error: error.message });

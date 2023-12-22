@@ -26,7 +26,8 @@
   "PatientPage": "Patient page",
   "Rx": "Rx",
   "Report": "Report",
-  "Examination": "patient page",
+  "Examination": "Examination",
+  "Examination for": "Examination for",
   "Options": "Options",
   "Drugs": "Drugs",
   "DrugsCategory": "DrugsCategory",
@@ -110,13 +111,15 @@
   "numberOfChildren": "number of children",
   "fractures": "fractures",
   "pulseRate": "pulse rate",
-  "AgeTitle":"age",
+  "AgeTitle": "age",
   "spo2": "spo2",
   "temperature": "temperature",
   "bloodPressure": "blood pressure",
   "bloodSugar": "blood sugar",
   "ExaminationFindining": "Examination Findining",
   "InvestigationFinding": "Investigation Finding",
-  "dayAge":"day Age"
+  "dayAge": "day Age",
+  "miscarriageState":"Miscarriage State",
+  "pregnancyCurrent" : "Current pregnancy"
 
 }
