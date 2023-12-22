@@ -672,7 +672,7 @@ function MedicalForm(props) {
                 label="ملاحضات حول الحمل"
                 // defaultValue="Hello World"
               />
-              {formData.pregnancyData.DateOfLastPeriod ? (
+              {formData.pregnancyData && formData.pregnancyData.DateOfLastPeriod ? (
                 <div className="flex justify-between w-full">
                   <div>موعد الحمل</div>
                   <div>
