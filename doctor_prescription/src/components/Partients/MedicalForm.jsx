@@ -10,6 +10,7 @@ import {
   Switch,
   TextField,
 } from "@mui/material";
+import dayjs from "dayjs";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -536,31 +537,33 @@ function MedicalForm(props) {
           {formData.pregnancyState ? (
             <>
               <div className="flex w-full gap-4">
-                <TextField
-                  size="small"
-                  value={
-                    formatDate(formData.pregnancyData?.DateOfLastPeriod) || ""
-                  }
-                  onChange={(event) => {
-                    setFormData({
-                      ...formData,
-                      pregnancyData: {
-                        ...formData.pregnancyData,
-                        DateOfLastPeriod: event.target.value,
-                      },
-                    });
-                  }}
-                  sx={{
-                    width: "100%",
-                    textAlign: "right",
-                    color: "#fff",
-                  }}
-                  type="date"
-                  InputProps={{
-                    style: { textAlign: "right" },
-                  }}
-                  label="تاريخ اخر حمل"
-                />
+                <div style={{ direction: "ltr" }}>
+                  <TextField
+                    size="small"
+                    value={
+                      formatDate(formData.pregnancyData?.DateOfLastPeriod) || ""
+                    }
+                    onChange={(event) => {
+                      setFormData({
+                        ...formData,
+                        pregnancyData: {
+                          ...formData.pregnancyData,
+                          DateOfLastPeriod: event.target.value,
+                        },
+                      });
+                    }}
+                    sx={{
+                      width: "100%",
+                      textAlign: "right",
+                      color: "#fff",
+                    }}
+                    type="date"
+                    InputProps={{
+                      style: { textAlign: "right" },
+                    }}
+                    label="تاريخ اخر دورة"
+                  />
+                </div>
                 <TextField
                   value={formData.pregnancyData?.PregnancySequence || ""}
                   onChange={(event) => {
@@ -669,6 +672,21 @@ function MedicalForm(props) {
                 label="ملاحضات حول الحمل"
                 // defaultValue="Hello World"
               />
+              {formData.pregnancyData.DateOfLastPeriod ? (
+                <div className="flex justify-between w-full">
+                  <div>موعد الحمل</div>
+                  <div>
+                    {" "}
+                    {formData.pregnancyData
+                      ? dayjs(formData.pregnancyData.DateOfLastPeriod)
+                          .add(9, "month")
+                          .format("YYYY-MM-DD")
+                      : ""}
+                  </div>
+                </div>
+              ) : (
+                ""
+              )}
             </>
           ) : (
             ""

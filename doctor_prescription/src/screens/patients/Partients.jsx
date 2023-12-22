@@ -90,7 +90,7 @@ function Row(props) {
         className="hover:bg-blue-50"
         sx={{ "& > *": { borderBottom: "unset" } }}
       >
-        <TableCell>{props.index + 1}</TableCell>
+        <TableCell>{props.index + 1 + (20*(props.pageSelect-1))}</TableCell>
         <TableCell
           className=" cursor-pointer hover:bg-blue-100"
           onClick={() => {
@@ -1317,6 +1317,7 @@ function Partients() {
             <TableBody>
               {patientsList.map((patient, index) => (
                 <Row
+                pageSelect={pageSelect}
                   onPrescriptionEditHandel={onPrescriptionEditHandel}
                   onShareHande={onShareHande}
                   settingData={settingData}
