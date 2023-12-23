@@ -674,7 +674,7 @@ function MedicalForm(props) {
               />
               {formData.pregnancyData && formData.pregnancyData.DateOfLastPeriod ? (
                 <div className="flex justify-between w-full">
-                  <div>موعد الحمل</div>
+                  <div>موعد الانجاب</div>
                   <div>
                     {" "}
                     {formData.pregnancyData

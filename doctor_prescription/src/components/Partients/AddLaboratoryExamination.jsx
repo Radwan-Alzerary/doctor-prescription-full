@@ -14,8 +14,9 @@ function AddLaboratoryExamination({
   partientsSelectId,
   onPrinterClick,
   type,
-  data
+  data,
 }) {
+
   // Define state to store form input data
   const [formData, setFormData] = useState({
     report: "",
@@ -29,7 +30,6 @@ function AddLaboratoryExamination({
       });
     }
   }, []);
-
 
   const [locale, setLocale] = useState(() => {
     return Cookies.get("locale") || "ar";
@@ -60,6 +60,7 @@ function AddLaboratoryExamination({
         direction: locale === "en" ? "ltr" : "rtl",
       }}
     >
+
       <div className=" text-right w-full">
         <h5>
           {" "}

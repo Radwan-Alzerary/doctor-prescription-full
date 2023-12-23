@@ -25,7 +25,9 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import BiotechIcon from "@mui/icons-material/Biotech";
-import { useSpeechRecognition } from "react-speech-recognition";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import { Calendar } from "react-modern-calendar-datepicker";
@@ -90,7 +92,7 @@ function Row(props) {
         className="hover:bg-blue-50"
         sx={{ "& > *": { borderBottom: "unset" } }}
       >
-        <TableCell>{props.index + 1 + (20*(props.pageSelect-1))}</TableCell>
+        <TableCell>{props.index + 1 + 20 * (props.pageSelect - 1)}</TableCell>
         <TableCell
           className=" cursor-pointer hover:bg-blue-100"
           onClick={() => {
@@ -1059,12 +1061,35 @@ function Partients() {
         });
     }
   };
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
+
+  if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
+    console.log(
+      "Your browser does not support speech recognition software! Try Chrome desktop, maybe?"
+    );
+  }
 
   useEffect(() => {
     getPatientsList();
   }, [pageSelect]);
   return (
     <div className="p-2 relative h-[93vh] overflow-scroll">
+      {!browserSupportsSpeechRecognition ? (
+        <span>Browser doesn't support speech recognition.</span>
+      ) : (
+        ""
+      )}
+      <p>Microphone: {listening ? "on" : "off"}</p>
+      <button onClick={SpeechRecognition.startListening}>Start</button>
+      <button onClick={SpeechRecognition.stopListening}>Stop</button>
+      <button onClick={resetTranscript}>Reset</button>
+      <p>{transcript}</p>
+
       <div className=" bg-white overflow-scroll shadow-sm h-full rounded-md pb-4">
         <div className="flex gap-4 justify-center items-center w-full">
           <div className=" flex flex-col justify-center items-center p-4">
@@ -1105,7 +1130,6 @@ function Partients() {
                     defaultMessage="Hello, World!"
                   />
                 }
-
               >
                 <MenuItem value="all">
                   <em>الكل</em>
@@ -1317,7 +1341,7 @@ function Partients() {
             <TableBody>
               {patientsList.map((patient, index) => (
                 <Row
-                pageSelect={pageSelect}
+                  pageSelect={pageSelect}
                   onPrescriptionEditHandel={onPrescriptionEditHandel}
                   onShareHande={onShareHande}
                   settingData={settingData}
@@ -1423,7 +1447,7 @@ function Partients() {
             }}
           ></BackGroundShadow>
           <PartientsProfile
-             settingData={settingData}
+            settingData={settingData}
             handleEditPatientData={handleEditPatientData}
             userEditData={userEditData}
             refresh={profileRefresh}

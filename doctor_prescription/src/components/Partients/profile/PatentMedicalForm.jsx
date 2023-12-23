@@ -433,7 +433,7 @@ function PatentMedicalForm(props) {
             </div>
             {props.userEditData.pregnancyData.DateOfLastPeriod ? (
                 <div className="flex justify-between w-full">
-                  <div>موعد الحمل</div>
+                  <div>موعد الانجاب</div>
                   <div>
                     {" "}
                     {props.userEditData
