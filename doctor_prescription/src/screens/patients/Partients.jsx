@@ -1079,7 +1079,7 @@ function Partients() {
   }, [pageSelect]);
   return (
     <div className="p-2 relative h-[93vh] overflow-scroll">
-      {!browserSupportsSpeechRecognition ? (
+      {/* {!browserSupportsSpeechRecognition ? (
         <span>Browser doesn't support speech recognition.</span>
       ) : (
         ""
@@ -1088,7 +1088,7 @@ function Partients() {
       <button onClick={SpeechRecognition.startListening}>Start</button>
       <button onClick={SpeechRecognition.stopListening}>Stop</button>
       <button onClick={resetTranscript}>Reset</button>
-      <p>{transcript}</p>
+      <p>{transcript}</p> */}
 
       <div className=" bg-white overflow-scroll shadow-sm h-full rounded-md pb-4">
         <div className="flex gap-4 justify-center items-center w-full">
