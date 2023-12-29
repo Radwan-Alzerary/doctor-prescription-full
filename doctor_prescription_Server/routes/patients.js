@@ -4,6 +4,8 @@ const Patients = require("../model/patients"); // Make sure to adjust the path a
 const ConstantDiseases = require("../model/constantDiseases");
 const axios = require("axios");
 const multer = require("multer");
+const fs = require("fs");
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./public/img");
@@ -453,5 +455,45 @@ router.delete(
     }
   }
 );
+
+router.get("/import", async (req, res) => {
+  try {
+    // Replace 'your-json-file.json' with the path to your JSON file
+    const jsonFilePath = "data.json";
+    console.log(process.cwd());
+
+    // Read the JSON file
+    const jsonData = fs.readFileSync(jsonFilePath, "utf8");
+
+    // Parse the JSON data
+    const pharmaceuticalsArray = JSON.parse(jsonData);
+
+    for (const item of pharmaceuticalsArray) {
+      // Create a new Pharmaceutical document with the necessary fields
+      const newPatients = new Patients({
+        name: item.name, // Assuming 'text' field contains the name
+        gender: "انثى",
+        adresses:item.adress,
+        age: 2024-item.date ,
+        phonNumber: item.phoneNumber,
+      });
+  
+      
+      
+      try {
+        // Save the pharmaceutical document to the database
+        await newPatients.save();
+        console.log(`Added: ${item.text}`);
+      } catch (error) {
+        console.error(`Error adding ${item.text}: ${error.message}`);
+      }
+    }
+    res.status(200).json({ message: "Import completed." });
+  } catch (error) {
+    console.error(`Error reading JSON file: ${error.message}`);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 module.exports = router;
