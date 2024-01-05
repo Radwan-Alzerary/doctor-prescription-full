@@ -25,6 +25,7 @@ router.post("/new", async (req, res) => {
     patientsDate.name = req.body.name;
     patientsDate.phonNumber = req.body.phonNumber;
     patientsDate.adresses = req.body.adresses;
+    patientsDate.Sequence = req.body.Sequence;
     patientsDate.gender = req.body.gender;
     patientsDate.age = req.body.age;
     patientsDate.monthAge = req.body.monthAge;

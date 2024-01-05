@@ -79,6 +79,7 @@ function NewPatientForm(props) {
         bloodType: props.data.bloodType,
         MaritalStatus: props.data.MaritalStatus,
         age: props.data.age,
+        Sequence: props.data.Sequence,
         childrenData: props.data.childrenData, // Array to store data for each child
         monthAge: props.data.monthAge,
         dayAge: props.data.dayAge,
@@ -163,12 +164,11 @@ function NewPatientForm(props) {
   const renderChildFields = () => {
     const childFields = [];
     const formatDate = (date) => {
-
       if (!date) return "";
       const formattedDate = new Date(date).toISOString().split("T")[0];
       return formattedDate;
     };
-  
+
     for (let i = 0; i < formData.numberOfChildren; i++) {
       childFields.push(
         <div key={i} className="flex flex-col gap-4">
@@ -303,6 +303,22 @@ function NewPatientForm(props) {
           }}
           label={
             <FormattedMessage id={"Address"} defaultMessage="Hello, World!" />
+          }
+        />
+        <TextField
+          id="outlined-required"
+          size="small"
+          value={formData.Sequence}
+          onChange={(event) =>
+            handleInputChange("Sequence", event.target.value)
+          }
+          sx={{
+            width: "10%",
+            textAlign: "right",
+            color: "#fff",
+          }}
+          label={
+            <FormattedMessage id={"Sequence"} defaultMessage="Hello, World!" />
           }
         />
       </div>

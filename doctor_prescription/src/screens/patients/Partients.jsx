@@ -140,6 +140,10 @@ function Row(props) {
           {row.adresses}
         </TableCell>
         <TableCell component="th" scope="row" align="center">
+          {row.Sequence}
+        </TableCell>
+
+        <TableCell component="th" scope="row" align="center">
           {row.weight ? row.weight + "kg" : ""}
         </TableCell>
         <TableCell component="th" scope="row" align="center">
@@ -1079,12 +1083,12 @@ function Partients() {
   }, [pageSelect]);
   return (
     <div className="p-2 relative h-[93vh] overflow-scroll">
-      {/* {!browserSupportsSpeechRecognition ? (
+      {!browserSupportsSpeechRecognition ? (
         <span>Browser doesn't support speech recognition.</span>
       ) : (
         ""
       )}
-      <p>Microphone: {listening ? "on" : "off"}</p>
+      {/* <p>Microphone: {listening ? "on" : "off"}</p>
       <button onClick={SpeechRecognition.startListening}>Start</button>
       <button onClick={SpeechRecognition.stopListening}>Stop</button>
       <button onClick={resetTranscript}>Reset</button>
@@ -1270,6 +1274,14 @@ function Partients() {
                     defaultMessage="Hello, World!"
                   />
                 </TableCell>
+                <TableCell align="center">
+                  {" "}
+                  <FormattedMessage
+                    id={"Sequence"}
+                    defaultMessage="Hello, World!"
+                  />
+                </TableCell>
+
                 <TableCell align="center">
                   {" "}
                   <FormattedMessage

@@ -25,6 +25,10 @@ const PatientsSchema = new mongoose.Schema(
     weight: {
       type: Number,
     },
+    Sequence: {
+      type: Number,
+    },
+
     length: {
       type: Number,
     },

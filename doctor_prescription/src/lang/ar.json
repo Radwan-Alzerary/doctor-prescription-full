@@ -118,5 +118,6 @@
   "InvestigationFinding": "نتائج الفحوصات السريرية",
   "dayAge":"العمر بالايام",
   "miscarriageState":"حالة الاجهاض",
-  "pregnancyCurrent" : "حمل حالي"
+  "pregnancyCurrent" : "حمل حالي",
+  "Sequence":"التسلسل"
 }

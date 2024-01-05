@@ -120,6 +120,8 @@
   "InvestigationFinding": "Investigation Finding",
   "dayAge": "day Age",
   "miscarriageState":"Miscarriage State",
-  "pregnancyCurrent" : "Current pregnancy"
+  "pregnancyCurrent" : "Current pregnancy",
+  "Sequence":"Sequence"
+
 
 }

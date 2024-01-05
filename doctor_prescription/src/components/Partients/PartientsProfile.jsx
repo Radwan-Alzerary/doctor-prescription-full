@@ -158,11 +158,34 @@ function PartientsProfile(props) {
                 ) : (
                   ""
                 )}
-                <p>الوزن : {partientsProfile.weight} كيلو</p>
-                <p>الطول : {partientsProfile.length}</p>
+                {partientsProfile.weight ? (
+                  <p>الوزن : {partientsProfile.weight} كيلو</p>
+                ) : (
+                  ""
+                )}
+                {partientsProfile.length ? (
+                  <p>الطول : {partientsProfile.length}</p>
+                ) : (
+                  ""
+                )}
+
                 <p>الجنس : {partientsProfile.gender}</p>
-                <p>صنف الدم : {partientsProfile.bloodType}</p>
-                <p>الحالة الزوجية : {partientsProfile.MaritalStatus}</p>
+                {partientsProfile.bloodType ? (
+                  <p>صنف الدم : {partientsProfile.bloodType}</p>
+                ) : (
+                  ""
+                )}
+
+                {partientsProfile.MaritalStatus ? (
+                  <p>الحالة الزوجية : {partientsProfile.MaritalStatus}</p>
+                ) : (
+                  ""
+                )}
+                {partientsProfile.Sequence ? (
+                  <p>التسلسل : {partientsProfile.Sequence}</p>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
             <div className=" bg-white p-3 rounded-2xl shadow my-2">
@@ -190,9 +213,9 @@ function PartientsProfile(props) {
               <div className="w-full">
                 <div className="flex justify-between items-center w-full">
                   {partientsProfile.childrenData
-                    ? partientsProfile.childrenData.map((child,index) => (
+                    ? partientsProfile.childrenData.map((child, index) => (
                         <div className="">
-                          <div>{`طفل رقم ${index+1}`}</div>
+                          <div>{`طفل رقم ${index + 1}`}</div>
                           <div>{`نوع الولادة  : ${child.type}`}</div>
                           <div>
                             {new Date(child.date).toLocaleDateString("en-GB")}
@@ -217,9 +240,8 @@ function PartientsProfile(props) {
       )}
       {profileSelect === "midicalInfo" ? (
         <PatentMedicalForm
-        settingData={props.settingData}
-
-        handleEditPatientData={props.handleEditPatientData}
+          settingData={props.settingData}
+          handleEditPatientData={props.handleEditPatientData}
           onFormSubmit={handleEditPatientData}
           userEditData={partientsProfile}
         ></PatentMedicalForm>
