@@ -48,6 +48,7 @@ function PartientsProfile(props) {
           sx={{ width: 120, height: 120 }}
         />{" "}
         <h5>المريض : {partientsProfile.name}</h5>
+        <h5>{partientsProfile.phonNumber}</h5>
       </div>
       <div className="flex gap-8 w-full justify-center text-center">
         <div
