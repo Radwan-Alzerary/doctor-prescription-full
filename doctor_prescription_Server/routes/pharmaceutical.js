@@ -139,6 +139,42 @@ router.get("/import", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+router.get("/costemimport", async (req, res) => {
+  try {
+    // Replace 'your-json-file.json' with the path to your JSON file
+    const jsonFilePath = "book.json";
+    console.log(process.cwd());
+
+    // Read the JSON file
+    const jsonData = fs.readFileSync(jsonFilePath, "utf8");
+
+    // Parse the JSON data
+    const pharmaceuticalsArray = JSON.parse(jsonData);
+
+    for (const item of pharmaceuticalsArray) {
+      const pharmaceutical = new Pharmaceutical({
+        name: item.name, // Assuming 'text' field contains the name
+        midScapeId: "none",
+        midScapeval: "none",
+        midScapetype: "none",
+        midScapeHasInteractions: "none",
+      });
+  
+            
+      try {
+        // Save the pharmaceutical document to the database
+        await pharmaceutical.save();
+        console.log(`Added: ${item.text}`);
+      } catch (error) {
+        console.error(`Error adding ${item.text}: ${error.message}`);
+      }
+    }
+    res.status(200).json({ message: "Import completed." });
+  } catch (error) {
+    console.error(`Error reading JSON file: ${error.message}`);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 router.get("/getbyname/:searchName", async (req, res) => {
   const searchName = req.params.searchName;
