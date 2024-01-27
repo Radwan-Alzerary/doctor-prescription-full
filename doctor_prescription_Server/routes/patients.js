@@ -474,13 +474,11 @@ router.get("/import", async (req, res) => {
       const newPatients = new Patients({
         name: item.name, // Assuming 'text' field contains the name
         gender: "انثى",
+        Sequence:item.serialn,
         adresses:item.adress,
         age: 2024-item.date ,
         phonNumber: item.phoneNumber,
       });
-  
-      
-      
       try {
         // Save the pharmaceutical document to the database
         await newPatients.save();

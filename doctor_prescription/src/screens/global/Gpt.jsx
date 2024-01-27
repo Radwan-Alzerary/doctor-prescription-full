@@ -15,7 +15,7 @@ const API_KEY = "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";
 const Gpt = (props) => {
   const [messages, setMessages] = useState([
     {
-      message: "Hello, I'm ChatGPT! Ask me anything!",
+      message: "مرحبا انا مساعدك الطبي الشخصي هل تحتاج الى مساعدة ؟",
       sentTime: "just now",
       sender: "ChatGPT",
     },
