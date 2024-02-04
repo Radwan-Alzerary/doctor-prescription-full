@@ -63,7 +63,7 @@ router.post("/new", async (req, res) => {
 });
 router.post("/edit", async (req, res) => {
   try {
-    console.log(req.body)
+    console.log(req.body);
     const id = req.body.id; // Extract the ID from the URL parameter
     const ubdateData = req.body;
     if (req.body.diseases) {
@@ -109,7 +109,10 @@ router.get("/getall", async (req, res) => {
           path: "pharmaceutical.id",
         },
       })
-      .sort({ updatedAt: -1 }); // Sort by 'updatedAt' field in descending order
+      .sort({
+        booked: -1, // Sort by 'booked' field in descending order
+        updatedAt: -1,
+      }); // Sort by 'updatedAt' field in descending order
     res.json(patients);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -138,7 +141,12 @@ router.get("/getall/:page", async (req, res) => {
           path: "pharmaceutical.id",
         },
       })
-      .sort({ updatedAt: -1 }) // Sort by 'updatedAt' field in descending order
+      .sort({
+        bookedPriority: -1, // Sort by 'booked' field in descending order
+
+        booked: -1, // Sort by 'booked' field in descending order
+        updatedAt: -1,
+      }) // Sort by 'updatedAt' field in descending order
       .skip(skip)
       .limit(perPage);
     res.json(patients);
@@ -208,7 +216,8 @@ router.get("/medicalinfo/:partientId", async (req, res) => {
       })
       .populate("medicalReport")
       .populate("diseases")
-      .populate("labory");
+      .populate("labory")
+      .populate("visit");
     console.log(patients);
     res.json(patients);
   } catch (error) {
@@ -474,9 +483,9 @@ router.get("/import", async (req, res) => {
       const newPatients = new Patients({
         name: item.name, // Assuming 'text' field contains the name
         gender: "انثى",
-        Sequence:item.serialn,
-        adresses:item.adress,
-        age: 2024-item.date ,
+        Sequence: item.serialn,
+        adresses: item.adress,
+        age: 2024 - item.date,
         phonNumber: item.phoneNumber,
       });
       try {
@@ -494,5 +503,51 @@ router.get("/import", async (req, res) => {
   }
 });
 
+router.post("/bookpatents", async (req, res) => {
+  try {
+    let bookedCount = 0;
+    await Patients.countDocuments({ booked: true })
+      .then((count) => {
+        bookedCount = count;
+        console.log(`Number of booked patients: ${count}`);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    console.log(req.body);
+    const id = req.body.id; // Extract the ID from the URL parameter
+    const currentPatient = await Patients.findById(req.body.id);
+    if (currentPatient.booked) {
+      await Patients.updateMany(
+        {
+          _id: { $ne: id },
+          booked: true,
+          bookedPriority: { $gt: currentPatient.bookedPriority },
+        },
+        { $inc: { bookedPriority: -1 } }
+      );
+    }
+
+    const updatedPatient = await Patients.findByIdAndUpdate(
+      id,
+      {
+        booked: !currentPatient.booked,
+        bookedDate: Date.now(),
+        bookedPriority: currentPatient.booked ? 0 : bookedCount + 1,
+      },
+
+      {
+        new: true,
+      }
+    );
+
+    if (!updatedPatient) {
+      return res.status(404).json({ error: "Patient not found" });
+    }
+    res.status(200).json(updatedPatient);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
 module.exports = router;

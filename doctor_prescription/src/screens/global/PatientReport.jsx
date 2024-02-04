@@ -7,6 +7,8 @@ function PatientReport(props) {
   const [middleText, setMiddleText] = useState([]);
   const [rightText, setRightText] = useState([]);
   const [leftText, setLeftText] = useState([]);
+  const [shape, setShape] = useState([]);
+  const [images, setImages] = useState([]);
   const [randomText, setRandomText] = useState([]);
   const currentURL = window.location.origin; // Get the current URL
   const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
@@ -18,6 +20,8 @@ function PatientReport(props) {
         setMiddleText(props.medicalReportsStype.HeaderMidleText);
         setRightText(props.medicalReportsStype.HeaderRightText);
         setLeftText(props.medicalReportsStype.HeaderLeftText);
+        setShape(props.medicalReportsStype.shape);
+        setImages(props.medicalReportsStype.images);
         setRandomText(props.medicalReportsStype.textRandom);
         // Introduce a 1-second delay
         await new Promise((resolve) => setTimeout(resolve, 300));
@@ -32,6 +36,9 @@ function PatientReport(props) {
     setMiddleText(props.medicalReportsStype.HeaderMidleText);
     setRightText(props.medicalReportsStype.HeaderRightText);
     setLeftText(props.medicalReportsStype.HeaderLeftText);
+    setShape(props.medicalReportsStype.shape);
+    setImages(props.medicalReportsStype.images);
+
     setRandomText(props.medicalReportsStype.textRandom);
   }, [props.medicalReportsStype]);
 
@@ -95,6 +102,53 @@ function PatientReport(props) {
             {textData.title}
           </div>
         ))}
+
+        {shape
+          ? shape.map((shape, index) => (
+              <div
+                className={`${
+                  !shape.Active ? "hidden" : "flex"
+                } absolute text-center  flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center `}
+                style={{
+                  height: `${shape.height}px`,
+                  width: `${shape.width}%`,
+                  left: `${shape.placeX}%`,
+                  opacity: `${!shape.active ? 0 : "100%"}`,
+                  top: `${shape.placeY}%`,
+                  zIndex: `${shape.zindex}`,
+                  background: `${shape.color}`,
+                  borderColor: `${shape.borderColor}`,
+                  borderWidth: `${shape.borderWidth}px`,
+                  borderRadius: `${
+                    shape.shapetype === "circle"
+                      ? "100%"
+                      : `${shape.borderRadius}px`
+                  }`,
+                }}
+              ></div>
+            ))
+          : ""}
+
+        {images
+          ? images.map((image, index) => (
+              <div
+                className={`absolute overflow-hidden text-center  flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center `}
+                style={{
+                  height: `${image.height}px`,
+                  width: `${image.width}px`,
+                  left: `${image.placeX}%`,
+                  opacity: `${!image.active ? 0 : `${image.opacity}%`}`,
+                  top: `${image.placeY}%`,
+                  zIndex: `${image.zindex}`,
+                  borderColor: `${image.borderColor}`,
+                  borderWidth: `${image.borderWidth}px`,
+                  borderRadius: `${`${image.borderRadius}px`}`,
+                }}
+              >
+                <img alt="" className="w-full h-full" src={`${serverAddress}` + image.imageUrl}></img>
+              </div>
+            ))
+          : ""}
 
         {props.medicalReportsStype.nameActive &&
         props.medicalReportsStype.nameAbsoulateActive ? (
@@ -173,6 +227,47 @@ function PatientReport(props) {
         ) : (
           ""
         )}
+
+        {props.medicalReportsStype.genderActive &&
+        props.medicalReportsStype.genderAbsoulateActive ? (
+          <div
+            className={`flex gap-2 ${
+              props.medicalReportsStype.genderAbsoulateActive ? "absolute" : ""
+            }`}
+            style={{
+              top: `${props.medicalReportsStype.genderY}%`,
+              left: `${props.medicalReportsStype.genderX}%`,
+            }}
+          >
+            <h2
+              className=" text-red-500 font-semibold"
+              style={{
+                fontSize: `${props.medicalReportsStype.genderSize}rem`,
+                color: `${props.medicalReportsStype.genderMainTitleColor}`,
+              }}
+            >
+              {props.medicalReportsStype.patientsTitleActive &&
+              props.medicalReportsStype.genderMainTitleActive
+                ? "الجنس : "
+                : ""}
+            </h2>
+            <h2
+              className="font-semibold"
+              style={{
+                fontSize: `${props.medicalReportsStype.genderSize}rem`,
+                color: `${props.medicalReportsStype.genderColor}`,
+              }}
+            >
+              {" "}
+              {props.dataToPrint.patients.gender
+                ? props.dataToPrint.patients.gender
+                : "غير معرف"}
+            </h2>
+          </div>
+        ) : (
+          ""
+        )}
+
         {props.medicalReportsStype.dateActive &&
         props.medicalReportsStype.dateAbsoulateActive ? (
           <div
@@ -265,7 +360,7 @@ function PatientReport(props) {
             backgroundColor: `${props.medicalReportsStype.backgroundColor}`,
           }}
         >
-          <div className="flex w-full  flex-col justify-center items-center">
+          <div className="flex w-full z-50 flex-col justify-center items-center">
             <div
               style={{ height: `${props.medicalReportsStype.topPading}px` }}
             ></div>
@@ -273,7 +368,7 @@ function PatientReport(props) {
               className={`font-black`}
               style={{
                 marginBottom: `${props.medicalReportsStype.mainNameHeaderkniaMarginY}px`,
-
+                zindex: 100,
                 fontSize: `${props.medicalReportsStype.mainNameHeaderkniaSize}rem`,
                 color: `${props.medicalReportsStype.mainNameHeaderkniaColor}`,
               }}
@@ -361,7 +456,7 @@ function PatientReport(props) {
               ""
             )}
           </div>
-          <div className="flex justify-around items-center my-2 ">
+          <div className="flex z-50 justify-around items-center my-2 ">
             {props.medicalReportsStype.nameActive &&
             !props.medicalReportsStype.ageAbsoulateActive ? (
               <div
@@ -437,9 +532,10 @@ function PatientReport(props) {
                     ? props.dataToPrint.patients.monthAge + " شهر "
                     : props.dataToPrint.patients.monthAge &&
                       props.dataToPrint.patients.monthAge < 2
-                    ?(props.dataToPrint.patients.monthAge * 30 +
-                      props.dataToPrint.patients.dayAge ) + " يوم "
-                    : props.dataToPrint.patients.dayAge 
+                    ? props.dataToPrint.patients.monthAge * 30 +
+                      props.dataToPrint.patients.dayAge +
+                      " يوم "
+                    : props.dataToPrint.patients.dayAge
                     ? props.dataToPrint.patients.dayAge + " يوم "
                     : "غير معرف"}
                 </h2>
@@ -542,9 +638,9 @@ function PatientReport(props) {
             ""
           )}
 
-          <div className=" w-full h-1/2  ">
-            <div class=" ">
-              <table class="w-full text-sm  text-center text-gray-500 ">
+          <div className=" w-full z-50 h-1/2  ">
+            <div class="z-50 ">
+              <table class="w-full z-50 text-sm  text-center text-gray-500 ">
                 {!props.dataToPrint.textonly ? (
                   <thead class="text-xs text-center text-gray-700 uppercase   ">
                     {props.medicalReportsStype.tableHeaderActive ? (
@@ -783,7 +879,7 @@ function PatientReport(props) {
             </div>
           </div>
 
-          <div className=" w-full absolute bottom-0 ">
+          <div className=" w-full z-50 absolute bottom-0 ">
             {props.medicalReportsStype.linesActive ? (
               <div className="w-full h-0.5 bg-slate-100 mt-2"></div>
             ) : (

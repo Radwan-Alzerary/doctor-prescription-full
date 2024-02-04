@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import ImageInput from "../../components/Partients/ImageInput";
 
 const data = {
   patients: {
@@ -52,6 +53,9 @@ const data = {
 function PrescriptionsDesign() {
   const [medicalReportsStype, setMedicalReportsStype] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [shapeArray, setShapeArray] = useState([]);
+  const [imagesArray, setImagesArray] = useState([]);
+
   const [medicalMiddleTextReportsStype, setMedicalTextMiddleReportsStype] =
     useState([]);
   const [medicalLeftTextReportsStype, setMedicalTextLeftReportsStype] =
@@ -76,6 +80,9 @@ function PrescriptionsDesign() {
       .get(`${serverAddress}/medicaleeportstyle/getmedicalreportstype`)
       .then((response) => {
         setMedicalReportsStype(response.data[0]); // Update the categories state with the fetched data
+        setShapeArray(response.data[0].shape);
+        setImagesArray(response.data[0].images);
+
         setMedicalTextMiddleReportsStype(response.data[0].HeaderMidleText);
         setMedicalTextLeftReportsStype(response.data[0].HeaderLeftText);
         setMedicalTextRightReportsStype(response.data[0].HeaderRightText);
@@ -151,6 +158,44 @@ function PrescriptionsDesign() {
         console.error("Error making POST request:", error);
       });
   };
+
+  const onShapeInputChange = (text, data, index) => {
+    axios
+      .post(`${serverAddress}/medicaleeportstyle/updateshape`, {
+        id: medicalReportsStype._id,
+        text: text,
+        data: data,
+        index: index,
+      })
+      .then((response) => {
+        // Handle the response if needed
+        console.log("POST request successful:", response.data);
+        ubdateStyle();
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+  };
+  const onImagesInputChange = (text, data, index) => {
+    axios
+      .post(`${serverAddress}/medicaleeportstyle/updateimages`, {
+        id: medicalReportsStype._id,
+        text: text,
+        data: data,
+        index: index,
+      })
+      .then((response) => {
+        // Handle the response if needed
+        console.log("POST request successful:", response.data);
+        ubdateStyle();
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+  };
+
   const onRandomTextInput = (text, data, index) => {
     axios
       .post(`${serverAddress}/medicaleeportstyle/updatetextRandom`, {
@@ -169,6 +214,39 @@ function PrescriptionsDesign() {
         console.error("Error making POST request:", error);
       });
   };
+
+  const addNewShape = () => {
+    axios
+      .post(`${serverAddress}/medicaleeportstyle/newShape`, {
+        id: medicalReportsStype._id,
+      })
+      .then((response) => {
+        // Handle the response if needed
+        ubdateStyle();
+        console.log("POST request successful:", response.data);
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+  };
+
+  const addNewImages = () => {
+    axios
+      .post(`${serverAddress}/medicaleeportstyle/newImages`, {
+        id: medicalReportsStype._id,
+      })
+      .then((response) => {
+        // Handle the response if needed
+        ubdateStyle();
+        console.log("POST request successful:", response.data);
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+  };
+
   const addNewCenterText = (type) => {
     axios
       .post(`${serverAddress}/medicaleeportstyle/newmiddleline`, {
@@ -200,11 +278,76 @@ function PrescriptionsDesign() {
         console.error("Error making POST request:", error);
       });
   };
+  const removeImages = (elementId) => {
+    axios
+      .post(`${serverAddress}/medicaleeportstyle/deleteImages`, {
+        id: medicalReportsStype._id,
+        elementId: elementId,
+      })
+      .then((response) => {
+        // Handle the response if needed
+        ubdateStyle();
+        console.log("POST request successful:", response.data);
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+  };
+  const removeShape = (elementId) => {
+    axios
+      .post(`${serverAddress}/medicaleeportstyle/deleteShape`, {
+        id: medicalReportsStype._id,
+        elementId: elementId,
+      })
+      .then((response) => {
+        // Handle the response if needed
+        ubdateStyle();
+        console.log("POST request successful:", response.data);
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+  };
+
   const [file, setFile] = useState(null);
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
   };
+  const handleImagesFilesChange = async (file, index) => {
+    const selectedFile = file;
+    setFile(selectedFile);
+    console.log(file);
+    if (!file) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("index", index);
+    formData.append("id", medicalReportsStype._id);
+    try {
+      const response = await fetch(
+        `${serverAddress}/medicaleeportstyle/importImages/`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        setFile(null);
+        console.log("xx");
+      } else {
+        // alert("Error uploading image");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -312,7 +455,6 @@ function PrescriptionsDesign() {
               />
             </div>
             <hr></hr>
-
             <div className="flex w-full mt-4 font-bold">
               <p>معلومات الاسم</p>
             </div>
@@ -383,6 +525,418 @@ function PrescriptionsDesign() {
               />
             </div>
             <hr></hr>
+
+            <div className="flex w-full  mt-4 font-bold">
+              <p>الاشكال</p>
+            </div>
+            <div>
+              {shapeArray.map((shape, index) => (
+                <>
+                  <div>الشكل {index + 1}</div>
+                  <div className="flex justify-between items-center w-full">
+                    <div className="flex flex-col gap-2">
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          نوع الشكل{" "}
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={medicalReportsStype.shape[index].shapetype}
+                          label="Age"
+                          size="small"
+                          onChange={(event) => {
+                            onShapeInputChange(
+                              "shapetype",
+                              event.target.value,
+                              index
+                            );
+                            console.log(event.target.value);
+                          }}
+                        >
+                          <MenuItem value={"rectangle"}>مستطيل</MenuItem>
+                          <MenuItem value={"circle"}>دائري</MenuItem>
+                        </Select>
+                      </FormControl>
+                      <TextField
+                        type="number"
+                        label="اولوية"
+                        size="small"
+                        value={medicalReportsStype.shape[index].zindex}
+                        onChange={(event) => {
+                          onShapeInputChange(
+                            "zindex",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      ></TextField>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <TextField
+                        type="number"
+                        label="العرض"
+                        size="small"
+                        value={medicalReportsStype.shape[index].width}
+                        onChange={(event) => {
+                          onShapeInputChange(
+                            "width",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      ></TextField>
+                      <TextField
+                        type="number"
+                        label="الارتفاع"
+                        size="small"
+                        value={medicalReportsStype.shape[index].height}
+                        onChange={(event) => {
+                          onShapeInputChange(
+                            "height",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      ></TextField>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <TextField
+                        type="number"
+                        label="x"
+                        size="small"
+                        value={medicalReportsStype.shape[index].placeX}
+                        onChange={(event) => {
+                          onShapeInputChange(
+                            "placeX",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      ></TextField>
+                      <TextField
+                        type="number"
+                        label="y"
+                        size="small"
+                        value={medicalReportsStype.shape[index].placeY}
+                        onChange={(event) => {
+                          onShapeInputChange(
+                            "placeY",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      ></TextField>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <TextField
+                        type="number"
+                        label="التكوير"
+                        size="small"
+                        value={medicalReportsStype.shape[index].borderRadius}
+                        onChange={(event) => {
+                          onShapeInputChange(
+                            "borderRadius",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      ></TextField>
+                      <TextField
+                        type="number"
+                        label="حجم الاطار"
+                        size="small"
+                        value={medicalReportsStype.shape[index].borderWidth}
+                        onChange={(event) => {
+                          onShapeInputChange(
+                            "borderWidth",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      ></TextField>
+                    </div>
+
+                    <div className="flex flex-col justify-center items-center">
+                      <p>لون الداخل</p>
+                      <input
+                        type="color"
+                        className=" border-none rounded-full"
+                        value={medicalReportsStype.shape[index].color}
+                        onChange={(event) => {
+                          onShapeInputChange(
+                            "color",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      />
+                    </div>
+                    <div className="flex flex-col justify-center items-center">
+                      <p>لون الاطار</p>
+                      <input
+                        type="color"
+                        className=" border-none rounded-full"
+                        value={medicalReportsStype.shape[index].borderColor}
+                        onChange={(event) => {
+                          onShapeInputChange(
+                            "borderColor",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      />
+                    </div>
+
+                    <IconButton
+                      onClick={() => {
+                        removeShape(shape._id);
+                      }}
+                      type="button"
+                      sx={{ p: "10px" }}
+                      aria-label="search"
+                    >
+                      <DeleteIcon></DeleteIcon>
+                    </IconButton>
+                    <FormControlLabel
+                      sx={{
+                        display: "block",
+                      }}
+                      control={
+                        <Switch
+                          checked={medicalReportsStype.shape[index].active}
+                          onChange={(event) => {
+                            onShapeInputChange(
+                              "active",
+                              !medicalReportsStype.shape[index].active,
+                              index
+                            );
+                            console.log(event.target.value);
+                          }}
+                          color="primary"
+                        />
+                      }
+                    />
+                  </div>
+                </>
+              ))}
+              <div
+                onClick={() => {
+                  addNewShape();
+                }}
+                className="w-full bg-blue-300 h-8 rounded-full justify-center items-center flex cursor-pointer hover:bg-blue-400"
+              >
+                اضافة شكل
+              </div>
+            </div>
+            <div className="flex w-full  mt-4 font-bold">
+              <p>الصور</p>
+            </div>
+            <div>
+              {imagesArray.map((images, index) => (
+                <>
+                  <div>الصورة {index + 1}</div>
+                  <div className="flex justify-center items-center w-full">
+                    <div></div>
+                    <ImageInput
+                      handleFileChange={handleImagesFilesChange}
+                      index={index}
+                    ></ImageInput>
+                    <div className="flex w-full flex-col gap-2">
+                      <TextField
+                        type="number"
+                        label="الارتفاع"
+                        size="small"
+                        value={medicalReportsStype.images[index].height}
+                        onChange={(event) => {
+                          onImagesInputChange(
+                            "height",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      ></TextField>
+                      <TextField
+                        type="number"
+                        label="العرض"
+                        size="small"
+                        value={medicalReportsStype.images[index].width}
+                        onChange={(event) => {
+                          onImagesInputChange(
+                            "width",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      ></TextField>
+                    </div>
+
+                    <div className="flex w-full flex-col gap-2">
+                      <TextField
+                        type="number"
+                        label="x"
+                        size="small"
+                        value={medicalReportsStype.images[index].placeX}
+                        onChange={(event) => {
+                          onImagesInputChange(
+                            "placeX",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      ></TextField>
+                      <TextField
+                        type="number"
+                        label="y"
+                        size="small"
+                        value={medicalReportsStype.images[index].placeY}
+                        onChange={(event) => {
+                          onImagesInputChange(
+                            "placeY",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      ></TextField>
+                    </div>
+                    <div className="flex w-full flex-col gap-2">
+                      <TextField
+                        type="number"
+                        label="الشفافية"
+                        size="small"
+                        value={medicalReportsStype.images[index].opacity}
+                        onChange={(event) => {
+                          onImagesInputChange(
+                            "opacity",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      ></TextField>
+                      <TextField
+                        type="number"
+                        label="الاولوية"
+                        size="small"
+                        value={medicalReportsStype.images[index].zindex}
+                        onChange={(event) => {
+                          onImagesInputChange(
+                            "zindex",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      ></TextField>
+                    </div>
+
+                    <div className="flex w-full flex-col gap-2">
+                      <TextField
+                        type="number"
+                        label="التكوير"
+                        size="small"
+                        value={medicalReportsStype.images[index].borderRadius}
+                        onChange={(event) => {
+                          onImagesInputChange(
+                            "borderRadius",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      ></TextField>
+                      <TextField
+                        type="number"
+                        label="حجم الاطار"
+                        size="small"
+                        value={medicalReportsStype.images[index].borderWidth}
+                        onChange={(event) => {
+                          onImagesInputChange(
+                            "borderWidth",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      ></TextField>
+                    </div>
+
+                    <div className="flex flex-col justify-center items-center">
+                      <p>لون الاطار</p>
+                      <input
+                        type="color"
+                        className=" border-none rounded-full"
+                        value={medicalReportsStype.images[index].borderColor}
+                        onChange={(event) => {
+                          onImagesInputChange(
+                            "borderColor",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-between items-center w-full">
+                      <IconButton
+                        onClick={() => {
+                          removeImages(images._id);
+                        }}
+                        type="button"
+                        sx={{ p: "10px" }}
+                        aria-label="search"
+                      >
+                        <DeleteIcon></DeleteIcon>
+                      </IconButton>
+                      <FormControlLabel
+                        sx={{
+                          display: "block",
+                        }}
+                        control={
+                          <Switch
+                            checked={medicalReportsStype.images[index].active}
+                            onChange={(event) => {
+                              onImagesInputChange(
+                                "active",
+                                !medicalReportsStype.images[index].active,
+                                index
+                              );
+                              console.log(event.target.value);
+                            }}
+                            color="primary"
+                          />
+                        }
+                      />
+                    </div>
+                  </div>
+                </>
+              ))}
+              <div
+                onClick={() => {
+                  addNewImages();
+                }}
+                className="w-full bg-blue-300 h-8 rounded-full justify-center items-center flex cursor-pointer hover:bg-blue-400"
+              >
+                اضافة صورة
+              </div>
+            </div>
+
             <div className="flex w-full  mt-4 font-bold">
               <p>معلومات الطبيب الوسطية</p>
             </div>
@@ -778,7 +1332,7 @@ function PrescriptionsDesign() {
                 اضافة سطر
               </div>
             </div>
-
+            {/* معلومات المريض */}
             <div className="flex w-full  mt-4 font-bold">
               <p>معلومات المريض</p>
             </div>
@@ -1248,6 +1802,118 @@ function PrescriptionsDesign() {
                     onChange={(event) => {
                       handleInputChange(
                         "weightMainTitleColor",
+                        event.target.value
+                      );
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-center items-center flex-col">
+                <p> تفعيل الجنس</p>
+                <FormControlLabel
+                  sx={{
+                    display: "block",
+                  }}
+                  control={
+                    <Switch
+                      checked={medicalReportsStype.genderActive}
+                      onChange={(event) => {
+                        handleInputChange(
+                          "genderActive",
+                          !medicalReportsStype.genderActive
+                        );
+                      }}
+                      color="primary"
+                    />
+                  }
+                />
+                <p> تفعيل العنوان</p>
+                <FormControlLabel
+                  sx={{
+                    display: "block",
+                  }}
+                  control={
+                    <Switch
+                      checked={medicalReportsStype.genderMainTitleActive}
+                      onChange={(event) => {
+                        handleInputChange(
+                          "genderMainTitleActive",
+                          !medicalReportsStype.genderMainTitleActive
+                        );
+                      }}
+                      color="primary"
+                    />
+                  }
+                />
+
+                <p>تفعيل الاحداثي</p>
+                <FormControlLabel
+                  sx={{
+                    display: "block",
+                  }}
+                  control={
+                    <Switch
+                      checked={medicalReportsStype.genderAbsoulateActive}
+                      onChange={(event) => {
+                        handleInputChange(
+                          "genderAbsoulateActive",
+                          !medicalReportsStype.genderAbsoulateActive
+                        );
+                      }}
+                      color="primary"
+                    />
+                  }
+                />
+                <div className="flex justify-center items-center flex-col gap-2">
+                  <TextField
+                    type="number"
+                    label="x"
+                    size="small"
+                    value={medicalReportsStype.genderX}
+                    onChange={(event) => {
+                      handleInputChange("genderX", event.target.value);
+                    }}
+                    inputProps={{ min: "0", max: "100" }}
+                  ></TextField>
+                  <TextField
+                    type="number"
+                    label="y"
+                    size="small"
+                    value={medicalReportsStype.genderY}
+                    onChange={(event) => {
+                      handleInputChange("genderY", event.target.value);
+                    }}
+                    inputProps={{ min: "0", max: "100" }}
+                  ></TextField>
+                  <TextField
+                    type="number"
+                    label="الحجم"
+                    size="small"
+                    value={medicalReportsStype.genderSize}
+                    onChange={(event) => {
+                      handleInputChange("genderSize", event.target.value);
+                    }}
+                    inputProps={{ min: "0", max: "100" }}
+                  ></TextField>
+
+                  <p>اللون</p>
+                  <input
+                    type="color"
+                    className=" border-none rounded-full"
+                    value={medicalReportsStype.genderColor}
+                    onChange={(event) => {
+                      handleInputChange("genderColor", event.target.value);
+                    }}
+                  />
+
+                  <p>لون العنوان</p>
+                  <input
+                    type="color"
+                    className=" border-none rounded-full"
+                    value={medicalReportsStype.genderMainTitleColor}
+                    onChange={(event) => {
+                      handleInputChange(
+                        "genderMainTitleColor",
                         event.target.value
                       );
                     }}

@@ -15,10 +15,39 @@ function Dashboard() {
   const [todayPatient, setTodayPatient] = useState([]);
   const [UpcomingPatient, setUpcomingPatient] = useState([]);
   const [loading, setLoding] = useState(false);
+  const [settingData, setSettingData] = useState({});
+
   const [partientsSelectId, setPartientsSelectId] = useState("");
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000
+
   const onNameClickHandle = (id) => {
     setPartientsSelectId(id);
     setShowPartientProfile(true);
+  };
+  useEffect(() => {
+    const getSettingApi = () => {
+      axios
+        .get(`${serverAddress}/setting/getdata`)
+        .then((response) => {
+          setSettingData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    };
+    getSettingApi();
+  }, []);
+  const handleEditPatientData = (data) => {
+    data.id = partientsSelectId;
+    axios
+      .post(`${serverAddress}/patients/edit`, data)
+      .then((response) => {
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
   };
 
   const fetchData = async () => {
@@ -159,7 +188,12 @@ function Dashboard() {
                   </thead>
                   <tbody>
                     {todayPatient.map((patient, index) => (
-                      <tr class="bg-white border-b hover:bg-slate-50 cursor-pointer" onClick={()=>{onNameClickHandle(patient._id)}}>
+                      <tr
+                        class="bg-white border-b hover:bg-slate-50 cursor-pointer"
+                        onClick={() => {
+                          onNameClickHandle(patient._id);
+                        }}
+                      >
                         <th
                           scope="row"
                           class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
@@ -261,7 +295,11 @@ function Dashboard() {
               setShowPartientProfile(false);
             }}
           ></BackGroundShadow>
-          <PartientsProfile partientId={partientsSelectId}></PartientsProfile>
+          <PartientsProfile
+            handleEditPatientData={handleEditPatientData}
+            partientId={partientsSelectId}
+            settingData={settingData}
+          ></PartientsProfile>
         </>
       ) : (
         ""

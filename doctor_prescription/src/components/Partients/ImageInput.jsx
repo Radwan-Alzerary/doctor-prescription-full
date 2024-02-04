@@ -20,14 +20,14 @@ function ImageInput(props) {
     e.preventDefault();
     setIsDragging(false);
     const file = e.dataTransfer.files[0];
-    props.handleFileChange(file)
+    props.handleFileChange(file,props.index)
 
     displayPreview(file);
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    props.handleFileChange(file)
+    props.handleFileChange(file,props.index)
     console.log(e.target.files[0])
     displayPreview(file);
   };

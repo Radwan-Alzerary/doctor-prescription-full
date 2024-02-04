@@ -88,15 +88,6 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
       default: "1",
     },
     reportHeaderName: { type: String, default: "التقرير" },
-    imagesRandom: [
-      {
-        url: { type: String },
-        width: { type: Number },
-        height: { type: Number },
-        x: { type: Number, default: 0 },
-        y: { type: Number, default: 0 },
-      },
-    ],
 
     textRandom: [
       {
@@ -161,6 +152,15 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
     ageMainTitleActive: { type: Boolean, default: true },
     ageMainTitleColor: { type: String, default: "#000" },
 
+    genderActive: { type: Boolean, default: true },
+    genderX: { type: Number, default: 0 },
+    genderY: { type: Number, default: 0 },
+    genderAbsoulateActive: { type: Boolean, default: false },
+    genderColor: { type: String, default: "#000" },
+    genderSize: { type: Number, default: 1 },
+    genderMainTitleActive: { type: Boolean, default: false },
+    genderMainTitleColor: { type: String, default: "#000" },
+
     weightActive: { type: Boolean, default: false },
     weightX: { type: Number, default: 0 },
     weightY: { type: Number, default: 0 },
@@ -169,8 +169,37 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
     weightSize: { type: Number, default: 1 },
     weightMainTitleActive: { type: Boolean, default: true },
     weightMainTitleColor: { type: String, default: "#000" },
+    shape: [
+      {
+        shapetype: { type: String, default: "rectangle" },
+        color: { type: String, default: "#000" },
+        width: { type: Number, default: 100 },
+        height: { type: Number, default: 1 },
+        placeX: { type: Number, default: 50 },
+        placeY: { type: Number, default: 50 },
+        active: { type: Boolean, default: true },
+        zindex: { type: Number, default: 100 },
+        borderRadius: { type: Number, default: 0 },
+        borderColor: { type: String, default: "#000" },
+        borderWidth: { type: Number, default: 0 },
+      },
+    ],
 
-
+    images: [
+      {
+        imageUrl: { type: String, default: "" },
+        width: { type: Number, default: 100 },
+        height: { type: Number, default: 100 },
+        placeX: { type: Number, default: 50 },
+        placeY: { type: Number, default: 50 },
+        active: { type: Boolean, default: true },
+        zindex: { type: Number, default: 100 },
+        opacity: { type: Number, default: 100 },
+        borderRadius: { type: Number, default: 0 },
+        borderColor: { type: String, default: "#000" },
+        borderWidth: { type: Number, default: 0 },
+      },
+    ],
 
     dateActive: { type: Boolean, default: true },
     dateX: { type: Number, default: 0 },

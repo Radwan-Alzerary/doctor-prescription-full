@@ -2,7 +2,7 @@ const router = require("express").Router();
 const OpenAI = require('openai')
 
 const openai = new OpenAI({
-  apiKey: "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" // This is also the default, can be omitted
+  apiKey: "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" // This is also the default, can be omitted
 });
 
 

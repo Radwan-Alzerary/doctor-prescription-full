@@ -10,7 +10,7 @@ import {
   TypingIndicator,
 } from "@chatscope/chat-ui-kit-react";
 
-const API_KEY = "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";
+const API_KEY = "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";
 
 const Gpt = (props) => {
   const [messages, setMessages] = useState([
@@ -56,9 +56,9 @@ const Gpt = (props) => {
     });
 
     const apiRequestBody = {
-      model: "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo-1106",
       messages: [
-        { role: "system", content: "I'm a Student using ChatGPT for learning" },
+        { role: "system", content: "I'm a doctor using ChatGPT for help" },
         ...apiMessages,
       ],
     };

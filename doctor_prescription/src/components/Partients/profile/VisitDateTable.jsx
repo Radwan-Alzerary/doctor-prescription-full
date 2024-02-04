@@ -5,7 +5,7 @@ const columns = [
   {
     field: "date",
     headerName: "تاريخ الزيارة",
-    width: 170,
+    width: 140,
     valueGetter: (params) => {
       const createdAt = new Date(params.row.date);
 
@@ -23,19 +23,25 @@ const columns = [
     },
   },
   {
+    field: "visitReportCount",
+    headerName: "عدد تقارير الزيارة",
+    width: 110,
+  },
+
+  {
     field: "prescriptionCount",
     headerName: "عدد الفحوصات",
-    width: 170,
+    width: 110,
   },
   {
     field: "medicalReportsCount",
     headerName: "عدد التقارير الطبية",
-    width: 170,
+    width: 110,
   },
   {
     field: "laboryReportCount",
     headerName: "عدد التقارير المختبرية",
-    width: 170,
+    width: 110,
     
   },
 

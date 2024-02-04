@@ -28,11 +28,13 @@ import BiotechIcon from "@mui/icons-material/Biotech";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-
+import ChromeReaderModeIcon from "@mui/icons-material/ChromeReaderMode";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import { Calendar } from "react-modern-calendar-datepicker";
 import {
   Add,
+  Book,
+  BookOnline,
   Delete,
   Edit,
   Female,
@@ -48,7 +50,7 @@ import NewPatientForm from "../../components/Partients/NewPatientForm";
 import BackGroundShadow from "../../components/pageCompond/BackGroundShadow";
 import BillTable from "../../components/Partients/BillTable";
 import axios from "axios";
-import { blue, green, red, yellow } from "@mui/material/colors";
+import { blue, green, purple, red, yellow } from "@mui/material/colors";
 import { useReactToPrint } from "react-to-print";
 import PatientReport from "../global/PatientReport";
 import NewMedicalReporyForm from "../../components/Partients/NewMedicalReporyForm";
@@ -63,6 +65,7 @@ import DateRangePickerComp from "../global/DateRangePickerComp";
 import Loading from "../../components/pageCompond/Loading";
 import CancelAlert from "../../components/pageCompond/CancelAlert";
 import DeleteAlert from "../../components/pageCompond/DeleteAlert";
+import VisitForm from "../../components/Partients/VisitForm";
 
 function Row(props) {
   const { row } = props;
@@ -89,7 +92,9 @@ function Row(props) {
   return (
     <React.Fragment>
       <TableRow
-        className="hover:bg-blue-50"
+        className={` ${
+          row.booked ? "bg-green-200 hover:bg-green-100" : "hover:bg-blue-50"
+        }`}
         sx={{ "& > *": { borderBottom: "unset" } }}
       >
         <TableCell>{props.index + 1 + 20 * (props.pageSelect - 1)}</TableCell>
@@ -102,7 +107,16 @@ function Row(props) {
           scope="row"
           align="center"
         >
-          {row.name}
+          <div className="flex justify-center items-center gap-4">
+            {row.name}
+            {row.bookedPriority > 0 ? (
+              <div className=" bg-cyan-500 rounded-full w-8 h-8 flex justify-center items-center">
+                {row.bookedPriority}
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
         </TableCell>
         <TableCell component="th" scope="row" align="center">
           <div className="bg-green-100 w-full flex justify-center items-center h-6 rounded-full">
@@ -156,6 +170,22 @@ function Row(props) {
         {props.currentUser ? (
           props.currentUser.role === "doctor" ? (
             <>
+              <TableCell align="center">
+                <IconButton
+                  sx={{ color: blue[800] }}
+                  // className=" hover:text-yellow-500"
+                  onClick={() => {
+                    props.onVisitFormShowHandel(row._id);
+                  }}
+                  aria-label="delete"
+                >
+                  <ChromeReaderModeIcon
+                    aria-label="expand row"
+                    size="small"
+                  ></ChromeReaderModeIcon>
+                </IconButton>
+              </TableCell>
+
               <TableCell align="center">
                 <IconButton
                   sx={{ color: blue[800] }}
@@ -219,6 +249,16 @@ function Row(props) {
 
               <TableCell align="center">
                 <IconButton
+                  sx={{ color: purple[400] }}
+                  className=" hover:text-purple-600"
+                  onClick={() => props.onBookedHandel(row._id)}
+                  aria-label="delete"
+                  // size="large"
+                >
+                  <Book fontSize="inherit" />
+                </IconButton>
+
+                {/* <IconButton
                   sx={{ color: green[400] }}
                   className=" hover:text-green-600"
                   onClick={() => props.onShareHande(row._id)}
@@ -226,7 +266,7 @@ function Row(props) {
                   // size="large"
                 >
                   <Share fontSize="inherit" />
-                </IconButton>
+                </IconButton> */}
                 <IconButton
                   onClick={() => {
                     props.onDeleteHande(row._id);
@@ -367,6 +407,7 @@ function Partients() {
   const [showPartientsAddForm, setShowPartientsAddForm] = useState(false);
   const [showPartientsEditForm, setShowPartientsEditForm] = useState(false);
   const [showAddReportForm, setShowAddReportForm] = useState(false);
+  const [showVisitForm, setShowVisitForm] = useState(false);
   const [showLaporyReportForm, setShowLaporyReportForm] = useState(false);
   const [showPartientProfile, setShowPartientProfile] = useState(false);
   const [showMidicalForm, setShowMidicalForm] = useState(false);
@@ -374,6 +415,7 @@ function Partients() {
   const [userData, setUserData] = useState([]);
   const [showReportEditForm, setShowReportEditForm] = useState(false);
   const [showLabReportEditForm, setShowLabReportEditForm] = useState(false);
+  const [showVisitReportEditForm, setShowVisitReportEditForm] = useState(false);
 
   const [partientsSelectId, setPartientsSelectId] = useState("");
   const [PrescriptionId, setPrescriptionId] = useState("");
@@ -427,6 +469,19 @@ function Partients() {
           console.error(`Error deleting category with ID ${id}:`, error);
         });
     }
+  };
+  const onBookedHandel = (id) => {
+    axios
+      .post(`${serverAddress}/patients/bookPatents`, {
+        id: id,
+      })
+      .then((response) => {
+        getPatientsList();
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
   };
   const handleEditReportData = (data) => {
     axios
@@ -497,6 +552,50 @@ function Partients() {
         console.error("Error making POST request:", error);
       });
   };
+
+  const handelVisitReportEdit = (id) => {
+    axios
+      .get(`${serverAddress}/visit/getone/${id}`)
+      .then((response) => {
+        setSelectedaLabory(response.data);
+        setShowVisitReportEditForm(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
+  const handelVisitReportDelete = (id) => {
+    if (settingData.abortProssesMsg) {
+      setDeleteInfo({ id: id, type: "visitDelete" });
+      setDeleteAlert(true);
+    } else {
+      axios
+        .delete(`${serverAddress}/visit/delete/${id}/`)
+        .then((response) => {
+          setProfileRefresh(!profileRefresh);
+        })
+        .catch((error) => {
+          setLoading(() => true);
+          console.error(`Error deleting category with ID ${id}:`, error);
+        });
+    }
+  };
+  const handelEditVisitReportData = (data) => {
+    axios
+      .post(`${serverAddress}/visit/editone`, {
+        id: selectedaLabory._id,
+        data: data,
+      })
+      .then((response) => {
+        setProfileRefresh(!profileRefresh);
+        setShowVisitReportEditForm(false);
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+  };
+
   const changeReportHeaderName = (headerName) => {
     const data = { reportHeaderName: headerName };
     console.log(medicalReportsStype);
@@ -882,6 +981,7 @@ function Partients() {
         console.error("Error making POST request:", error);
       });
   };
+
   const handleNewLaboryData = (data) => {
     axios
       .post(`${serverAddress}/labory/new`, { data })
@@ -895,6 +995,21 @@ function Partients() {
         console.error("Error making POST request:", error);
       });
   };
+
+  const handleNewVisit = (data) => {
+    axios
+      .post(`${serverAddress}/visit/new`, { data })
+      .then((response) => {
+        // Handle the response if needed
+        getPatientsList();
+        setShowVisitForm(false);
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+  };
+
   const handeSearchInput = (event) => {
     const searchInputValue = event.target.value;
     if (searchInputValue === "") {
@@ -959,6 +1074,7 @@ function Partients() {
     setShowMidicalForm(false);
     setShowAddForm(false);
     setShowPartientsAddForm(false);
+    setShowVisitForm(false);
   };
   const onCancelAborteHande = () => {
     setCanceleAlert(false);
@@ -986,6 +1102,12 @@ function Partients() {
 
     onQueryChange();
   }, [ageQuery, stateQuery, genderQuery, range]);
+
+  const onVisitFormShowHandel = (id) => {
+    setPartientsSelectId(id);
+    setShowVisitForm(true);
+    console.log(`visit Show clicked for id ${id}`);
+  };
 
   const onDeleteConfirmHandel = (id, type) => {
     console.log(id, type);
@@ -1062,6 +1184,17 @@ function Partients() {
         })
         .catch((error) => {
           // Handle error, e.g., show an error message
+        });
+    }else if (type === "visitDelete") {
+      axios
+        .delete(`${serverAddress}/visit/delete/${id}/`)
+        .then((response) => {
+          setProfileRefresh(!profileRefresh);
+          setDeleteAlert(false);
+        })
+        .catch((error) => {
+          setLoading(() => true);
+          console.error(`Error deleting category with ID ${id}:`, error);
         });
     }
   };
@@ -1309,6 +1442,14 @@ function Partients() {
                       <TableCell align="center">
                         {" "}
                         <FormattedMessage
+                          id={"visit"}
+                          defaultMessage="Hello, World!"
+                        />
+                      </TableCell>
+
+                      <TableCell align="center">
+                        {" "}
+                        <FormattedMessage
                           id={"Examination"}
                           defaultMessage="Hello, World!"
                         />
@@ -1353,7 +1494,9 @@ function Partients() {
             <TableBody>
               {patientsList.map((patient, index) => (
                 <Row
+                  onBookedHandel={onBookedHandel}
                   pageSelect={pageSelect}
+                  onVisitFormShowHandel={onVisitFormShowHandel}
                   onPrescriptionEditHandel={onPrescriptionEditHandel}
                   onShareHande={onShareHande}
                   settingData={settingData}
@@ -1467,6 +1610,9 @@ function Partients() {
             handleReportDelete={handleReportDelete}
             handleLabReportEdit={handleLabReportEdit}
             handleLabReportDelete={handleLabReportDelete}
+            handelVisitReportEdit={handelVisitReportEdit}
+            handelVisitReportDelete={handelVisitReportDelete}
+            handelEditVisitReportData={handelEditVisitReportData}
             partientId={partientsSelectId}
             onPrescriptionDeleteHande={HandleOnPrescriptionDeleteHande}
             onPrescriptionEditHandel={onPrescriptionEditHandel}
@@ -1547,6 +1693,19 @@ function Partients() {
       ) : (
         ""
       )}
+      {showVisitForm ? (
+        <>
+          <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
+          <VisitForm
+            partientsSelectId={partientsSelectId}
+            onPrinterClick={HandleonPrinterClickText}
+            onFormSubmit={handleNewVisit}
+          ></VisitForm>
+        </>
+      ) : (
+        ""
+      )}
+
       {showLabReportEditForm ? (
         <>
           <BackGroundShadow
@@ -1561,6 +1720,24 @@ function Partients() {
             type="edit"
             data={selectedaLabory}
           ></AddLaboratoryExamination>
+        </>
+      ) : (
+        ""
+      )}
+      {showVisitReportEditForm ? (
+        <>
+          <BackGroundShadow
+            onClick={() => {
+              setShowLabReportEditForm(false);
+            }}
+          ></BackGroundShadow>
+          <VisitForm
+            partientsSelectId={partientsSelectId}
+            onPrinterClick={HandleonPrinterClickText}
+            onFormSubmit={handelEditVisitReportData}
+            type="edit"
+            data={selectedaLabory}
+          ></VisitForm>
         </>
       ) : (
         ""

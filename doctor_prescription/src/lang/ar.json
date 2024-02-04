@@ -119,5 +119,9 @@
   "dayAge":"العمر بالايام",
   "miscarriageState":"حالة الاجهاض",
   "pregnancyCurrent" : "حمل حالي",
-  "Sequence":"التسلسل"
+  "Sequence":"التسلسل",
+  "visit":"زيارة",
+  "diagnosis":"التشخيص"
+
+
 }

@@ -121,7 +121,8 @@
   "dayAge": "day Age",
   "miscarriageState":"Miscarriage State",
   "pregnancyCurrent" : "Current pregnancy",
-  "Sequence":"Sequence"
-
+  "Sequence":"Sequence",
+  "visit":"visit",
+"diagnosis":"diagnosis"
 
 }

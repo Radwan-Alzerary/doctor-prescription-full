@@ -42,7 +42,7 @@ router.post(
   }
 );
 
-router.post("/imagesRandom", upload.single("image"), async (req, res, next) => {
+router.post("/importimages", upload.single("image"), async (req, res, next) => {
   console.log(req.body);
   const { filename, path } = req.file;
   const { name } = req.body;
@@ -51,14 +51,16 @@ router.post("/imagesRandom", upload.single("image"), async (req, res, next) => {
   const imagePath = req.file ? "/img/" + req.file.filename : null;
   console.log(imagePath);
   try {
-    const medicalReportsStype = await MedicalReportsStype.findOneAndUpdate(
-      {},
-      { imagesRandom: imagePath }
-    );
-    if (!medicalReportsStype) {
-      return res.status(404).json({ error: "Category not found" });
+    const doc = await MedicalReportsStype.findById(req.body.id);
+    if (!doc) {
+      return res.status(404).json({ message: "Document not found" });
     }
-    res.json(medicalReportsStype);
+    doc.images[req.body.index].imageUrl = imagePath;
+    await doc.save();
+    return res.status(200).json({
+      message: "Element updated successfully",
+      updatedElement: doc.images[req.body.index],
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -160,6 +162,37 @@ router.post("/newmiddleline", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+router.post("/newShape", async (req, res) => {
+  try {
+    let update = "";
+    update = { $push: { shape: {} } };
+    console.log(req.body);
+    const updatedDocument = await MedicalReportsStype.findByIdAndUpdate(
+      req.body.id,
+      update,
+      { new: true } // This option returns the updated document
+    );
+    res.json(updatedDocument);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/newimages", async (req, res) => {
+  try {
+    let update = "";
+    update = { $push: { images: {} } };
+    console.log(req.body);
+    const updatedDocument = await MedicalReportsStype.findByIdAndUpdate(
+      req.body.id,
+      update,
+      { new: true } // This option returns the updated document
+    );
+    res.json(updatedDocument);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 router.post("/removeline", async (req, res) => {
   try {
@@ -213,7 +246,7 @@ router.post("/updatemiddle", async (req, res) => {
         doc.HeaderMidleText[req.body.index].size = req.body.data;
       } else if (req.body.text == "textWeight") {
         doc.HeaderMidleText[req.body.index].textWeight = req.body.data;
-      }else if (req.body.text == "marginB") {
+      } else if (req.body.text == "marginB") {
         doc.HeaderMidleText[req.body.index].marginB = req.body.data;
       }
     } else if (req.body.type == "right") {
@@ -225,7 +258,7 @@ router.post("/updatemiddle", async (req, res) => {
         doc.HeaderRightText[req.body.index].size = req.body.data;
       } else if (req.body.text == "textWeight") {
         doc.HeaderRightText[req.body.index].textWeight = req.body.data;
-      }else if (req.body.text == "marginB") {
+      } else if (req.body.text == "marginB") {
         doc.HeaderRightText[req.body.index].marginB = req.body.data;
       }
     } else if (req.body.type == "left") {
@@ -237,7 +270,7 @@ router.post("/updatemiddle", async (req, res) => {
         doc.HeaderLeftText[req.body.index].size = req.body.data;
       } else if (req.body.text == "textWeight") {
         doc.HeaderLeftText[req.body.index].textWeight = req.body.data;
-      }else if (req.body.text == "marginB") {
+      } else if (req.body.text == "marginB") {
         doc.HeaderLeftText[req.body.index].marginB = req.body.data;
       }
     }
@@ -254,5 +287,135 @@ router.post("/updatemiddle", async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 });
+
+router.post("/updateshape", async (req, res) => {
+  try {
+    console.log(req.body);
+    // Find the document by its ID
+    const doc = await MedicalReportsStype.findById(req.body.id);
+
+    // Check if the document was found
+    if (!doc) {
+      return res.status(404).json({ message: "Document not found" });
+    }
+    // Check if the element at the specified index exists
+    if (req.body.text == "color") {
+      doc.shape[req.body.index].color = req.body.data;
+    } else if (req.body.text == "shapetype") {
+      doc.shape[req.body.index].shapetype = req.body.data;
+    } else if (req.body.text == "width") {
+      doc.shape[req.body.index].width = req.body.data;
+    } else if (req.body.text == "height") {
+      doc.shape[req.body.index].height = req.body.data;
+    } else if (req.body.text == "placeX") {
+      doc.shape[req.body.index].placeX = req.body.data;
+    } else if (req.body.text == "placeY") {
+      doc.shape[req.body.index].placeY = req.body.data;
+    } else if (req.body.text == "active") {
+      doc.shape[req.body.index].active = req.body.data;
+    } else if (req.body.text == "zindex") {
+      doc.shape[req.body.index].zindex = req.body.data;
+    } else if (req.body.text == "borderRadius") {
+      doc.shape[req.body.index].borderRadius = req.body.data;
+    } else if (req.body.text == "borderColor") {
+      doc.shape[req.body.index].borderColor = req.body.data;
+    } else if (req.body.text == "borderWidth") {
+      doc.shape[req.body.index].borderWidth = req.body.data;
+    }
+    // Save the updated document
+    await doc.save();
+
+    return res.status(200).json({
+      message: "Element updated successfully",
+      updatedElement: doc.shape[req.body.index],
+    });
+  } catch (error) {
+    console.error("Error updating element:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+router.post("/updateimages", async (req, res) => {
+  try {
+    console.log(req.body);
+    // Find the document by its ID
+    const doc = await MedicalReportsStype.findById(req.body.id);
+    // Check if the document was found
+    if (!doc) {
+      return res.status(404).json({ message: "Document not found" });
+    }
+    if (req.body.text == "width") {
+      doc.images[req.body.index].width = req.body.data;
+    } else if (req.body.text == "height") {
+      doc.images[req.body.index].height = req.body.data;
+    } else if (req.body.text == "placeX") {
+      doc.images[req.body.index].placeX = req.body.data;
+    } else if (req.body.text == "placeY") {
+      doc.images[req.body.index].placeY = req.body.data;
+    } else if (req.body.text == "active") {
+      doc.images[req.body.index].active = req.body.data;
+    } else if (req.body.text == "zindex") {
+      doc.images[req.body.index].zindex = req.body.data;
+    } else if (req.body.text == "borderRadius") {
+      doc.images[req.body.index].borderRadius = req.body.data;
+    } else if (req.body.text == "borderColor") {
+      doc.images[req.body.index].borderColor = req.body.data;
+    } else if (req.body.text == "borderWidth") {
+      doc.images[req.body.index].borderWidth = req.body.data;
+    }else if (req.body.text == "opacity") {
+      doc.images[req.body.index].opacity = req.body.data;
+    }
+    // Save the updated document
+    await doc.save();
+
+    return res.status(200).json({
+      message: "Element updated successfully",
+      updatedElement: doc.HeaderMidleText[req.body.index],
+    });
+  } catch (error) {
+    console.error("Error updating element:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.post("/deleteImages", async (req, res) => {
+    const { id, elementId } =req.body;
+console.log(req.body)
+    try {
+      const result = await MedicalReportsStype.updateOne(
+        { _id: id },
+        {
+          $pull: {
+            images:  { _id: elementId }
+          }
+        }
+      );
+      
+      res.json({ success: true, result });
+    } catch (error) {
+      console.error('Error removing element:', error);
+      res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+  
+})
+router.post("/deleteShape", async (req, res) => {
+  const { id, elementId } =req.body;
+console.log(req.body)
+  try {
+    const result = await MedicalReportsStype.updateOne(
+      { _id: id },
+      {
+        $pull: {
+          shape:  { _id: elementId }
+        }
+      }
+    );
+    
+    res.json({ success: true, result });
+  } catch (error) {
+    console.error('Error removing element:', error);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+
+})
 
 module.exports = router;

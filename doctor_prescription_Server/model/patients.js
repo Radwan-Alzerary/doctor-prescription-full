@@ -28,7 +28,9 @@ const PatientsSchema = new mongoose.Schema(
     Sequence: {
       type: Number,
     },
-
+    booked: { type: Boolean },
+    bookedDate:{type:Date},
+    bookedPriority:{type:Number},
     length: {
       type: Number,
     },
@@ -45,6 +47,7 @@ const PatientsSchema = new mongoose.Schema(
         medicalReportsCount: { type: Number },
         prescriptionCount: { type: Number },
         laboryReportCount: { type: Number },
+        visitReportCount: { type: Number },
       },
     ],
     fumbling: { type: String },
@@ -67,8 +70,8 @@ const PatientsSchema = new mongoose.Schema(
       DateOfLastPeriod: { type: Date },
       PregnancySequence: { type: Number },
       TypeOfPreviousBirth: { type: String },
-      comment:{type:String},
-      HusbandsBloodType : {type:String}
+      comment: { type: String },
+      HusbandsBloodType: { type: String },
     },
 
     ExaminationFindining: { type: String },
@@ -88,6 +91,7 @@ const PatientsSchema = new mongoose.Schema(
       { type: mongoose.Schema.Types.ObjectId, ref: "MedicalReportS" },
     ],
     labory: [{ type: mongoose.Schema.Types.ObjectId, ref: "labory" }],
+    visit: [{ type: mongoose.Schema.Types.ObjectId, ref: "visit" }],
     nextVisit: { type: Date },
     Medicine: [{ type: mongoose.Schema.Types.ObjectId, ref: "Medicine" }],
     bloodType: { type: String },

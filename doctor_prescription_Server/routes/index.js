@@ -1,4 +1,5 @@
 const router = require("express").Router();
+router.use('/visit', require('./visit'));
 
 router.use("/category", require("./category"));
 router.use("/pharmaceutical", require("./pharmaceutical"));

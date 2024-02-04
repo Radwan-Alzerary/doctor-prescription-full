@@ -9,6 +9,7 @@ import VisitDateTable from "./profile/VisitDateTable";
 import PatientPictures from "./profile/PatientPictures";
 import PatentMedicalForm from "./profile/PatentMedicalForm";
 import PregmentData from "./profile/PregmentData";
+import VisitReportTable from "./profile/VisitReportTable";
 
 function PartientsProfile(props) {
   const [partientsProfile, setPartientsProfile] = useState([]);
@@ -95,6 +96,19 @@ function PartientsProfile(props) {
         >
           معرض المريض
         </div>
+        <div
+          onClick={() => {
+            setProfileSelect("visitReport");
+          }}
+          className={`${
+            profileSelect === "visitReport"
+              ? "bg-green-200"
+              : "bg-slate-200"
+          }  p-2 w-48 rounded-full hover:bg-slate-100 cursor-pointer`}
+        >
+          الزيارات
+        </div>
+
         <div
           onClick={() => {
             setProfileSelect("prescriptionSite");
@@ -256,6 +270,21 @@ function PartientsProfile(props) {
             id={partientsProfile._id}
             images={partientsProfile.galary}
           ></PatientPictures>
+        </>
+      ) : (
+        ""
+      )}
+
+      {profileSelect === "visitReport" ? (
+        <>
+        
+        
+          <VisitReportTable
+            visitData={partientsProfile.visit}
+            partientsProfileId={partientsProfile._id}
+            onVisitEditHandel={props.handelVisitReportEdit}
+            onVisitDeleteHandel={props.handelVisitReportDelete}
+          ></VisitReportTable>
         </>
       ) : (
         ""

@@ -49,12 +49,13 @@ const [headerName,setHeaderName]=useState(medicalReportsStype.reportHeaderName)
     changeReportHeaderName(headerName)
   },[headerName])
   // Handle form submission
+
   const handleSubmit = (event) => {
     event.preventDefault();
     // Call the onFormSubmit function passed as a prop with the formData
     onFormSubmit(formData);
   };
-
+ 
   // Handle changes in form fields
   const handleInputChange = (name, value) => {
     // Update the formData state with the input data
