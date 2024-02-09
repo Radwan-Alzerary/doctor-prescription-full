@@ -16,7 +16,6 @@ function VisitForm({
   type,
   data,
 }) {
-
   // Define state to store form input data
   const [formData, setFormData] = useState({
     chiefComplaint: "",
@@ -29,8 +28,8 @@ function VisitForm({
     if (type === "edit") {
       setFormData({
         ...formData,
-        chiefComplaint : data.chiefComplaint,
-        dateOfVisit : data.dateOfVisit,
+        chiefComplaint: data.chiefComplaint,
+        dateOfVisit: data.dateOfVisit,
         investigation: data.investigation,
         diagnosis: data.diagnosis,
       });
@@ -66,25 +65,23 @@ function VisitForm({
         direction: locale === "en" ? "ltr" : "rtl",
       }}
     >
-
       <div className=" text-right w-full">
         <h5>
           {" "}
           <FormattedMessage
-            id={"Laboratory Test Information"}
+            id={"visit Information"}
             defaultMessage="Hello, World!"
           />
         </h5>
-
-
-
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
           id="outlined-required"
           size="small"
           value={formData.chiefComplaint}
-          onChange={(event) => handleInputChange("chiefComplaint", event.target.value)} // Update the name state
+          onChange={(event) =>
+            handleInputChange("chiefComplaint", event.target.value)
+          } // Update the name state
           sx={{
             width: "100%",
             color: "#fff",
@@ -103,7 +100,9 @@ function VisitForm({
           id="outlined-required"
           size="small"
           value={formData.investigation}
-          onChange={(event) => handleInputChange("investigation", event.target.value)} // Update the name state
+          onChange={(event) =>
+            handleInputChange("investigation", event.target.value)
+          } // Update the name state
           sx={{
             width: "100%",
             color: "#fff",
@@ -122,21 +121,19 @@ function VisitForm({
           id="outlined-required"
           size="small"
           value={formData.diagnosis}
-          onChange={(event) => handleInputChange("diagnosis", event.target.value)} // Update the name state
+          onChange={(event) =>
+            handleInputChange("diagnosis", event.target.value)
+          } // Update the name state
           sx={{
             width: "100%",
             color: "#fff",
           }}
           label={
-            <FormattedMessage
-              id={"diagnosis"}
-              defaultMessage="Hello, World!"
-            />
+            <FormattedMessage id={"diagnosis"} defaultMessage="Hello, World!" />
           }
           // defaultValue="Hello World"
         />
       </div>
-
       <div className="flex gap-6 w-full justify-between">
         <IconButton>
           {/* <PrintRounded color="action"></PrintRounded> */}
@@ -149,10 +146,17 @@ function VisitForm({
           className="w-full"
           color="success"
         >
-          <FormattedMessage
-            id={"Add a laboratory test"}
-            defaultMessage="Hello, World!"
-          />
+          {type === "edit" ? (
+            <FormattedMessage
+              id={"edit visit"}
+              defaultMessage="Hello, World!"
+            />
+          ) : (
+            <FormattedMessage
+              id={"add new visit"}
+              defaultMessage="Hello, World!"
+            />
+          )}
         </Button>
         <IconButton
           onClick={() => {
@@ -167,3 +171,6 @@ function VisitForm({
 }
 
 export default VisitForm;
+
+
+

@@ -121,7 +121,9 @@
   "pregnancyCurrent" : "حمل حالي",
   "Sequence":"التسلسل",
   "visit":"زيارة",
-  "diagnosis":"التشخيص"
-
+  "diagnosis":"التشخيص",
+  "edit visit": "تعديل الزيارة",
+  "add new visit": "اضافة زيارة جديدة",
+  "visit Information" : "معلومات الزيارة"
 
 }

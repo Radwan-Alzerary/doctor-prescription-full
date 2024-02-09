@@ -119,10 +119,12 @@
   "ExaminationFindining": "Examination Findining",
   "InvestigationFinding": "Investigation Finding",
   "dayAge": "day Age",
-  "miscarriageState":"Miscarriage State",
-  "pregnancyCurrent" : "Current pregnancy",
-  "Sequence":"Sequence",
-  "visit":"visit",
-"diagnosis":"diagnosis"
-
+  "miscarriageState": "Miscarriage State",
+  "pregnancyCurrent": "Current pregnancy",
+  "Sequence": "Sequence",
+  "visit": "visit",
+  "diagnosis": "diagnosis",
+  "edit visit": "edit visit",
+  "add new visit": "add new visit",
+  "visit Information" : "visit Information"
 }

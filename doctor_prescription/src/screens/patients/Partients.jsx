@@ -327,7 +327,7 @@ function Row(props) {
                     <TableCell align="center">عدد الادوية</TableCell>
                     <TableCell align="center">التشخيص</TableCell>
                     <TableCell align="center">التاريخ</TableCell>
-                    <TableCell align="center">الاودية</TableCell>
+                    <TableCell align="center">الادوية</TableCell>
                     <TableCell align="center">الخيارات</TableCell>
                   </TableRow>
                 </TableHead>

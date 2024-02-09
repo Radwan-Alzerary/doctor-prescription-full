@@ -146,7 +146,11 @@ function App() {
                     <Route exact path="surgen">
                       <Route exact path="list" element={<SurgenList />}></Route>
                       <Route exact path="type" element={<SurgenType />}></Route>
-                      <Route exact path="calender" element={<SurgenDate/>}></Route>
+                      <Route
+                        exact
+                        path="calender"
+                        element={<SurgenDate />}
+                      ></Route>
                       <Route
                         exact
                         path="device"
@@ -194,7 +198,13 @@ function App() {
                     ></Route>
                   </Route>
                 </Routes>
-
+                {/* <div className="z-50 flex justify-center items-center absolute bottom-3 border-blue-300 right-16 w-32 h-20 rounded-lg bg-[#ffffffb7] border-2 border-spacing-11">  
+                <img
+                    className="logo w-[90%]"
+                    src={process.env.PUBLIC_URL + "/sponserlogo.png"}
+                    alt="Sponsor Logo"
+                  />
+                </div> */}
                 {isAuthenticated ? (
                   <div className=" z-50 absolute bottom-2 right-2">
                     {!showGpt ? (
