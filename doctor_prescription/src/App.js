@@ -198,13 +198,25 @@ function App() {
                     ></Route>
                   </Route>
                 </Routes>
-                {/* <div className="z-50 flex justify-center items-center absolute bottom-3 border-blue-300 right-16 w-32 h-20 rounded-lg bg-[#ffffffb7] border-2 border-spacing-11">  
-                <img
-                    className="logo w-[90%]"
-                    src={process.env.PUBLIC_URL + "/sponserlogo.png"}
-                    alt="Sponsor Logo"
-                  />
-                </div> */}
+                {isAuthenticated ? (
+                  <>
+                    {/* <div className="z-50 flex justify-center items-center absolute -top-16 border-blue-300 right-[45%] w-32 h-20 rounded-lg bg-[#ffffffb7] border-2 border-spacing-11">
+                      <img
+                        className="logo w-[90%]"
+                        src={process.env.PUBLIC_URL + "/sponserlogo.png"}
+                        alt="Sponsor Logo"
+                      />
+                    </div> */}
+                  </>
+                ) : (
+                  <div className="z-50 flex justify-center items-center absolute -top-0 border-blue-300 right-[45%] w-32 h-20 rounded-lg bg-[#ffffffb7] border-2 border-spacing-11">
+                    <img
+                      className="logo w-[90%]"
+                      src={process.env.PUBLIC_URL + "/sponserlogo.png"}
+                      alt="Sponsor Logo"
+                    />
+                  </div>
+                )}
                 {isAuthenticated ? (
                   <div className=" z-50 absolute bottom-2 right-2">
                     {!showGpt ? (

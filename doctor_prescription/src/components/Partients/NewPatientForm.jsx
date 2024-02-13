@@ -53,6 +53,7 @@ function NewPatientForm(props) {
     childrenData: [], // Array to store data for each child
     length: "",
     description: "",
+    jop:"",
     bloodType: "",
     MaritalStatus: "",
     fumbling: "",
@@ -77,6 +78,7 @@ function NewPatientForm(props) {
         adresses: props.data.adresses,
         gender: props.data.gender,
         bloodType: props.data.bloodType,
+        jop:props.data.jop,
         MaritalStatus: props.data.MaritalStatus,
         age: props.data.age,
         Sequence: props.data.Sequence,
@@ -305,6 +307,23 @@ function NewPatientForm(props) {
             <FormattedMessage id={"Address"} defaultMessage="Hello, World!" />
           }
         />
+                <TextField
+          id="outlined-required"
+          size="small"
+          value={formData.jop}
+          onChange={(event) =>
+            handleInputChange("jop", event.target.value)
+          }
+          sx={{
+            width: "30%",
+            textAlign: "right",
+            color: "#fff",
+          }}
+          label={
+            <FormattedMessage id={"jop"} defaultMessage="Hello, World!" />
+          }
+        />
+
         <TextField
           id="outlined-required"
           size="small"

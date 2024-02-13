@@ -29,6 +29,7 @@ router.post("/new", async (req, res) => {
     patientsDate.gender = req.body.gender;
     patientsDate.age = req.body.age;
     patientsDate.monthAge = req.body.monthAge;
+    patientsDate.jop = req.body.jop;
     patientsDate.dayAge = req.body.dayAge;
     patientsDate.length = req.body.length;
     patientsDate.weight = req.body.weight;
@@ -482,18 +483,17 @@ router.get("/import", async (req, res) => {
       // Create a new Pharmaceutical document with the necessary fields
       const newPatients = new Patients({
         name: item.name, // Assuming 'text' field contains the name
-        gender: "انثى",
-        Sequence: item.serialn,
-        adresses: item.adress,
-        age: 2024 - item.date,
-        phonNumber: item.phoneNumber,
+        gender: "ذكر",
+        Sequence: item.serialn ,
+        adresses: item.adress ?? "",
+        phonNumber: item.phoneNumber ?? "",
       });
       try {
         // Save the pharmaceutical document to the database
         await newPatients.save();
-        console.log(`Added: ${item.text}`);
+        console.log(`Added: ${item.name}`);
       } catch (error) {
-        console.error(`Error adding ${item.text}: ${error.message}`);
+        console.error(`Error adding ${item.name}: ${error.message}`);
       }
     }
     res.status(200).json({ message: "Import completed." });

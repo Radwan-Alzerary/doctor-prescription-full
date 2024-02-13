@@ -81,6 +81,7 @@ const PatientsSchema = new mongoose.Schema(
       { type: mongoose.Schema.Types.ObjectId, ref: "ConstantDiseases" },
     ],
     description: { type: String },
+    jop : {type:String},
     prescription: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Prescription" },
     ],

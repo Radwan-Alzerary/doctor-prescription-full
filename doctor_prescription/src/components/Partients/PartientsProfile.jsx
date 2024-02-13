@@ -101,9 +101,7 @@ function PartientsProfile(props) {
             setProfileSelect("visitReport");
           }}
           className={`${
-            profileSelect === "visitReport"
-              ? "bg-green-200"
-              : "bg-slate-200"
+            profileSelect === "visitReport" ? "bg-green-200" : "bg-slate-200"
           }  p-2 w-48 rounded-full hover:bg-slate-100 cursor-pointer`}
         >
           الزيارات
@@ -187,6 +185,12 @@ function PartientsProfile(props) {
                 <p>الجنس : {partientsProfile.gender}</p>
                 {partientsProfile.bloodType ? (
                   <p>صنف الدم : {partientsProfile.bloodType}</p>
+                ) : (
+                  ""
+                )}
+
+                {partientsProfile.jop ? (
+                  <p>المهنة : {partientsProfile.jop}</p>
                 ) : (
                   ""
                 )}
@@ -277,8 +281,6 @@ function PartientsProfile(props) {
 
       {profileSelect === "visitReport" ? (
         <>
-        
-        
           <VisitReportTable
             visitData={partientsProfile.visit}
             partientsProfileId={partientsProfile._id}
