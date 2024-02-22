@@ -97,6 +97,7 @@ const PatientsSchema = new mongoose.Schema(
     Medicine: [{ type: mongoose.Schema.Types.ObjectId, ref: "Medicine" }],
     bloodType: { type: String },
     MaritalStatus: { type: String },
+    lastEditDate:{type:Date},
     numberOfChildren: { type: Number },
     childrenData: [{ date: { type: Date }, type: { type: String } }],
     MedicalAnalysis: {

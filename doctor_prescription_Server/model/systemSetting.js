@@ -12,7 +12,6 @@ const SystemSettingSchema = new mongoose.Schema(
     lastBackup: { type: Date },
     abortProssesMsg: { type: Boolean, default: false },
     openEditPrescriptionByClick: { type: Boolean, default: false },
-
     medicalDiagnosisActive: { type: Boolean, default: true },
     currentMedicalHistoryActive: { type: Boolean, default: true },
     medicalHistoryActive: { type: Boolean, default: true },
@@ -29,7 +28,7 @@ const SystemSettingSchema = new mongoose.Schema(
     bloodSugarActive: { type: Boolean, default: true },
     miscarriageStateActive: { type: Boolean, default: true },
     pregnancyActive: { type: Boolean, default: true },
-
+    spesialLogo: { type: Boolean, default: false },
     autoBackUp: { type: Boolean, default: false },
     isForWoman: { type: Boolean, default: false },
     isForSurgery: { type: Boolean, default: false },

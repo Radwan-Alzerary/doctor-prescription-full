@@ -82,6 +82,21 @@ function App() {
   const [userAvailable, setUserAvailable] = useState(false);
   const currentURL = window.location.origin; // Get the current URL
   const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+  const [settingData, setSettingData] = useState({});
+
+  useEffect(() => {
+    const getSettingApi = () => {
+      axios
+        .get(`${serverAddress}/setting/getdata`)
+        .then((response) => {
+          setSettingData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    };
+    getSettingApi();
+  }, []);
 
   axios
     .get(`${serverAddress}/users/checkAvailable`)
@@ -198,24 +213,44 @@ function App() {
                     ></Route>
                   </Route>
                 </Routes>
-                {isAuthenticated ? (
-                  <>
-                    {/* <div className="z-50 flex justify-center items-center absolute -top-16 border-blue-300 right-[45%] w-32 h-20 rounded-lg bg-[#ffffffb7] border-2 border-spacing-11">
-                      <img
-                        className="logo w-[90%]"
-                        src={process.env.PUBLIC_URL + "/sponserlogo.png"}
-                        alt="Sponsor Logo"
-                      />
-                    </div> */}
-                  </>
+                {settingData.spesialLogo ? (
+                  isAuthenticated ? (
+                    <>
+                      <div className="z-50 flex justify-center items-center absolute -top-16 border-blue-300 right-[45%] w-32 h-20 rounded-lg bg-[#ffffffb7] border-2 border-spacing-11">
+                        <img
+                          className="logo w-[90%]"
+                          src={process.env.PUBLIC_URL + "/sponserlogo.png"}
+                          alt="Sponsor Logo"
+                        />
+                      </div>
+                      <div className="z-50 flex justify-center items-center absolute -top-16 border-blue-300 right-[54%] w-32 h-20 rounded-lg bg-[#ffffffb7] border-2 border-spacing-11">
+                        <img
+                          className="logo w-[90%]"
+                          src={process.env.PUBLIC_URL + "/sponserlogo2.png"}
+                          alt="Sponsor Logo"
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="z-50 flex justify-center items-center absolute -top-0 border-blue-300 right-[45%] w-32 h-20 rounded-lg bg-[#ffffffb7] border-2 border-spacing-11">
+                        <img
+                          className="logo w-[90%]"
+                          src={process.env.PUBLIC_URL + "/sponserlogo.png"}
+                          alt="Sponsor Logo"
+                        />
+                      </div>
+                      <div className="z-50 flex justify-center items-center absolute -top-0 border-blue-300 right-[54%] w-32 h-20 rounded-lg bg-[#ffffffb7] border-2 border-spacing-11">
+                        <img
+                          className="logo w-[90%]"
+                          src={process.env.PUBLIC_URL + "/sponserlogo2.png"}
+                          alt="Sponsor Logo"
+                        />
+                      </div>
+                    </>
+                  )
                 ) : (
-                  <div className="z-50 flex justify-center items-center absolute -top-0 border-blue-300 right-[45%] w-32 h-20 rounded-lg bg-[#ffffffb7] border-2 border-spacing-11">
-                    <img
-                      className="logo w-[90%]"
-                      src={process.env.PUBLIC_URL + "/sponserlogo.png"}
-                      alt="Sponsor Logo"
-                    />
-                  </div>
+                  ""
                 )}
                 {isAuthenticated ? (
                   <div className=" z-50 absolute bottom-2 right-2">

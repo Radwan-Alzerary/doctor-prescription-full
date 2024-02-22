@@ -5,6 +5,8 @@ const ConstantDiseases = require("../model/constantDiseases");
 const axios = require("axios");
 const multer = require("multer");
 const fs = require("fs");
+const Visit = require("../model/visit"); // Make sure to adjust the path as needed
+const Medicalreports = require("../model/medicalReport"); // Make sure to adjust the path as needed
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -131,9 +133,7 @@ router.get("/getall/:page", async (req, res) => {
   try {
     const page = parseInt(req.params.page) || 1; // Get the requested page number, default to 1 if not provided
     const perPage = 20; // Number of documents to display per page
-
     const skip = (page - 1) * perPage; // Calculate the number of documents to skip
-
     const patients = await Patients.find({ name: { $ne: "" } })
       .populate({
         path: "prescription",
@@ -144,7 +144,6 @@ router.get("/getall/:page", async (req, res) => {
       })
       .sort({
         bookedPriority: -1, // Sort by 'booked' field in descending order
-
         booked: -1, // Sort by 'booked' field in descending order
         updatedAt: -1,
       }) // Sort by 'updatedAt' field in descending order
@@ -484,7 +483,7 @@ router.get("/import", async (req, res) => {
       const newPatients = new Patients({
         name: item.name, // Assuming 'text' field contains the name
         gender: "ذكر",
-        Sequence: item.serialn ,
+        Sequence: item.serialn,
         adresses: item.adress ?? "",
         phonNumber: item.phoneNumber ?? "",
       });
@@ -492,6 +491,124 @@ router.get("/import", async (req, res) => {
         // Save the pharmaceutical document to the database
         await newPatients.save();
         console.log(`Added: ${item.name}`);
+      } catch (error) {
+        console.error(`Error adding ${item.name}: ${error.message}`);
+      }
+    }
+    res.status(200).json({ message: "Import completed." });
+  } catch (error) {
+    console.error(`Error reading JSON file: ${error.message}`);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router.get("/importasem", async (req, res) => {
+  try {
+    // Replace 'your-json-file.json' with the path to your JSON file
+    const jsonFilePath = "dbo.tblPatient.json";
+    console.log(process.cwd());
+
+    // Read the JSON file
+    const jsonData = fs.readFileSync(jsonFilePath, "utf8");
+
+    // Parse the JSON data
+    const pharmaceuticalsArray = JSON.parse(jsonData);
+
+    for (const item of pharmaceuticalsArray) {
+      var dob = new Date(item.PDOB);
+      var currentDate = new Date();
+
+      // Calculate the age
+      var age = currentDate.getFullYear() - dob.getFullYear();
+      console.log(age);
+      // Create a new Pharmaceutical document with the necessary fields
+      const newPatients = new Patients({
+        name: item.PName, // Assuming 'text' field contains the name
+        gender: item.gender == "Male" ? "ذكر" : "انثى",
+        Sequence: item.PID,
+        adresses: item.PAddress ?? "",
+        phonNumber: item.PPhone ?? "",
+        medicalDiagnosis: item.PSik ?? "",
+        currentMedicalHistory: item.PSir ?? "",
+        medicalHistory: item.PSig ?? "",
+        ExaminationFindining: item.PALer ?? "",
+      });
+      try {
+        // Save the pharmaceutical document to the database
+        await newPatients.save();
+
+        const visit = new Visit({
+          chiefComplaint: item.DVReason,
+          dateOfVisit: item.DIAGDATE,
+          investigation: item.DVTests,
+          diagnosis: item.DVDiagnos,
+        });
+        await visit.save();
+        // Find the patient by ID
+        const patient = await Patients.findById(newPatients._id.toString());
+        if (!patient) {
+          return res.status(404).json({ message: "Patient not found" });
+        }
+
+        // Push the new prescription's ID into the patient's prescription field
+        console.log(visit._id.toString());
+        patient.visit.push(visit._id.toString());
+        const currentDate = new Date();
+        const currentDateStr = currentDate.toISOString().split("T")[0]; // Get today's date as YYYY-MM-DD string
+
+        // Find the visitDate entry for today's date, if it exists
+        const todayVisitDate = patient.visitDate.find(
+          (visit) =>
+            visit.date &&
+            visit.date.toISOString().split("T")[0] === currentDateStr
+        );
+
+        if (todayVisitDate) {
+          if (todayVisitDate.visitReportCount) {
+            todayVisitDate.visitReportCount += 1;
+          } else {
+            todayVisitDate.visitReportCount = 1;
+          }
+        } else {
+          // Today's date is not in visitDate, so push it with initial counts
+          patient.visitDate.push({
+            date: currentDate,
+            visitReportCount: 1,
+          });
+        }
+        // Save the updated patient
+        await patient.save();
+
+const reportData = `<p>${item.report}</p>`
+        const medicalreports = new Medicalreports({ report: reportData ?? ""});
+        await medicalreports.save();
+    
+    
+        // Push the new prescription's ID into the patient's prescription field
+        console.log(medicalreports._id.toString());
+        patient.medicalReport.push(medicalreports._id.toString());
+        // Find the visitDate entry for today's date, if it exists
+    
+        if (todayVisitDate) {
+          if (todayVisitDate.medicalReportsCount) {
+            todayVisitDate.medicalReportsCount += 1;
+          } else {
+            todayVisitDate.medicalReportsCount = 1;
+          }
+        } else {
+          // Today's date is not in visitDate, so push it with initial counts
+          patient.visitDate.push({
+            date: currentDate,
+            medicalReportsCount: 1,
+          });
+        }
+    
+        // Save the updated patient
+        await patient.save();
+    
+
+
+
+        // console.log(`Added: ${item.name}`);
       } catch (error) {
         console.error(`Error adding ${item.name}: ${error.message}`);
       }

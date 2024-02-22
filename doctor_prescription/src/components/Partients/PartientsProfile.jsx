@@ -21,6 +21,7 @@ function PartientsProfile(props) {
   useEffect(() => {
     refreshPaitent();
   }, []);
+
   useEffect(() => {
     refreshPaitent();
   }, [props.refresh]);
@@ -32,10 +33,12 @@ function PartientsProfile(props) {
         setPartientsProfile(response.data); // Update the categories state with the fetched data
         setDiseasesProfile(response.data.diseases);
       })
+      
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
   };
+
   const handleEditPatientData = (data) => {
     data.id = partientsProfile._id;
   };

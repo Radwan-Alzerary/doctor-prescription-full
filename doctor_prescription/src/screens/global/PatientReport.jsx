@@ -153,7 +153,7 @@ function PatientReport(props) {
         {props.medicalReportsStype.nameActive &&
         props.medicalReportsStype.nameAbsoulateActive ? (
           <div
-            className={`flex gap-2 ${
+            className={`flex gap-2 text-right ${
               props.medicalReportsStype.nameAbsoulateActive ? "absolute" : ""
             }`}
             style={{
@@ -162,7 +162,7 @@ function PatientReport(props) {
             }}
           >
             <h2
-              className=" text-red-500 font-semibold"
+              className=" text-red-500 font-semibold text-right"
               style={{
                 fontSize: `${props.medicalReportsStype.nameSize}rem`,
                 color: `${props.medicalReportsStype.nameMainTitleColor}`,
@@ -174,7 +174,7 @@ function PatientReport(props) {
                 : ""}
             </h2>
             <h2
-              className="font-semibold"
+              className="font-semibold text-right"
               style={{
                 fontSize: `${props.medicalReportsStype.nameSize}rem`,
                 color: `${props.medicalReportsStype.nameColor}`,

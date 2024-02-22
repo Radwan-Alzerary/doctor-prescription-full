@@ -25,7 +25,7 @@ function NewMedicalReporyForm({
   medicalReportsStype,
   changeReportHeaderName
 }) {
-const [headerName,setHeaderName]=useState(medicalReportsStype.reportHeaderName)
+const [headerName,setHeaderName]=useState(medicalReportsStype.reportHeaderName )
   // Define state to store form input data
   const [formData, setFormData] = useState({
     report: "",
