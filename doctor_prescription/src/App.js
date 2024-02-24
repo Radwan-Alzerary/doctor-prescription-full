@@ -1,4 +1,8 @@
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import {
+  HashRouter as Router,
+  } from 'react-router-dom';
+
 import "./App.css";
 import SideBarMenu from "./screens/global/SideBarMenu";
 import MedicalReports from "./screens/medicalReports/MedicalReports";
@@ -151,13 +155,14 @@ function App() {
               {isAuthenticated ? <Header></Header> : ""}
 
               <div className="h-[92vh] relative bg-[#F3F4F9] w-full">
+                
                 <Routes>
                   <Route exact path="/register" element={<Register />} />
                   <Route exact path="/newcomputer" element={<Register />} />
                   <Route exact path="/login" element={<Login />} />
                   <Route exact path="/tst" element={<VoiceRecoed />} />
                   <Route exact path="/" element={<PrivateRoute />}>
-                    <Route exact path="/" element={<Dashboard />}></Route>
+                  <Route index element={<Dashboard />} />
                     <Route exact path="surgen">
                       <Route exact path="list" element={<SurgenList />}></Route>
                       <Route exact path="type" element={<SurgenType />}></Route>

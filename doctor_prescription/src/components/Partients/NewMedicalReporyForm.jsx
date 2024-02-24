@@ -81,6 +81,7 @@ const [headerName,setHeaderName]=useState(medicalReportsStype.reportHeaderName )
             id={"Report information"}
             defaultMessage="Hello, World!"
           />
+          {/* {props.userData} */}
         </h5>
       </div>
       <div style={{ direction: "ltr" }} className="w-full my-3">

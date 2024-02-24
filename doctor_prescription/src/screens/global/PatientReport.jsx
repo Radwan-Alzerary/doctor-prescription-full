@@ -107,7 +107,7 @@ function PatientReport(props) {
           ? shape.map((shape, index) => (
               <div
                 className={`${
-                  !shape.Active ? "hidden" : "flex"
+                  shape.Active ? "hidden" : "flex"
                 } absolute text-center  flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center `}
                 style={{
                   height: `${shape.height}px`,

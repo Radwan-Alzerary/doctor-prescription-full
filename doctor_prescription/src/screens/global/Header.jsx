@@ -1,7 +1,7 @@
 import PowerSettingsNewOutlinedIcon from "@mui/icons-material/PowerSettingsNewOutlined";
 import FullscreenOutlinedIcon from "@mui/icons-material/FullscreenOutlined";
 
-import { blue, red } from "@mui/material/colors";
+import { blue, green, red } from "@mui/material/colors";
 import { Button, IconButton } from "@mui/material";
 import { useSignOut } from "react-auth-kit";
 import axios from "axios";
@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { toast } from "react-toastify";
 import { FormattedMessage } from "react-intl";
+import { Refresh } from "@mui/icons-material";
 
 function Header() {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ function Header() {
     setIsFullscreen(!isFullscreen);
   };
   const handleClose = () => {
-    const shouldClose = window.confirm('Do you want to close this window/tab?');
+    const shouldClose = window.confirm("Do you want to close this window/tab?");
     if (shouldClose) {
       window.close();
     }
@@ -53,7 +54,7 @@ function Header() {
   useEffect(() => {
     const currentURL = window.location.origin; // Get the current URL
     const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
-  
+
     const verifyUser = async () => {
       if (!cookies.jwt) {
         navigate("/login");
@@ -95,6 +96,19 @@ function Header() {
       </div>
       <div className="flex">
         <IconButton
+          onClick={() => {
+            window.location.reload();
+          }}
+          aria-label="fingerprint"
+          color="secondary"
+        >
+          <Refresh
+            sx={{ color: green[500] }}
+            style={{ fontSize: "32px" }}
+          ></Refresh>
+        </IconButton>
+
+        <IconButton
           onClick={toggleFullscreen}
           aria-label="fingerprint"
           color="secondary"
@@ -104,10 +118,11 @@ function Header() {
             style={{ fontSize: "32px" }}
           ></FullscreenOutlinedIcon>
         </IconButton>
-        <IconButton 
-              onClick={handleIconButtonClick}
-
-         aria-label="fingerprint" color="success">
+        <IconButton
+          onClick={handleIconButtonClick}
+          aria-label="fingerprint"
+          color="success"
+        >
           <PowerSettingsNewOutlinedIcon
             sx={{ color: red[500] }}
             style={{ fontSize: "32px" }}

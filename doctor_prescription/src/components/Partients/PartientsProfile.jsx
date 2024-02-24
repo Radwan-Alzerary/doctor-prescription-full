@@ -33,7 +33,7 @@ function PartientsProfile(props) {
         setPartientsProfile(response.data); // Update the categories state with the fetched data
         setDiseasesProfile(response.data.diseases);
       })
-      
+
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
@@ -210,44 +210,67 @@ function PartientsProfile(props) {
                 )}
               </div>
             </div>
-            <div className=" bg-white p-3 rounded-2xl shadow my-2">
-              <div className=" font-medium text-xl">الامراض</div>
-              <div className="flex gap-4 my-4">
-                {diseasesProfile.map((diseases, index) => (
-                  <Chip
-                    label={diseases.name}
-                    variant="outlined"
-                    onClick={() => {
-                      console.log(diseases);
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-            <div className=" bg-white p-3 rounded-2xl shadow my-4">
-              <div className=" font-medium text-xl">التحسس</div>
-              <div className="flex gap-4 ">
-                <p>{partientsProfile.fumbling} </p>
-              </div>
-            </div>
-            <div className=" bg-white p-3 rounded-2xl shadow my-4">
-              <div className=" font-medium text-xl">الاطفال</div>
-              <div className="w-full">
-                <div className="flex justify-between items-center w-full">
-                  {partientsProfile.childrenData
-                    ? partientsProfile.childrenData.map((child, index) => (
-                        <div className="">
-                          <div>{`طفل رقم ${index + 1}`}</div>
-                          <div>{`نوع الولادة  : ${child.type}`}</div>
-                          <div>
-                            {new Date(child.date).toLocaleDateString("en-GB")}
-                          </div>
-                        </div>
-                      ))
-                    : ""}
+            {partientsProfile.description ? (
+              <div className=" bg-white p-3 rounded-2xl shadow my-4">
+                <div className=" font-medium text-xl">الملاحضات</div>
+                <div className="flex gap-4 ">
+                  <p>{partientsProfile.description} </p>
                 </div>
               </div>
-            </div>
+            ) : (
+              ""
+            )}
+
+            {diseasesProfile.length > 0 ? (
+              <div className=" bg-white p-3 rounded-2xl shadow my-2">
+                <div className=" font-medium text-xl">الامراض</div>
+                <div className="flex gap-4 my-4">
+                  {diseasesProfile.map((diseases, index) => (
+                    <Chip
+                      label={diseases.name}
+                      variant="outlined"
+                      onClick={() => {
+                        console.log(diseases);
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+            {partientsProfile.fumbling ? (
+              <div className=" bg-white p-3 rounded-2xl shadow my-4">
+                <div className=" font-medium text-xl">التحسس</div>
+                <div className="flex gap-4 ">
+                  <p>{partientsProfile.fumbling} </p>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+            {partientsProfile.childrenData  ? (
+              <div className=" bg-white p-3 rounded-2xl shadow my-4">
+                <div className=" font-medium text-xl">الاطفال</div>
+                <div className="w-full">
+                  <div className="flex justify-between items-center w-full">
+                    {partientsProfile.childrenData
+                      ? partientsProfile.childrenData.map((child, index) => (
+                          <div className="">
+                            <div>{`طفل رقم ${index + 1}`}</div>
+                            <div>{`نوع الولادة  : ${child.type}`}</div>
+                            <div>
+                              {new Date(child.date).toLocaleDateString("en-GB")}
+                            </div>
+                          </div>
+                        ))
+                      : ""}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       ) : (

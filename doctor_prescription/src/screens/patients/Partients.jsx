@@ -1652,6 +1652,7 @@ function Partients() {
           {" "}
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewMedicalReporyForm
+          userEditData={userEditData}
             medicalReportsStype={medicalReportsStype}
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterClickText}
