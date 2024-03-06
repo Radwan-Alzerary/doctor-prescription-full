@@ -28,9 +28,9 @@ const PatientsSchema = new mongoose.Schema(
     Sequence: {
       type: Number,
     },
-    booked: { type: Boolean },
-    bookedDate:{type:Date},
-    bookedPriority:{type:Number},
+    booked: { type: Boolean, default: false },
+    bookedDate: { type: Date },
+    bookedPriority: { type: Number },
     length: {
       type: Number,
     },
@@ -81,7 +81,7 @@ const PatientsSchema = new mongoose.Schema(
       { type: mongoose.Schema.Types.ObjectId, ref: "ConstantDiseases" },
     ],
     description: { type: String },
-    jop : {type:String},
+    jop: { type: String },
     prescription: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Prescription" },
     ],
@@ -97,7 +97,7 @@ const PatientsSchema = new mongoose.Schema(
     Medicine: [{ type: mongoose.Schema.Types.ObjectId, ref: "Medicine" }],
     bloodType: { type: String },
     MaritalStatus: { type: String },
-    lastEditDate:{type:Date},
+    lastEditDate: { type: Date },
     numberOfChildren: { type: Number },
     childrenData: [{ date: { type: Date }, type: { type: String } }],
     MedicalAnalysis: {

@@ -4,6 +4,8 @@ import ImageInput from "../ImageInput";
 import { useState } from "react";
 import ImageView from "./ImageView";
 import BackGroundShadow from "../../pageCompond/BackGroundShadow";
+import { Delete } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 
 export default function PatientPictures(props) {
   const [file, setFile] = useState(null);
@@ -54,7 +56,7 @@ export default function PatientPictures(props) {
     <div style={{ width: "100%" }} className=" overflow-scroll p-3 ">
       <div className=" w-full grid grid-cols-3 gap-4 ">
         {props.images.map((value) => (
-          <div>
+          <div className=" relative">
             <img
               alt="2"
               onClick={() => {
@@ -63,13 +65,25 @@ export default function PatientPictures(props) {
               className=" w-full  h-80 object-cover"
               src={`${serverAddress}/${value}`}
             ></img>
+            <div className=" absolute w-12 h-12 flexx top-0 right-0">
+              <IconButton className=" bg-white" onClick={()=>{props.onImageDeleteHandle(value)}}>
+                <Delete className=" text-center justify-center items-center text-red-500"></Delete>
+              </IconButton>
+            </div>
           </div>
         ))}
         <ImageInput handleFileChange={handleFileChange}></ImageInput>
       </div>
-      {showImage ?<>
-        <ImageView imageSelector={imageSelector} handleHideImage={handleHideImage}></ImageView> 
-      </>: ""}
+      {showImage ? (
+        <>
+          <ImageView
+            imageSelector={imageSelector}
+            handleHideImage={handleHideImage}
+          ></ImageView>
+        </>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

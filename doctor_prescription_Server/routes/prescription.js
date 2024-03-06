@@ -118,6 +118,7 @@ router.post("/ubdateData", async (req, res) => {
       (visit) =>
         visit.date && visit.date.toISOString().split("T")[0] === currentDateStr
     );
+    patient.lastEditDate = Date.now();
 
     if (todayVisitDate) {
       if (todayVisitDate.prescriptionCount) {
@@ -158,6 +159,7 @@ router.post("/new", async (req, res) => {
 
     // Find the patient by ID
     const patient = await Patients.findById(patientId);
+    patient.lastEditDate = Date.now();
 
     if (!patient) {
       return res.status(404).json({ message: "Patient not found" });

@@ -30,10 +30,14 @@ router.post("/new", async (req, res) => {
     if (todayVisitDate) {
       if (todayVisitDate.laboryReportCount) {
         todayVisitDate.laboryReportCount += 1;
+        patient.lastEditDate = Date.now();
       } else {
         todayVisitDate.laboryReportCount = 1;
+        patient.lastEditDate = Date.now();
       }
     } else {
+      patient.lastEditDate = Date.now();
+
       // Today's date is not in visitDate, so push it with initial counts
       patient.visitDate.push({
         date: currentDate,
@@ -67,15 +71,11 @@ router.get("/getone/:id", async (req, res) => {
   }
 });
 
-
 router.post("/editone/", async (req, res) => {
   try {
-    console.log(req.body)
-    console.log(req.body)
-    console.log(req.body)
-    console.log(req.body)
-    console.log(req.body)
-    const medicalreports = await Labory.findByIdAndUpdate(req.body.id,{report : req.body.data.report});
+    const medicalreports = await Labory.findByIdAndUpdate(req.body.id, {
+      report: req.body.data.report,
+    });
     res.json(medicalreports);
   } catch (error) {
     res.status(500).json({ error: error.message });

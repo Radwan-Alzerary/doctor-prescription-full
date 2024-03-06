@@ -18,6 +18,7 @@ router.post("/new", async (req, res) => {
     if (!patient) {
       return res.status(404).json({ message: "Patient not found" });
     }
+    patient.lastEditDate = Date.now();
 
     // Push the new prescription's ID into the patient's prescription field
     console.log(visit._id.toString());

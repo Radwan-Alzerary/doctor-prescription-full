@@ -39,6 +39,7 @@ router.post("/new", async (req, res) => {
     patientsDate.childrenData = req.body.childrenData;
     patientsDate.bloodType = req.body.bloodType;
     patientsDate.description = req.body.description;
+    patientsDate.lastEditDate = Date.now()
     const diseasesArray = req.body.diseases;
     const resultArray = [];
     for (const diseaseName of diseasesArray) {
@@ -89,6 +90,7 @@ router.post("/edit", async (req, res) => {
       }
       ubdateData.diseases = resultArray;
     }
+    ubdateData.lastEditDate = Date.now()
 
     const updatedPatient = await Patients.findByIdAndUpdate(id, ubdateData, {
       new: true,
@@ -114,6 +116,7 @@ router.get("/getall", async (req, res) => {
       })
       .sort({
         booked: -1, // Sort by 'booked' field in descending order
+        lastEditDate:-1,
         updatedAt: -1,
       }); // Sort by 'updatedAt' field in descending order
     res.json(patients);
@@ -129,6 +132,17 @@ router.get("/getcount", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+router.post("/reset-booked", async (req, res) => {
+  try {
+    // Update all patients and set booked to false
+    const result = await Patients.updateMany({}, { $set: { booked: false } });
+
+    res.json({ message: `Updated ${result.nModified} patients.`, result });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 router.get("/getall/:page", async (req, res) => {
   try {
     const page = parseInt(req.params.page) || 1; // Get the requested page number, default to 1 if not provided
@@ -143,8 +157,8 @@ router.get("/getall/:page", async (req, res) => {
         },
       })
       .sort({
-        bookedPriority: -1, // Sort by 'booked' field in descending order
         booked: -1, // Sort by 'booked' field in descending order
+        lastEditDate:-1,
         updatedAt: -1,
       }) // Sort by 'updatedAt' field in descending order
       .skip(skip)
@@ -414,6 +428,30 @@ router.post("/galaryimage", upload.single("image"), async (req, res, next) => {
     res.status(500).json({ error: error.message });
   }
 });
+router.post("/images/delete", async (req, res, next) => {
+  console.log(req.body)
+    const patientId = req.body.id;
+    const imageUrl = req.body.imageUrl
+    try {
+      const updatedPrescription = await Patients.findOneAndUpdate(
+        { _id: patientId },
+        { $pull: { galary:  imageUrl  } },
+        { new: true }
+      );
+
+    //   // Check if the pharmaceutical item was successfully removed
+      if (updatedPrescription) {
+        res.json(updatedPrescription);
+      } else {
+        res
+          .status(404)
+          .json({ message: "Pharmaceutical not found in this prescription." });
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 router.put("/edit/:id", async (req, res) => {
   try {
     const patients = await Patients.findByIdAndUpdate(req.params.id, req.body, {
@@ -465,7 +503,6 @@ router.delete(
     }
   }
 );
-
 router.get("/import", async (req, res) => {
   try {
     // Replace 'your-json-file.json' with the path to your JSON file
@@ -578,16 +615,15 @@ router.get("/importasem", async (req, res) => {
         // Save the updated patient
         await patient.save();
 
-const reportData = `<p>${item.report}</p>`
-        const medicalreports = new Medicalreports({ report: reportData ?? ""});
+        const reportData = `<p>${item.report}</p>`;
+        const medicalreports = new Medicalreports({ report: reportData ?? "" });
         await medicalreports.save();
-    
-    
+
         // Push the new prescription's ID into the patient's prescription field
         console.log(medicalreports._id.toString());
         patient.medicalReport.push(medicalreports._id.toString());
         // Find the visitDate entry for today's date, if it exists
-    
+
         if (todayVisitDate) {
           if (todayVisitDate.medicalReportsCount) {
             todayVisitDate.medicalReportsCount += 1;
@@ -601,12 +637,9 @@ const reportData = `<p>${item.report}</p>`
             medicalReportsCount: 1,
           });
         }
-    
+
         // Save the updated patient
         await patient.save();
-    
-
-
 
         // console.log(`Added: ${item.name}`);
       } catch (error) {
@@ -619,7 +652,6 @@ const reportData = `<p>${item.report}</p>`
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 router.post("/bookpatents", async (req, res) => {
   try {
     let bookedCount = 0;
@@ -666,5 +698,4 @@ router.post("/bookpatents", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
 module.exports = router;

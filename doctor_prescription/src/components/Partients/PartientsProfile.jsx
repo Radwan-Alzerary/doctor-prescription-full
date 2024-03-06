@@ -249,7 +249,7 @@ function PartientsProfile(props) {
             ) : (
               ""
             )}
-            {partientsProfile.childrenData  ? (
+            {partientsProfile.childrenData ? (
               <div className=" bg-white p-3 rounded-2xl shadow my-4">
                 <div className=" font-medium text-xl">الاطفال</div>
                 <div className="w-full">
@@ -296,6 +296,7 @@ function PartientsProfile(props) {
       {profileSelect === "patientPictures" ? (
         <>
           <PatientPictures
+            onImageDeleteHandle={props.onImageDeleteHandle}
             refreshPaitent={refreshPaitent}
             id={partientsProfile._id}
             images={partientsProfile.galary}

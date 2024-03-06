@@ -77,7 +77,7 @@ function PatientReport(props) {
           alt=""
         ></img>
         <div
-          className={`z-20 h-0 w-40 absolute text-center flex flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center  rounded-xl `}
+          className={`z-50 h-0 w-40  absolute text-center flex flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center  rounded-xl `}
           style={{
             fontFamily: "signfont",
             left: `${props.medicalReportsStype.signatureX}%`,
@@ -86,12 +86,12 @@ function PatientReport(props) {
             color: `${props.medicalReportsStype.signatureColor}`,
           }}
         >
-          <p className="h-0"> {props.medicalReportsStype.mainNameHeaderknia}</p>
+          <p className="h-0 z-50"> {props.medicalReportsStype.mainNameHeaderknia}</p>
           {props.medicalReportsStype.signature}
         </div>
         {randomText.map((textData, index) => (
           <div
-            className={`z-20 h-0 w-40 absolute text-center flex flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center  rounded-xl `}
+            className={`z-50 h-0 w-40 absolute text-center flex flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center  rounded-xl `}
             style={{
               left: `${textData.x}%`,
               top: `${textData.y}%`,
@@ -153,7 +153,7 @@ function PatientReport(props) {
         {props.medicalReportsStype.nameActive &&
         props.medicalReportsStype.nameAbsoulateActive ? (
           <div
-            className={`flex gap-2 text-right ${
+            className={`flex gap-2 z-50 text-right ${
               props.medicalReportsStype.nameAbsoulateActive ? "absolute" : ""
             }`}
             style={{
@@ -162,7 +162,7 @@ function PatientReport(props) {
             }}
           >
             <h2
-              className=" text-red-500 font-semibold text-right"
+              className=" text-red-500 z-50 font-semibold text-right"
               style={{
                 fontSize: `${props.medicalReportsStype.nameSize}rem`,
                 color: `${props.medicalReportsStype.nameMainTitleColor}`,
@@ -174,7 +174,7 @@ function PatientReport(props) {
                 : ""}
             </h2>
             <h2
-              className="font-semibold text-right"
+              className="font-semibold z-50 text-right"
               style={{
                 fontSize: `${props.medicalReportsStype.nameSize}rem`,
                 color: `${props.medicalReportsStype.nameColor}`,
@@ -189,7 +189,7 @@ function PatientReport(props) {
         {props.medicalReportsStype.ageActive &&
         props.medicalReportsStype.ageAbsoulateActive ? (
           <div
-            className={`flex gap-2 ${
+            className={`flex gap-2 z-50 ${
               props.medicalReportsStype.ageAbsoulateActive ? "absolute" : ""
             }`}
             style={{
@@ -198,7 +198,7 @@ function PatientReport(props) {
             }}
           >
             <h2
-              className=" text-red-500 font-semibold"
+              className=" text-red-500 z-50 font-semibold"
               style={{
                 fontSize: `${props.medicalReportsStype.ageSize}rem`,
                 color: `${props.medicalReportsStype.ageMainTitleColor}`,
@@ -210,7 +210,7 @@ function PatientReport(props) {
                 : ""}
             </h2>
             <h2
-              className="font-semibold"
+              className="font-semibold z-50"
               style={{
                 fontSize: `${props.medicalReportsStype.ageSize}rem`,
                 color: `${props.medicalReportsStype.ageColor}`,
@@ -231,7 +231,7 @@ function PatientReport(props) {
         {props.medicalReportsStype.genderActive &&
         props.medicalReportsStype.genderAbsoulateActive ? (
           <div
-            className={`flex gap-2 ${
+            className={`flex gap-2 z-50 ${
               props.medicalReportsStype.genderAbsoulateActive ? "absolute" : ""
             }`}
             style={{
@@ -240,7 +240,7 @@ function PatientReport(props) {
             }}
           >
             <h2
-              className=" text-red-500 font-semibold"
+              className=" text-red-500 font-semibold z-50"
               style={{
                 fontSize: `${props.medicalReportsStype.genderSize}rem`,
                 color: `${props.medicalReportsStype.genderMainTitleColor}`,
@@ -252,7 +252,7 @@ function PatientReport(props) {
                 : ""}
             </h2>
             <h2
-              className="font-semibold"
+              className="font-semibold z-50"
               style={{
                 fontSize: `${props.medicalReportsStype.genderSize}rem`,
                 color: `${props.medicalReportsStype.genderColor}`,
@@ -271,7 +271,7 @@ function PatientReport(props) {
         {props.medicalReportsStype.dateActive &&
         props.medicalReportsStype.dateAbsoulateActive ? (
           <div
-            className={`flex gap-2 ${
+            className={`flex gap-2 z-50 ${
               props.medicalReportsStype.dateAbsoulateActive ? "absolute" : ""
             }`}
             style={{
@@ -280,7 +280,7 @@ function PatientReport(props) {
             }}
           >
             <h2
-              className=" text-red-500 font-semibold"
+              className=" text-red-500 font-semibold z-50"
               style={{
                 fontSize: `${props.medicalReportsStype.dateSize}rem`,
                 color: `${props.medicalReportsStype.dateMainTitleColor}`,
@@ -292,7 +292,7 @@ function PatientReport(props) {
                 : ""}
             </h2>
             <h2
-              className="font-semibold"
+              className="font-semibold z-50"
               style={{
                 fontSize: `${props.medicalReportsStype.dateSize}rem`,
                 color: `${props.medicalReportsStype.dateColor}`,
@@ -316,7 +316,7 @@ function PatientReport(props) {
         {props.medicalReportsStype.weightActive &&
         props.medicalReportsStype.weightAbsoulateActive ? (
           <div
-            className={`flex gap-2 ${
+            className={`flex gap-2 z-50 ${
               props.medicalReportsStype.weightAbsoulateActive ? "absolute" : ""
             }`}
             style={{
@@ -325,7 +325,7 @@ function PatientReport(props) {
             }}
           >
             <h2
-              className=" text-red-500 font-semibold"
+              className=" text-red-500 font-semibold z-50"
               style={{
                 fontSize: `${props.medicalReportsStype.weightSize}rem`,
                 color: `${props.medicalReportsStype.weightMainTitleColor}`,
@@ -337,13 +337,13 @@ function PatientReport(props) {
                 : ""}
             </h2>
             <h2
-              className="font-semibold"
+              className="font-semibold z-50"
               style={{
                 fontSize: `${props.medicalReportsStype.weightSize}rem`,
                 color: `${props.medicalReportsStype.weightColor}`,
               }}
             >
-              <div className="flex">
+              <div className="flex z-50">
                 <div>Kg</div>
                 <div>{props.dataToPrint.patients.weight}</div>
               </div>
@@ -498,7 +498,7 @@ function PatientReport(props) {
             {props.medicalReportsStype.ageActive &&
             !props.medicalReportsStype.ageAbsoulateActive ? (
               <div
-                className={`flex gap-2 ${
+                className={`flex gap-2 z-50 ${
                   props.medicalReportsStype.ageAbsoulateActive ? "absolute" : ""
                 }`}
                 style={{
@@ -507,7 +507,7 @@ function PatientReport(props) {
                 }}
               >
                 <h2
-                  className=" text-red-500 font-semibold"
+                  className=" text-red-500 font-semibold z-50"
                   style={{
                     fontSize: `${props.medicalReportsStype.ageSize}rem`,
                     color: `${props.medicalReportsStype.ageMainTitleColor}`,
@@ -519,7 +519,7 @@ function PatientReport(props) {
                     : ""}
                 </h2>
                 <h2
-                  className="font-semibold"
+                  className="font-semibold z-50"
                   style={{
                     fontSize: `${props.medicalReportsStype.ageSize}rem`,
                     color: `${props.medicalReportsStype.ageColor}`,

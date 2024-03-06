@@ -470,6 +470,22 @@ function Partients() {
         });
     }
   };
+  const onImageDeleteHandle = (data) => {
+    console.log(data);
+    axios
+      .post(`${serverAddress}/patients/images/delete`, {
+        id: partientsSelectId,
+        imageUrl: data,
+      })
+      .then((response) => {
+        // getPatientsList();
+        setProfileRefresh(!profileRefresh);
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+  };
   const onBookedHandel = (id) => {
     axios
       .post(`${serverAddress}/patients/bookPatents`, {
@@ -1185,7 +1201,7 @@ function Partients() {
         .catch((error) => {
           // Handle error, e.g., show an error message
         });
-    }else if (type === "visitDelete") {
+    } else if (type === "visitDelete") {
       axios
         .delete(`${serverAddress}/visit/delete/${id}/`)
         .then((response) => {
@@ -1602,6 +1618,7 @@ function Partients() {
             }}
           ></BackGroundShadow>
           <PartientsProfile
+            onImageDeleteHandle={onImageDeleteHandle}
             settingData={settingData}
             handleEditPatientData={handleEditPatientData}
             userEditData={userEditData}
@@ -1652,7 +1669,7 @@ function Partients() {
           {" "}
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewMedicalReporyForm
-          userEditData={userEditData}
+            userEditData={userEditData}
             medicalReportsStype={medicalReportsStype}
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterClickText}

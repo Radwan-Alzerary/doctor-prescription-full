@@ -107,7 +107,29 @@ Intaketime.countDocuments()
   .catch((err) => {
     console.error("Error checking Storge collection:", err);
   });
-
+  async function updateBookedStatus() {
+    try {
+      // Find all patients with undefined or null booked field
+      const patientsToUpdate = await Patients.find({ booked: { $exists: false } });
+  
+      // Update their booked field to false
+      const updatePromises = patientsToUpdate.map(async (patient) => {
+        patient.booked = false;
+        await patient.save();
+      });
+  
+      // Wait for all updates to complete
+      await Promise.all(updatePromises);
+  
+      console.log("Booked status updated for patients without booked field.");
+    } catch (error) {
+      console.error("Error updating booked status:", error.message);
+    }
+  }
+  
+  // Call the function to update booked status
+  updateBookedStatus();
+  
 ConstantDiseases.countDocuments()
   .then((count) => {
     if (count === 0) {

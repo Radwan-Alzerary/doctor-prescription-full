@@ -30,8 +30,12 @@ router.post("/new", async (req, res) => {
     if (todayVisitDate) {
       if (todayVisitDate.medicalReportsCount) {
         todayVisitDate.medicalReportsCount += 1;
+        patient.lastEditDate = Date.now();
+
       } else {
         todayVisitDate.medicalReportsCount = 1;
+        patient.lastEditDate = Date.now();
+
       }
     } else {
       // Today's date is not in visitDate, so push it with initial counts
@@ -39,6 +43,8 @@ router.post("/new", async (req, res) => {
         date: currentDate,
         medicalReportsCount: 1,
       });
+      patient.lastEditDate = Date.now();
+
     }
 
     // Save the updated patient
