@@ -1219,7 +1219,7 @@ function Partients() {
     listening,
     resetTranscript,
     browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
+  } = useSpeechRecognition({ continuous: true });
 
   if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
     console.log(
@@ -1232,12 +1232,12 @@ function Partients() {
   }, [pageSelect]);
   return (
     <div className="p-2 relative h-[93vh] overflow-scroll">
-      {!browserSupportsSpeechRecognition ? (
+      {/* {!browserSupportsSpeechRecognition ? (
         <span>Browser doesn't support speech recognition.</span>
       ) : (
         ""
       )}
-      {/* <p>Microphone: {listening ? "on" : "off"}</p>
+      <p>Microphone: {listening ? "on" : "off"}</p>
       <button onClick={SpeechRecognition.startListening}>Start</button>
       <button onClick={SpeechRecognition.stopListening}>Stop</button>
       <button onClick={resetTranscript}>Reset</button>

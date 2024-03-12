@@ -9,6 +9,7 @@ import BackUp from "../../components/setting/BackUp";
 import Loading from "../../components/pageCompond/Loading";
 import PropertySetting from "../../components/setting/PropertySetting";
 import ExaminationSetting from "../../components/setting/ExaminationSetting";
+import PartientsTableSetting from "../../components/setting/PartientsTableSetting";
 
 function Setting(props) {
   const [cashire, setCashire] = useState([]);
@@ -211,6 +212,15 @@ function Setting(props) {
             <div className=" bg-white rounded-xl p-4 w-full">
             <div>تخصيصات الطبلة</div>
             <ExaminationSetting></ExaminationSetting>
+            
+          </div>
+
+          </div>
+          <div className="flex gap-3">
+          <div className=" bg-white rounded-xl p-4 w-full">
+            <div>تخصيصات جدول المرضى</div>
+            <PartientsTableSetting></PartientsTableSetting>
+            
           </div>
 
           </div>

@@ -36,6 +36,7 @@ app.use(flash());
 const corsOptions = {
   origin: [
     /^(http:\/\/.+:8080)$/,
+    /^(http:\/\/.+:8085)$/,
     /^(http:\/\/.+:80)$/,
     /^(http:\/\/.+:3000)$/,
     /^(http:\/\/.+:5000)$/,

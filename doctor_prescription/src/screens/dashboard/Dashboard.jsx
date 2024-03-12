@@ -6,8 +6,14 @@ import axios from "axios";
 import Loading from "../../components/pageCompond/Loading";
 import BackGroundShadow from "../../components/pageCompond/BackGroundShadow";
 import PartientsProfile from "../../components/Partients/PartientsProfile";
+import Webcam from "react-webcam";
 
 function Dashboard() {
+  const webRef =useRef(null);
+  let img=null
+  const showImage = ()=>{
+    img = webRef.current.getScreenshot();
+  }
   // Declare componentRef at the component level
   const [showPartientProfile, setShowPartientProfile] = useState(false);
 
@@ -25,6 +31,7 @@ function Dashboard() {
     setPartientsSelectId(id);
     setShowPartientProfile(true);
   };
+  
   useEffect(() => {
     const getSettingApi = () => {
       axios
@@ -94,6 +101,9 @@ function Dashboard() {
 
   return (
     <div className="w-full p-4 h-[100%] overflow-auto">
+      {/* <Webcam ref={webRef}></Webcam> */}
+      {/* <button onClick={()=>{showImage()}}>csdcx</button> */}
+      {/* <img src={img}></img> */}
       {loading ? (
         <div className="flex flex-col gap-6">
           <div className="w-full grid grid-cols-1 lg:grid-cols-5 md:grid-cols-5 gap-8   ">
