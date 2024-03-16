@@ -11,6 +11,7 @@ const EcoSchema = new Schema(
     type: { type: String },
     toDoctor: { type: String },
     wallThikness: {
+      wallThikness:{type: String,default:""},
       IVS: { type: String, default: "" },
       LVIPW: { type: String, default: "" },
       EF: { type: String, default: "" },
@@ -84,7 +85,7 @@ const EcoSchema = new Schema(
       AorticValve: { type: String, default: "" },
       MitalValve: { type: String, default: "" },
       PulmonaryValve: { type: String, default: "" },
-      TricuspidValve: { type: String, default: "" },
+      TricuspedValve: { type: String, default: "" },
       AorticArch: { type: String, default: "" },
       PericardialEffusion: { type: String, default: "" },
     },

@@ -13,7 +13,13 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import { useEffect, useState } from "react";
 import Sidebaritems from "../../components/Sidebar/Sidebaritems";
 import LanguageSelector from "./lanquageSelector";
-import { HeatPumpSharp, Home, MonitorHeart, Paragliding, Surfing } from "@mui/icons-material";
+import {
+  HeatPumpSharp,
+  Home,
+  MonitorHeart,
+  Paragliding,
+  Surfing,
+} from "@mui/icons-material";
 import { FormattedMessage } from "react-intl";
 import logo from "../../logo.png"; // Tell webpack this JS file uses this image
 import AirlineSeatFlatAngledIcon from "@mui/icons-material/AirlineSeatFlatAngled";
@@ -106,6 +112,12 @@ function SideBarMenu(props) {
                   router="/category"
                   onClick={() => setActiveSubmenu("medications")}
                 ></Sidebaritems>
+                <Sidebaritems
+                  title="group"
+                  // icon={<CategoryIcon style={{ fontSize: "28px" }} />}
+                  router="/group"
+                  onClick={() => setActiveSubmenu("group")}
+                ></Sidebaritems>
               </SubMenu>
               <SubMenu
                 active={activeSubmenu === "PrescriptionDesign"}
@@ -171,7 +183,6 @@ function SideBarMenu(props) {
                 router="/eco"
                 onClick={() => setActiveSubmenu("ECO")}
               ></Sidebaritems>
-
             </>
           ) : (
             ""
