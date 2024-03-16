@@ -217,11 +217,11 @@ function Setting(props) {
 
           </div>
           <div className="flex gap-3">
-          <div className=" bg-white rounded-xl p-4 w-full">
+          {/* <div className=" bg-white rounded-xl p-4 w-full">
             <div>تخصيصات جدول المرضى</div>
             <PartientsTableSetting></PartientsTableSetting>
             
-          </div>
+          </div> */}
 
           </div>
           <div>

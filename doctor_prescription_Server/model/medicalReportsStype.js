@@ -44,6 +44,7 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
         textAlign: { type: String, default: "center" },
         textWeight: { type: String, default: "normal" },
         marginB: { type: Number, defult: 0 },
+        active: { type: Boolean, default: true },
       },
     ],
     HeaderRightTextActive: { type: Boolean, default: true },

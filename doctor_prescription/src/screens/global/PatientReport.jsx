@@ -86,7 +86,10 @@ function PatientReport(props) {
             color: `${props.medicalReportsStype.signatureColor}`,
           }}
         >
-          <p className="h-0 z-50"> {props.medicalReportsStype.mainNameHeaderknia}</p>
+          <p className="h-0 z-50">
+            {" "}
+            {props.medicalReportsStype.mainNameHeaderknia}
+          </p>
           {props.medicalReportsStype.signature}
         </div>
         {randomText.map((textData, index) => (
@@ -145,7 +148,11 @@ function PatientReport(props) {
                   borderRadius: `${`${image.borderRadius}px`}`,
                 }}
               >
-                <img alt="" className="w-full h-full" src={`${serverAddress}` + image.imageUrl}></img>
+                <img
+                  alt=""
+                  className="w-full h-full"
+                  src={`${serverAddress}` + image.imageUrl}
+                ></img>
               </div>
             ))
           : ""}
@@ -353,7 +360,6 @@ function PatientReport(props) {
           ""
         )}
 
-        {/* Your content to be printed */}
         <div
           className="  h-[96vh] flex flex-col z-1"
           style={{
@@ -418,20 +424,24 @@ function PatientReport(props) {
                 ))}
               </div>
               <div className=" text-center">
-                {middleText.map((medicalText, index) => (
-                  <>
-                    <p
-                      style={{
-                        marginBottom: `${medicalText.marginB}px`,
-                        fontWeight: `${medicalText.textWeight}`,
-                        fontSize: `${medicalText.size}rem`,
-                        color: `${medicalText.Color}`,
-                      }}
-                    >
-                      {medicalText.text}
-                    </p>
-                  </>
-                ))}
+                {middleText.map((medicalText, index) =>
+                  medicalText.active ? (
+                    <>
+                      <p
+                        style={{
+                          marginBottom: `${medicalText.marginB}px`,
+                          fontWeight: `${medicalText.textWeight}`,
+                          fontSize: `${medicalText.size}rem`,
+                          color: `${medicalText.Color}`,
+                        }}
+                      >
+                        {medicalText.text}
+                      </p>
+                    </>
+                  ) : (
+                    ""
+                  )
+                )}
               </div>
               <div className=" text-left">
                 {leftText.map((medicalText, index) => (

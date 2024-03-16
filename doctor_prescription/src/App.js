@@ -39,6 +39,7 @@ import SurgenDevice from "./screens/surgeon/SurgenDevice";
 import SurgenNarcosis from "./screens/surgeon/SurgenNarcosis";
 import SurgenDate from "./screens/surgeon/SurgenDate";
 import Eco from "./screens/Eco/Eco";
+import CheckPrint from "./screens/Eco/CheckPrint";
 function Layout({ children }) {
   return (
     <div
@@ -163,6 +164,7 @@ function App() {
                   <Route exact path="/login" element={<Login />} />
                   <Route exact path="/tst" element={<VoiceRecoed />} />
                   <Route exact path="/eco" element={<Eco />} />
+                  <Route exact path="/checkeco" element={<CheckPrint />} />
                   <Route exact path="/" element={<PrivateRoute />}>
                   <Route index element={<Dashboard />} />
                     <Route exact path="surgen">

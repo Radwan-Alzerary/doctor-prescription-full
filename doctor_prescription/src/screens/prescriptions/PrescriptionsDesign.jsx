@@ -947,6 +947,7 @@ function PrescriptionsDesign() {
                   <div className="flex justify-between items-center w-full">
                     <TextField
                       value={medicalReportsStype.HeaderMidleText[index].text}
+                      sx={{ width: "100%" }}
                       onChange={(event) => {
                         onMiddleLineInput(
                           "text",
@@ -959,48 +960,54 @@ function PrescriptionsDesign() {
                       label="معلومات السطر"
                       size="small"
                     ></TextField>
-                    <TextField
-                      type="number"
-                      label="حجم الخط"
-                      size="small"
-                      value={medicalReportsStype.HeaderMidleText[index].size}
-                      onChange={(event) => {
-                        onMiddleLineInput(
-                          "size",
-                          event.target.value,
-                          index,
-                          "middle"
-                        );
-                        console.log(event.target.value);
-                      }}
-                    ></TextField>
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        وزن الخط
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={
-                          medicalReportsStype.HeaderMidleText[index].textWeight
-                        }
-                        label="Age"
+                    <div>
+                      <TextField
+                        type="number"
+                        sx={{ width: "100%" }}
+                        label="حجم الخط"
                         size="small"
+                        value={medicalReportsStype.HeaderMidleText[index].size}
                         onChange={(event) => {
                           onMiddleLineInput(
-                            "textWeight",
+                            "size",
                             event.target.value,
                             index,
                             "middle"
                           );
                           console.log(event.target.value);
                         }}
-                      >
-                        <MenuItem value={"normal"}>اعتيادي</MenuItem>
-                        <MenuItem value={"bold"}>بولد</MenuItem>
-                        <MenuItem value={"lighter"}>لايت</MenuItem>
-                      </Select>
-                    </FormControl>
+                      ></TextField>
+                    </div>
+                    <div>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          وزن الخط
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={
+                            medicalReportsStype.HeaderMidleText[index]
+                              .textWeight
+                          }
+                          label="Age"
+                          size="small"
+                          onChange={(event) => {
+                            onMiddleLineInput(
+                              "textWeight",
+                              event.target.value,
+                              index,
+                              "middle"
+                            );
+                            console.log(event.target.value);
+                          }}
+                        >
+                          <MenuItem value={"normal"}>اعتيادي</MenuItem>
+                          <MenuItem value={"bold"}>بولد</MenuItem>
+                          <MenuItem value={"lighter"}>لايت</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </div>
                     <TextField
                       type="number"
                       label="ازاحة سفلية"
@@ -1050,10 +1057,19 @@ function PrescriptionsDesign() {
                       }}
                       control={
                         <Switch
-                          //   checked={loading}
-                          //   onChange={() => setLoading(!loading)}
-                          color="primary"
-                        />
+                        checked={medicalReportsStype.HeaderMidleText[index].active}
+                        onChange={(event) => {
+                          onMiddleLineInput(
+                            "active",
+                            !medicalReportsStype.HeaderMidleText[index].active,
+                            index,
+                            "middle"
+                          );
+
+                          console.log(event.target.value);
+                        }}
+                        color="primary"
+                      />
                       }
                     />
                   </div>

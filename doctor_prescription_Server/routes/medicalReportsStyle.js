@@ -248,6 +248,8 @@ router.post("/updatemiddle", async (req, res) => {
         doc.HeaderMidleText[req.body.index].textWeight = req.body.data;
       } else if (req.body.text == "marginB") {
         doc.HeaderMidleText[req.body.index].marginB = req.body.data;
+      }else if (req.body.text == "active") {
+        doc.HeaderMidleText[req.body.index].active = req.body.data;
       }
     } else if (req.body.type == "right") {
       if (req.body.text == "Color") {
