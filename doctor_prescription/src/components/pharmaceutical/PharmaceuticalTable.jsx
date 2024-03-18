@@ -26,7 +26,6 @@ const CategoryTr = () => {
 const DosageTr = () => {
   return <FormattedMessage id={"Dosage"} defaultMessage="Hello, World!" />;
 };
-
 const NodosageTr = () => {
   return <FormattedMessage id={"No.dosage"} defaultMessage="Hello, World!" />;
 };

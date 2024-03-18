@@ -447,6 +447,7 @@ function Partients() {
       key: "selection",
     },
   ]);
+  const [groupList,setGroupList]=useState()
   const [selectedReport, setSelectedReport] = useState({});
   const [selectedaLabory, setSelectedaLabory] = useState({});
   const currentURL = window.location.origin; // Get the current URL
@@ -611,6 +612,17 @@ function Partients() {
         console.error("Error making POST request:", error);
       });
   };
+  const getAllGroup = () => {
+    axios
+      .get(`${serverAddress}/pharmaceuticalGroup/getall`)
+      .then((response) => {
+        setGroupList(response.data); // Update the categories state with the fetched data
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
 
   const changeReportHeaderName = (headerName) => {
     const data = { reportHeaderName: headerName };
@@ -648,6 +660,7 @@ function Partients() {
   }, [Cookies, navigate]);
 
   useEffect(() => {
+    getAllGroup()
     const getSettingApi = () => {
       axios
         .get(`${serverAddress}/setting/getdata`)
@@ -907,6 +920,19 @@ function Partients() {
         console.error("Error making POST request:", error);
       });
   };
+  const onBillGroupAdded = (data) => {
+    axios
+      .post(`${serverAddress}/prescription/postpharmaceuticalgroup`, data)
+      .then((response) => {
+        // Handle the response if needed
+        getAllPrescription(data.PrescriptionId);
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error("Error making POST request:", error);
+      });
+  };
+
   const handleOnBillAdded = (data) => {
     axios
       .post(`${serverAddress}/prescription/postpharmaceutical`, data)
@@ -1580,6 +1606,7 @@ function Partients() {
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewPartientsForm
+          groupList={groupList}
             userData={userData}
             editPrescriptionData={editPrescriptionData}
             patientsList={patientsList}
@@ -1591,6 +1618,7 @@ function Partients() {
             onPrinterClick={HandleonPrinterClick}
             pharmaceListInside={pharmaceListInside}
             onBillAdded={handleOnBillAdded}
+            onBillGroupAdded={onBillGroupAdded}
             midscapeData={midscapeData}
             onFormSubmit={handleNewPrescriptionData}
           ></NewPartientsForm>

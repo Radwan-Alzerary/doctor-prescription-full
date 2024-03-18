@@ -35,6 +35,7 @@ function Pharmaceutical() {
   const [pharmaceList, setPharmaceList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   const [inTakeTimeList, setInTakeTime] = useState([]);
+  const [groupList, setGroupList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [addFormData, setAddFormData] = useState({});
   const currentURL = window.location.origin; // Get the current URL
@@ -134,6 +135,7 @@ function Pharmaceutical() {
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
 
   useEffect(() => {
+    getAllGroup();
     getAllBill();
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
   const getAllBill = () => {
@@ -163,6 +165,19 @@ function Pharmaceutical() {
   const handleAddButtonClick = () => {
     setShowAddForm(true);
   };
+
+  const getAllGroup = () => {
+    axios
+      .get(`${serverAddress}/pharmaceuticalGroup/getall`)
+      .then((response) => {
+        setGroupList(response.data); // Update the categories state with the fetched data
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
+
 
   const handeSearchInput = (event) => {
     const searchInputValue = event.target.value;

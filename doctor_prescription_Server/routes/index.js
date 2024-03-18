@@ -3,6 +3,7 @@ router.use('/visit', require('./visit'));
 
 router.use("/category", require("./category"));
 router.use("/pharmaceutical", require("./pharmaceutical"));
+router.use("/pharmaceuticalGroup", require("./pharmaceuticalGroup"));
 router.use("/eco", require("./eco"));
 router.use("/intaketime", require("./inTakeTime"));
 router.use("/patients", require("./patients"));

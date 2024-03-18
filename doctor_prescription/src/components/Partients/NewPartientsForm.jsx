@@ -28,6 +28,7 @@ function EditPartients(props) {
   const [dose, setDose] = useState("");
   const [tradeName, setTradeName] = useState("");
   const [billId, setBillId] = useState("");
+  const [group, setGroup] = useState("");
   const [nextVisit, setNextVisit] = useState("");
   const [doseNumFirst, setDoseNumFirst] = useState("");
   const [doseNumSecend, setDoseNumSecend] = useState("");
@@ -61,6 +62,36 @@ function EditPartients(props) {
     setInTakeTimeOther("");
     setDescription("");
   };
+  const handeAddGroupBill = (groups) => {
+    console.log(groups);
+    if (groups && Array.isArray(groups.pharmaceutical)) {
+      groups.pharmaceutical.forEach((group) => {
+        console.log(group);
+        const dataBillForm = {};
+        dataBillForm.billId = group;
+        dataBillForm.PrescriptionId = props.PrescriptionId;
+
+        props.onBillGroupAdded(dataBillForm);
+
+        // Assuming you want to log each item in the pharmaceutical group
+      });
+    } else {
+      console.error("Invalid groups data or pharmaceutical group not found.");
+      return; // Exit the function early to prevent further errors
+    }
+
+    // const dataBillForm = {};
+    // dataBillForm.billId = billId;
+    // props.onBillAdded(dataBillForm);
+    setDose("");
+    setTradeName("");
+    setDoseNumFirst("");
+    setDoseNumSecend("");
+    setInTakeTime("");
+    setInTakeTimeOther("");
+    setDescription("");
+  };
+
   const filterOptions = createFilterOptions({
     ignoreCase: true,
     matchFrom: "start",
@@ -134,8 +165,6 @@ function EditPartients(props) {
     props.onFormSubmit(prescriptionData);
   };
   console.log(props);
-  console.log(props);
-  console.log(props);
   console.log(props.partientId);
   return (
     <form
@@ -147,7 +176,26 @@ function EditPartients(props) {
     >
       <div className=" text-right w-full">
         <h5>
-          {" "}
+          <Autocomplete
+            size="small"
+            disableListWrap
+            disablePortal
+            id="combo-box-demo"
+            options={props.groupList}
+            filterOptions={filterOptions}
+            getOptionLabel={(option) => {
+              return `${option.name}`;
+            }}
+            sx={{ width: "33%" }}
+            onChange={(event, newValue) => {
+              handeAddGroupBill(newValue);
+            }}
+            inputValue={inputValue}
+            onInputChange={(event, newInputValue) => {}}
+            renderInput={(params) => (
+              <TextField {...params} label={"اضافة كروب ادوية"} />
+            )}
+          />{" "}
           <FormattedMessage
             id={"Medical Diagnosis"}
             defaultMessage="Hello, World!"

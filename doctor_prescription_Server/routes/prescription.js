@@ -61,6 +61,24 @@ router.post("/postpharmaceutical", async (req, res) => {
   }
 });
 
+router.post("/postpharmaceuticalgroup", async (req, res) => {
+  try {
+    console.log(req.body);
+    const billData = {};
+    billData.id = req.body.billId;
+
+    const PrescriptionId = req.body.PrescriptionId;
+
+    const prescription = await Prescription.findById(PrescriptionId);
+    prescription.pharmaceutical.push(billData);
+    console.log(req.body);
+    await prescription.save();
+    res.status(201).json("prescription");
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 router.delete(
   "/removebill/:prescriptionId/pharmaceutical/:pharmaceuticalId",
   async (req, res) => {
