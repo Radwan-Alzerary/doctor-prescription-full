@@ -276,7 +276,7 @@ function NewPatientForm(props) {
             handleInputChange("phonNumber", event.target.value)
           } // Update the name state
           sx={{
-            width: "20%",
+            width: "30%",
             textAlign: "right",
             color: "#fff",
           }}
@@ -286,7 +286,7 @@ function NewPatientForm(props) {
               defaultMessage="Hello, World!"
             />
           }
-          type="number"
+          type="String"
           InputProps={{
             style: { textAlign: "right" }, // Apply CSS style to right-align placeholder
           }}
