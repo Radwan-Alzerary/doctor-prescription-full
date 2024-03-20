@@ -127,5 +127,10 @@
   "add new visit": "اضافة زيارة جديدة",
   "visit Information": "معلومات الزيارة",
   "jop": "المهنة",
-  "group": "كروب ادوية"
+  "group": "كروب ادوية",
+  "PriorChronicTherapy":"الادوية السابقة",
+  "CauseOfVisite":"سبب الزيارة",
+  "management":"الادارية",
+  "visitType":"نوع الزيارة"
+
 }

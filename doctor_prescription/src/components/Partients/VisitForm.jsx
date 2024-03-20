@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import {
   // ... (your other imports)
   Button,
+  FormControl,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
 } from "@mui/material";
 import { PrintRounded } from "@mui/icons-material";
@@ -22,6 +26,10 @@ function VisitForm({
     dateOfVisit: "",
     investigation: "",
     diagnosis: "",
+    PriorChronicTherapy: "",
+    CauseOfVisite: "",
+    management: "",
+    type: "",
     patientId: partientsSelectId,
   });
   useEffect(() => {
@@ -32,6 +40,12 @@ function VisitForm({
         dateOfVisit: data.dateOfVisit,
         investigation: data.investigation,
         diagnosis: data.diagnosis,
+        CauseOfVisite: data.CauseOfVisite,
+        management: data.management,
+        PriorChronicTherapy: data.PriorChronicTherapy,
+
+        type: data.type,
+        patientId: partientsSelectId,
       });
     }
   }, []);
@@ -73,6 +87,48 @@ function VisitForm({
             defaultMessage="Hello, World!"
           />
         </h5>
+      </div>
+      <div className="flex flex-col justify-center items-center gap-4  w-full">
+        <TextField
+          id="outlined-required"
+          size="small"
+          value={formData.CauseOfVisite}
+          onChange={(event) =>
+            handleInputChange("CauseOfVisite", event.target.value)
+          } // Update the name state
+          sx={{
+            width: "100%",
+            color: "#fff",
+          }}
+          label={
+            <FormattedMessage
+              id={"CauseOfVisite"}
+              defaultMessage="Hello, World!"
+            />
+          }
+          // defaultValue="Hello World"
+        />
+      </div>
+      <div className="flex flex-col justify-center items-center gap-4  w-full">
+        <TextField
+          id="outlined-required"
+          size="small"
+          value={formData.PriorChronicTherapy}
+          onChange={(event) =>
+            handleInputChange("PriorChronicTherapy", event.target.value)
+          } // Update the name state
+          sx={{
+            width: "100%",
+            color: "#fff",
+          }}
+          label={
+            <FormattedMessage
+              id={"PriorChronicTherapy"}
+              defaultMessage="Hello, World!"
+            />
+          }
+          // defaultValue="Hello World"
+        />
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
@@ -134,6 +190,44 @@ function VisitForm({
           // defaultValue="Hello World"
         />
       </div>
+      <div className="flex flex-col justify-center items-center gap-4  w-full">
+        <TextField
+          id="outlined-required"
+          size="small"
+          value={formData.management}
+          onChange={(event) =>
+            handleInputChange("management", event.target.value)
+          } // Update the name state
+          sx={{
+            width: "100%",
+            color: "#fff",
+          }}
+          label={
+            <FormattedMessage
+              id={"management"}
+              defaultMessage="Hello, World!"
+            />
+          }
+          // defaultValue="Hello World"
+        />
+      </div>
+      <FormControl className=" w-1/3 bg-whiteh" size="small">
+        <InputLabel id="demo-simple-select-helper-label">
+          نوع الزيارة
+        </InputLabel>
+        <Select
+          labelId="demo-simple-select-helper-label"
+          id="demo-simple-select-helper"
+          // value={age}
+          value={formData.type}
+          onChange={(event) => handleInputChange("type", event.target.value)} // Update the name state
+          label="الصنف"
+          // onChange={handleAgeChange}
+        >
+          <MenuItem value={"زيارة"}>زيارة</MenuItem>
+          <MenuItem value={"مراجعة"}>مراجعة</MenuItem>
+        </Select>
+      </FormControl>
       <div className="flex gap-6 w-full justify-between">
         <IconButton>
           {/* <PrintRounded color="action"></PrintRounded> */}
@@ -171,6 +265,3 @@ function VisitForm({
 }
 
 export default VisitForm;
-
-
-

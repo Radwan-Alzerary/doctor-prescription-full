@@ -5,6 +5,10 @@ const visitSqema = new mongoose.Schema(
     dateOfVisit: { type: String },
     investigation: { type: String },
     diagnosis: { type: String },
+    PriorChronicTherapy: { type: String },
+    CauseOfVisite: { type: String },
+    management: { type: String },
+    type: { type: String },
     patients: { type: mongoose.Schema.Types.ObjectId, ref: "Patients" },
   },
   {

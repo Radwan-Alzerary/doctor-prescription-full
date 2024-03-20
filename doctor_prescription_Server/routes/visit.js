@@ -11,6 +11,10 @@ router.post("/new", async (req, res) => {
       dateOfVisit: req.body.data.dateOfVisit,
       investigation: req.body.data.investigation,
       diagnosis: req.body.data.diagnosis,
+      CauseOfVisite: req.body.data.CauseOfVisite,
+      management: req.body.data.management,
+      PriorChronicTherapy: req.body.data.PriorChronicTherapy,
+      type: req.body.data.type,
     });
     await visit.save();
     // Find the patient by ID
@@ -79,6 +83,10 @@ router.post("/editone/", async (req, res) => {
       chiefComplaint: req.body.data.chiefComplaint,
       investigation: req.body.data.investigation,
       diagnosis: req.body.data.diagnosis,
+      CauseOfVisite: req.body.CauseOfVisite,
+      PriorChronicTherapy: req.body.PriorChronicTherapy,
+      management: req.body.management,
+      type: req.body.type,
     });
 
     res.json(medicalreports);

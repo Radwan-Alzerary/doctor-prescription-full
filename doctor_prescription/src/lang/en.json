@@ -129,6 +129,9 @@
   "add new visit": "add new visit",
   "visit Information" : "visit Information",
   "jop" : "jop",
-  "group": "group"
-
+  "group": "group",
+  "PriorChronicTherapy":"Prior Chronic Therapy",
+  "CauseOfVisite":"Cause Of Visite",
+  "management":"management",
+  "visitType":"visit Type"
 }
