@@ -83,10 +83,10 @@ router.post("/editone/", async (req, res) => {
       chiefComplaint: req.body.data.chiefComplaint,
       investigation: req.body.data.investigation,
       diagnosis: req.body.data.diagnosis,
-      CauseOfVisite: req.body.CauseOfVisite,
-      PriorChronicTherapy: req.body.PriorChronicTherapy,
-      management: req.body.management,
-      type: req.body.type,
+      CauseOfVisite: req.body.data.CauseOfVisite,
+      PriorChronicTherapy: req.body.data.PriorChronicTherapy,
+      management: req.body.data.management,
+      type: req.body.data.type,
     });
 
     res.json(medicalreports);

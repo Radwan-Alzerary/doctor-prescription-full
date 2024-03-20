@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
 const visitSqema = new mongoose.Schema(
   {
-    chiefComplaint: { type: String },
-    dateOfVisit: { type: String },
-    investigation: { type: String },
-    diagnosis: { type: String },
-    PriorChronicTherapy: { type: String },
-    CauseOfVisite: { type: String },
-    management: { type: String },
-    type: { type: String },
+    chiefComplaint: { type: String, default: "" },
+    dateOfVisit: { type: String, default: "" },
+    investigation: { type: String, default: "" },
+    diagnosis: { type: String, default: "" },
+    PriorChronicTherapy: { type: String, default: "" },
+    CauseOfVisite: { type: String, default: "" },
+    management: { type: String, default: "" },
+    type: { type: String, default: "" },
     patients: { type: mongoose.Schema.Types.ObjectId, ref: "Patients" },
   },
   {
