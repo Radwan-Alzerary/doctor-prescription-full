@@ -11,7 +11,9 @@ import {
   TableRow,
 } from "@mui/material";
 import SummarizeIcon from "@mui/icons-material/Summarize";
-import React, { useEffect, useState } from "react";
+import { allUsersRoute, host } from "../../util/APIRoutes";
+
+import React, { useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import Table from "@mui/material/Table";
@@ -30,6 +32,8 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import ChromeReaderModeIcon from "@mui/icons-material/ChromeReaderMode";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
+import { io } from "socket.io-client";
+
 import { Calendar } from "react-modern-calendar-datepicker";
 import {
   Add,
@@ -246,18 +250,27 @@ function Row(props) {
                   <BiotechIcon size={"small"} />
                 </IconButton>
               </TableCell>
+            </>
+          ) : (
+            ""
+          )
+        ) : (
+          ""
+        )}
 
-              <TableCell align="center">
-                <IconButton
-                  sx={{ color: purple[400] }}
-                  className=" hover:text-purple-600"
-                  onClick={() => props.onBookedHandel(row._id)}
-                  aria-label="delete"
-                  // size="large"
-                >
-                  <Book fontSize="inherit" />
-                </IconButton>
-
+        <TableCell align="center">
+          <IconButton
+            sx={{ color: purple[400] }}
+            className=" hover:text-purple-600"
+            onClick={() => props.onBookedHandel(row._id)}
+            aria-label="delete"
+            // size="large"
+          >
+            <Book fontSize="inherit" />
+          </IconButton>
+          {props.currentUser ? (
+            props.currentUser.role === "doctor" ? (
+              <>
                 {/* <IconButton
                   sx={{ color: green[400] }}
                   className=" hover:text-green-600"
@@ -289,7 +302,17 @@ function Row(props) {
                 >
                   <Edit aria-label="expand row" size="small"></Edit>
                 </IconButton>
-              </TableCell>
+              </>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
+        </TableCell>
+        {props.currentUser ? (
+          props.currentUser.role === "doctor" ? (
+            <>
               <IconButton
                 type="button"
                 sx={{ p: "10px" }}
@@ -447,7 +470,9 @@ function Partients() {
       key: "selection",
     },
   ]);
-  const [groupList,setGroupList]=useState()
+  const socket = useRef();
+
+  const [groupList, setGroupList] = useState();
   const [selectedReport, setSelectedReport] = useState({});
   const [selectedaLabory, setSelectedaLabory] = useState({});
   const currentURL = window.location.origin; // Get the current URL
@@ -487,12 +512,39 @@ function Partients() {
         console.error("Error making POST request:", error);
       });
   };
+
+  useEffect(() => {
+    // Establish connection to the socket.io server
+    const socket = io(host);
+
+    // Listen for the "book-received" event
+    socket.on("book-received", (data) => {
+      console.log("Received book data:", data);
+      getPatientsList();
+      // Handle the received data here
+    });
+    socket.on("new-patient", (data) => {
+      console.log("Received book data:", data);
+      getPatientsList();
+      // Handle the received data here
+    });
+
+    // Cleanup function to disconnect the socket when the component unmounts
+    return () => {
+      socket.disconnect();
+    };
+  }, []); // Empty dependency array ensures this effect runs only once
+
   const onBookedHandel = (id) => {
     axios
       .post(`${serverAddress}/patients/bookPatents`, {
         id: id,
       })
       .then((response) => {
+        socket.current.emit("send-book", {
+          to: "",
+        });
+
         getPatientsList();
       })
       .catch((error) => {
@@ -660,7 +712,14 @@ function Partients() {
   }, [Cookies, navigate]);
 
   useEffect(() => {
-    getAllGroup()
+    if (currentUser) {
+      socket.current = io(host);
+      socket.current.emit("add-user", currentUser.userId);
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    getAllGroup();
     const getSettingApi = () => {
       axios
         .get(`${serverAddress}/setting/getdata`)
@@ -892,6 +951,9 @@ function Partients() {
       .post(`${serverAddress}/patients/new`, data)
       .then((response) => {
         // Handle the response if needed
+        socket.current.emit("new-patient", {
+          to: "",
+        });
         getConstDiseasesApi();
         getPharmaceApi();
         getPatientsList();
@@ -1606,7 +1668,7 @@ function Partients() {
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewPartientsForm
-          groupList={groupList}
+            groupList={groupList}
             userData={userData}
             editPrescriptionData={editPrescriptionData}
             patientsList={patientsList}

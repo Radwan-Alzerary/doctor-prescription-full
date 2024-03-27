@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import {
   HashRouter as Router,
   } from 'react-router-dom';
@@ -41,6 +41,7 @@ import SurgenDate from "./screens/surgeon/SurgenDate";
 import Eco from "./screens/Eco/Eco";
 import CheckPrint from "./screens/Eco/CheckPrint";
 import Group from "./screens/pharmaceutical/Group";
+import BookedScreen from "./screens/booked/BookedScreen";
 function Layout({ children }) {
   return (
     <div
@@ -62,6 +63,12 @@ function Layout({ children }) {
 }
 
 function App() {
+  const location = useLocation();
+
+  // Check if the current route is '/bookedScreen'
+  const hideSidebarAndHeader = location.pathname === "/bookedScreen";
+console.log(location.pathname)
+
   const [locale, setLocale] = useState(() => {
     return Cookies.get("locale") || "ar";
   });
@@ -146,7 +153,7 @@ function App() {
               direction: "rtl",
             }}
           >
-            {isAuthenticated ? (
+            {isAuthenticated && !hideSidebarAndHeader ? (
               <SideBarMenu
                 currentUser={currentUser}
                 onLanguageChange={handleLanguageChange}
@@ -155,13 +162,14 @@ function App() {
               ""
             )}
             <main className="w-full">
-              {isAuthenticated ? <Header></Header> : ""}
+              {isAuthenticated && !hideSidebarAndHeader ? <Header></Header> : ""}
 
               <div className="h-[92vh] relative bg-[#F3F4F9] w-full">
                 
                 <Routes>
                   <Route exact path="/register" element={<Register />} />
                   <Route exact path="/newcomputer" element={<Register />} />
+                  <Route exact path="/bookedScreen" element={<BookedScreen />} />
                   <Route exact path="/login" element={<Login />} />
                   <Route exact path="/tst" element={<VoiceRecoed />} />
                   <Route exact path="/eco" element={<Eco />} />

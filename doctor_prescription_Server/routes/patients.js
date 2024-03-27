@@ -124,6 +124,20 @@ router.get("/getall", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+router.get("/getbooked", async (req, res) => {
+  try {
+    const patients = await Patients.find({ booked: true })
+      .sort({
+        booked: -1, // Sort by 'booked' field in descending order
+        lastEditDate:-1,
+        updatedAt: -1,
+      }); // Sort by 'updatedAt' field in descending order
+    res.json(patients);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 router.get("/getcount", async (req, res) => {
   try {
     const count = await Patients.countDocuments({ name: { $ne: "" } });

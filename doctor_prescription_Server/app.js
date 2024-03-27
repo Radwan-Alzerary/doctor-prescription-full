@@ -417,8 +417,18 @@ io.on("connection", (socket) => {
 
   socket.on("send-msg", (data) => {
     const sendUserSocket = onlineUsers.get(data.to);
+    console.log(data)
     if (sendUserSocket) {
       socket.to(sendUserSocket).emit("msg-recieved", data.message);
     }
   });
+  socket.on("send-book", (data) => {
+    console.log(data)
+    io.emit("book-received", "newBooked"); // You can emit to a specific room if needed
+  });
+  socket.on("new-patient", (data) => {
+    console.log(data)
+    io.emit("book-received", "newPatient"); // You can emit to a specific room if needed
+  });
+
 });
