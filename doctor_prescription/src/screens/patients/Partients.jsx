@@ -999,6 +999,7 @@ function Partients() {
     axios
       .post(`${serverAddress}/prescription/postpharmaceutical`, data)
       .then((response) => {
+        getPharmaceApi()
         // Handle the response if needed
         getAllPrescription(data.PrescriptionId);
       })

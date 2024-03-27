@@ -49,6 +49,42 @@ router.post("/nested/", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+router.post("/removenested/", async (req, res) => {
+  const { groupId } = req.body;
+  const { pharmaceuticalId } = req.body;
+
+  try {
+    // Find the pharmaceutical group by ID
+    const group = await pharmaceuticalGroup.findById(groupId);
+
+    // Check if the group exists
+    if (!group) {
+      return res.status(404).json({ message: "Pharmaceutical group not found" });
+    }
+    console.log(pharmaceuticalId)
+    console.log(pharmaceuticalId)
+    // Find the index of the pharmaceutical in the group
+    const pharmaceuticalIndex = group.pharmaceutical.findIndex(item => item._id.toString() === pharmaceuticalId);
+
+    // Check if the pharmaceutical exists in the group
+    if (pharmaceuticalIndex === -1) {
+      return res.status(404).json({ message: "Pharmaceutical not found in the group" });
+    }
+
+    // Remove the pharmaceutical from the group
+    group.pharmaceutical.splice(pharmaceuticalIndex, 1);
+
+    // Save the updated group
+    await group.save();
+
+    // Return success response
+    res.status(200).json({ message: "Pharmaceutical removed from group successfully" });
+  } catch (error) {
+    // Handle errors
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 // Get all PharmaceuticalGroup
 router.get("/getall", async (req, res) => {
