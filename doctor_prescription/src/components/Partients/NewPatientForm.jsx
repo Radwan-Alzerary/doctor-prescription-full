@@ -200,7 +200,6 @@ function NewPatientForm(props) {
               <MenuItem value={"قيصرية"}>قيصرية</MenuItem>
             </Select>
           </FormControl>
-
           <TextField
             id={`child-date-${i}`}
             size="small"
@@ -220,7 +219,6 @@ function NewPatientForm(props) {
         </div>
       );
     }
-
     return childFields;
   };
 
@@ -332,7 +330,7 @@ function NewPatientForm(props) {
             textAlign: "right",
             color: "#fff",
           }}
-          label={
+          label={   
             <FormattedMessage id={"Sequence"} defaultMessage="Hello, World!" />
           }
         />
