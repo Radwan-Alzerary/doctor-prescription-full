@@ -7,6 +7,7 @@ router.use("/pharmaceuticalGroup", require("./pharmaceuticalGroup"));
 router.use("/eco", require("./eco"));
 router.use("/intaketime", require("./inTakeTime"));
 router.use("/patients", require("./patients"));
+router.use("/autoComplete", require("./autoComplete"));
 router.use("/prescription", require("./prescription"));
 router.use("/constantdiseases", require("./constantDiseases"));
 router.use('/users', require('./users'));

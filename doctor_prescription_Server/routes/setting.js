@@ -49,6 +49,8 @@ router.post("/update", async (req, res) => {
       {},
       req.body.data
     );
+    console.log(      req.body.data
+    )
     if (!systemSetting) {
       return res.status(404).json({ error: "systemSetting not found" });
     }

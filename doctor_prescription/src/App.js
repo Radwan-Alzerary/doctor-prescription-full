@@ -42,6 +42,7 @@ import Eco from "./screens/Eco/Eco";
 import CheckPrint from "./screens/Eco/CheckPrint";
 import Group from "./screens/pharmaceutical/Group";
 import BookedScreen from "./screens/booked/BookedScreen";
+import AutoComplete from "./screens/AutoComplete/AutoComplete";
 function Layout({ children }) {
   return (
     <div
@@ -173,6 +174,7 @@ console.log(location.pathname)
                   <Route exact path="/login" element={<Login />} />
                   <Route exact path="/tst" element={<VoiceRecoed />} />
                   <Route exact path="/eco" element={<Eco />} />
+                  <Route exact path="/autocomplete" element={<AutoComplete />} />
                   <Route exact path="/group" element={<Group />} />
                   <Route exact path="/checkeco" element={<CheckPrint />} />
                   <Route exact path="/" element={<PrivateRoute />}>

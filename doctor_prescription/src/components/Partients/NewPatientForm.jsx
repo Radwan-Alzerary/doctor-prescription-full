@@ -597,6 +597,7 @@ function NewPatientForm(props) {
               onChange={(event, newValue) => {
                 handleChange(event, newValue);
                 setHistoryPatient(newValue);
+                console.log(historyPatient)
               }}
               options={props.constantDiseases.map((option) => option.name)}
               // defaultValue={[top100Films[13].title]}

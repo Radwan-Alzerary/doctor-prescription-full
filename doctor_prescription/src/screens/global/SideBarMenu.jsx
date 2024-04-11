@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import Sidebaritems from "../../components/Sidebar/Sidebaritems";
 import LanguageSelector from "./lanquageSelector";
 import {
+  Abc,
   HeatPumpSharp,
   Home,
   MonitorHeart,
@@ -182,6 +183,13 @@ function SideBarMenu(props) {
                 icon={<MonitorHeart style={{ fontSize: "28px" }} />}
                 router="/eco"
                 onClick={() => setActiveSubmenu("ECO")}
+              ></Sidebaritems>
+              <Sidebaritems
+                active={activeSubmenu === "AutoComplete"}
+                title="AutoComplete"
+                icon={<Abc style={{ fontSize: "28px" }} />}
+                router="/AutoComplete"
+                onClick={() => setActiveSubmenu("AutoComplete")}
               ></Sidebaritems>
             </>
           ) : (

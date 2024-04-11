@@ -102,154 +102,256 @@ function Row(props) {
         sx={{ "& > *": { borderBottom: "unset" } }}
       >
         <TableCell>{props.index + 1 + 20 * (props.pageSelect - 1)}</TableCell>
-        <TableCell
-          className=" cursor-pointer hover:bg-blue-100"
-          onClick={() => {
-            props.onNameClickHandle(row._id);
-          }}
-          component="th"
-          scope="row"
-          align="center"
-        >
-          <div className="flex justify-center items-center gap-4">
-            {row.name}
-            {row.bookedPriority > 0 ? (
-              <div className=" bg-cyan-500 rounded-full w-8 h-8 flex justify-center items-center">
-                {row.bookedPriority}
-              </div>
+        {props.settingData &&
+        props.settingData.patientsTable &&
+        props.settingData.patientsTable.patientName ? (
+          <TableCell
+            className=" cursor-pointer hover:bg-blue-100"
+            onClick={() => {
+              props.onNameClickHandle(row._id);
+            }}
+            component="th"
+            scope="row"
+            align="center"
+          >
+            <div className="flex justify-center items-center gap-4">
+              {row.name}
+              {row.bookedPriority > 0 ? (
+                <div className=" bg-cyan-500 rounded-full w-8 h-8 flex justify-center items-center">
+                  {row.bookedPriority}
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          </TableCell>
+        ) : (
+          ""
+        )}
+        {props.settingData &&
+        props.settingData.patientsTable &&
+        props.settingData.patientsTable.patientDate ? (
+          <TableCell component="th" scope="row" align="center">
+            <div className="bg-green-100 w-full flex justify-center items-center h-6 rounded-full">
+              {new Date(row.createdAt).toLocaleString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                // hour: "2-digit",
+                // minute: "2-digit",
+                // hour12: true, // Include this option for AM/PM format
+              })}
+            </div>
+          </TableCell>
+        ) : (
+          ""
+        )}
+
+        {props.settingData &&
+        props.settingData.patientsTable &&
+        props.settingData.patientsTable.patientAge ? (
+          <TableCell component="th" scope="row" align="center">
+            {props.settingData &&
+            props.settingData.patientsTable &&
+            props.settingData.patientsTable.patientAgeYear ? (
+              <div>{row.age ? row.age : 0} سنة</div>
             ) : (
               ""
             )}
-          </div>
-        </TableCell>
-        <TableCell component="th" scope="row" align="center">
-          <div className="bg-green-100 w-full flex justify-center items-center h-6 rounded-full">
-            {new Date(row.createdAt).toLocaleString("en-GB", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-              // hour: "2-digit",
-              // minute: "2-digit",
-              // hour12: true, // Include this option for AM/PM format
-            })}
-          </div>
-        </TableCell>
-        <TableCell component="th" scope="row" align="center">
-          <div>{row.age ? row.age : 0} سنة</div>
-          <div>{row.monthAge ? row.monthAge : 0} شهر</div>
-          <div>{row.dayAge ? row.dayAge : 0} يوم</div>
-        </TableCell>
-        <TableCell component="th" scope="row" align="center">
-          <div
-            className={`p-0.5 rounded-full  ${
-              row.gender === "ذكر"
-                ? "bg-blue-200 hover:bg-blue-300"
-                : "bg-pink-200 hover:bg-pink-300"
-            }`}
-          >
-            {row.gender === "ذكر" ? (
-              <Male className=" text-blue-700"></Male>
+            {props.settingData &&
+            props.settingData.patientsTable &&
+            props.settingData.patientsTable.patientAgeMonth ? (
+              <div>{row.monthAge ? row.monthAge : 0} شهر</div>
             ) : (
-              <Female className=" text-pink-700"></Female>
+              ""
             )}
-          </div>
-        </TableCell>
-        <TableCell component="th" scope="row" align="center">
-          {row.adresses}
-        </TableCell>
-        <TableCell component="th" scope="row" align="center">
-          {row.Sequence}
-        </TableCell>
+            {props.settingData &&
+            props.settingData.patientsTable &&
+            props.settingData.patientsTable.patientAgeDay ? (
+              <div>{row.dayAge ? row.dayAge : 0} يوم</div>
+            ) : (
+              ""
+            )}
+          </TableCell>
+        ) : (
+          ""
+        )}
+        {props.settingData &&
+        props.settingData.patientsTable &&
+        props.settingData.patientsTable.patientGender ? (
+          <TableCell component="th" scope="row" align="center">
+            <div
+              className={`p-0.5 rounded-full  ${
+                row.gender === "ذكر"
+                  ? "bg-blue-200 hover:bg-blue-300"
+                  : "bg-pink-200 hover:bg-pink-300"
+              }`}
+            >
+              {row.gender === "ذكر" ? (
+                <Male className=" text-blue-700"></Male>
+              ) : (
+                <Female className=" text-pink-700"></Female>
+              )}
+            </div>
+          </TableCell>
+        ) : (
+          ""
+        )}
+        {props.settingData &&
+        props.settingData.patientsTable &&
+        props.settingData.patientsTable.patientAdresses ? (
+          <TableCell component="th" scope="row" align="center">
+            {row.adresses}
+          </TableCell>
+        ) : (
+          ""
+        )}
+        {props.settingData &&
+        props.settingData.patientsTable &&
+        props.settingData.patientsTable.patientSequance ? (
+          <TableCell component="th" scope="row" align="center">
+            {row.Sequence}
+          </TableCell>
+        ) : (
+          ""
+        )}
+        {props.settingData &&
+        props.settingData.patientsTable &&
+        props.settingData.patientsTable.patientWeghit ? (
+          <TableCell component="th" scope="row" align="center">
+            {row.weight ? row.weight + "kg" : ""}
+          </TableCell>
+        ) : (
+          ""
+        )}
 
-        <TableCell component="th" scope="row" align="center">
-          {row.weight ? row.weight + "kg" : ""}
-        </TableCell>
-        <TableCell component="th" scope="row" align="center">
-          {row.length ? row.length + "cm" : ""}
-        </TableCell>
-        <TableCell component="th" scope="row" align="center">
-          {row.visitDate.length}
-        </TableCell>
+        {props.settingData &&
+        props.settingData.patientsTable &&
+        props.settingData.patientsTable.patientLeanth ? (
+          <TableCell component="th" scope="row" align="center">
+            {row.length ? row.length + "cm" : ""}
+          </TableCell>
+        ) : (
+          ""
+        )}
+        {props.settingData &&
+        props.settingData.patientsTable &&
+        props.settingData.patientsTable.patientVisitNum ? (
+          <TableCell component="th" scope="row" align="center">
+            {row.visitDate.length}
+          </TableCell>
+        ) : (
+          ""
+        )}
 
         {props.currentUser ? (
           props.currentUser.role === "doctor" ? (
             <>
-              <TableCell align="center">
-                <IconButton
-                  sx={{ color: blue[800] }}
-                  // className=" hover:text-yellow-500"
-                  onClick={() => {
-                    props.onVisitFormShowHandel(row._id);
-                  }}
-                  aria-label="delete"
-                >
-                  <ChromeReaderModeIcon
-                    aria-label="expand row"
-                    size="small"
-                  ></ChromeReaderModeIcon>
-                </IconButton>
-              </TableCell>
+              {props.settingData &&
+              props.settingData.patientsTable &&
+              props.settingData.patientsTable.patientAddVisit ? (
+                <TableCell align="center">
+                  <IconButton
+                    sx={{ color: blue[800] }}
+                    // className=" hover:text-yellow-500"
+                    onClick={() => {
+                      props.onVisitFormShowHandel(row._id);
+                    }}
+                    aria-label="delete"
+                  >
+                    <ChromeReaderModeIcon
+                      aria-label="expand row"
+                      size="small"
+                    ></ChromeReaderModeIcon>
+                  </IconButton>
+                </TableCell>
+              ) : (
+                ""
+              )}
+              {props.settingData &&
+              props.settingData.patientsTable &&
+              props.settingData.patientsTable.patientAddMedicalData ? (
+                <TableCell align="center">
+                  <IconButton
+                    sx={{ color: blue[800] }}
+                    // className=" hover:text-yellow-500"
 
-              <TableCell align="center">
-                <IconButton
-                  sx={{ color: blue[800] }}
-                  // className=" hover:text-yellow-500"
+                    onClick={() => {
+                      props.onMedicalFormShowHandle(row._id);
+                    }}
+                    aria-label="delete"
+                  >
+                    <ContentPasteIcon
+                      aria-label="expand row"
+                      size="small"
+                    ></ContentPasteIcon>
+                  </IconButton>
+                </TableCell>
+              ) : (
+                ""
+              )}
+              {props.settingData &&
+              props.settingData.patientsTable &&
+              props.settingData.patientsTable.patientAddPrescription ? (
+                <TableCell align="center">
+                  <IconButton
+                    sx={{ color: yellow[800] }}
+                    className=" hover:text-yellow-500"
+                    onClick={() => {
+                      props.onPrescriptionShowHande(row._id);
+                    }}
+                    aria-label="delete"
+                  >
+                    <img
+                      src={process.env.PUBLIC_URL + "/rx-icon.svg"}
+                      alt=""
+                      className="w-7 h-7"
+                    />
+                  </IconButton>
+                </TableCell>
+              ) : (
+                ""
+              )}
 
-                  onClick={() => {
-                    props.onMedicalFormShowHandle(row._id);
-                  }}
-                  aria-label="delete"
-                >
-                  <ContentPasteIcon
-                    aria-label="expand row"
-                    size="small"
-                  ></ContentPasteIcon>
-                </IconButton>
-              </TableCell>
-
-              <TableCell align="center">
-                <IconButton
-                  sx={{ color: yellow[800] }}
-                  className=" hover:text-yellow-500"
-                  onClick={() => {
-                    props.onPrescriptionShowHande(row._id);
-                  }}
-                  aria-label="delete"
-                >
-                  <img
-                    src={process.env.PUBLIC_URL + "/rx-icon.svg"}
-                    alt=""
-                    className="w-7 h-7"
-                  />
-                </IconButton>
-              </TableCell>
-              <TableCell align="center">
-                <IconButton
-                  sx={{ color: blue[800] }}
-                  // className=" hover:text-yellow-500"
-                  onClick={() => {
-                    props.onReportShowHandel(row._id);
-                  }}
-                  aria-label="delete"
-                >
-                  <SummarizeIcon
-                    aria-label="expand row"
-                    size="small"
-                  ></SummarizeIcon>
-                </IconButton>
-              </TableCell>
-              <TableCell align="center">
-                <IconButton
-                  sx={{ color: blue[800] }}
-                  // className=" hover:text-yellow-500"
-                  onClick={() => {
-                    props.onLaboryShowHandel(row._id);
-                  }}
-                  aria-label="delete"
-                >
-                  <BiotechIcon size={"small"} />
-                </IconButton>
-              </TableCell>
+              {props.settingData &&
+              props.settingData.patientsTable &&
+              props.settingData.patientsTable.patientAddReport ? (
+                <TableCell align="center">
+                  <IconButton
+                    sx={{ color: blue[800] }}
+                    // className=" hover:text-yellow-500"
+                    onClick={() => {
+                      props.onReportShowHandel(row._id);
+                    }}
+                    aria-label="delete"
+                  >
+                    <SummarizeIcon
+                      aria-label="expand row"
+                      size="small"
+                    ></SummarizeIcon>
+                  </IconButton>
+                </TableCell>
+              ) : (
+                ""
+              )}
+              {props.settingData &&
+              props.settingData.patientsTable &&
+              props.settingData.patientsTable.patientAddLaboryTest ? (
+                <TableCell align="center">
+                  <IconButton
+                    sx={{ color: blue[800] }}
+                    // className=" hover:text-yellow-500"
+                    onClick={() => {
+                      props.onLaboryShowHandel(row._id);
+                    }}
+                    aria-label="delete"
+                  >
+                    <BiotechIcon size={"small"} />
+                  </IconButton>
+                </TableCell>
+              ) : (
+                ""
+              )}
             </>
           ) : (
             ""
@@ -257,70 +359,89 @@ function Row(props) {
         ) : (
           ""
         )}
-
-        <TableCell align="center">
-          <IconButton
-            sx={{ color: purple[400] }}
-            className=" hover:text-purple-600"
-            onClick={() => props.onBookedHandel(row._id)}
-            aria-label="delete"
-            // size="large"
-          >
-            <Book fontSize="inherit" />
-          </IconButton>
-          {props.currentUser ? (
-            props.currentUser.role === "doctor" ? (
-              <>
-                {/* <IconButton
-                  sx={{ color: green[400] }}
-                  className=" hover:text-green-600"
-                  onClick={() => props.onShareHande(row._id)}
-                  aria-label="delete"
-                  // size="large"
-                >
-                  <Share fontSize="inherit" />
-                </IconButton> */}
-                <IconButton
-                  onClick={() => {
-                    props.onDeleteHande(row._id);
-                  }}
-                  sx={{ color: red[400] }}
-                  className=" hover:text-red-600"
-                  aria-label="delete"
-
-                  // size="large"
-                >
-                  <Delete fontSize="inherit" />
-                </IconButton>
-                <IconButton
-                  sx={{ color: blue[400] }}
-                  className=" hover:text-blue-600"
-                  onClick={() => {
-                    props.onEditHande(row._id);
-                  }}
-                  aria-label="delete"
-                >
-                  <Edit aria-label="expand row" size="small"></Edit>
-                </IconButton>
-              </>
+        {props.settingData &&
+        props.settingData.patientsTable &&
+        props.settingData.patientsTable.patientOption ? (
+          <TableCell align="center">
+            {props.settingData &&
+            props.settingData.patientsTable &&
+            props.settingData.patientsTable.patientBooked ? (
+              <IconButton
+                sx={{ color: purple[400] }}
+                className=" hover:text-purple-600"
+                onClick={() => props.onBookedHandel(row._id)}
+                aria-label="delete"
+                // size="large"
+              >
+                <Book fontSize="inherit" />
+              </IconButton>
             ) : (
               ""
-            )
-          ) : (
-            ""
-          )}
-        </TableCell>
+            )}
+
+            {props.currentUser ? (
+              props.currentUser.role === "doctor" ? (
+                <>
+                  {/* <IconButton
+                          sx={{ color: green[400] }}
+                          className=" hover:text-green-600"
+                          onClick={() => props.onShareHande(row._id)}
+                          aria-label="delete"
+                          // size="large"
+                        >
+                          <Share fontSize="inherit" />
+                        </IconButton> */}
+                  <IconButton
+                    onClick={() => {
+                      props.onDeleteHande(row._id);
+                    }}
+                    sx={{ color: red[400] }}
+                    className=" hover:text-red-600"
+                    aria-label="delete"
+
+                    // size="large"
+                  >
+                    <Delete fontSize="inherit" />
+                  </IconButton>
+                  <IconButton
+                    sx={{ color: blue[400] }}
+                    className=" hover:text-blue-600"
+                    onClick={() => {
+                      props.onEditHande(row._id);
+                    }}
+                    aria-label="delete"
+                  >
+                    <Edit aria-label="expand row" size="small"></Edit>
+                  </IconButton>
+                </>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
+          </TableCell>
+        ) : (
+          ""
+        )}
+
         {props.currentUser ? (
           props.currentUser.role === "doctor" ? (
             <>
-              <IconButton
-                type="button"
-                sx={{ p: "10px" }}
-                aria-label="search"
-                onClick={() => setOpen(!open)}
-              >
-                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-              </IconButton>
+              {props.settingData &&
+              props.settingData.patientsTable &&
+              props.settingData.patientsTable.patientPrescriptionView ? (
+                <IconButton
+                  type="button"
+                  sx={{ p: "10px" }}
+                  aria-label="search"
+                  onClick={() => setOpen(!open)}
+                >
+                  {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                </IconButton>
+              ) : (
+                ""
+              )}
             </>
           ) : (
             ""
@@ -999,7 +1120,7 @@ function Partients() {
     axios
       .post(`${serverAddress}/prescription/postpharmaceutical`, data)
       .then((response) => {
-        getPharmaceApi()
+        getPharmaceApi();
         // Handle the response if needed
         getAllPrescription(data.PrescriptionId);
       })
@@ -1479,114 +1600,205 @@ function Partients() {
             <TableHead>
               <TableRow>
                 <TableCell align="center"># </TableCell>
-                <TableCell align="right">
-                  <FormattedMessage
-                    id={"PatientName"}
-                    defaultMessage="Hello, World!"
-                  />
-                </TableCell>
-                <TableCell align="center">
-                  <FormattedMessage
-                    id={"Date"}
-                    defaultMessage="Hello, World!"
-                  />
-                </TableCell>
-                <TableCell align="center">
-                  {" "}
-                  <FormattedMessage
-                    id={"AgeTitle"}
-                    defaultMessage="Hello, World!"
-                  />
-                </TableCell>
-                <TableCell align="center">
-                  {" "}
-                  <FormattedMessage
-                    id={"Gender"}
-                    defaultMessage="Hello, World!"
-                  />
-                </TableCell>
-                <TableCell align="center">
-                  {" "}
-                  <FormattedMessage
-                    id={"Address"}
-                    defaultMessage="Hello, World!"
-                  />
-                </TableCell>
-                <TableCell align="center">
-                  {" "}
-                  <FormattedMessage
-                    id={"Sequence"}
-                    defaultMessage="Hello, World!"
-                  />
-                </TableCell>
+                {settingData &&
+                settingData.patientsTable &&
+                settingData.patientsTable.patientName ? (
+                  <TableCell align="right">
+                    <FormattedMessage
+                      id={"PatientName"}
+                      defaultMessage="Hello, World!"
+                    />
+                  </TableCell>
+                ) : (
+                  ""
+                )}
+                {settingData &&
+                settingData.patientsTable &&
+                settingData.patientsTable.patientDate ? (
+                  <TableCell align="center">
+                    <FormattedMessage
+                      id={"Date"}
+                      defaultMessage="Hello, World!"
+                    />
+                  </TableCell>
+                ) : (
+                  ""
+                )}
+                {settingData &&
+                settingData.patientsTable &&
+                settingData.patientsTable.patientAge ? (
+                  <TableCell align="center">
+                    {" "}
+                    <FormattedMessage
+                      id={"AgeTitle"}
+                      defaultMessage="Hello, World!"
+                    />
+                  </TableCell>
+                ) : (
+                  ""
+                )}
 
-                <TableCell align="center">
-                  {" "}
-                  <FormattedMessage
-                    id={"Weight"}
-                    defaultMessage="Hello, World!"
-                  />
-                </TableCell>
-                <TableCell align="center">
-                  {" "}
-                  <FormattedMessage
-                    id={"Length"}
-                    defaultMessage="Hello, World!"
-                  />
-                </TableCell>
-                <TableCell align="center">
-                  {" "}
-                  <FormattedMessage
-                    id={"VisitNumber"}
-                    defaultMessage="Hello, World!"
-                  />
-                </TableCell>
+                {settingData &&
+                settingData.patientsTable &&
+                settingData.patientsTable.patientGender ? (
+                  <TableCell align="center">
+                    {" "}
+                    <FormattedMessage
+                      id={"Gender"}
+                      defaultMessage="Hello, World!"
+                    />
+                  </TableCell>
+                ) : (
+                  ""
+                )}
+                {settingData &&
+                settingData.patientsTable &&
+                settingData.patientsTable.patientAdresses ? (
+                  <TableCell align="center">
+                    {" "}
+                    <FormattedMessage
+                      id={"Address"}
+                      defaultMessage="Hello, World!"
+                    />
+                  </TableCell>
+                ) : (
+                  ""
+                )}
+
+                {settingData &&
+                settingData.patientsTable &&
+                settingData.patientsTable.patientSequance ? (
+                  <TableCell align="center">
+                    {" "}
+                    <FormattedMessage
+                      id={"Sequence"}
+                      defaultMessage="Hello, World!"
+                    />
+                  </TableCell>
+                ) : (
+                  ""
+                )}
+                {settingData &&
+                settingData.patientsTable &&
+                settingData.patientsTable.patientWeghit ? (
+                  <TableCell align="center">
+                    {" "}
+                    <FormattedMessage
+                      id={"Weight"}
+                      defaultMessage="Hello, World!"
+                    />
+                  </TableCell>
+                ) : (
+                  ""
+                )}
+                {settingData &&
+                settingData.patientsTable &&
+                settingData.patientsTable.patientLeanth ? (
+                  <TableCell align="center">
+                    {" "}
+                    <FormattedMessage
+                      id={"Length"}
+                      defaultMessage="Hello, World!"
+                    />
+                  </TableCell>
+                ) : (
+                  ""
+                )}
+                {settingData &&
+                settingData.patientsTable &&
+                settingData.patientsTable.patientVisitNum ? (
+                  <TableCell align="center">
+                    {" "}
+                    <FormattedMessage
+                      id={"VisitNumber"}
+                      defaultMessage="Hello, World!"
+                    />
+                  </TableCell>
+                ) : (
+                  ""
+                )}
+
                 {currentUser ? (
                   currentUser.role === "doctor" ? (
                     <>
-                      <TableCell align="center">
-                        {" "}
-                        <FormattedMessage
-                          id={"visit"}
-                          defaultMessage="Hello, World!"
-                        />
-                      </TableCell>
-
-                      <TableCell align="center">
-                        {" "}
-                        <FormattedMessage
-                          id={"Examination"}
-                          defaultMessage="Hello, World!"
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        {" "}
-                        <FormattedMessage
-                          id={"Rx"}
-                          defaultMessage="Hello, World!"
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        {" "}
-                        <FormattedMessage
-                          id={"Report"}
-                          defaultMessage="Hello, World!"
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        {" "}
-                        <FormattedMessage
-                          id={"LaboratoryTesting"}
-                          defaultMessage="Hello, World!"
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        {" "}
-                        <FormattedMessage
-                          id={"Options"}
-                          defaultMessage="Hello, World!"
-                        />
-                      </TableCell>
+                      {settingData &&
+                      settingData.patientsTable &&
+                      settingData.patientsTable.patientAddVisit ? (
+                        <TableCell align="center">
+                          {" "}
+                          <FormattedMessage
+                            id={"visit"}
+                            defaultMessage="Hello, World!"
+                          />
+                        </TableCell>
+                      ) : (
+                        ""
+                      )}
+                      {settingData &&
+                      settingData.patientsTable &&
+                      settingData.patientsTable.patientAddMedicalData ? (
+                        <TableCell align="center">
+                          {" "}
+                          <FormattedMessage
+                            id={"Examination"}
+                            defaultMessage="Hello, World!"
+                          />
+                        </TableCell>
+                      ) : (
+                        ""
+                      )}
+                      {settingData &&
+                      settingData.patientsTable &&
+                      settingData.patientsTable.patientAddPrescription ? (
+                        <TableCell align="center">
+                          {" "}
+                          <FormattedMessage
+                            id={"Rx"}
+                            defaultMessage="Hello, World!"
+                          />
+                        </TableCell>
+                      ) : (
+                        ""
+                      )}
+                      {settingData &&
+                      settingData.patientsTable &&
+                      settingData.patientsTable.patientAddReport ? (
+                        <TableCell align="center">
+                          {" "}
+                          <FormattedMessage
+                            id={"Report"}
+                            defaultMessage="Hello, World!"
+                          />
+                        </TableCell>
+                      ) : (
+                        ""
+                      )}
+                      {settingData &&
+                      settingData.patientsTable &&
+                      settingData.patientsTable.patientAddLaboryTest ? (
+                        <TableCell align="center">
+                          {" "}
+                          <FormattedMessage
+                            id={"LaboratoryTesting"}
+                            defaultMessage="Hello, World!"
+                          />
+                        </TableCell>
+                      ) : (
+                        ""
+                      )}
+                      {settingData &&
+                      settingData.patientsTable &&
+                      settingData.patientsTable.patientOption ? (
+                        <TableCell align="center">
+                          {" "}
+                          <FormattedMessage
+                            id={"Options"}
+                            defaultMessage="Hello, World!"
+                          />
+                        </TableCell>
+                      ) : (
+                        ""
+                      )}
                     </>
                   ) : (
                     ""

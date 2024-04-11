@@ -131,6 +131,7 @@
   "PriorChronicTherapy":"الادوية السابقة",
   "CauseOfVisite":"سبب الزيارة",
   "management":"الادارية",
-  "visitType":"نوع الزيارة"
-
+  "visitType":"نوع الزيارة",
+  "ECO":"الايكو",
+  "AutoComplete":"اكمال تلقائي"
 }

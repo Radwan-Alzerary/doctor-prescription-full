@@ -1,3 +1,4 @@
+import { Delete, Remove } from "@mui/icons-material";
 import {
   Autocomplete,
   Button,
@@ -6,6 +7,7 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
+  Chip,
   Select,
   Switch,
   TextField,
@@ -14,12 +16,34 @@ import dayjs from "dayjs";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
+import axios from "axios";
+import MedicalFormChipAutoComplete from "./MedicalFormChipAutoComplete";
 
 function MedicalForm(props) {
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000
+  const [textSelector, setTextSelector] = useState("");
+  const [autoCompleteList, setAutoCompleteList] = useState();
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({});
   const [locale, setLocale] = useState(() => {
     return Cookies.get("locale") || "ar";
   });
+  useEffect(() => {
+    const getAutoCompleteList = () => {
+      axios
+        .get(`${serverAddress}/autoComplete/getall/`)
+        .then((response) => {
+          setAutoCompleteList(response.data);
+          setLoading(false);
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    };
+    getAutoCompleteList();
+  }, []);
 
   useEffect(() => {
     const { diseases, ...formDataWithoutDiseases } = props.userEditData;
@@ -113,383 +137,29 @@ function MedicalForm(props) {
         direction: locale === "en" ? "ltr" : "rtl",
       }}
     >
-      <div className="w-full flex gap-9"></div>
-      <div className=" text-right w-full">
-        <h5>
-          {" "}
-          <FormattedMessage
-            id={"Examination for"}
-            defaultMessage="Hello, World!"
-          />{" "}
-          : <span className=" font-bold">{props.userEditData.name}</span>
-        </h5>
-      </div>
-      {props.settingData.medicalDiagnosisActive ? (
-        <TextField
-          value={formData.medicalDiagnosis}
-          onChange={(event) => {
-            handleInputChange("medicalDiagnosis", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"Diagnostic Details"}
-              defaultMessage="Hello, World!"
-            />
-          }
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-      {props.settingData.currentMedicalHistoryActive ? (
-        <TextField
-          value={formData.currentMedicalHistory}
-          onChange={(event) => {
-            handleInputChange("currentMedicalHistory", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"Present Medical History"}
-              defaultMessage="Hello, World!"
-            />
-          }
-        />
-      ) : (
-        ""
-      )}
-      {props.settingData.medicalHistoryActive ? (
-        <TextField
-          value={formData.medicalHistory}
-          onChange={(event) => {
-            handleInputChange("medicalHistory", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"Medical History"}
-              defaultMessage="Hello, World!"
-            />
-          } // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-      {props.settingData.previousSurgeriesActive ? (
-        <TextField
-          value={formData.previousSurgeries}
-          onChange={(event) => {
-            handleInputChange("previousSurgeries", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"Previous Surgical Procedures"}
-              defaultMessage="Hello, World!"
-            />
-          } // defaultValue="Hello World"        Present Medical History
-        />
-      ) : (
-        ""
-      )}
-      {props.settingData.familyHistoryActive ? (
-        <TextField
-          value={formData.familyHistory}
-          onChange={(event) => {
-            handleInputChange("familyHistory", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"Family Medical History"}
-              defaultMessage="Hello, World!"
-            />
-          }
-          Diagnostic
-          Details
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-      {props.settingData.fumblingActive ? (
-        <TextField
-          value={formData.fumbling}
-          onChange={(event) => {
-            handleInputChange("fumbling", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"Medication Allergies"}
-              defaultMessage="Hello, World!"
-            />
-          }
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-      {props.settingData.InvestigationFindingActive ? (
-        <TextField
-          value={formData.InvestigationFinding}
-          onChange={(event) => {
-            handleInputChange("InvestigationFinding", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"InvestigationFinding"}
-              defaultMessage="Hello, World!"
-            />
-          }
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-      {props.settingData.fracturesActive ? (
-        <TextField
-          value={formData.fractures}
-          onChange={(event) => {
-            handleInputChange("fractures", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage id={"fractures"} defaultMessage="Hello, World!" />
-          }
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-      {props.settingData.ExaminationFindiningActive ? (
-        <TextField
-          value={formData.ExaminationFindining}
-          onChange={(event) => {
-            handleInputChange("ExaminationFindining", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"ExaminationFindining"}
-              defaultMessage="Hello, World!"
-            />
-          }
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-      {props.settingData.pulseRateActive ? (
-        <TextField
-          value={formData.pulseRate}
-          onChange={(event) => {
-            handleInputChange("pulseRate", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage id={"pulseRate"} defaultMessage="Hello, World!" />
-          }
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-      {props.settingData.spo2Active ? (
-        <TextField
-          value={formData.spo2}
-          onChange={(event) => {
-            handleInputChange("spo2", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage id={"spo2"} defaultMessage="Hello, World!" />
-          }
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-      {props.settingData.temperatureActive ? (
-        <TextField
-          value={formData.temperature}
-          onChange={(event) => {
-            handleInputChange("temperature", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"temperature"}
-              defaultMessage="Hello, World!"
-            />
-          }
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-      {props.settingData.bloodPressureActive ? (
-        <TextField
-          value={formData.bloodPressure}
-          onChange={(event) => {
-            handleInputChange("bloodPressure", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"bloodPressure"}
-              defaultMessage="Hello, World!"
-            />
-          }
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-      {props.settingData.bloodSugarActive ? (
-        <TextField
-          value={formData.bloodSugar}
-          onChange={(event) => {
-            handleInputChange("bloodSugar", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"bloodSugar"}
-              defaultMessage="Hello, World!"
-            />
-          }
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-      {props.settingData.miscarriageStateActive ? (
+      {!loading ? (
         <>
-          <p> اسقاط حمل</p>
-          <FormControlLabel
-            sx={{
-              display: "block",
-            }}
-            control={
-              <Switch
-                checked={formData.miscarriageState}
-                onChange={(event) => {
-                  handleInputChange(
-                    "miscarriageState",
-                    !formData.miscarriageState
-                  );
-                }}
-                color="primary"
-              />
-            }
-          />
-          {formData.miscarriageState ? (
+          <div className="w-full flex gap-9"></div>
+          <div className=" text-right w-full">
+            <h5>
+              {" "}
+              <FormattedMessage
+                id={"Examination for"}
+                defaultMessage="Hello, World!"
+              />{" "}
+              : <span className=" font-bold">{props.userEditData.name}</span>
+            </h5>
+          </div>
+          {props.settingData.medicalDiagnosisActive ? (
             <>
               <TextField
-                value={formData.MiscarriageNo}
+                value={formData.medicalDiagnosis}
                 onChange={(event) => {
-                  handleInputChange("MiscarriageNo", event.target.value);
+                  handleInputChange("medicalDiagnosis", event.target.value);
+                }}
+                onClick={() => {
+                  // Your click handler code here
+                  setTextSelector("medicalDiagnosis");
                 }}
                 id="outlined-multiline-static"
                 size="small"
@@ -497,168 +167,39 @@ function MedicalForm(props) {
                   width: "100%",
                   color: "#fff",
                 }}
-                type="number"
                 multiline
-                // label={
-                //   <FormattedMessage
-                //     id={"bloodSugar"}
-                //     defaultMessage="Hello, World!"
-                //   />
-                // }
-                label={"عدد الاسقاطات"}
+                rows={2}
+                label={
+                  <FormattedMessage
+                    id={"Diagnostic Details"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
                 // defaultValue="Hello World"
               />
-              <div className="flex gap-4 flex-wrap">{renderChildFields()}</div>
+              {textSelector === "medicalDiagnosis" ? (
+                <MedicalFormChipAutoComplete
+                  AutoCompletevalue={autoCompleteList.medicalDiagnosis}
+                  formDataValue={formData.medicalDiagnosis}
+                  handleInputChange={handleInputChange}
+                  target={"medicalDiagnosis"}
+                ></MedicalFormChipAutoComplete>
+              ) : (
+                ""
+              )}
             </>
           ) : (
             ""
           )}
-        </>
-      ) : (
-        ""
-      )}
-      {props.settingData.pregnancyActive ? (
-        <>
-          <p>حمل حالي</p>
-          <FormControlLabel
-            sx={{
-              display: "block",
-            }}
-            control={
-              <Switch
-                checked={formData.pregnancyState}
-                onChange={(event) => {
-                  handleInputChange("pregnancyState", !formData.pregnancyState);
-                }}
-                color="primary"
-              />
-            }
-          />
-          {formData.pregnancyState ? (
+          {props.settingData.currentMedicalHistoryActive ? (
             <>
-              <div className="flex w-full gap-4">
-                <div style={{ direction: "ltr" }}>
-                  <TextField
-                    size="small"
-                    value={
-                      formatDate(formData.pregnancyData?.DateOfLastPeriod) || ""
-                    }
-                    onChange={(event) => {
-                      setFormData({
-                        ...formData,
-                        pregnancyData: {
-                          ...formData.pregnancyData,
-                          DateOfLastPeriod: event.target.value,
-                        },
-                      });
-                    }}
-                    sx={{
-                      width: "100%",
-                      textAlign: "right",
-                      color: "#fff",
-                    }}
-                    type="date"
-                    InputProps={{
-                      style: { textAlign: "right" },
-                    }}
-                    label="تاريخ اخر دورة"
-                  />
-                </div>
-                <TextField
-                  value={formData.pregnancyData?.PregnancySequence || ""}
-                  onChange={(event) => {
-                    setFormData({
-                      ...formData,
-                      pregnancyData: {
-                        ...formData.pregnancyData,
-                        PregnancySequence: event.target.value,
-                      },
-                    });
-                  }}
-                  id="outlined-multiline-static"
-                  type="Number"
-                  size="small"
-                  sx={{
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                  // label={
-                  //   <FormattedMessage id={"spo2"} defaultMessage="Hello, World!" />
-                  // }
-                  label="تسلسل الحمل"
-                  // defaultValue="Hello World"
-                />
-              </div>
-              <div className="flex w-full gap-4">
-                <FormControl className=" w-full bg-whiteh" size="small">
-                  <InputLabel id="demo-simple-select-helper-label">
-                    نوع الولادة السابقة{" "}
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-helper-label"
-                    id="demo-simple-select-helper"
-                    value={formData.pregnancyData?.TypeOfPreviousBirth || ""}
-                    onChange={(event) => {
-                      setFormData({
-                        ...formData,
-                        pregnancyData: {
-                          ...formData.pregnancyData,
-                          TypeOfPreviousBirth: event.target.value,
-                        },
-                      });
-                    }}
-                    label="نوع الولادة السابقة"
-                    // label={
-                    //   <FormattedMessage
-                    //     id={"bloodType"}
-                    //     defaultMessage="Hello, World!"
-                    //   />
-                    // }
-                  >
-                    <MenuItem value={"طبيعية"}>طبيعية</MenuItem>
-                    <MenuItem value={"قيصرية"}>قيصرية</MenuItem>
-                  </Select>
-                </FormControl>
-                <FormControl className=" w-full bg-whiteh" size="small">
-                  <InputLabel id="demo-simple-select-helper-label">
-                    فصيلة دم الزوج{" "}
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-helper-label"
-                    id="demo-simple-select-helper"
-                    value={formData.pregnancyData?.HusbandsBloodType || ""}
-                    onChange={(event) => {
-                      setFormData({
-                        ...formData,
-                        pregnancyData: {
-                          ...formData.pregnancyData,
-                          HusbandsBloodType: event.target.value,
-                        },
-                      });
-                    }}
-                    label="فصيلة دم الزوج"
-                  >
-                    <MenuItem value={"A+"}>A+</MenuItem>
-                    <MenuItem value={"A-"}>A-</MenuItem>
-                    <MenuItem value={"B+"}>B+</MenuItem>
-                    <MenuItem value={"B-"}>B-</MenuItem>
-                    <MenuItem value={"AB+"}>AB+</MenuItem>
-                    <MenuItem value={"AB-"}>AB-</MenuItem>
-                    <MenuItem value={"O+"}>o+</MenuItem>
-                    <MenuItem value={"O-"}>o-</MenuItem>
-                  </Select>
-                </FormControl>
-              </div>
               <TextField
-                value={formData.pregnancyData?.comment || ""}
+                value={formData.currentMedicalHistory}
                 onChange={(event) => {
-                  setFormData({
-                    ...formData,
-                    pregnancyData: {
-                      ...formData.pregnancyData,
-                      comment: event.target.value,
-                    },
-                  });
+                  handleInputChange(
+                    "currentMedicalHistory",
+                    event.target.value
+                  );
                 }}
                 id="outlined-multiline-static"
                 size="small"
@@ -666,24 +207,763 @@ function MedicalForm(props) {
                   width: "100%",
                   color: "#fff",
                 }}
-                // label={
-                //   <FormattedMessage id={"spo2"} defaultMessage="Hello, World!" />
-                // }
-                label="ملاحضات حول الحمل"
+                onClick={() => {
+                  // Your click handler code here
+                  setTextSelector("currentMedicalHistory");
+                  console.log("TextField clicked!");
+                }}
+                multiline
+                rows={2}
+                label={
+                  <FormattedMessage
+                    id={"Present Medical History"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
+              />
+              {textSelector === "currentMedicalHistory" ? (
+                <MedicalFormChipAutoComplete
+                  AutoCompletevalue={autoCompleteList.currentMedicalHistory}
+                  formDataValue={formData.currentMedicalHistory}
+                  handleInputChange={handleInputChange}
+                  target={"currentMedicalHistory"}
+                ></MedicalFormChipAutoComplete>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )}
+          {props.settingData.medicalHistoryActive ? (
+            <>
+              <TextField
+                value={formData.medicalHistory}
+                onChange={(event) => {
+                  handleInputChange("medicalHistory", event.target.value);
+                }}
+                id="outlined-multiline-static"
+                size="small"
+                onClick={() => {
+                  // Your click handler code here
+                  setTextSelector("medicalHistory");
+                }}
+                sx={{
+                  width: "100%",
+                  color: "#fff",
+                }}
+                multiline
+                rows={2}
+                label={
+                  <FormattedMessage
+                    id={"Medical History"}
+                    defaultMessage="Hello, World!"
+                  />
+                } // defaultValue="Hello World"
+              />
+
+              {textSelector === "medicalHistory" ? (
+                <MedicalFormChipAutoComplete
+                  AutoCompletevalue={autoCompleteList.medicalHistory}
+                  formDataValue={formData.medicalHistory}
+                  handleInputChange={handleInputChange}
+                  target={"medicalHistory"}
+                ></MedicalFormChipAutoComplete>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )}
+          {props.settingData.previousSurgeriesActive ? (
+            <>
+              {" "}
+              <TextField
+                value={formData.previousSurgeries}
+                onChange={(event) => {
+                  handleInputChange("previousSurgeries", event.target.value);
+                }}
+                id="outlined-multiline-static"
+                size="small"
+                onClick={() => {
+                  // Your click handler code here
+                  setTextSelector("previousSurgeries");
+                }}
+                sx={{
+                  width: "100%",
+                  color: "#fff",
+                }}
+                multiline
+                rows={2}
+                label={
+                  <FormattedMessage
+                    id={"Previous Surgical Procedures"}
+                    defaultMessage="Hello, World!"
+                  />
+                } // defaultValue="Hello World"        Present Medical History
+              />
+              {textSelector === "previousSurgeries" ? (
+                <MedicalFormChipAutoComplete
+                  AutoCompletevalue={autoCompleteList.previousSurgeries}
+                  formDataValue={formData.previousSurgeries}
+                  handleInputChange={handleInputChange}
+                  target={"previousSurgeries"}
+                ></MedicalFormChipAutoComplete>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )}
+          {props.settingData.familyHistoryActive ? (
+            <>
+              <TextField
+                value={formData.familyHistory}
+                onChange={(event) => {
+                  handleInputChange("familyHistory", event.target.value);
+                }}
+                id="outlined-multiline-static"
+                size="small"
+                onClick={() => {
+                  // Your click handler code here
+                  setTextSelector("familyHistory");
+                }}
+                sx={{
+                  width: "100%",
+                  color: "#fff",
+                }}
+                multiline
+                rows={2}
+                label={
+                  <FormattedMessage
+                    id={"Family Medical History"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
+                Diagnostic
+                Details
                 // defaultValue="Hello World"
               />
-              {formData.pregnancyData && formData.pregnancyData.DateOfLastPeriod ? (
-                <div className="flex justify-between w-full">
-                  <div>موعد الانجاب</div>
-                  <div>
-                    {" "}
-                    {formData.pregnancyData
-                      ? dayjs(formData.pregnancyData.DateOfLastPeriod)
-                          .add(9, "month")
-                          .format("YYYY-MM-DD")
-                      : ""}
+              {textSelector === "familyHistory" ? (
+                <MedicalFormChipAutoComplete
+                  AutoCompletevalue={autoCompleteList.familyHistory}
+                  formDataValue={formData.familyHistory}
+                  handleInputChange={handleInputChange}
+                  target={"familyHistory"}
+                ></MedicalFormChipAutoComplete>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )}
+          {props.settingData.fumblingActive ? (
+            <>
+              <TextField
+                value={formData.fumbling}
+                onChange={(event) => {
+                  handleInputChange("fumbling", event.target.value);
+                }}
+                id="outlined-multiline-static"
+                size="small"
+                onClick={() => {
+                  // Your click handler code here
+                  setTextSelector("fumbling");
+                }}
+                sx={{
+                  width: "100%",
+                  color: "#fff",
+                }}
+                multiline
+                rows={2}
+                label={
+                  <FormattedMessage
+                    id={"Medication Allergies"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
+                // defaultValue="Hello World"
+              />
+              {textSelector === "fumbling" ? (
+                <MedicalFormChipAutoComplete
+                  AutoCompletevalue={autoCompleteList.fumbling}
+                  formDataValue={formData.fumbling}
+                  handleInputChange={handleInputChange}
+                  target={"fumbling"}
+                ></MedicalFormChipAutoComplete>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )}
+          {props.settingData.InvestigationFindingActive ? (
+            <>
+              {" "}
+              <TextField
+                value={formData.InvestigationFinding}
+                onChange={(event) => {
+                  handleInputChange("InvestigationFinding", event.target.value);
+                }}
+                id="outlined-multiline-static"
+                size="small"
+                onClick={() => {
+                  // Your click handler code here
+                  setTextSelector("InvestigationFinding");
+                }}
+                sx={{
+                  width: "100%",
+                  color: "#fff",
+                }}
+                multiline
+                rows={2}
+                label={
+                  <FormattedMessage
+                    id={"InvestigationFinding"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
+                // defaultValue="Hello World"
+              />
+              {textSelector === "InvestigationFinding" ? (
+                <MedicalFormChipAutoComplete
+                  AutoCompletevalue={autoCompleteList.InvestigationFinding}
+                  formDataValue={formData.InvestigationFinding}
+                  handleInputChange={handleInputChange}
+                  target={"InvestigationFinding"}
+                ></MedicalFormChipAutoComplete>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )}
+          {props.settingData.fracturesActive ? (
+            <>
+              <TextField
+                value={formData.fractures}
+                onChange={(event) => {
+                  handleInputChange("fractures", event.target.value);
+                }}
+                id="outlined-multiline-static"
+                size="small"
+                onClick={() => {
+                  // Your click handler code here
+                  setTextSelector("fractures");
+                }}
+                sx={{
+                  width: "100%",
+                  color: "#fff",
+                }}
+                multiline
+                rows={2}
+                label={
+                  <FormattedMessage
+                    id={"fractures"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
+                // defaultValue="Hello World"
+              />
+              {textSelector === "fractures" ? (
+                <MedicalFormChipAutoComplete
+                  AutoCompletevalue={autoCompleteList.fractures}
+                  formDataValue={formData.fractures}
+                  handleInputChange={handleInputChange}
+                  target={"fractures"}
+                ></MedicalFormChipAutoComplete>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )}
+          {props.settingData.ExaminationFindiningActive ? (
+            <>
+              <TextField
+                value={formData.ExaminationFindining}
+                onChange={(event) => {
+                  handleInputChange("ExaminationFindining", event.target.value);
+                }}
+                id="outlined-multiline-static"
+                size="small"
+                onClick={() => {
+                  // Your click handler code here
+                  setTextSelector("ExaminationFindining");
+                }}
+                sx={{
+                  width: "100%",
+                  color: "#fff",
+                }}
+                multiline
+                rows={2}
+                label={
+                  <FormattedMessage
+                    id={"ExaminationFindining"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
+                // defaultValue="Hello World"
+              />
+              {textSelector === "ExaminationFindining" ? (
+                <MedicalFormChipAutoComplete
+                  AutoCompletevalue={autoCompleteList.ExaminationFindining}
+                  formDataValue={formData.ExaminationFindining}
+                  handleInputChange={handleInputChange}
+                  target={"ExaminationFindining"}
+                ></MedicalFormChipAutoComplete>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )}
+          {props.settingData.pulseRateActive ? (
+            <>
+              <TextField
+                value={formData.pulseRate}
+                onChange={(event) => {
+                  handleInputChange("pulseRate", event.target.value);
+                }}
+                id="outlined-multiline-static"
+                size="small"
+                onClick={() => {
+                  // Your click handler code here
+                  setTextSelector("pulseRate");
+                }}
+                sx={{
+                  width: "100%",
+                  color: "#fff",
+                }}
+                multiline
+                rows={2}
+                label={
+                  <FormattedMessage
+                    id={"pulseRate"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
+                // defaultValue="Hello World"
+              />
+              {textSelector === "pulseRate" ? (
+                <MedicalFormChipAutoComplete
+                  AutoCompletevalue={autoCompleteList.pulseRate}
+                  formDataValue={formData.pulseRate}
+                  handleInputChange={handleInputChange}
+                  target={"pulseRate"}
+                ></MedicalFormChipAutoComplete>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )}
+          {props.settingData.spo2Active ? (
+            <>
+              <TextField
+                value={formData.spo2}
+                onChange={(event) => {
+                  handleInputChange("spo2", event.target.value);
+                }}
+                id="outlined-multiline-static"
+                size="small"
+                onClick={() => {
+                  setTextSelector("spo2");
+                }}
+                sx={{
+                  width: "100%",
+                  color: "#fff",
+                }}
+                multiline
+                rows={2}
+                label={
+                  <FormattedMessage
+                    id={"spo2"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
+                // defaultValue="Hello World"
+              />
+              {textSelector === "spo2" ? (
+                <MedicalFormChipAutoComplete
+                  AutoCompletevalue={autoCompleteList.spo2}
+                  formDataValue={formData.spo2}
+                  handleInputChange={handleInputChange}
+                  target={"spo2"}
+                ></MedicalFormChipAutoComplete>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )}
+          {props.settingData.temperatureActive ? (
+            <>
+              {" "}
+              <TextField
+                value={formData.temperature}
+                onChange={(event) => {
+                  handleInputChange("temperature", event.target.value);
+                }}
+                id="outlined-multiline-static"
+                size="small"
+                onClick={() => {
+                  // Your click handler code here
+                  setTextSelector("temperature");
+                }}
+                sx={{
+                  width: "100%",
+                  color: "#fff",
+                }}
+                multiline
+                rows={2}
+                label={
+                  <FormattedMessage
+                    id={"temperature"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
+                // defaultValue="Hello World"
+              />
+              {textSelector === "temperature" ? (
+                <MedicalFormChipAutoComplete
+                  AutoCompletevalue={autoCompleteList.temperature}
+                  formDataValue={formData.temperature}
+                  handleInputChange={handleInputChange}
+                  target={"temperature"}
+                ></MedicalFormChipAutoComplete>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )}
+          {props.settingData.bloodPressureActive ? (
+            <>
+              <TextField
+                value={formData.bloodPressure}
+                onChange={(event) => {
+                  handleInputChange("bloodPressure", event.target.value);
+                }}
+                id="outlined-multiline-static"
+                size="small"
+                onClick={() => {
+                  // Your click handler code here
+                  setTextSelector("bloodPressure");
+                }}
+                sx={{
+                  width: "100%",
+                  color: "#fff",
+                }}
+                multiline
+                rows={2}
+                label={
+                  <FormattedMessage
+                    id={"bloodPressure"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
+                // defaultValue="Hello World"
+              />
+              {textSelector === "bloodPressure" ? (
+                <MedicalFormChipAutoComplete
+                  AutoCompletevalue={autoCompleteList.bloodPressure}
+                  formDataValue={formData.bloodPressure}
+                  handleInputChange={handleInputChange}
+                  target={"bloodPressure"}
+                ></MedicalFormChipAutoComplete>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )}
+          {props.settingData.bloodSugarActive ? (
+            <>
+              <TextField
+                value={formData.bloodSugar}
+                onChange={(event) => {
+                  handleInputChange("bloodSugar", event.target.value);
+                }}
+                id="outlined-multiline-static"
+                size="small"
+                onClick={() => {
+                  // Your click handler code here
+                  setTextSelector("bloodSugar");
+                }}
+                sx={{
+                  width: "100%",
+                  color: "#fff",
+                }}
+                multiline
+                rows={2}
+                label={
+                  <FormattedMessage
+                    id={"bloodSugar"}
+                    defaultMessage="Hello, World!"
+                  />
+                }
+                // defaultValue="Hello World"
+              />
+              {textSelector === "bloodSugar" ? (
+                <MedicalFormChipAutoComplete
+                  AutoCompletevalue={autoCompleteList.bloodSugar}
+                  formDataValue={formData.bloodSugar}
+                  handleInputChange={handleInputChange}
+                  target={"bloodSugar"}
+                ></MedicalFormChipAutoComplete>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )}
+          {props.settingData.miscarriageStateActive ? (
+            <>
+              <p> اسقاط حمل</p>
+              <FormControlLabel
+                sx={{
+                  display: "block",
+                }}
+                control={
+                  <Switch
+                    checked={formData.miscarriageState}
+                    onChange={(event) => {
+                      handleInputChange(
+                        "miscarriageState",
+                        !formData.miscarriageState
+                      );
+                    }}
+                    color="primary"
+                  />
+                }
+              />
+              {formData.miscarriageState ? (
+                <>
+                  <TextField
+                    value={formData.MiscarriageNo}
+                    onChange={(event) => {
+                      handleInputChange("MiscarriageNo", event.target.value);
+                    }}
+                    id="outlined-multiline-static"
+                    size="small"
+                    sx={{
+                      width: "100%",
+                      color: "#fff",
+                    }}
+                    type="number"
+                    multiline
+                    // label={
+                    //   <FormattedMessage
+                    //     id={"bloodSugar"}
+                    //     defaultMessage="Hello, World!"
+                    //   />
+                    // }
+                    label={"عدد الاسقاطات"}
+                    // defaultValue="Hello World"
+                  />
+                  <div className="flex gap-4 flex-wrap">
+                    {renderChildFields()}
                   </div>
-                </div>
+                </>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )}
+          {props.settingData.pregnancyActive ? (
+            <>
+              <p>حمل حالي</p>
+              <FormControlLabel
+                sx={{
+                  display: "block",
+                }}
+                control={
+                  <Switch
+                    checked={formData.pregnancyState}
+                    onChange={(event) => {
+                      handleInputChange(
+                        "pregnancyState",
+                        !formData.pregnancyState
+                      );
+                    }}
+                    color="primary"
+                  />
+                }
+              />
+              {formData.pregnancyState ? (
+                <>
+                  <div className="flex w-full gap-4">
+                    <div style={{ direction: "ltr" }}>
+                      <TextField
+                        size="small"
+                        value={
+                          formatDate(
+                            formData.pregnancyData?.DateOfLastPeriod
+                          ) || ""
+                        }
+                        onChange={(event) => {
+                          setFormData({
+                            ...formData,
+                            pregnancyData: {
+                              ...formData.pregnancyData,
+                              DateOfLastPeriod: event.target.value,
+                            },
+                          });
+                        }}
+                        sx={{
+                          width: "100%",
+                          textAlign: "right",
+                          color: "#fff",
+                        }}
+                        type="date"
+                        InputProps={{
+                          style: { textAlign: "right" },
+                        }}
+                        label="تاريخ اخر دورة"
+                      />
+                    </div>
+                    <TextField
+                      value={formData.pregnancyData?.PregnancySequence || ""}
+                      onChange={(event) => {
+                        setFormData({
+                          ...formData,
+                          pregnancyData: {
+                            ...formData.pregnancyData,
+                            PregnancySequence: event.target.value,
+                          },
+                        });
+                      }}
+                      id="outlined-multiline-static"
+                      type="Number"
+                      size="small"
+                      sx={{
+                        width: "100%",
+                        color: "#fff",
+                      }}
+                      // label={
+                      //   <FormattedMessage id={"spo2"} defaultMessage="Hello, World!" />
+                      // }
+                      label="تسلسل الحمل"
+                      // defaultValue="Hello World"
+                    />
+                  </div>
+                  <div className="flex w-full gap-4">
+                    <FormControl className=" w-full bg-whiteh" size="small">
+                      <InputLabel id="demo-simple-select-helper-label">
+                        نوع الولادة السابقة{" "}
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-helper-label"
+                        id="demo-simple-select-helper"
+                        value={
+                          formData.pregnancyData?.TypeOfPreviousBirth || ""
+                        }
+                        onChange={(event) => {
+                          setFormData({
+                            ...formData,
+                            pregnancyData: {
+                              ...formData.pregnancyData,
+                              TypeOfPreviousBirth: event.target.value,
+                            },
+                          });
+                        }}
+                        label="نوع الولادة السابقة"
+                        // label={
+                        //   <FormattedMessage
+                        //     id={"bloodType"}
+                        //     defaultMessage="Hello, World!"
+                        //   />
+                        // }
+                      >
+                        <MenuItem value={"طبيعية"}>طبيعية</MenuItem>
+                        <MenuItem value={"قيصرية"}>قيصرية</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl className=" w-full bg-whiteh" size="small">
+                      <InputLabel id="demo-simple-select-helper-label">
+                        فصيلة دم الزوج{" "}
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-helper-label"
+                        id="demo-simple-select-helper"
+                        value={formData.pregnancyData?.HusbandsBloodType || ""}
+                        onChange={(event) => {
+                          setFormData({
+                            ...formData,
+                            pregnancyData: {
+                              ...formData.pregnancyData,
+                              HusbandsBloodType: event.target.value,
+                            },
+                          });
+                        }}
+                        label="فصيلة دم الزوج"
+                      >
+                        <MenuItem value={"A+"}>A+</MenuItem>
+                        <MenuItem value={"A-"}>A-</MenuItem>
+                        <MenuItem value={"B+"}>B+</MenuItem>
+                        <MenuItem value={"B-"}>B-</MenuItem>
+                        <MenuItem value={"AB+"}>AB+</MenuItem>
+                        <MenuItem value={"AB-"}>AB-</MenuItem>
+                        <MenuItem value={"O+"}>o+</MenuItem>
+                        <MenuItem value={"O-"}>o-</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+                  <TextField
+                    value={formData.pregnancyData?.comment || ""}
+                    onChange={(event) => {
+                      setFormData({
+                        ...formData,
+                        pregnancyData: {
+                          ...formData.pregnancyData,
+                          comment: event.target.value,
+                        },
+                      });
+                    }}
+                    id="outlined-multiline-static"
+                    size="small"
+                    sx={{
+                      width: "100%",
+                      color: "#fff",
+                    }}
+                    // label={
+                    //   <FormattedMessage id={"spo2"} defaultMessage="Hello, World!" />
+                    // }
+                    label="ملاحضات حول الحمل"
+                    // defaultValue="Hello World"
+                  />
+                  {formData.pregnancyData &&
+                  formData.pregnancyData.DateOfLastPeriod ? (
+                    <div className="flex justify-between w-full">
+                      <div>موعد الانجاب</div>
+                      <div>
+                        {" "}
+                        {formData.pregnancyData
+                          ? dayjs(formData.pregnancyData.DateOfLastPeriod)
+                              .add(9, "month")
+                              .format("YYYY-MM-DD")
+                          : ""}
+                      </div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </>
               ) : (
                 ""
               )}

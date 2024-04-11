@@ -210,19 +210,15 @@ function Setting(props) {
               <PropertySetting></PropertySetting>
             </div>
             <div className=" bg-white rounded-xl p-4 w-full">
-            <div>تخصيصات الطبلة</div>
-            <ExaminationSetting></ExaminationSetting>
-            
-          </div>
-
+              <div>تخصيصات الطبلة</div>
+              <ExaminationSetting></ExaminationSetting>
+            </div>
           </div>
           <div className="flex gap-3">
-          {/* <div className=" bg-white rounded-xl p-4 w-full">
-            <div>تخصيصات جدول المرضى</div>
-            <PartientsTableSetting></PartientsTableSetting>
-            
-          </div> */}
-
+            <div className=" bg-white rounded-xl p-4 w-full">
+              <div>تخصيصات جدول المرضى</div>
+              <PartientsTableSetting></PartientsTableSetting>
+            </div>
           </div>
           <div>
             <div>تفعيل النسخة</div>
