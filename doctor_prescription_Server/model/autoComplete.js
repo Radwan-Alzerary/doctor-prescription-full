@@ -15,6 +15,14 @@ const AutoComplteSchema = new mongoose.Schema(
     bloodSugar: [{ type: String }],
     ExaminationFindining: [{ type: String }],
     InvestigationFinding: [{ type: String }],
+    rxMedicalDiagnosis: [{ type: String }],
+    visitchiefComplaint: [{ type: String }],
+    visitdiagnosis: [{ type: String }],
+
+    visitPriorChronicTherapy: [{ type: String }],
+    visitCauseOfVisite: [{ type: String }],
+    visitManagement: [{ type: String }],
+    visitinvestigation: [{ type: String }],
   },
   {
     timestamps: true,

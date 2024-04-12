@@ -12,6 +12,8 @@ import {
 import { PrintRounded } from "@mui/icons-material";
 import { FormattedMessage } from "react-intl";
 import Cookies from "js-cookie";
+import axios from "axios";
+import MedicalFormChipAutoComplete from "./MedicalFormChipAutoComplete";
 
 function VisitForm({
   onFormSubmit,
@@ -53,6 +55,27 @@ function VisitForm({
   const [locale, setLocale] = useState(() => {
     return Cookies.get("locale") || "ar";
   });
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000
+  const [autoCompleteList, setAutoCompleteList] = useState();
+  const [loading, setLoading] = useState(true);
+  const [textSelector, setTextSelector] = useState("");
+
+  useEffect(() => {
+    const getAutoCompleteList = () => {
+      axios
+        .get(`${serverAddress}/autoComplete/getall/`)
+        .then((response) => {
+          setAutoCompleteList(response.data);
+          setLoading(false);
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    };
+    getAutoCompleteList();
+  }, []);
 
   // Handle form submission
   const handleSubmit = (event) => {
@@ -96,6 +119,10 @@ function VisitForm({
           onChange={(event) =>
             handleInputChange("CauseOfVisite", event.target.value)
           } // Update the name state
+          onClick={() => {
+            // Your click handler code here
+            setTextSelector("CauseOfVisite");
+          }}
           sx={{
             width: "100%",
             color: "#fff",
@@ -108,6 +135,16 @@ function VisitForm({
           }
           // defaultValue="Hello World"
         />
+        {!loading && textSelector === "CauseOfVisite" ? (
+          <MedicalFormChipAutoComplete
+            AutoCompletevalue={autoCompleteList.visitCauseOfVisite}
+            formDataValue={formData.CauseOfVisite}
+            handleInputChange={handleInputChange}
+            target={"CauseOfVisite"}
+          ></MedicalFormChipAutoComplete>
+        ) : (
+          ""
+        )}
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
@@ -127,14 +164,33 @@ function VisitForm({
               defaultMessage="Hello, World!"
             />
           }
+          onClick={() => {
+            // Your click handler code here
+            setTextSelector("PriorChronicTherapy");
+          }}
+
           // defaultValue="Hello World"
         />
+        {!loading && textSelector === "PriorChronicTherapy" ? (
+          <MedicalFormChipAutoComplete
+            AutoCompletevalue={autoCompleteList.visitPriorChronicTherapy}
+            formDataValue={formData.PriorChronicTherapy}
+            handleInputChange={handleInputChange}
+            target={"PriorChronicTherapy"}
+          ></MedicalFormChipAutoComplete>
+        ) : (
+          ""
+        )}
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
           id="outlined-required"
           size="small"
           value={formData.chiefComplaint}
+          onClick={() => {
+            // Your click handler code here
+            setTextSelector("chiefComplaint");
+          }}
           onChange={(event) =>
             handleInputChange("chiefComplaint", event.target.value)
           } // Update the name state
@@ -150,6 +206,16 @@ function VisitForm({
           }
           // defaultValue="Hello World"
         />
+        {!loading && textSelector === "chiefComplaint" ? (
+          <MedicalFormChipAutoComplete
+            AutoCompletevalue={autoCompleteList.visitchiefComplaint}
+            formDataValue={formData.chiefComplaint}
+            handleInputChange={handleInputChange}
+            target={"chiefComplaint"}
+          ></MedicalFormChipAutoComplete>
+        ) : (
+          ""
+        )}
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
@@ -163,6 +229,10 @@ function VisitForm({
             width: "100%",
             color: "#fff",
           }}
+          onClick={() => {
+            // Your click handler code here
+            setTextSelector("investigation");
+          }}
           label={
             <FormattedMessage
               id={"InvestigationFinding"}
@@ -171,12 +241,27 @@ function VisitForm({
           }
           // defaultValue="Hello World"
         />
+        {!loading  && textSelector === "investigation"? (
+          <MedicalFormChipAutoComplete
+            AutoCompletevalue={autoCompleteList.visitinvestigation}
+            formDataValue={formData.investigation}
+            handleInputChange={handleInputChange}
+            target={"investigation"}
+          ></MedicalFormChipAutoComplete>
+        ) : (
+          ""
+        )}
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
           id="outlined-required"
           size="small"
           value={formData.diagnosis}
+          onClick={() => {
+            // Your click handler code here
+            setTextSelector("diagnosis");
+          }}
+
           onChange={(event) =>
             handleInputChange("diagnosis", event.target.value)
           } // Update the name state
@@ -189,6 +274,16 @@ function VisitForm({
           }
           // defaultValue="Hello World"
         />
+        {!loading  && textSelector === "diagnosis"? (
+          <MedicalFormChipAutoComplete
+            AutoCompletevalue={autoCompleteList.visitdiagnosis}
+            formDataValue={formData.diagnosis}
+            handleInputChange={handleInputChange}
+            target={"diagnosis"}
+          ></MedicalFormChipAutoComplete>
+        ) : (
+          ""
+        )}
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
@@ -202,6 +297,11 @@ function VisitForm({
             width: "100%",
             color: "#fff",
           }}
+          onClick={() => {
+            // Your click handler code here
+            setTextSelector("management");
+          }}
+
           label={
             <FormattedMessage
               id={"management"}
@@ -210,6 +310,16 @@ function VisitForm({
           }
           // defaultValue="Hello World"
         />
+        {!loading  && textSelector === "management"? (
+          <MedicalFormChipAutoComplete
+            AutoCompletevalue={autoCompleteList.visitManagement}
+            formDataValue={formData.management}
+            handleInputChange={handleInputChange}
+            target={"management"}
+          ></MedicalFormChipAutoComplete>
+        ) : (
+          ""
+        )}
       </div>
       <FormControl className=" w-1/3 bg-whiteh" size="small">
         <InputLabel id="demo-simple-select-helper-label">

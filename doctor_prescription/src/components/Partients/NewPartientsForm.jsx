@@ -21,6 +21,8 @@ import { FormattedMessage } from "react-intl";
 import Cookies from "js-cookie";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import MedicalFormChipAutoComplete from "./MedicalFormChipAutoComplete";
+import axios from "axios";
 function EditPartients(props) {
   const [value, setValue] = useState("");
   const [pharmaceuticalInputs, setPharmaceuticalInputs] = useState(true);
@@ -39,6 +41,25 @@ function EditPartients(props) {
   const [locale, setLocale] = useState(() => {
     return Cookies.get("locale") || "ar";
   });
+  const [autoCompleteList, setAutoCompleteList] = useState();
+  const [loading, setLoading] = useState(true);
+  const currentURL = window.location.origin; // Get the current URL
+  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000
+
+  useEffect(() => {
+    const getAutoCompleteList = () => {
+      axios.get(`${serverAddress}/autoComplete/getall/`)
+        .then((response) => {
+          setAutoCompleteList(response.data);
+          setLoading(false);
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    };
+    getAutoCompleteList();
+  }, []);
 
   const handeAddBill = () => {
     const dataBillForm = {};
@@ -164,6 +185,10 @@ function EditPartients(props) {
     // Call the onFormSubmit function passed as a prop with the formData
     props.onFormSubmit(prescriptionData);
   };
+  const handleInputChange = (name, value) => {
+    setDiagnosis(value);
+  };
+
   console.log(props);
   console.log(props.partientId);
   return (
@@ -223,6 +248,17 @@ function EditPartients(props) {
         }
         // defaultValue="Hello World"
       />
+      {!loading ? (
+        <MedicalFormChipAutoComplete
+          AutoCompletevalue={autoCompleteList.rxMedicalDiagnosis}
+          formDataValue={diagnosis}
+          handleInputChange={handleInputChange}
+          target={"diagnosis"}
+        ></MedicalFormChipAutoComplete>
+      ) : (
+        ""
+      )}
+
       <div className="w-full">
         <h5>
           {" "}
