@@ -89,7 +89,7 @@ router.post("/removenested/", async (req, res) => {
 // Get all PharmaceuticalGroup
 router.get("/getall", async (req, res) => {
   try {
-    const PharmaceuticalGroup = await pharmaceuticalGroup.find();
+    const PharmaceuticalGroup = await pharmaceuticalGroup.find().populate("pharmaceutical");
     res.json(PharmaceuticalGroup);
   } catch (error) {
     res.status(500).json({ error: error.message });

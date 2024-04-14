@@ -111,6 +111,27 @@ function PropertySetting(props) {
             }
           />
         </div>
+        <div className="flex w-full justify-between items-center">
+          <div>اختيار الدواء من قائمة الكروب</div>
+          <FormControlLabel
+            sx={{
+              display: "block",
+            }}
+            control={
+              <Switch
+                checked={property.billSelectFromGroup}
+                onChange={(event) => {
+                  handleInputChange(
+                    "billSelectFromGroup",
+                    !property.billSelectFromGroup
+                  );
+                }}
+                color="primary"
+              />
+            }
+          />
+        </div>
+
       </div>
     </div>
   );

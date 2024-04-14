@@ -95,6 +95,7 @@ function NewPharmaceuticalForm(props) {
             labelId="demo-simple-select-helper-label"
             id="demo-simple-select-helper"
             // value={age}
+            required
             value={formData.category}
             onChange={(event) =>
               handleInputChange("category", event.target.value)
@@ -115,7 +116,7 @@ function NewPharmaceuticalForm(props) {
       <div className=" flex w-full gap-4 items-center">
         <TextField
           dir="rtl"
-          required
+          
           id="outlined-required"
           size="small"
           value={formData.dose}
@@ -134,7 +135,7 @@ function NewPharmaceuticalForm(props) {
         />
         <TextField
           dir="rtl"
-          required
+          
           id="outlined-required"
           size="small"
           value={formData.doseCount}

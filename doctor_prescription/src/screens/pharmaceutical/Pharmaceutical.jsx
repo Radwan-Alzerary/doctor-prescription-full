@@ -48,6 +48,7 @@ function Pharmaceutical() {
       .post(`${serverAddress}/pharmaceutical/new`, data)
       .then((response) => {
         // Handle the response if needed
+        setShowAddForm(false);
         console.log("POST request successful:", response.data);
       })
       .catch((error) => {
@@ -64,6 +65,8 @@ function Pharmaceutical() {
       .post(`${serverAddress}/pharmaceutical/edit`, data)
       .then((response) => {
         // Handle the response if needed
+        setShowEditForm(false);
+
         console.log("POST request successful:", response.data);
       })
       .catch((error) => {
@@ -177,7 +180,6 @@ function Pharmaceutical() {
         console.error("Error fetching categories:", error);
       });
   };
-
 
   const handeSearchInput = (event) => {
     const searchInputValue = event.target.value;

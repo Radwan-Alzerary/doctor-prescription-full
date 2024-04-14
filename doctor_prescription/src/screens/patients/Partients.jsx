@@ -1881,6 +1881,7 @@ function Partients() {
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewPartientsForm
+            settingData={settingData}
             groupList={groupList}
             userData={userData}
             editPrescriptionData={editPrescriptionData}

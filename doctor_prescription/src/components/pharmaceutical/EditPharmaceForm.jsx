@@ -83,7 +83,7 @@ function EditPharmaceForm(props) {
       <div className="flex gap-4  w-full">
         <TextField
           dir="rtl" // Set the direction to RTL
-          required
+          // required
           id="outlined-required"
           size="small"
           value={formData.name}
@@ -126,7 +126,7 @@ function EditPharmaceForm(props) {
       <div className=" flex w-full gap-4 items-center">
         <TextField
           dir="rtl"
-          required
+          
           id="outlined-required"
           size="small"
           value={formData.dose}
@@ -145,7 +145,7 @@ function EditPharmaceForm(props) {
         />
         <TextField
           dir="rtl"
-          required
+          
           id="outlined-required"
           size="small"
           value={formData.doseCount}

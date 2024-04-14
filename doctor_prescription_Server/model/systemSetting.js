@@ -24,6 +24,7 @@ const SystemSettingSchema = new mongoose.Schema(
     pulseRateActive: { type: Boolean, default: true },
     spo2Active: { type: Boolean, default: true },
     temperatureActive: { type: Boolean, default: true },
+    
     bloodPressureActive: { type: Boolean, default: true },
     bloodSugarActive: { type: Boolean, default: true },
     miscarriageStateActive: { type: Boolean, default: true },
@@ -55,6 +56,7 @@ const SystemSettingSchema = new mongoose.Schema(
     spesialLogo: { type: Boolean, default: false },
     autoBackUp: { type: Boolean, default: false },
     isForWoman: { type: Boolean, default: false },
+    billSelectFromGroup:{type:Boolean,default:false},
     isForSurgery: { type: Boolean, default: false },
   },
   {

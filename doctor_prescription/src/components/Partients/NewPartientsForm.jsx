@@ -43,12 +43,14 @@ function EditPartients(props) {
   });
   const [autoCompleteList, setAutoCompleteList] = useState();
   const [loading, setLoading] = useState(true);
+  const [pharmGroupSelected, setPharmGroupSelected] = useState("");
   const currentURL = window.location.origin; // Get the current URL
   const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000
-
+  console.log(props.settingData);
   useEffect(() => {
     const getAutoCompleteList = () => {
-      axios.get(`${serverAddress}/autoComplete/getall/`)
+      axios
+        .get(`${serverAddress}/autoComplete/getall/`)
         .then((response) => {
           setAutoCompleteList(response.data);
           setLoading(false);
@@ -112,7 +114,13 @@ function EditPartients(props) {
     setInTakeTimeOther("");
     setDescription("");
   };
+  const handleAddFromGroup = (pharmId) => {
+    const dataBillForm = {};
+    dataBillForm.billId = pharmId;
+    dataBillForm.PrescriptionId = props.PrescriptionId;
 
+    props.onBillGroupAdded(dataBillForm);
+  };
   const filterOptions = createFilterOptions({
     ignoreCase: true,
     matchFrom: "start",
@@ -193,363 +201,429 @@ function EditPartients(props) {
   console.log(props.partientId);
   return (
     <form
-      className="fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
+      className={`fixed flex  justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  items-center ${
+        props.settingData.billSelectFromGroup ? "w-[90%]" : "w-3/5"
+      }   p-5 rounded-xl z-50`}
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
       }}
     >
-      <div className=" text-right w-full">
-        <h5>
-          <Autocomplete
-            size="small"
-            disableListWrap
-            disablePortal
-            id="combo-box-demo"
-            options={props.groupList}
-            filterOptions={filterOptions}
-            getOptionLabel={(option) => {
-              return `${option.name}`;
-            }}
-            sx={{ width: "33%" }}
-            onChange={(event, newValue) => {
-              handeAddGroupBill(newValue);
-            }}
-            inputValue={inputValue}
-            onInputChange={(event, newInputValue) => {}}
-            renderInput={(params) => (
-              <TextField {...params} label={"اضافة كروب ادوية"} />
-            )}
-          />{" "}
-          <FormattedMessage
-            id={"Medical Diagnosis"}
-            defaultMessage="Hello, World!"
-          />
-        </h5>
-      </div>
-      <TextField
-        onChange={(event) => {
-          setDiagnosis(event.target.value);
-        }}
-        value={diagnosis}
-        id="outlined-multiline-static"
-        size="small"
-        sx={{
-          width: "100%",
-          color: "#fff",
-        }}
-        multiline
-        rows={1}
-        label={
-          <FormattedMessage
-            id={"Medical Diagnosis"}
-            defaultMessage="Hello, World!"
-          />
-        }
-        // defaultValue="Hello World"
-      />
-      {!loading ? (
-        <MedicalFormChipAutoComplete
-          AutoCompletevalue={autoCompleteList.rxMedicalDiagnosis}
-          formDataValue={diagnosis}
-          handleInputChange={handleInputChange}
-          target={"diagnosis"}
-        ></MedicalFormChipAutoComplete>
+      {props.settingData ? (
+        props.settingData.billSelectFromGroup ? (
+          <div className="  w-1/2 h-[80vh] flex flex-col item-center bg-white p-5 overflow-y-scroll">
+            <div className="gap-4 flex flex-col justify-center">
+              {props.groupList.map((group) => (
+                <>
+                  <div
+                    onClick={() => {
+                      setPharmGroupSelected(
+                        pharmGroupSelected !== group.name ? `${group.name}` : ""
+                      );
+                    }}
+                    className="w-full flex justify-center items-center bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer"
+                  >
+                    {group.name}
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    {pharmGroupSelected == group.name ? (
+                      <div className="flex gap-4  flex-col justify-center items-center">
+                        {group.pharmaceutical.map((pharm) => (
+                          <div
+                            onClick={() => {
+                              if (
+                                !props.pharmaceListInside.find(
+                                  (obj) => obj.id._id === pharm._id
+                                )
+                              ) {
+                                handleAddFromGroup(pharm._id);
+                              }
+                              console.log(pharm._id);
+                            }}
+                            className={
+                              props.pharmaceListInside.find(
+                                (obj) => obj.id._id === pharm._id
+                              )
+                                ? "text-red-400 hover:opacity-80 cursor-pointer w-full h-12 hover:bg-gray-100 flex justify-center items-center "
+                                : "text-green-400 hover:opacity-80 cursor-pointer w-full h-12 hover:bg-gray-100 flex justify-center items-center"
+                            }
+                          >
+                            {pharm.name}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </>
+              ))}
+            </div>
+          </div>
+        ) : (
+          ""
+        )
       ) : (
         ""
       )}
 
-      <div className="w-full">
-        <h5>
-          {" "}
-          <FormattedMessage
-            id={"NextVisitDate"}
-            defaultMessage="Hello, World!"
-          />
-        </h5>
-        <LocalizationProvider
-          size="small"
-          className=" w-full"
-          dateAdapter={AdapterDayjs}
-        >
-          <DateTimePicker
-            renderInput={(props) => <TextField {...props} />}
-            format="DD/MM/YYYY HH:mm"
-            onChange={(newValue) => setNextVisit(newValue.$d)}
-            className="w-full"
-          />
-        </LocalizationProvider>
-      </div>
-
-      <div className=" text-right flex w-full gap-[74%]">
-        <h5>
-          <FormattedMessage
-            id={"prescription"}
-            defaultMessage="Hello, World!"
-          />
-        </h5>
-        <h5>
-          {" "}
-          <FormattedMessage id={"No.dosage"} defaultMessage="Hello, World!" />
-        </h5>
-      </div>
-      <div className="w-full ">
-        <div className="">
-          <div className="flex gap-4 justify-center mb-2 items-center">
+      <div
+        className={`${
+          props.settingData.billSelectFromGroup ? `w-2/3` : `w-full`
+        }  h-full bg-white p-4 `}
+        style={{ direction: locale === "en" ? "ltr" : "rtl" }}
+      >
+        <div className=" text-right w-full">
+          <h5>
             <Autocomplete
-              freeSolo
               size="small"
               disableListWrap
               disablePortal
               id="combo-box-demo"
-              options={props.pharmaceList}
-              getOptionLabel={(option) => {
-                return `${option.name} ${
-                  option.tradeName ? `(${option.tradeName})` : ""
-                }`;
-              }}
+              options={props.groupList}
               filterOptions={filterOptions}
+              getOptionLabel={(option) => {
+                return `${option.name}`;
+              }}
               sx={{ width: "33%" }}
               onChange={(event, newValue) => {
-                setValue(newValue);
+                handeAddGroupBill(newValue);
               }}
               inputValue={inputValue}
-              onInputChange={(event, newInputValue) => {
-                setValue(null);
-                setBillId("");
-                setInputValue(newInputValue);
-              }}
-              isOptionEqualToValue={(option, value) =>
-                option.name === value || option.tradeName === value
-              }
+              onInputChange={(event, newInputValue) => {}}
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label={
-                    <FormattedMessage
-                      id={"Drug name"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                />
+                <TextField {...params} label={"اضافة كروب ادوية"} />
               )}
+            />{" "}
+            <FormattedMessage
+              id={"Medical Diagnosis"}
+              defaultMessage="Hello, World!"
             />
-            {pharmaceuticalInputs ? (
-              <>
-                <TextField
-                  id="outlined-required"
-                  size="small"
-                  value={tradeName}
-                  onChange={(event) => {
-                    setTradeName(event.target.value);
-                  }} // Update the name state
-                  sx={{
-                    width: "42%",
-                    color: "#fff",
-                  }}
-                  label={
-                    <FormattedMessage
-                      id={"Trade name"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                  // defaultValue="Hello World"
-                />
+          </h5>
+        </div>
+        <TextField
+          onChange={(event) => {
+            setDiagnosis(event.target.value);
+          }}
+          value={diagnosis}
+          id="outlined-multiline-static"
+          size="small"
+          sx={{
+            width: "100%",
+            color: "#fff",
+          }}
+          multiline
+          rows={1}
+          label={
+            <FormattedMessage
+              id={"Medical Diagnosis"}
+              defaultMessage="Hello, World!"
+            />
+          }
+          // defaultValue="Hello World"
+        />
+        {!loading ? (
+          <MedicalFormChipAutoComplete
+            AutoCompletevalue={autoCompleteList.rxMedicalDiagnosis}
+            formDataValue={diagnosis}
+            handleInputChange={handleInputChange}
+            target={"diagnosis"}
+          ></MedicalFormChipAutoComplete>
+        ) : (
+          ""
+        )}
 
-                <TextField
-                  id="outlined-required"
-                  size="small"
-                  value={dose}
-                  onChange={(event) => {
-                    setDose(event.target.value);
-                    // handleBillInputChange("dose", event.target.value);
-                  }} // Update the name state
-                  sx={{
-                    width: "42%",
-                    color: "#fff",
-                  }}
-                  label={
-                    <FormattedMessage
-                      id={"Dosage"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                  // defaultValue="Hello World"
-                />
-                {/* First TextField */}
+        <div className="w-full">
+          <h5>
+            {" "}
+            <FormattedMessage
+              id={"NextVisitDate"}
+              defaultMessage="Hello, World!"
+            />
+          </h5>
+          <LocalizationProvider
+            size="small"
+            className=" w-full"
+            dateAdapter={AdapterDayjs}
+          >
+            <DateTimePicker
+              renderInput={(props) => <TextField {...props} />}
+              format="DD/MM/YYYY HH:mm"
+              onChange={(newValue) => setNextVisit(newValue.$d)}
+              className="w-full"
+            />
+          </LocalizationProvider>
+        </div>
 
-                <TextField
-                  id="outlined-required"
-                  size="small"
-                  value={doseNumSecend}
-                  onChange={(event) => {
-                    setDoseNumSecend(event.target.value);
-                  }}
-                  sx={{
-                    width: "10%",
-                    color: "#fff",
-                  }}
-                />
-                <span>X</span>
-                <TextField
-                  id="outlined-required"
-                  size="small"
-                  value={doseNumFirst}
-                  onChange={(event) => {
-                    setDoseNumFirst(event.target.value);
-                  }}
-                  sx={{
-                    width: "10%",
-                    color: "#fff",
-                  }}
-                />
-              </>
-            ) : (
-              ""
-            )}
-          </div>
-          <div className="flex justify-between gap-3">
-            {pharmaceuticalInputs ? (
-              <>
-                <FormControl className=" w-1/3 bg-whiteh" size="small">
-                  <InputLabel id="demo-simple-select-helper-label">
-                    <FormattedMessage
-                      id={"Take time"}
-                      defaultMessage="Hello, World!"
-                    />
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-helper-label"
-                    id="demo-simple-select-helper"
-                    value={inTakeTime}
+        <div className=" text-right flex w-full gap-[74%]">
+          <h5>
+            <FormattedMessage
+              id={"prescription"}
+              defaultMessage="Hello, World!"
+            />
+          </h5>
+          <h5>
+            {" "}
+            <FormattedMessage id={"No.dosage"} defaultMessage="Hello, World!" />
+          </h5>
+        </div>
+        <div className="w-full ">
+          <div className="">
+            <div className="flex gap-4 justify-center mb-2 items-center">
+              <Autocomplete
+                freeSolo
+                size="small"
+                disableListWrap
+                disablePortal
+                id="combo-box-demo"
+                options={props.pharmaceList}
+                getOptionLabel={(option) => {
+                  return `${option.name} ${
+                    option.tradeName ? `(${option.tradeName})` : ""
+                  }`;
+                }}
+                filterOptions={filterOptions}
+                sx={{ width: "33%" }}
+                onChange={(event, newValue) => {
+                  setValue(newValue);
+                }}
+                inputValue={inputValue}
+                onInputChange={(event, newInputValue) => {
+                  setValue(null);
+                  setBillId("");
+                  setInputValue(newInputValue);
+                }}
+                isOptionEqualToValue={(option, value) =>
+                  option.name === value || option.tradeName === value
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
                     label={
                       <FormattedMessage
-                        id={"Take time"}
+                        id={"Drug name"}
                         defaultMessage="Hello, World!"
                       />
                     }
-                    onChange={(event) => {
-                      setInTakeTime(event.target.value);
-
-                      handleInTakeTimeInputChange(event.target.value);
-                    }}
-                  >
-                    {props.inTakeTimeList.map((inTakeTime, index) => (
-                      <MenuItem value={inTakeTime._id}>
-                        {inTakeTime.name}
-                      </MenuItem>
-                    ))}
-                    <MenuItem value={"other"}>
-                      {" "}
-                      <FormattedMessage
-                        id={"other"}
-                        defaultMessage="Hello, World!"
-                      />
-                    </MenuItem>
-                  </Select>
-                </FormControl>
-                {showInTakeOtherInput ? (
+                  />
+                )}
+              />
+              {pharmaceuticalInputs ? (
+                <>
                   <TextField
                     id="outlined-required"
                     size="small"
-                    value={inTakeTimeOther}
+                    value={tradeName}
                     onChange={(event) => {
-                      setInTakeTimeOther(event.target.value);
+                      setTradeName(event.target.value);
                     }} // Update the name state
                     sx={{
-                      width: "33%",
+                      width: "42%",
                       color: "#fff",
                     }}
                     label={
                       <FormattedMessage
-                        id={"time to take"}
+                        id={"Trade name"}
                         defaultMessage="Hello, World!"
                       />
                     }
-
                     // defaultValue="Hello World"
                   />
-                ) : (
-                  ""
-                )}
 
-                <TextField
-                  id="outlined-multiline-static"
-                  size="small"
-                  sx={{
-                    width: "33%",
-                    color: "#fff",
-                  }}
-                  onChange={(event) => {
-                    setDescription(event.target.value);
-                  }}
-                  label={
-                    <FormattedMessage
-                      id={"Notes"}
-                      defaultMessage="Hello, World!"
+                  <TextField
+                    id="outlined-required"
+                    size="small"
+                    value={dose}
+                    onChange={(event) => {
+                      setDose(event.target.value);
+                      // handleBillInputChange("dose", event.target.value);
+                    }} // Update the name state
+                    sx={{
+                      width: "42%",
+                      color: "#fff",
+                    }}
+                    label={
+                      <FormattedMessage
+                        id={"Dosage"}
+                        defaultMessage="Hello, World!"
+                      />
+                    }
+                    // defaultValue="Hello World"
+                  />
+                  {/* First TextField */}
+
+                  <TextField
+                    id="outlined-required"
+                    size="small"
+                    value={doseNumSecend}
+                    onChange={(event) => {
+                      setDoseNumSecend(event.target.value);
+                    }}
+                    sx={{
+                      width: "10%",
+                      color: "#fff",
+                    }}
+                  />
+                  <span>X</span>
+                  <TextField
+                    id="outlined-required"
+                    size="small"
+                    value={doseNumFirst}
+                    onChange={(event) => {
+                      setDoseNumFirst(event.target.value);
+                    }}
+                    sx={{
+                      width: "10%",
+                      color: "#fff",
+                    }}
+                  />
+                </>
+              ) : (
+                ""
+              )}
+            </div>
+            <div className="flex justify-between gap-3">
+              {pharmaceuticalInputs ? (
+                <>
+                  <FormControl className=" w-1/3 bg-whiteh" size="small">
+                    <InputLabel id="demo-simple-select-helper-label">
+                      <FormattedMessage
+                        id={"Take time"}
+                        defaultMessage="Hello, World!"
+                      />
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-helper-label"
+                      id="demo-simple-select-helper"
+                      value={inTakeTime}
+                      label={
+                        <FormattedMessage
+                          id={"Take time"}
+                          defaultMessage="Hello, World!"
+                        />
+                      }
+                      onChange={(event) => {
+                        setInTakeTime(event.target.value);
+                        handleInTakeTimeInputChange(event.target.value);
+                      }}
+                    >
+                      {props.inTakeTimeList.map((inTakeTime, index) => (
+                        <MenuItem value={inTakeTime._id}>
+                          {inTakeTime.name}
+                        </MenuItem>
+                      ))}
+                      <MenuItem value={"other"}>
+                        {" "}
+                        <FormattedMessage
+                          id={"other"}
+                          defaultMessage="Hello, World!"
+                        />
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                  {showInTakeOtherInput ? (
+                    <TextField
+                      id="outlined-required"
+                      size="small"
+                      value={inTakeTimeOther}
+                      onChange={(event) => {
+                        setInTakeTimeOther(event.target.value);
+                      }} // Update the name state
+                      sx={{
+                        width: "33%",
+                        color: "#fff",
+                      }}
+                      label={
+                        <FormattedMessage
+                          id={"time to take"}
+                          defaultMessage="Hello, World!"
+                        />
+                      }
+
+                      // defaultValue="Hello World"
                     />
-                  }
-                  // defaultValue="Hello World"
-                />
-              </>
-            ) : (
-              ""
-            )}
+                  ) : (
+                    ""
+                  )}
 
-            <Button
-              sx={{ width: "33%" }}
-              variant="contained"
-              className="w-full"
-              color="success"
-              onClick={handeAddBill}
-            >
-              <FormattedMessage
-                id={"Adding medication"}
-                defaultMessage="Hello, World!"
-              />
-            </Button>
+                  <TextField
+                    id="outlined-multiline-static"
+                    size="small"
+                    sx={{
+                      width: "33%",
+                      color: "#fff",
+                    }}
+                    onChange={(event) => {
+                      setDescription(event.target.value);
+                    }}
+                    label={
+                      <FormattedMessage
+                        id={"Notes"}
+                        defaultMessage="Hello, World!"
+                      />
+                    }
+                    // defaultValue="Hello World"
+                  />
+                </>
+              ) : (
+                ""
+              )}
+
+              <Button
+                sx={{ width: "33%" }}
+                variant="contained"
+                className="w-full"
+                color="success"
+                onClick={handeAddBill}
+              >
+                <FormattedMessage
+                  id={"Adding medication"}
+                  defaultMessage="Hello, World!"
+                />
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-      <BillTable
-        midscapeData={props.midscapeData}
-        onBillInsideRemove={props.onBillInsideRemove}
-        pharmaceList={props.pharmaceListInside}
-      ></BillTable>
-      {props.userData && props.userData.length > 0 ? (
-        <div>
-          المريض يعاني حساسية من :{" "}
-          <span className=" text-red-700">{props.userData}</span>
+        <BillTable
+          midscapeData={props.midscapeData}
+          onBillInsideRemove={props.onBillInsideRemove}
+          pharmaceList={props.pharmaceListInside}
+        ></BillTable>
+        {props.userData && props.userData.length > 0 ? (
+          <div>
+            المريض يعاني حساسية من :{" "}
+            <span className=" text-red-700">{props.userData}</span>
+          </div>
+        ) : (
+          ""
+        )}
+        {props.midscapeData && props.midscapeData.length > 0 ? (
+          <p className="text-left text-sm text-red-700">
+            {props.midscapeData.map((midscapedata) => midscapedata.text)}
+          </p>
+        ) : (
+          ""
+        )}
+        <div className="flex gap-6 w-full justify-between">
+          <IconButton>
+            {/* <PrintRounded color="action"></PrintRounded> */}
+          </IconButton>
+          <Button
+            sx={{ width: "33%" }}
+            type="submit"
+            variant="contained"
+            className="w-full"
+            color="success"
+          >
+            <FormattedMessage
+              id={"Add a prescription"}
+              defaultMessage="Hello, World!"
+            />
+          </Button>
+          <IconButton onClick={props.onPrinterClick}>
+            <PrintRounded color="action"></PrintRounded>
+          </IconButton>
         </div>
-      ) : (
-        ""
-      )}
-      {props.midscapeData && props.midscapeData.length > 0 ? (
-        <p className="text-left text-sm text-red-700">
-          {props.midscapeData.map((midscapedata) => midscapedata.text)}
-        </p>
-      ) : (
-        ""
-      )}
-      <div className="flex gap-6 w-full justify-between">
-        <IconButton>
-          {/* <PrintRounded color="action"></PrintRounded> */}
-        </IconButton>
-        <Button
-          sx={{ width: "33%" }}
-          type="submit"
-          variant="contained"
-          className="w-full"
-          color="success"
-        >
-          <FormattedMessage
-            id={"Add a prescription"}
-            defaultMessage="Hello, World!"
-          />
-        </Button>
-        <IconButton onClick={props.onPrinterClick}>
-          <PrintRounded color="action"></PrintRounded>
-        </IconButton>
       </div>
     </form>
   );
