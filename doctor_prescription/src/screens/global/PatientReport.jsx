@@ -752,7 +752,7 @@ function PatientReport(props) {
                       ""
                     )}
                   </thead>
-                ) : (
+                ) : props.dataToPrint.type != "Lab" ? (
                   <div className="text-center text-2xl">
                     <p
                       style={{
@@ -763,6 +763,8 @@ function PatientReport(props) {
                       {props.medicalReportsStype.reportHeaderName}
                     </p>
                   </div>
+                ) : (
+                  ""
                 )}
 
                 {!props.dataToPrint.textonly ? (

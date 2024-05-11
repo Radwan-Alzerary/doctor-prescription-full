@@ -65,7 +65,18 @@ router.post("/postpharmaceuticalgroup", async (req, res) => {
   try {
     console.log(req.body);
     const billData = {};
+    if (req.body.inTakeTime == "other") {
+      billData.anotherIntaketime = req.body.inTakeTimeOther;
+    } else {
+      billData.inTakeTime = req.body.inTakeTime;
+    }
+    billData.dose = req.body.dose;
+    billData.tradeName = req.body.tradeName;
+    billData.doseNum = req.body.doseNum;
+    billData.description = req.body.description;
     billData.id = req.body.billId;
+
+
 
     const PrescriptionId = req.body.PrescriptionId;
 
@@ -271,7 +282,7 @@ router.get("/getall", async (req, res) => {
 // Get one Pharmaceutical by ID
 router.get("/getone/:id", async (req, res) => {
   try {
-    const prescription = await Prescription.findById(req.params.id);
+    const prescription = await Prescription.findById(req.params.id).populate("intaketime");
     if (!prescription) {
       return res.status(404).json({ error: "Pharmaceutical not found" });
     }

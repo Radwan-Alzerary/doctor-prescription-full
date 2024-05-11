@@ -116,7 +116,7 @@ function Row(props) {
           >
             <div className="flex justify-center items-center gap-4">
               {row.name}
-              {row.bookedPriority > 0 ? (
+              {row.bookmedicalReportsStypeedPriority > 0 ? (
                 <div className=" bg-cyan-500 rounded-full w-8 h-8 flex justify-center items-center">
                   {row.bookedPriority}
                 </div>
@@ -1107,6 +1107,7 @@ function Partients() {
     axios
       .post(`${serverAddress}/prescription/postpharmaceuticalgroup`, data)
       .then((response) => {
+        
         // Handle the response if needed
         getAllPrescription(data.PrescriptionId);
       })
@@ -1194,6 +1195,23 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   };
+  const HandleonPrinterLabClickText = (data) => {
+    axios
+      .get(`${serverAddress}/patients/medicalinfo/${partientsSelectId}`)
+      .then((response) => {
+        setDataToPrint({
+          patients: response.data,
+          textonly: true,
+          data: data,
+          type: "Lab",
+        }); // Update the categories state with the fetched data
+        setprints(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
+
   const handleNewReportData = (data) => {
     axios
       .post(`${serverAddress}/medicalreports/new`, { data })
@@ -1751,7 +1769,6 @@ function Partients() {
                       settingData.patientsTable &&
                       settingData.patientsTable.patientAddPrescription ? (
                         <TableCell align="center">
-                          {" "}
                           <FormattedMessage
                             id={"Rx"}
                             defaultMessage="Hello, World!"
@@ -1994,8 +2011,10 @@ function Partients() {
             }}
           ></BackGroundShadow>
           <NewMedicalReporyForm
+            medicalReportsStype={medicalReportsStype}
             partientsSelectId={partientsSelectId}
             type="edit"
+            changeReportHeaderName={changeReportHeaderName}
             data={selectedReport}
             onFormSubmit={handleEditReportData}
           ></NewMedicalReporyForm>
@@ -2008,7 +2027,7 @@ function Partients() {
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <AddLaboratoryExamination
             partientsSelectId={partientsSelectId}
-            onPrinterClick={HandleonPrinterClickText}
+            onPrinterClick={HandleonPrinterLabClickText}
             onFormSubmit={handleNewLaboryData}
           ></AddLaboratoryExamination>
         </>
@@ -2037,7 +2056,7 @@ function Partients() {
           ></BackGroundShadow>
           <AddLaboratoryExamination
             partientsSelectId={partientsSelectId}
-            onPrinterClick={HandleonPrinterClickText}
+            onPrinterClick={HandleonPrinterLabClickText}
             onFormSubmit={handleEditLabReportData}
             type="edit"
             data={selectedaLabory}

@@ -95,7 +95,7 @@ function NewPharmaceuticalForm(props) {
             labelId="demo-simple-select-helper-label"
             id="demo-simple-select-helper"
             // value={age}
-            required
+            // required
             value={formData.category}
             onChange={(event) =>
               handleInputChange("category", event.target.value)

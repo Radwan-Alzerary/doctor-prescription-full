@@ -91,10 +91,31 @@ function EditPartients(props) {
       groups.pharmaceutical.forEach((group) => {
         console.log(group);
         const dataBillForm = {};
-        dataBillForm.billId = group;
-        dataBillForm.PrescriptionId = props.PrescriptionId;
+        axios
+        .get(`${serverAddress}/pharmaceutical/getone/${group._id}`)
+        .then((response) => {
 
-        props.onBillGroupAdded(dataBillForm);
+          console.log(response.data);
+
+          dataBillForm.dose = response.data.dose;
+          dataBillForm.x = response.data.dose;
+          dataBillForm.billId = response.data._id;
+          dataBillForm.tradeName = response.data.tradeName;
+          dataBillForm.billName = response.data.inputValue;
+          dataBillForm.doseNum = response.data.doseCount;
+          dataBillForm.inTakeTime = response.data.inTakeTime;
+          dataBillForm.inTakeTimeOther = response.data.inTakeTimeOther;
+          dataBillForm.description = response.data.description;      
+          dataBillForm.PrescriptionId = props.PrescriptionId;
+          props.onBillGroupAdded(dataBillForm);
+
+          
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+  
+
 
         // Assuming you want to log each item in the pharmaceutical group
       });

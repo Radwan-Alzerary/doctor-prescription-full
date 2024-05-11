@@ -698,7 +698,6 @@ router.post("/bookpatents", async (req, res) => {
         bookedDate: Date.now(),
         bookedPriority: currentPatient.booked ? 0 : bookedCount + 1,
       },
-
       {
         new: true,
       }

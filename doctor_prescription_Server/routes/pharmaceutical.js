@@ -9,6 +9,10 @@ const fs = require("fs");
 router.post("/new", async (req, res) => {
   try {
     const pharmaceuticalData = req.body;
+    if (pharmaceuticalData.category === '') {
+      delete pharmaceuticalData.category;
+    }
+    
     console.log(pharmaceuticalData);
     if (req.body.intaketime === "") {
       delete pharmaceuticalData.intaketime;
