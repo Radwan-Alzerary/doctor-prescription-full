@@ -282,7 +282,7 @@ router.get("/getall", async (req, res) => {
 // Get one Pharmaceutical by ID
 router.get("/getone/:id", async (req, res) => {
   try {
-    const prescription = await Prescription.findById(req.params.id).populate("intaketime");
+    const prescription = await Prescription.findById(req.params.id);
     if (!prescription) {
       return res.status(404).json({ error: "Pharmaceutical not found" });
     }
