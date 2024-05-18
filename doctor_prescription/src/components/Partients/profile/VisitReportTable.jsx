@@ -27,13 +27,15 @@ export default function VisitReportTable(props) {
         return formattedDate;
       },
     },
-    { field: "chiefComplaint", headerName: "تفاصيل التشخيص المرضي", width: "330" },
-    { field: "investigation", headerName: "الفحص السريري", width: "330" },
-    { field: "diagnosis", headerName: "التشخيص", width: "330" },
+    { field: "CauseOfVisite", headerName: "سبب الزيارة", width: "120" },
+    { field: "chiefComplaint", headerName: "تفاصيل التشخيص المرضي", width: "120" },
+    { field: "investigation", headerName: "الفحص السريري", width: "120" },
+    { field: "diagnosis", headerName: "التشخيص", width: "80" },
+    { field: "management", headerName: "الادارية", width: "80" },
     {
       field: "actions",
       headerName: "الخيارات",
-      width: 150,
+      width: 100,
       renderCell: (params) => (
         <div className="flex justify-center items-center">
           <IconButton
