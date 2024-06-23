@@ -194,18 +194,18 @@ router.get("/getall/:page", async (req, res) => {
           updatedAt: -1, // Sort by 'updatedAt' field in descending order
         };
       } else {
-        if (setting.patientsTable.defultSort === "nameAsc") sort["name"] = -1;
-        if (setting.patientsTable.defultSort === "nameDesc") sort["name"] = 1;
+        if (setting.patientsTable.defultSort === "nameAsc") sort["name"] = 1;
+        if (setting.patientsTable.defultSort === "nameDesc") sort["name"] = -1;
         if (setting.patientsTable.defultSort === "autoAsc")
-          sort["createdAt"] = -1;
-        if (setting.patientsTable.defultSort === "autoDesc")
           sort["createdAt"] = 1;
+        if (setting.patientsTable.defultSort === "autoDesc")
+          sort["createdAt"] = -1;
         if (setting.patientsTable.defultSort === "manualAsc")
-          sort["Sequence"] = -1;
-        if (setting.patientsTable.defultSort === "manualDesc")
           sort["Sequence"] = 1;
-        if (setting.patientsTable.defultSort === "ageAsc") sort["age"] = -1;
-        if (setting.patientsTable.defultSort === "ageDesc") sort["age"] = 1;
+        if (setting.patientsTable.defultSort === "manualDesc")
+          sort["Sequence"] = -1;
+        if (setting.patientsTable.defultSort === "ageAsc") sort["age"] = 1;
+        if (setting.patientsTable.defultSort === "ageDesc") sort["age"] = -1;
       }
     }
     let dateFilter = {};

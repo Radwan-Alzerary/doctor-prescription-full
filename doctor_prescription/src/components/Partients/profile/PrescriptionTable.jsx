@@ -4,7 +4,6 @@ import { IconButton } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { blue, red } from "@mui/material/colors";
 
-
 export default function PrescriptionTable(props) {
   const columns = [
     {
@@ -22,7 +21,7 @@ export default function PrescriptionTable(props) {
         )} ${String(createdAt.getHours()).padStart(2, "0")}:${String(
           createdAt.getMinutes()
         ).padStart(2, "0")}`;
-  
+
         return formattedDate;
       },
     },
@@ -34,8 +33,8 @@ export default function PrescriptionTable(props) {
       valueGetter: (params) => {
         const pharmaceuticalArray = params.row.pharmaceutical;
         // Extract the id and name properties from each item in the array
-        const pharmaceuticalNames = pharmaceuticalArray.map(
-          (item) => item.id.name
+        const pharmaceuticalNames = pharmaceuticalArray.map((item) =>
+          item.id ? item.id.name : "غير معروف"
         );
         console.log(pharmaceuticalNames);
         // Join the extracted names into a string and display it in the cell
@@ -50,7 +49,10 @@ export default function PrescriptionTable(props) {
         <div className="flex justify-center items-center">
           <IconButton
             onClick={() => {
-              props.onPrescriptionDeleteHande(props.partientsProfileId,params.row._id);
+              props.onPrescriptionDeleteHande(
+                props.partientsProfileId,
+                params.row._id
+              );
             }}
             sx={{ color: red[400] }}
             className=" hover:text-red-600"
@@ -60,7 +62,10 @@ export default function PrescriptionTable(props) {
           </IconButton>
           <IconButton
             onClick={() => {
-              props.onPrescriptionEditHandel(props.partientsProfileId,params.row._id);
+              props.onPrescriptionEditHandel(
+                props.partientsProfileId,
+                params.row._id
+              );
             }}
             sx={{ color: blue[400] }}
             className=" hover:text-red-600"
@@ -71,9 +76,8 @@ export default function PrescriptionTable(props) {
         </div>
       ),
     },
-  
   ];
-  
+
   return (
     <div style={{ height: 400, width: "100%" }}>
       <DataGrid
