@@ -9,11 +9,12 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { PrintRounded } from "@mui/icons-material";
+import { CloseSharp, PrintRounded } from "@mui/icons-material";
 import { FormattedMessage } from "react-intl";
 import Cookies from "js-cookie";
 import axios from "axios";
 import MedicalFormChipAutoComplete from "./MedicalFormChipAutoComplete";
+import { red } from "@mui/material/colors";
 
 function VisitForm({
   onFormSubmit,
@@ -21,6 +22,8 @@ function VisitForm({
   onPrinterClick,
   type,
   data,
+  screenMode,
+  handleExit,
 }) {
   // Define state to store form input data
   const [formData, setFormData] = useState({
@@ -33,6 +36,7 @@ function VisitForm({
     management: "",
     type: "",
     patientId: partientsSelectId,
+    priority: "",
   });
   useEffect(() => {
     if (type === "edit") {
@@ -45,7 +49,7 @@ function VisitForm({
         CauseOfVisite: data.CauseOfVisite,
         management: data.management,
         PriorChronicTherapy: data.PriorChronicTherapy,
-
+        priority: data.priority,
         type: data.type,
         patientId: partientsSelectId,
       });
@@ -97,11 +101,26 @@ function VisitForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
+      className={`fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center ${
+        screenMode ? "h-[100%] w-full p-4" : "w-3/5 "
+      } }  bg-white p-5 rounded-xl z-50`}
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
       }}
     >
+      {screenMode ? (
+        <div className=" flex justify-start items-start text-right w-full ">
+          <IconButton
+            onClick={() => {
+              handleExit();
+            }}
+          >
+            <CloseSharp className=" text-red-700  top-5 right-5"></CloseSharp>
+          </IconButton>
+        </div>
+      ) : (
+        ""
+      )}
       <div className=" text-right w-full">
         <h5>
           {" "}
@@ -241,7 +260,7 @@ function VisitForm({
           }
           // defaultValue="Hello World"
         />
-        {!loading  && textSelector === "investigation"? (
+        {!loading && textSelector === "investigation" ? (
           <MedicalFormChipAutoComplete
             AutoCompletevalue={autoCompleteList.visitinvestigation}
             formDataValue={formData.investigation}
@@ -261,7 +280,6 @@ function VisitForm({
             // Your click handler code here
             setTextSelector("diagnosis");
           }}
-
           onChange={(event) =>
             handleInputChange("diagnosis", event.target.value)
           } // Update the name state
@@ -274,7 +292,7 @@ function VisitForm({
           }
           // defaultValue="Hello World"
         />
-        {!loading  && textSelector === "diagnosis"? (
+        {!loading && textSelector === "diagnosis" ? (
           <MedicalFormChipAutoComplete
             AutoCompletevalue={autoCompleteList.visitdiagnosis}
             formDataValue={formData.diagnosis}
@@ -301,7 +319,6 @@ function VisitForm({
             // Your click handler code here
             setTextSelector("management");
           }}
-
           label={
             <FormattedMessage
               id={"management"}
@@ -310,7 +327,7 @@ function VisitForm({
           }
           // defaultValue="Hello World"
         />
-        {!loading  && textSelector === "management"? (
+        {!loading && textSelector === "management" ? (
           <MedicalFormChipAutoComplete
             AutoCompletevalue={autoCompleteList.visitManagement}
             formDataValue={formData.management}
@@ -336,6 +353,35 @@ function VisitForm({
         >
           <MenuItem value={"زيارة"}>زيارة</MenuItem>
           <MenuItem value={"مراجعة"}>مراجعة</MenuItem>
+        </Select>
+      </FormControl>
+      <FormControl className=" w-1/3 bg-whiteh" size="small">
+        <InputLabel id="demo-simple-select-helper-label">الاولوية </InputLabel>
+        <Select
+          labelId="demo-simple-select-helper-label"
+          id="demo-simple-select-helper"
+          // value={age}
+          value={formData.priority}
+          onChange={(event) =>
+            handleInputChange("priority", event.target.value)
+          } // Update the name state
+          label="الاولوية"
+          // onChange={handleAgeChange}
+        >
+          <MenuItem value={"normal"}>اعتيادية</MenuItem>
+          <MenuItem value={"medium"} sx={{ backgroundColor: red[200] }}>
+            متوسطة
+          </MenuItem>
+          <MenuItem value={"high"} sx={{ backgroundColor: red[300] }}>
+            عالية
+          </MenuItem>
+          <MenuItem
+            className=" bg-red-200"
+            sx={{ backgroundColor: red[400] }}
+            value={"dangers"}
+          >
+            خطيرة
+          </MenuItem>
         </Select>
       </FormControl>
       <div className="flex gap-6 w-full justify-between">

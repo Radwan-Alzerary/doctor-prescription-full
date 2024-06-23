@@ -1,5 +1,5 @@
-import { VerifiedUser } from "@mui/icons-material";
-import { Avatar, Chip } from "@mui/material";
+import { CloseSharp, VerifiedUser } from "@mui/icons-material";
+import { Avatar, Chip, IconButton } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import MedicalReportTable from "./profile/MedicalReportTable";
@@ -44,8 +44,27 @@ function PartientsProfile(props) {
   };
 
   return (
-    <form className="fixed flex flex-col  left-[50%] top-[50%]  transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 h-[85%] bg-slate-50 p-5 rounded-xl z-30">
-      <div className="  w-full flex flex-col  text-center items-center">
+    <form
+      className={`fixed flex flex-col  left-[50%] top-[50%]  transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center ${
+        props.screenMode ? "h-[100%] w-full p-4" : "w-3/5 h-[85%] "
+      } }  bg-slate-50 p-5 rounded-xl z-30`}
+    >
+         {props.screenMode ? (
+        <div className=" flex justify-start items-start text-right w-full ">
+          <IconButton
+            onClick={() => {
+              props.handleExit()
+            }}
+          >
+            <CloseSharp className=" text-red-700  top-5 right-5"></CloseSharp>
+          </IconButton>
+        </div>
+      ) : (
+        ""
+      )}
+
+
+      <div className="w-full flex flex-col  text-center items-center">
         <Avatar
           className="w-full"
           alt={partientsProfile.name}

@@ -5,7 +5,7 @@ import {
   IconButton,
   TextField,
 } from "@mui/material";
-import { PrintRounded } from "@mui/icons-material";
+import { CloseSharp, PrintRounded } from "@mui/icons-material";
 import VoiceRecoed from "../../screens/global/VoiceRecoed";
 import Cookies from "js-cookie";
 import { FormattedMessage } from "react-intl";
@@ -23,9 +23,13 @@ function NewMedicalReporyForm({
   type,
   data,
   medicalReportsStype,
-  changeReportHeaderName
+  changeReportHeaderName,
+  screenMode,
+  handleExit
 }) {
-const [headerName,setHeaderName]=useState(medicalReportsStype.reportHeaderName )
+  const [headerName, setHeaderName] = useState(
+    medicalReportsStype.reportHeaderName
+  );
   // Define state to store form input data
   const [formData, setFormData] = useState({
     report: "",
@@ -45,9 +49,9 @@ const [headerName,setHeaderName]=useState(medicalReportsStype.reportHeaderName )
   const currentURL = window.location.origin; // Get the current URL
   const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
 
-  useEffect(()=>{
-    changeReportHeaderName(headerName)
-  },[headerName])
+  useEffect(() => {
+    changeReportHeaderName(headerName);
+  }, [headerName]);
   // Handle form submission
 
   const handleSubmit = (event) => {
@@ -55,7 +59,7 @@ const [headerName,setHeaderName]=useState(medicalReportsStype.reportHeaderName )
     // Call the onFormSubmit function passed as a prop with the formData
     onFormSubmit(formData);
   };
- 
+
   // Handle changes in form fields
   const handleInputChange = (name, value) => {
     // Update the formData state with the input data
@@ -68,12 +72,34 @@ const [headerName,setHeaderName]=useState(medicalReportsStype.reportHeaderName )
   return (
     <form
       onSubmit={handleSubmit}
-      className="fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
+      className={`fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center ${
+        screenMode ? "h-[100%] w-full p-4" : "w-3/5"
+      } }  bg-white p-5 rounded-xl z-50`}
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
       }}
     >
-      <TextField value={headerName} size="small" sx={{textAlign:"center"}} onChange={(e)=>{setHeaderName(e.target.value)}}></TextField>
+      {screenMode ? (
+        <div className=" flex justify-start items-start text-right w-full ">
+          <IconButton
+            onClick={() => {
+              handleExit();
+            }}
+          >
+            <CloseSharp className=" text-red-700  top-5 right-5"></CloseSharp>
+          </IconButton>
+        </div>
+      ) : (
+        ""
+      )}
+      <TextField
+        value={headerName}
+        size="small"
+        sx={{ textAlign: "center" }}
+        onChange={(e) => {
+          setHeaderName(e.target.value);
+        }}
+      ></TextField>
       <div className=" text-right w-full">
         <h5>
           {" "}
@@ -87,7 +113,7 @@ const [headerName,setHeaderName]=useState(medicalReportsStype.reportHeaderName )
       <div style={{ direction: "ltr" }} className="w-full my-3">
         <Editor
           value={formData.report}
-          className=" h-56"
+          className={`${screenMode ? "h-96" : "h-56"}   `}
           onTextChange={(e) => handleInputChange("report", e.htmlValue)}
         ></Editor>
       </div>

@@ -1,6 +1,7 @@
 import { use } from "i18next";
 import React, { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
+import QRCode from "qrcode.react";
 
 function PatientReport(props) {
   const componentRef = useRef();
@@ -156,6 +157,24 @@ function PatientReport(props) {
               </div>
             ))
           : ""}
+
+        {props.medicalReportsStype.barcodeActive ? (
+          <div className=" absolute"
+            style={{
+              left: `${props.medicalReportsStype.barcodeX}%`,
+              top: `${props.medicalReportsStype.barcodeY}%`,
+            }}
+          >
+            <QRCode
+              size={props.medicalReportsStype.barcodeSize}
+              renderAs="svg"
+              level="H"
+              value={props.dataToPrint.patients._id}
+            />
+          </div>
+        ) : (
+          ""
+        )}
 
         {props.medicalReportsStype.nameActive &&
         props.medicalReportsStype.nameAbsoulateActive ? (

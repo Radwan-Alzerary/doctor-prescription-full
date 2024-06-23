@@ -1,8 +1,10 @@
+import { Close, CloseSharp, Remove } from "@mui/icons-material";
 import {
   Autocomplete,
   Button,
   Chip,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -59,9 +61,9 @@ function NewPatientForm(props) {
     fumbling: "",
     diseases: [],
   });
+
   useEffect(() => {
     // setHistoryPatient(props.data.diseases);
-
     if (props.type === "edit") {
       if (props.data.diseases) {
         const diseasesArray = [];
@@ -224,12 +226,27 @@ function NewPatientForm(props) {
 
   return (
     <form
-      className="fixed overflow-scroll h-[90%] flex flex-col  left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-[70%] bg-white p-5 rounded-xl z-50"
+      className={`fixed overflow-scroll  flex flex-col ${
+        props.screenMode ? "h-[100%] w-full p-4" : "h-[90%] w-[70%] "
+      }   left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center  bg-white p-5 rounded-xl z-50`}
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
       }}
     >
+      {props.screenMode ? (
+        <div className=" flex justify-start items-start text-right w-full ">
+          <IconButton
+            onClick={() => {
+              props.handleExit()
+            }}
+          >
+            <CloseSharp className=" text-red-700  top-5 right-5"></CloseSharp>
+          </IconButton>
+        </div>
+      ) : (
+        ""
+      )}
       <div className=" text-right w-full">
         <h5>
           <FormattedMessage
@@ -330,7 +347,7 @@ function NewPatientForm(props) {
             textAlign: "right",
             color: "#fff",
           }}
-          label={   
+          label={
             <FormattedMessage id={"Sequence"} defaultMessage="Hello, World!" />
           }
         />
@@ -597,7 +614,7 @@ function NewPatientForm(props) {
               onChange={(event, newValue) => {
                 handleChange(event, newValue);
                 setHistoryPatient(newValue);
-                console.log(historyPatient)
+                console.log(historyPatient);
               }}
               options={props.constantDiseases.map((option) => option.name)}
               // defaultValue={[top100Films[13].title]}
@@ -683,7 +700,10 @@ function NewPatientForm(props) {
           className="w-full"
           color="success"
         >
-          <FormattedMessage id={"Edit patient"} defaultMessage="Hello, World!" />
+          <FormattedMessage
+            id={"Edit patient"}
+            defaultMessage="Hello, World!"
+          />
         </Button>
       ) : (
         <Button

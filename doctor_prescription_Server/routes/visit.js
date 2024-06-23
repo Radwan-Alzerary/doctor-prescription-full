@@ -87,6 +87,7 @@ router.post("/editone/", async (req, res) => {
       PriorChronicTherapy: req.body.data.PriorChronicTherapy,
       management: req.body.data.management,
       type: req.body.data.type,
+      priority: req.body.data.priority,
     });
 
     res.json(medicalreports);

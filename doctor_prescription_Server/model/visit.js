@@ -9,6 +9,7 @@ const visitSqema = new mongoose.Schema(
     CauseOfVisite: { type: String, default: "" },
     management: { type: String, default: "" },
     type: { type: String, default: "" },
+    priority: { type: String, default: "normal" },
     patients: { type: mongoose.Schema.Types.ObjectId, ref: "Patients" },
   },
   {

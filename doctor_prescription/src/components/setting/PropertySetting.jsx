@@ -7,6 +7,7 @@ function PropertySetting(props) {
     abortProssesMsg: "",
     openEditPrescriptionByClick: "",
     autoBackUp: "",
+    pullUpFullScreenMode:""
   });
 
   const currentURL = window.location.origin; // Get the current URL
@@ -101,10 +102,7 @@ function PropertySetting(props) {
               <Switch
                 checked={property.autoBackUp}
                 onChange={(event) => {
-                  handleInputChange(
-                    "autoBackUp",
-                    !property.autoBackUp
-                  );
+                  handleInputChange("autoBackUp", !property.autoBackUp);
                 }}
                 color="primary"
               />
@@ -131,7 +129,26 @@ function PropertySetting(props) {
             }
           />
         </div>
-
+        <div className="flex w-full justify-between items-center">
+          <div>عرض الصفحات المنبثقة على كامل الشاشة</div>
+          <FormControlLabel
+            sx={{
+              display: "block",
+            }}
+            control={
+              <Switch
+                checked={property.pullUpFullScreenMode}
+                onChange={(event) => {
+                  handleInputChange(
+                    "pullUpFullScreenMode",
+                    !property.pullUpFullScreenMode
+                  );
+                }}
+                color="primary"
+              />
+            }
+          />
+        </div>
       </div>
     </div>
   );

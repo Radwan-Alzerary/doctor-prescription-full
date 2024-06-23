@@ -1057,19 +1057,22 @@ function PrescriptionsDesign() {
                       }}
                       control={
                         <Switch
-                        checked={medicalReportsStype.HeaderMidleText[index].active}
-                        onChange={(event) => {
-                          onMiddleLineInput(
-                            "active",
-                            !medicalReportsStype.HeaderMidleText[index].active,
-                            index,
-                            "middle"
-                          );
+                          checked={
+                            medicalReportsStype.HeaderMidleText[index].active
+                          }
+                          onChange={(event) => {
+                            onMiddleLineInput(
+                              "active",
+                              !medicalReportsStype.HeaderMidleText[index]
+                                .active,
+                              index,
+                              "middle"
+                            );
 
-                          console.log(event.target.value);
-                        }}
-                        color="primary"
-                      />
+                            console.log(event.target.value);
+                          }}
+                          color="primary"
+                        />
                       }
                     />
                   </div>
@@ -2429,6 +2432,57 @@ function PrescriptionsDesign() {
             </div>
 
             <div className="flex w-full  mt-4 font-bold">
+              <p>معلومات الباركود</p>
+            </div>
+
+            <div className="flex">
+              <TextField
+                value={medicalReportsStype.barcodeSize}
+                onChange={(event) => {
+                  handleInputChange("barcodeSize", event.target.value);
+                }}
+                label="حجم الباركود"
+                size="small"
+                sx={{ width: "40%" }}
+              ></TextField>
+              <TextField
+                value={medicalReportsStype.barcodeX}
+                onChange={(event) => {
+                  handleInputChange("barcodeX", event.target.value);
+                }}
+                label="X"
+                size="small"
+                sx={{ width: "20%" }}
+              ></TextField>
+              <TextField
+                value={medicalReportsStype.barcodeY}
+                onChange={(event) => {
+                  handleInputChange("barcodeY", event.target.value);
+                }}
+                label="Y"
+                size="small"
+                sx={{ width: "20%" }}
+              ></TextField>
+              <FormControlLabel
+                sx={{
+                  display: "block",
+                }}
+                control={
+                  <Switch
+                    checked={medicalReportsStype.barcodeActive}
+                    onChange={(event) => {
+                      handleInputChange(
+                        "barcodeActive",
+                        !medicalReportsStype.barcodeActive
+                      );
+                    }}
+                    color="primary"
+                  />
+                }
+              />
+            </div>
+
+            <div className="flex w-full  mt-4 font-bold">
               <p>معلومات الصفحة</p>
             </div>
             <div className="flex">
@@ -2510,6 +2564,7 @@ function PrescriptionsDesign() {
                 }
               />
             </div>
+
             <div className="flex w-full  mt-4 font-bold">
               <p>اضافة كتابات اضافية</p>
             </div>

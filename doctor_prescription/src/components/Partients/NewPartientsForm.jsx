@@ -15,7 +15,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-import { PrintRounded } from "@mui/icons-material";
+import { CloseSharp, PrintRounded } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import Cookies from "js-cookie";
@@ -92,30 +92,25 @@ function EditPartients(props) {
         console.log(group);
         const dataBillForm = {};
         axios
-        .get(`${serverAddress}/pharmaceutical/getone/${group._id}`)
-        .then((response) => {
+          .get(`${serverAddress}/pharmaceutical/getone/${group._id}`)
+          .then((response) => {
+            console.log(response.data);
 
-          console.log(response.data);
-
-          dataBillForm.dose = response.data.dose;
-          dataBillForm.x = response.data.dose;
-          dataBillForm.billId = response.data._id;
-          dataBillForm.tradeName = response.data.tradeName;
-          dataBillForm.billName = response.data.inputValue;
-          dataBillForm.doseNum = response.data.doseCount;
-          dataBillForm.inTakeTime = response.data.inTakeTime;
-          dataBillForm.inTakeTimeOther = response.data.inTakeTimeOther;
-          dataBillForm.description = response.data.description;      
-          dataBillForm.PrescriptionId = props.PrescriptionId;
-          props.onBillGroupAdded(dataBillForm);
-
-          
-        })
-        .catch((error) => {
-          console.error("Error fetching categories:", error);
-        });
-  
-
+            dataBillForm.dose = response.data.dose;
+            dataBillForm.x = response.data.dose;
+            dataBillForm.billId = response.data._id;
+            dataBillForm.tradeName = response.data.tradeName;
+            dataBillForm.billName = response.data.inputValue;
+            dataBillForm.doseNum = response.data.doseCount;
+            dataBillForm.inTakeTime = response.data.inTakeTime;
+            dataBillForm.inTakeTimeOther = response.data.inTakeTimeOther;
+            dataBillForm.description = response.data.description;
+            dataBillForm.PrescriptionId = props.PrescriptionId;
+            props.onBillGroupAdded(dataBillForm);
+          })
+          .catch((error) => {
+            console.error("Error fetching categories:", error);
+          });
 
         // Assuming you want to log each item in the pharmaceutical group
       });
@@ -137,10 +132,27 @@ function EditPartients(props) {
   };
   const handleAddFromGroup = (pharmId) => {
     const dataBillForm = {};
-    dataBillForm.billId = pharmId;
-    dataBillForm.PrescriptionId = props.PrescriptionId;
+    axios
+      .get(`${serverAddress}/pharmaceutical/getone/${pharmId}`)
+      .then((response) => {
+        console.log(response.data);
 
-    props.onBillGroupAdded(dataBillForm);
+        dataBillForm.dose = response.data.dose;
+        dataBillForm.x = response.data.dose;
+        dataBillForm.billId = response.data._id;
+        dataBillForm.tradeName = response.data.tradeName;
+        dataBillForm.billName = response.data.inputValue;
+        dataBillForm.doseNum = response.data.doseCount;
+        dataBillForm.inTakeTime = response.data.inTakeTime;
+        dataBillForm.inTakeTimeOther = response.data.inTakeTimeOther;
+        dataBillForm.description = response.data.description;
+        dataBillForm.PrescriptionId = props.PrescriptionId;
+        props.onBillGroupAdded(dataBillForm);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+
   };
   const filterOptions = createFilterOptions({
     ignoreCase: true,
@@ -222,9 +234,13 @@ function EditPartients(props) {
   console.log(props.partientId);
   return (
     <form
-      className={`fixed flex  justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  items-center ${
-        props.settingData.billSelectFromGroup ? "w-[90%]" : "w-3/5"
-      }   p-5 rounded-xl z-50`}
+      className={`fixed flex ${
+        props.screenMode
+          ? "h-[100%] w-full "
+          : props.settingData.billSelectFromGroup
+          ? "w-[90%]"
+          : "w-3/5"
+      } } justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  items-center  p-5 rounded-xl z-50`}
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
@@ -294,6 +310,20 @@ function EditPartients(props) {
         }  h-full bg-white p-4 `}
         style={{ direction: locale === "en" ? "ltr" : "rtl" }}
       >
+        {props.screenMode ? (
+          <div className=" flex justify-start items-start text-right w-full ">
+            <IconButton
+              onClick={() => {
+                props.handleExit();
+              }}
+            >
+              <CloseSharp className=" text-red-700  top-5 right-5"></CloseSharp>
+            </IconButton>
+          </div>
+        ) : (
+          ""
+        )}
+
         <div className=" text-right w-full">
           <h5>
             <Autocomplete

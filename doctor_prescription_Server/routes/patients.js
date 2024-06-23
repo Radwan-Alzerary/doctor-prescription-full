@@ -7,6 +7,7 @@ const multer = require("multer");
 const fs = require("fs");
 const Visit = require("../model/visit"); // Make sure to adjust the path as needed
 const Medicalreports = require("../model/medicalReport"); // Make sure to adjust the path as needed
+const systemSetting = require("../model/systemSetting");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -39,7 +40,7 @@ router.post("/new", async (req, res) => {
     patientsDate.childrenData = req.body.childrenData;
     patientsDate.bloodType = req.body.bloodType;
     patientsDate.description = req.body.description;
-    patientsDate.lastEditDate = Date.now()
+    patientsDate.lastEditDate = Date.now();
     const diseasesArray = req.body.diseases;
     const resultArray = [];
     for (const diseaseName of diseasesArray) {
@@ -90,7 +91,7 @@ router.post("/edit", async (req, res) => {
       }
       ubdateData.diseases = resultArray;
     }
-    ubdateData.lastEditDate = Date.now()
+    ubdateData.lastEditDate = Date.now();
 
     const updatedPatient = await Patients.findByIdAndUpdate(id, ubdateData, {
       new: true,
@@ -116,7 +117,7 @@ router.get("/getall", async (req, res) => {
       })
       .sort({
         booked: -1, // Sort by 'booked' field in descending order
-        lastEditDate:-1,
+        lastEditDate: -1,
         updatedAt: -1,
       }); // Sort by 'updatedAt' field in descending order
     res.json(patients);
@@ -126,12 +127,11 @@ router.get("/getall", async (req, res) => {
 });
 router.get("/getbooked", async (req, res) => {
   try {
-    const patients = await Patients.find({ booked: true })
-      .sort({
-        booked: -1, // Sort by 'booked' field in descending order
-        lastEditDate:-1,
-        updatedAt: -1,
-      }); // Sort by 'updatedAt' field in descending order
+    const patients = await Patients.find({ booked: true }).sort({
+      booked: -1, // Sort by 'booked' field in descending order
+      lastEditDate: -1,
+      updatedAt: -1,
+    }); // Sort by 'updatedAt' field in descending order
     res.json(patients);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -162,7 +162,87 @@ router.get("/getall/:page", async (req, res) => {
     const page = parseInt(req.params.page) || 1; // Get the requested page number, default to 1 if not provided
     const perPage = 20; // Number of documents to display per page
     const skip = (page - 1) * perPage; // Calculate the number of documents to skip
-    const patients = await Patients.find({ name: { $ne: "" } })
+    const setting = await systemSetting.findOne();
+    const sortField = req.query.sort || ""; // Get the sort field from query, default to empty string if not provided
+    const sortOrder = req.query.order === "asc" ? 1 : -1; // Get the sort order from query, default to descending
+
+    let sort = { booked: -1 }; // Always include booked: -1
+
+    console.log(req.query);
+    if (sortField) {
+      // Construct the sort object dynamically based on query parameters
+      sort[sortField] = sortOrder;
+
+      // Additional sort criteria
+      if (sortField !== "name") sort["name"] = -1;
+      if (sortField !== "booked") sort["booked"] = -1;
+      if (sortField !== "gender") sort["gender"] = -1;
+      if (sortField !== "age") sort["age"] = -1;
+      if (sortField !== "Sequence") sort["Sequence"] = -1;
+      if (sortField !== "adresses") sort["adresses"] = -1;
+      if (sortField !== "weight") sort["weight"] = -1;
+      if (sortField !== "length") sort["length"] = -1;
+      if (sortField !== "visitCount") sort["visitCount"] = -1;
+      if (sortField !== "lastEditDate") sort["lastEditDate"] = -1;
+      if (sortField !== "updatedAt") sort["updatedAt"] = -1;
+    } else {
+      // Default sort criteria
+      if (setting.patientsTable.defultSort === "latestUpdate") {
+        sort = {
+          booked: -1, // Sort by 'booked' field in descending order
+          lastEditDate: -1, // Sort by 'lastEditDate' field in descending order
+          updatedAt: -1, // Sort by 'updatedAt' field in descending order
+        };
+      } else {
+        if (setting.patientsTable.defultSort === "nameAsc") sort["name"] = -1;
+        if (setting.patientsTable.defultSort === "nameDesc") sort["name"] = 1;
+        if (setting.patientsTable.defultSort === "autoAsc")
+          sort["createdAt"] = -1;
+        if (setting.patientsTable.defultSort === "autoDesc")
+          sort["createdAt"] = 1;
+        if (setting.patientsTable.defultSort === "manualAsc")
+          sort["Sequence"] = -1;
+        if (setting.patientsTable.defultSort === "manualDesc")
+          sort["Sequence"] = 1;
+        if (setting.patientsTable.defultSort === "ageAsc") sort["age"] = -1;
+        if (setting.patientsTable.defultSort === "ageDesc") sort["age"] = 1;
+      }
+    }
+    let dateFilter = {};
+
+    if (setting.patientsTable.DateViewQuery !== "everytime") {
+      const now = new Date();
+      let startDate;
+      let endDate = now;
+
+      if (setting.patientsTable.DateViewQuery === "day") {
+        startDate = new Date(now.setHours(0, 0, 0, 0));
+        endDate = new Date(now.setHours(23, 59, 59, 999));
+      } else if (setting.patientsTable.DateViewQuery === "month") {
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        endDate = new Date(
+          now.getFullYear(),
+          now.getMonth() + 1,
+          0,
+          23,
+          59,
+          59,
+          999
+        );
+      } else if (setting.patientsTable.DateViewQuery === "year") {
+        startDate = new Date(now.getFullYear(), 0, 1);
+        endDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
+      }
+
+      if (startDate) {
+        dateFilter = {
+          lastEditDate: { $gte: startDate, $lte: endDate },
+        };
+      }
+    }
+    console.log(setting.patientsTable.DateViewQuery)
+    console.log(dateFilter)
+    const patients = await Patients.find({ name: { $ne: "" }, ...dateFilter })
       .populate({
         path: "prescription",
         match: { active: true }, // Filter prescriptions with active: true
@@ -170,18 +250,16 @@ router.get("/getall/:page", async (req, res) => {
           path: "pharmaceutical.id",
         },
       })
-      .sort({
-        booked: -1, // Sort by 'booked' field in descending order
-        lastEditDate:-1,
-        updatedAt: -1,
-      }) // Sort by 'updatedAt' field in descending order
+      .sort(sort) // Apply sorting
       .skip(skip)
       .limit(perPage);
+
     res.json(patients);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
 router.get("/checktoken", async (req, res) => {
   let dayNum = 0;
   try {
@@ -443,28 +521,28 @@ router.post("/galaryimage", upload.single("image"), async (req, res, next) => {
   }
 });
 router.post("/images/delete", async (req, res, next) => {
-  console.log(req.body)
-    const patientId = req.body.id;
-    const imageUrl = req.body.imageUrl
-    try {
-      const updatedPrescription = await Patients.findOneAndUpdate(
-        { _id: patientId },
-        { $pull: { galary:  imageUrl  } },
-        { new: true }
-      );
+  console.log(req.body);
+  const patientId = req.body.id;
+  const imageUrl = req.body.imageUrl;
+  try {
+    const updatedPrescription = await Patients.findOneAndUpdate(
+      { _id: patientId },
+      { $pull: { galary: imageUrl } },
+      { new: true }
+    );
 
     //   // Check if the pharmaceutical item was successfully removed
-      if (updatedPrescription) {
-        res.json(updatedPrescription);
-      } else {
-        res
-          .status(404)
-          .json({ message: "Pharmaceutical not found in this prescription." });
-      }
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Internal Server Error" });
+    if (updatedPrescription) {
+      res.json(updatedPrescription);
+    } else {
+      res
+        .status(404)
+        .json({ message: "Pharmaceutical not found in this prescription." });
     }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 router.put("/edit/:id", async (req, res) => {
   try {

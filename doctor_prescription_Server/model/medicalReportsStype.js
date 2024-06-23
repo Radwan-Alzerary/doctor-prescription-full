@@ -11,6 +11,8 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
     topPading: { type: String, default: 0 },
     bottomPading: { type: String, default: 0 },
 
+
+
     mainNameHeaderColor: { type: String, default: "#EF4444" },
     mainNameHeader: { type: String, default: "اسم الطبيب" },
     mainNameSize: { type: String, default: 1.5 },
@@ -59,6 +61,12 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
       },
     ],
 
+
+
+    barcodeActive:{type:Boolean,default:false},
+    barcodeSize:{type:String,default:100},
+    barcodeX:{type:Number,defult:0},
+    barcodeY:{type:Number,defult:0},
     lineColor: { type: String },
     line: {
       line1Active: { type: Boolean, default: true },

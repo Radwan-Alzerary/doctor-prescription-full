@@ -37,6 +37,8 @@ import { io } from "socket.io-client";
 import { Calendar } from "react-modern-calendar-datepicker";
 import {
   Add,
+  ArrowDropDown,
+  ArrowDropUp,
   Book,
   BookOnline,
   Delete,
@@ -46,6 +48,7 @@ import {
   Medication,
   Report,
   Share,
+  SwapVert,
   Vaccines,
 } from "@mui/icons-material";
 import ContentPasteIcon from "@mui/icons-material/ContentPaste";
@@ -116,7 +119,7 @@ function Row(props) {
           >
             <div className="flex justify-center items-center gap-4">
               {row.name}
-              {row.bookmedicalReportsStypeedPriority > 0 ? (
+              {row.bookedPriority > 0 ? (
                 <div className=" bg-cyan-500 rounded-full w-8 h-8 flex justify-center items-center">
                   {row.bookedPriority}
                 </div>
@@ -591,6 +594,10 @@ function Partients() {
       key: "selection",
     },
   ]);
+
+  const [queryType, setQueryType] = useState("");
+  const [queryOrder, setQueryOrder] = useState("asc");
+
   const socket = useRef();
 
   const [groupList, setGroupList] = useState();
@@ -932,7 +939,13 @@ function Partients() {
   }, []); // The empty array [] means this effect runs only once, like componentDidMount
   const getPatientsList = () => {
     axios
-      .get(`${serverAddress}/patients/getall/${pageSelect}`)
+      .get(`${serverAddress}/patients/getall/${pageSelect}`, {
+        params: {
+          sort: queryType,
+          order: queryOrder,
+        },
+      })
+
       .then((response) => {
         setPatientsList(response.data); // Update the categories state with the fetched data
       })
@@ -1107,7 +1120,6 @@ function Partients() {
     axios
       .post(`${serverAddress}/prescription/postpharmaceuticalgroup`, data)
       .then((response) => {
-        
         // Handle the response if needed
         getAllPrescription(data.PrescriptionId);
       })
@@ -1458,6 +1470,20 @@ function Partients() {
   useEffect(() => {
     getPatientsList();
   }, [pageSelect]);
+
+  useEffect(() => {
+    getPatientsList();
+  }, [queryType, queryOrder]);
+
+  const handleQuerySelect = (query) => {
+    if (queryOrder === "asc") {
+      setQueryOrder("dec");
+    } else {
+      setQueryOrder("asc");
+    }
+    setQueryType(query);
+  };
+
   return (
     <div className="p-2 relative h-[93vh] overflow-scroll">
       {/* {!browserSupportsSpeechRecognition ? (
@@ -1617,15 +1643,37 @@ function Partients() {
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell align="center"># </TableCell>
+                <TableCell
+                  align="center"
+                  onClick={() => {
+                    handleQuerySelect("");
+                  }}
+                >
+                  #{" "}
+                </TableCell>
                 {settingData &&
                 settingData.patientsTable &&
                 settingData.patientsTable.patientName ? (
-                  <TableCell align="right">
+                  <TableCell
+                    align="right"
+                    className=" cursor-pointer"
+                    onClick={() => {
+                      handleQuerySelect("name");
+                    }}
+                  >
                     <FormattedMessage
                       id={"PatientName"}
                       defaultMessage="Hello, World!"
                     />
+                    {queryType === "name" ? (
+                      queryOrder == "asc" ? (
+                        <ArrowDropDown></ArrowDropDown>
+                      ) : (
+                        <ArrowDropUp></ArrowDropUp>
+                      )
+                    ) : (
+                      <SwapVert></SwapVert>
+                    )}
                   </TableCell>
                 ) : (
                   ""
@@ -1645,12 +1693,27 @@ function Partients() {
                 {settingData &&
                 settingData.patientsTable &&
                 settingData.patientsTable.patientAge ? (
-                  <TableCell align="center">
+                  <TableCell
+                    align="center"
+                    onClick={() => {
+                      handleQuerySelect("age");
+                    }}
+                    className=" cursor-pointer"
+                  >
                     {" "}
                     <FormattedMessage
                       id={"AgeTitle"}
                       defaultMessage="Hello, World!"
                     />
+                    {queryType === "age" ? (
+                      queryOrder == "asc" ? (
+                        <ArrowDropDown></ArrowDropDown>
+                      ) : (
+                        <ArrowDropUp></ArrowDropUp>
+                      )
+                    ) : (
+                      <SwapVert></SwapVert>
+                    )}
                   </TableCell>
                 ) : (
                   ""
@@ -1659,12 +1722,27 @@ function Partients() {
                 {settingData &&
                 settingData.patientsTable &&
                 settingData.patientsTable.patientGender ? (
-                  <TableCell align="center">
+                  <TableCell
+                    align="center"
+                    onClick={() => {
+                      handleQuerySelect("gender");
+                    }}
+                    className=" cursor-pointer"
+                  >
                     {" "}
                     <FormattedMessage
                       id={"Gender"}
                       defaultMessage="Hello, World!"
                     />
+                    {queryType === "gender" ? (
+                      queryOrder == "asc" ? (
+                        <ArrowDropDown></ArrowDropDown>
+                      ) : (
+                        <ArrowDropUp></ArrowDropUp>
+                      )
+                    ) : (
+                      <SwapVert></SwapVert>
+                    )}
                   </TableCell>
                 ) : (
                   ""
@@ -1672,12 +1750,27 @@ function Partients() {
                 {settingData &&
                 settingData.patientsTable &&
                 settingData.patientsTable.patientAdresses ? (
-                  <TableCell align="center">
+                  <TableCell
+                    align="center"
+                    onClick={() => {
+                      handleQuerySelect("adresses");
+                    }}
+                    className=" cursor-pointer"
+                  >
                     {" "}
                     <FormattedMessage
                       id={"Address"}
                       defaultMessage="Hello, World!"
                     />
+                    {queryType === "adresses" ? (
+                      queryOrder == "asc" ? (
+                        <ArrowDropDown></ArrowDropDown>
+                      ) : (
+                        <ArrowDropUp></ArrowDropUp>
+                      )
+                    ) : (
+                      <SwapVert></SwapVert>
+                    )}
                   </TableCell>
                 ) : (
                   ""
@@ -1686,12 +1779,27 @@ function Partients() {
                 {settingData &&
                 settingData.patientsTable &&
                 settingData.patientsTable.patientSequance ? (
-                  <TableCell align="center">
+                  <TableCell
+                    align="center"
+                    onClick={() => {
+                      handleQuerySelect("Sequence");
+                    }}
+                    className=" cursor-pointer"
+                  >
                     {" "}
                     <FormattedMessage
                       id={"Sequence"}
                       defaultMessage="Hello, World!"
                     />
+                    {queryType === "Sequence" ? (
+                      queryOrder == "asc" ? (
+                        <ArrowDropDown></ArrowDropDown>
+                      ) : (
+                        <ArrowDropUp></ArrowDropUp>
+                      )
+                    ) : (
+                      <SwapVert></SwapVert>
+                    )}
                   </TableCell>
                 ) : (
                   ""
@@ -1699,12 +1807,27 @@ function Partients() {
                 {settingData &&
                 settingData.patientsTable &&
                 settingData.patientsTable.patientWeghit ? (
-                  <TableCell align="center">
+                  <TableCell
+                    align="center"
+                    onClick={() => {
+                      handleQuerySelect("weight");
+                    }}
+                    className=" cursor-pointer"
+                  >
                     {" "}
                     <FormattedMessage
                       id={"Weight"}
                       defaultMessage="Hello, World!"
                     />
+                    {queryType === "weight" ? (
+                      queryOrder == "asc" ? (
+                        <ArrowDropDown></ArrowDropDown>
+                      ) : (
+                        <ArrowDropUp></ArrowDropUp>
+                      )
+                    ) : (
+                      <SwapVert></SwapVert>
+                    )}
                   </TableCell>
                 ) : (
                   ""
@@ -1712,12 +1835,27 @@ function Partients() {
                 {settingData &&
                 settingData.patientsTable &&
                 settingData.patientsTable.patientLeanth ? (
-                  <TableCell align="center">
+                  <TableCell
+                    align="center"
+                    onClick={() => {
+                      handleQuerySelect("length");
+                    }}
+                    className=" cursor-pointer"
+                  >
                     {" "}
                     <FormattedMessage
                       id={"Length"}
                       defaultMessage="Hello, World!"
                     />
+                    {queryType === "length" ? (
+                      queryOrder == "asc" ? (
+                        <ArrowDropDown></ArrowDropDown>
+                      ) : (
+                        <ArrowDropUp></ArrowDropUp>
+                      )
+                    ) : (
+                      <SwapVert></SwapVert>
+                    )}
                   </TableCell>
                 ) : (
                   ""
@@ -1725,12 +1863,27 @@ function Partients() {
                 {settingData &&
                 settingData.patientsTable &&
                 settingData.patientsTable.patientVisitNum ? (
-                  <TableCell align="center">
+                  <TableCell
+                    align="center"
+                    onClick={() => {
+                      handleQuerySelect("visitCount");
+                    }}
+                    className=" cursor-pointer"
+                  >
                     {" "}
                     <FormattedMessage
                       id={"VisitNumber"}
                       defaultMessage="Hello, World!"
                     />
+                    {/* {queryType === "visitCount" ? (
+                      queryOrder == "asc" ? (
+                        <ArrowDropDown></ArrowDropDown>
+                      ) : (
+                        <ArrowDropUp></ArrowDropUp>
+                      )
+                    ) : (
+                      <SwapVert></SwapVert>
+                    )} */}
                   </TableCell>
                 ) : (
                   ""
@@ -1835,6 +1988,9 @@ function Partients() {
                   onShareHande={onShareHande}
                   settingData={settingData}
                   onDeleteHande={onDeleteHande}
+                  setQueryType={(queryType) => {
+                    setQueryType(queryType);
+                  }}
                   currentUser={currentUser}
                   onPrescriptionDeleteHande={HandleOnPrescriptionDeleteHande}
                   onEditHande={onEditHande}
@@ -1883,7 +2039,9 @@ function Partients() {
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewPatientForm
+            handleExit={handleHideClick}
             currentUser={currentUser}
+            screenMode={settingData.pullUpFullScreenMode}
             constantDiseases={constantDiseases}
             onFormSubmit={handleNewPatientData}
           ></NewPatientForm>
@@ -1898,6 +2056,8 @@ function Partients() {
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewPartientsForm
+            handleExit={handleHideClick}
+            screenMode={settingData.pullUpFullScreenMode}
             settingData={settingData}
             groupList={groupList}
             userData={userData}
@@ -1939,6 +2099,8 @@ function Partients() {
             }}
           ></BackGroundShadow>
           <PartientsProfile
+            handleExit={handleHideClick}
+            screenMode={settingData.pullUpFullScreenMode}
             onImageDeleteHandle={onImageDeleteHandle}
             settingData={settingData}
             handleEditPatientData={handleEditPatientData}
@@ -1963,6 +2125,8 @@ function Partients() {
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewPatientForm
+            handleExit={handleHideClick}
+            screenMode={settingData.pullUpFullScreenMode}
             currentUser={currentUser}
             type={"edit"}
             constantDiseases={constantDiseases}
@@ -1977,6 +2141,8 @@ function Partients() {
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <MedicalForm
+            handleExit={handleHideClick}
+            screenMode={settingData.pullUpFullScreenMode}
             settingData={settingData}
             onFormSubmit={handleEditPatientData}
             userEditData={userEditData}
@@ -1990,6 +2156,8 @@ function Partients() {
           {" "}
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewMedicalReporyForm
+            handleExit={handleHideClick}
+            screenMode={settingData.pullUpFullScreenMode}
             userEditData={userEditData}
             medicalReportsStype={medicalReportsStype}
             partientsSelectId={partientsSelectId}
@@ -2011,6 +2179,8 @@ function Partients() {
             }}
           ></BackGroundShadow>
           <NewMedicalReporyForm
+            handleExit={()=>{setShowReportEditForm(false)}}
+            screenMode={settingData.pullUpFullScreenMode}
             medicalReportsStype={medicalReportsStype}
             partientsSelectId={partientsSelectId}
             type="edit"
@@ -2026,6 +2196,8 @@ function Partients() {
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <AddLaboratoryExamination
+            handleExit={handleHideClick}
+            screenMode={settingData.pullUpFullScreenMode}
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterLabClickText}
             onFormSubmit={handleNewLaboryData}
@@ -2038,6 +2210,8 @@ function Partients() {
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <VisitForm
+            handleExit={handleHideClick}
+            screenMode={settingData.pullUpFullScreenMode}
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterClickText}
             onFormSubmit={handleNewVisit}
@@ -2055,6 +2229,8 @@ function Partients() {
             }}
           ></BackGroundShadow>
           <AddLaboratoryExamination
+            handleExit={()=>{setShowLabReportEditForm(false)}}
+            screenMode={settingData.pullUpFullScreenMode}
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterLabClickText}
             onFormSubmit={handleEditLabReportData}
@@ -2069,10 +2245,12 @@ function Partients() {
         <>
           <BackGroundShadow
             onClick={() => {
-              setShowLabReportEditForm(false);
+              setShowVisitReportEditForm(false);
             }}
           ></BackGroundShadow>
           <VisitForm
+            handleExit={()=>{setShowVisitReportEditForm(false)}}
+            screenMode={settingData.pullUpFullScreenMode}
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterClickText}
             onFormSubmit={handelEditVisitReportData}

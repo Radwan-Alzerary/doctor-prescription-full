@@ -1,4 +1,4 @@
-import { Delete, Remove } from "@mui/icons-material";
+import { CloseSharp, Delete, Remove } from "@mui/icons-material";
 import {
   Autocomplete,
   Button,
@@ -131,12 +131,29 @@ function MedicalForm(props) {
 
   return (
     <form
-      className="fixed flex flex-col overflow-scroll h-[90%] left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
+      className={`fixed flex flex-col overflow-scroll h-[90%] left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center ${
+        props.screenMode ? "h-[100%] w-full p-4" : "h-[90%]  "
+      } } w-3/5 bg-white p-5 rounded-xl z-50`}
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
       }}
     >
+         {props.screenMode ? (
+        <div className=" flex justify-start items-start text-right w-full ">
+          <IconButton
+            onClick={() => {
+              props.handleExit()
+            }}
+          >
+            <CloseSharp className=" text-red-700  top-5 right-5"></CloseSharp>
+          </IconButton>
+        </div>
+      ) : (
+        ""
+      )}
+
+
       {!loading ? (
         <>
           <div className="w-full flex gap-9"></div>
