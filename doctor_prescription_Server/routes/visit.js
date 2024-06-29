@@ -15,6 +15,8 @@ router.post("/new", async (req, res) => {
       management: req.body.data.management,
       PriorChronicTherapy: req.body.data.PriorChronicTherapy,
       type: req.body.data.type,
+      priority: req.body.data.priority,
+
     });
     await visit.save();
     // Find the patient by ID
