@@ -37,7 +37,7 @@ function EditPartients(props) {
   const [inTakeTime, setInTakeTime] = useState("");
   const [inTakeTimeOther, setInTakeTimeOther] = useState("");
   const [description, setDescription] = useState("");
-  const [diagnosis, setDiagnosis] = useState([]);
+  const [diagnosis, setDiagnosis] = useState("");
   const [locale, setLocale] = useState(() => {
     return Cookies.get("locale") || "ar";
   });
@@ -46,7 +46,6 @@ function EditPartients(props) {
   const [pharmGroupSelected, setPharmGroupSelected] = useState("");
   const currentURL = window.location.origin; // Get the current URL
   const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000
-  console.log(props.settingData);
   useEffect(() => {
     const getAutoCompleteList = () => {
       axios
@@ -54,7 +53,6 @@ function EditPartients(props) {
         .then((response) => {
           setAutoCompleteList(response.data);
           setLoading(false);
-          console.log(response.data);
         })
         .catch((error) => {
           console.error("Error fetching categories:", error);
@@ -84,17 +82,18 @@ function EditPartients(props) {
     setInTakeTime("");
     setInTakeTimeOther("");
     setDescription("");
+    setValue("");
+
+    setInputValue("");
+
   };
   const handeAddGroupBill = (groups) => {
-    console.log(groups);
     if (groups && Array.isArray(groups.pharmaceutical)) {
       groups.pharmaceutical.forEach((group) => {
-        console.log(group);
         const dataBillForm = {};
         axios
           .get(`${serverAddress}/pharmaceutical/getone/${group._id}`)
           .then((response) => {
-            console.log(response.data);
 
             dataBillForm.dose = response.data.dose;
             dataBillForm.x = response.data.dose;
@@ -135,7 +134,6 @@ function EditPartients(props) {
     axios
       .get(`${serverAddress}/pharmaceutical/getone/${pharmId}`)
       .then((response) => {
-        console.log(response.data);
 
         dataBillForm.dose = response.data.dose;
         dataBillForm.x = response.data.dose;
@@ -165,12 +163,12 @@ function EditPartients(props) {
       props.editPrescriptionData &&
       props.editPrescriptionData.MedicalDiagnosis
     ) {
+      console.log(props.editPrescriptionData)
       setDiagnosis(props.editPrescriptionData.MedicalDiagnosis);
     }
   }, []);
 
   useEffect(() => {
-    console.log(inputValue);
     if (value !== null && typeof value === "object" && "_id" in value) {
       setBillId(value._id);
       if (value.dose) {
@@ -193,7 +191,6 @@ function EditPartients(props) {
 
     if (value && value.doseCount) {
       const parts = value.doseCount.split("*");
-      console.log(value);
       if (parts.length === 2) {
         setDoseNumFirst(parts[0]);
         setDoseNumSecend(parts[1]);
@@ -230,8 +227,6 @@ function EditPartients(props) {
     setDiagnosis(value);
   };
 
-  console.log(props);
-  console.log(props.partientId);
   return (
     <form
       className={`fixed flex ${
@@ -275,7 +270,6 @@ function EditPartients(props) {
                               ) {
                                 handleAddFromGroup(pharm._id);
                               }
-                              console.log(pharm._id);
                             }}
                             className={
                               props.pharmaceListInside.find(

@@ -970,8 +970,10 @@ function Partients() {
     setPharmaceListInside([]);
     if (settingData.abortProssesMsg) {
       setCanceleAlert(true);
+      setEditPrescriptionData("");
     } else {
       onCancelHande();
+      setEditPrescriptionData("");
     }
   };
   const handleOnBillInsideRemove = (id) => {
@@ -1183,6 +1185,7 @@ function Partients() {
       .then((response) => {
         // Handle the response if needed
         getPatientsList();
+        setEditPrescriptionData("");
         setShowPartientsAddForm(false);
       })
       .catch((error) => {
@@ -2179,7 +2182,9 @@ function Partients() {
             }}
           ></BackGroundShadow>
           <NewMedicalReporyForm
-            handleExit={()=>{setShowReportEditForm(false)}}
+            handleExit={() => {
+              setShowReportEditForm(false);
+            }}
             screenMode={settingData.pullUpFullScreenMode}
             medicalReportsStype={medicalReportsStype}
             partientsSelectId={partientsSelectId}
@@ -2229,7 +2234,9 @@ function Partients() {
             }}
           ></BackGroundShadow>
           <AddLaboratoryExamination
-            handleExit={()=>{setShowLabReportEditForm(false)}}
+            handleExit={() => {
+              setShowLabReportEditForm(false);
+            }}
             screenMode={settingData.pullUpFullScreenMode}
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterLabClickText}
@@ -2249,7 +2256,9 @@ function Partients() {
             }}
           ></BackGroundShadow>
           <VisitForm
-            handleExit={()=>{setShowVisitReportEditForm(false)}}
+            handleExit={() => {
+              setShowVisitReportEditForm(false);
+            }}
             screenMode={settingData.pullUpFullScreenMode}
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterClickText}
