@@ -11,9 +11,11 @@ router.post("/narcosis", async (req, res) => {
     }
   });
   
+  
   // Get a list of all SurgicalProceduresNarcosis
   router.get("/narcosis", async (req, res) => {
     try {
+      console.log("")
       const narcosisList = await SurgicalProceduresNarcosis.find({ name: { $ne: '' }});
       res.json(narcosisList);
     } catch (err) {

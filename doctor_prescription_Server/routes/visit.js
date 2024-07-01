@@ -69,6 +69,7 @@ router.get("/getall", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 router.get("/getone/:id", async (req, res) => {
   try {
     const medicalreports = await Visit.findById(req.params.id);
