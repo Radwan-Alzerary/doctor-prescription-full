@@ -406,16 +406,6 @@ function Row(props) {
                   >
                     <Delete fontSize="inherit" />
                   </IconButton>
-                  <IconButton
-                    sx={{ color: blue[400] }}
-                    className=" hover:text-blue-600"
-                    onClick={() => {
-                      props.onEditHande(row._id);
-                    }}
-                    aria-label="delete"
-                  >
-                    <Edit aria-label="expand row" size="small"></Edit>
-                  </IconButton>
                 </>
               ) : (
                 ""
@@ -423,6 +413,16 @@ function Row(props) {
             ) : (
               ""
             )}
+            <IconButton
+              sx={{ color: blue[400] }}
+              className=" hover:text-blue-600"
+              onClick={() => {
+                props.onEditHande(row._id);
+              }}
+              aria-label="delete"
+            >
+              <Edit aria-label="expand row" size="small"></Edit>
+            </IconButton>
           </TableCell>
         ) : (
           ""

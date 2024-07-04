@@ -236,12 +236,15 @@ router.get("/getall/:page", async (req, res) => {
 
       if (startDate) {
         dateFilter = {
-          lastEditDate: { $gte: startDate, $lte: endDate },
+          $or: [
+            { lastEditDate: { $gte: startDate, $lte: endDate } },
+            { booked: true },
+          ],
         };
       }
     }
-    console.log(setting.patientsTable.DateViewQuery)
-    console.log(dateFilter)
+    console.log(setting.patientsTable.DateViewQuery);
+    console.log(dateFilter);
     const patients = await Patients.find({ name: { $ne: "" }, ...dateFilter })
       .populate({
         path: "prescription",
