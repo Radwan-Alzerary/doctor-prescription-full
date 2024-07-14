@@ -2483,6 +2483,60 @@ function PrescriptionsDesign() {
             </div>
 
             <div className="flex w-full  mt-4 font-bold">
+              <p>معلومات الزيارة القادمة</p>
+            </div>
+            
+
+
+            <div className="flex">
+              <TextField
+                value={medicalReportsStype.patientsNextVisitSize}
+                onChange={(event) => {
+                  handleInputChange("patientsNextVisitSize", event.target.value);
+                }}
+                label="حجم الكتابة"
+                size="small"
+                sx={{ width: "40%" }}
+              ></TextField>
+              <TextField
+                value={medicalReportsStype.patientsNextVisitX}
+                onChange={(event) => {
+                  handleInputChange("patientsNextVisitX", event.target.value);
+                }}
+                label="X"
+                size="small"
+                sx={{ width: "20%" }}
+              ></TextField>
+              <TextField
+                value={medicalReportsStype.patientsNextVisitY}
+                onChange={(event) => {
+                  handleInputChange("patientsNextVisitY", event.target.value);
+                }}
+                label="Y"
+                size="small"
+                sx={{ width: "20%" }}
+              ></TextField>
+              <FormControlLabel
+                sx={{
+                  display: "block",
+                }}
+                control={
+                  <Switch
+                    checked={medicalReportsStype.patientsNextVisitActive}
+                    onChange={(event) => {
+                      handleInputChange(
+                        "patientsNextVisitActive",
+                        !medicalReportsStype.patientsNextVisitActive
+                      );
+                    }}
+                    color="primary"
+                  />
+                }
+              />
+            </div>
+
+
+            <div className="flex w-full  mt-4 font-bold">
               <p>معلومات الصفحة</p>
             </div>
             <div className="flex">

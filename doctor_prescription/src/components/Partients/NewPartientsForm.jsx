@@ -85,7 +85,6 @@ function EditPartients(props) {
     setValue("");
 
     setInputValue("");
-
   };
   const handeAddGroupBill = (groups) => {
     if (groups && Array.isArray(groups.pharmaceutical)) {
@@ -94,7 +93,6 @@ function EditPartients(props) {
         axios
           .get(`${serverAddress}/pharmaceutical/getone/${group._id}`)
           .then((response) => {
-
             dataBillForm.dose = response.data.dose;
             dataBillForm.x = response.data.dose;
             dataBillForm.billId = response.data._id;
@@ -134,7 +132,6 @@ function EditPartients(props) {
     axios
       .get(`${serverAddress}/pharmaceutical/getone/${pharmId}`)
       .then((response) => {
-
         dataBillForm.dose = response.data.dose;
         dataBillForm.x = response.data.dose;
         dataBillForm.billId = response.data._id;
@@ -150,7 +147,6 @@ function EditPartients(props) {
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
-
   };
   const filterOptions = createFilterOptions({
     ignoreCase: true,
@@ -163,7 +159,7 @@ function EditPartients(props) {
       props.editPrescriptionData &&
       props.editPrescriptionData.MedicalDiagnosis
     ) {
-      console.log(props.editPrescriptionData)
+      console.log(props.editPrescriptionData);
       setDiagnosis(props.editPrescriptionData.MedicalDiagnosis);
     }
   }, []);
@@ -394,7 +390,11 @@ function EditPartients(props) {
             <DateTimePicker
               renderInput={(props) => <TextField {...props} />}
               format="DD/MM/YYYY HH:mm"
-              onChange={(newValue) => setNextVisit(newValue.$d)}
+              onChange={(newValue) => {
+                setNextVisit(newValue.$d);
+                props.setNextVisit(newValue.$d);
+                console.log(newValue.$d)
+              }}
               className="w-full"
             />
           </LocalizationProvider>

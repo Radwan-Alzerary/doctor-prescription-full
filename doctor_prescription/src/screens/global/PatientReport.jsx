@@ -159,7 +159,8 @@ function PatientReport(props) {
           : ""}
 
         {props.medicalReportsStype.barcodeActive ? (
-          <div className=" absolute"
+          <div
+            className=" absolute"
             style={{
               left: `${props.medicalReportsStype.barcodeX}%`,
               top: `${props.medicalReportsStype.barcodeY}%`,
@@ -171,6 +172,29 @@ function PatientReport(props) {
               level="H"
               value={props.dataToPrint.patients._id}
             />
+          </div>
+        ) : (
+          ""
+        )}
+
+        {props.medicalReportsStype.patientsNextVisitActive ? (
+          <div
+            className=" absolute"
+            style={{
+              left: `${props.medicalReportsStype.patientsNextVisitX}%`,
+              top: `${props.medicalReportsStype.patientsNextVisitY}%`,
+              fontSize: `${props.medicalReportsStype.patientsNextVisitSize}rem`,
+            }}
+          >
+            {props.nextVisit ? <> الزيارة القادمة :</> : ""}
+
+            {props.nextVisit
+              ? new Date(props.nextVisit).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })
+              : ""}
           </div>
         ) : (
           ""

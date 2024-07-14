@@ -34,7 +34,6 @@ import ChromeReaderModeIcon from "@mui/icons-material/ChromeReaderMode";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import { io } from "socket.io-client";
 
-import { Calendar } from "react-modern-calendar-datepicker";
 import {
   Add,
   ArrowDropDown,
@@ -563,6 +562,7 @@ function Partients() {
   const [showReportEditForm, setShowReportEditForm] = useState(false);
   const [showLabReportEditForm, setShowLabReportEditForm] = useState(false);
   const [showVisitReportEditForm, setShowVisitReportEditForm] = useState(false);
+  const [nextVisit, setNextVisit] = useState("");
 
   const [partientsSelectId, setPartientsSelectId] = useState("");
   const [PrescriptionId, setPrescriptionId] = useState("");
@@ -967,6 +967,7 @@ function Partients() {
     setShowAddForm(true);
   };
   const handleHideClick = () => {
+    setNextVisit("")
     setPharmaceListInside([]);
     if (settingData.abortProssesMsg) {
       setCanceleAlert(true);
@@ -1186,6 +1187,7 @@ function Partients() {
         // Handle the response if needed
         getPatientsList();
         setEditPrescriptionData("");
+        setNextVisit("")
         setShowPartientsAddForm(false);
       })
       .catch((error) => {
@@ -2063,6 +2065,7 @@ function Partients() {
             screenMode={settingData.pullUpFullScreenMode}
             settingData={settingData}
             groupList={groupList}
+            setNextVisit={(data)=>{setNextVisit(data)}}
             userData={userData}
             editPrescriptionData={editPrescriptionData}
             patientsList={patientsList}
@@ -2086,6 +2089,7 @@ function Partients() {
         <div>
           <PatientReport
             prints={prints}
+            nextVisit = {nextVisit}
             dataToPrint={dataToPrint}
             medicalReportsStype={medicalReportsStype}
             feedback={handlePrintFeedBack}
