@@ -1,0 +1,45 @@
+[
+  {
+    "_id": "6680849cd1dae8a8f7c37102",
+    "beforeSurgeryImage": [],
+    "afterSurgeryImage": [],
+    "active": false,
+    "createdAt": "2024-06-29T22:03:08.416Z",
+    "updatedAt": "2024-06-29T22:03:08.416Z",
+    "__v": 0
+  },
+  {
+    "_id": "668085a0d1dae8a8f7c37afb",
+    "beforeSurgeryImage": [],
+    "afterSurgeryImage": [],
+    "active": false,
+    "createdAt": "2024-06-29T22:07:28.854Z",
+    "updatedAt": "2024-06-29T22:07:28.854Z",
+    "__v": 0
+  },
+  {
+    "_id": "668a7a86153792ed8d23d1ae",
+    "beforeSurgeryImage": [],
+    "afterSurgeryImage": [],
+    "active": true,
+    "createdAt": "2024-07-07T11:22:46.036Z",
+    "updatedAt": "2024-07-07T11:23:09.887Z",
+    "__v": 0,
+    "HospitalName": "jioioj",
+    "NarcosisEndTime": "2024-07-07T11:22:46.056Z",
+    "NarcosisStartTime": "2024-07-07T11:22:46.056Z",
+    "Patients": "668622a7d8d793581ca8888c",
+    "SurgeryAssistantName": "",
+    "SurgeryCost": "",
+    "SurgeryDate": "2024-07-07T11:22:46.056Z",
+    "SurgeryEndTime": "2024-07-07T11:22:46.056Z",
+    "SurgeryName": "",
+    "SurgeryResult": "",
+    "SurgeryStartTime": "2024-07-07T11:22:46.056Z",
+    "SurgicalProceduresDevice": "668a7a9d153792ed8d23d1b8",
+    "SurgicalProceduresNarcosis": "668a7a9d153792ed8d23d1b2",
+    "SurgicalProceduresType": "668a7a9d153792ed8d23d1b5",
+    "dangerLevel": "عبدالله",
+    "priority": "90"
+  }
+]

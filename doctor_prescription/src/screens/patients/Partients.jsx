@@ -967,7 +967,7 @@ function Partients() {
     setShowAddForm(true);
   };
   const handleHideClick = () => {
-    setNextVisit("")
+    setNextVisit("");
     setPharmaceListInside([]);
     if (settingData.abortProssesMsg) {
       setCanceleAlert(true);
@@ -1047,6 +1047,15 @@ function Partients() {
         setPharmaceListInside([]);
         setPrescriptionId(response.data.prescriptionId);
         setPartientsSelectId(id);
+        axios
+          .get(`${serverAddress}/patients/medicalinfo/${id}`)
+          .then((response) => {
+            setUserEditData(response.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching categories:", error);
+          });
+
         setShowPartientsAddForm(true);
         setUserData(response.data.patientFumbling);
       })
@@ -1059,6 +1068,15 @@ function Partients() {
   };
   const onReportShowHandel = (id) => {
     setPartientsSelectId(id);
+    axios
+      .get(`${serverAddress}/patients/getone/${id}`)
+      .then((response) => {
+        setUserEditData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+
     setShowAddReportForm(true);
 
     console.log(`Prescription Show clicked for id ${id}`);
@@ -1187,7 +1205,7 @@ function Partients() {
         // Handle the response if needed
         getPatientsList();
         setEditPrescriptionData("");
-        setNextVisit("")
+        setNextVisit("");
         setShowPartientsAddForm(false);
       })
       .catch((error) => {
@@ -1366,6 +1384,15 @@ function Partients() {
 
   const onVisitFormShowHandel = (id) => {
     setPartientsSelectId(id);
+    axios
+      .get(`${serverAddress}/patients/getOne/${id}`)
+      .then((response) => {
+        setUserEditData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+
     setShowVisitForm(true);
     console.log(`visit Show clicked for id ${id}`);
   };
@@ -2061,11 +2088,14 @@ function Partients() {
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <NewPartientsForm
+            userEditData={userEditData}
             handleExit={handleHideClick}
             screenMode={settingData.pullUpFullScreenMode}
             settingData={settingData}
             groupList={groupList}
-            setNextVisit={(data)=>{setNextVisit(data)}}
+            setNextVisit={(data) => {
+              setNextVisit(data);
+            }}
             userData={userData}
             editPrescriptionData={editPrescriptionData}
             patientsList={patientsList}
@@ -2089,7 +2119,7 @@ function Partients() {
         <div>
           <PatientReport
             prints={prints}
-            nextVisit = {nextVisit}
+            nextVisit={nextVisit}
             dataToPrint={dataToPrint}
             medicalReportsStype={medicalReportsStype}
             feedback={handlePrintFeedBack}
@@ -2219,6 +2249,7 @@ function Partients() {
         <>
           <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
           <VisitForm
+            userEditData={userEditData}
             handleExit={handleHideClick}
             screenMode={settingData.pullUpFullScreenMode}
             partientsSelectId={partientsSelectId}

@@ -339,7 +339,8 @@ function EditPartients(props) {
             <FormattedMessage
               id={"Medical Diagnosis"}
               defaultMessage="Hello, World!"
-            />
+            /> : 
+            {props.userEditData ? props.userEditData.name : ""}
           </h5>
         </div>
         <TextField

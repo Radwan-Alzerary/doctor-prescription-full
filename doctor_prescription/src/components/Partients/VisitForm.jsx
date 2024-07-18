@@ -24,6 +24,7 @@ function VisitForm({
   data,
   screenMode,
   handleExit,
+  userEditData,
 }) {
   // Define state to store form input data
   const [formData, setFormData] = useState({
@@ -127,7 +128,8 @@ function VisitForm({
           <FormattedMessage
             id={"visit Information"}
             defaultMessage="Hello, World!"
-          />
+          />{" "}
+          :{userEditData ? userEditData.name : ""}
         </h5>
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">

@@ -89,6 +89,14 @@ const VisitReportTable = (props) => {
     return "";
   };
 
+  // Handle row click event
+  const handleRowClick = (params) => {
+    console.log("Row clicked:", params.row);
+    props.onVisitEditHandel(params.row._id);
+
+    // You can perform additional actions here, such as navigating to a detailed view
+  };
+
   return (
     <div style={{ height: 700, width: "100%" }}>
       <DataGrid
@@ -103,6 +111,7 @@ const VisitReportTable = (props) => {
         }}
         pageSizeOptions={[5, 10]}
         checkboxSelection
+        onRowClick={handleRowClick} // Add row click event handler
       />
     </div>
   );

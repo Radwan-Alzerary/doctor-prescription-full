@@ -1,0 +1,29 @@
+[
+  {
+    "_id": "65637db5239bac7d3f0fe7e3",
+    "email": "rdoaniv@ymail.com",
+    "password": "$2b$10$XEkujja9gZCoLeu2hEV3meMTzgc9v0zFvu2xIQE5yqKca4CyErFQO",
+    "role": "doctor",
+    "userName": "dr test\n",
+    "expireDate": "2024-12-17T11:38:11.203Z",
+    "Specialization": "التخصص",
+    "university": "الجامعة",
+    "phoneNumber": "رقم الهاتف",
+    "adresses": "العنوان",
+    "description": "نبذة",
+    "__v": 0
+  },
+  {
+    "_id": "656382e5239bac7d3f103cd2",
+    "email": "dafer@scrter.com",
+    "password": "$2b$10$6VRuJw6fhKG9vHyWgXoJeeKHke/UHEBUsTCSIva99058J0eByX0Z2",
+    "role": "cashir",
+    "userName": "dafer",
+    "Specialization": "التخصص",
+    "university": "الجامعة",
+    "phoneNumber": "رقم الهاتف",
+    "adresses": "العنوان",
+    "description": "نبذة",
+    "__v": 0
+  }
+]

@@ -25,7 +25,8 @@ function NewMedicalReporyForm({
   medicalReportsStype,
   changeReportHeaderName,
   screenMode,
-  handleExit
+  handleExit,
+  userEditData,
 }) {
   const [headerName, setHeaderName] = useState(
     medicalReportsStype.reportHeaderName
@@ -106,7 +107,8 @@ function NewMedicalReporyForm({
           <FormattedMessage
             id={"Report information"}
             defaultMessage="Hello, World!"
-          />
+          />{" "}
+          :{userEditData ? userEditData.name : ""}
           {/* {props.userData} */}
         </h5>
       </div>
