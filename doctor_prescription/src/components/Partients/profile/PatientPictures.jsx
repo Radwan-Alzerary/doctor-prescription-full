@@ -1,9 +1,7 @@
 import * as React from "react";
-import { DataGrid } from "@mui/x-data-grid";
 import ImageInput from "../ImageInput";
 import { useState } from "react";
 import ImageView from "./ImageView";
-import BackGroundShadow from "../../pageCompond/BackGroundShadow";
 import { Delete } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 
