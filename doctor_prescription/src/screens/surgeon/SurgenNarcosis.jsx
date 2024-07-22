@@ -1,18 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import SurgenTypeTable from "../../components/surgeon/SurgenTypeTable";
 import axios from "axios";
-import { useIsAuthenticated } from "react-auth-kit";
 import { Fab } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import BackGroundShadow from "../../components/pageCompond/BackGroundShadow";
-import NewSugenTypeForm from "../../components/surgeon/NewSugenTypeForm";
-import NewSurgenDeviceForm from "../../components/surgeon/NewSurgenDeviceForm";
-import SurgeonDeviceTable from "../../components/surgeon/SurgeonDeviceTable";
 import SurgenNarcosisTable from "../../components/surgeon/SurgenNarcosisTable";
 import NewSurgenNarcosisForm from "../../components/surgeon/NewSurgenNarcosisForm";
 
 function SurgenNarcosis() {
-  const { isAuthenticated } = useIsAuthenticated();
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [editingData, setEditingData] = useState(false);

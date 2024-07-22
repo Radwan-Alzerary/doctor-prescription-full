@@ -1,4 +1,3 @@
-import { use } from "i18next";
 import React, { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import QRCode from "qrcode.react";

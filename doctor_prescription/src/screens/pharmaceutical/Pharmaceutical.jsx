@@ -6,7 +6,6 @@ import { Add } from "@mui/icons-material";
 import BackGroundShadow from "../../components/pageCompond/BackGroundShadow";
 import NewPharmaceuticalForm from "../../components/pharmaceutical/NewPharmaceuticalForm";
 import axios from "axios";
-import { useIsAuthenticated } from "react-auth-kit";
 import EditPharmaceForm from "../../components/pharmaceutical/EditPharmaceForm";
 import Loading from "../../components/pageCompond/Loading";
 
@@ -28,7 +27,6 @@ function CustomizedInputBase() {
 }
 
 function Pharmaceutical() {
-  const { isAuthenticated } = useIsAuthenticated();
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [editingData, setEditingData] = useState(false);

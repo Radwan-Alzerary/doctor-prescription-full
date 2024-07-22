@@ -7,11 +7,12 @@ import { blue, red } from "@mui/material/colors";
 export default function PrescriptionTable(props) {
   const columns = [
     {
-      field: "createdAt",
-      headerName: "تاريخ الوصفة",
-      width: 170,
-      valueGetter: (params) => {
-        const createdAt = new Date(params.row.createdAt);
+      field: "date",
+      headerName: "تاريخ الزيارة",
+      width: 140,
+      renderCell: (params) => {
+        const createdAt = new Date(params.value);
+
         // Format the date to include year, month, day, and time
         const formattedDate = `${createdAt.getFullYear()}-${String(
           createdAt.getMonth() + 1
@@ -22,7 +23,7 @@ export default function PrescriptionTable(props) {
           createdAt.getMinutes()
         ).padStart(2, "0")}`;
 
-        return formattedDate;
+        return <span>{formattedDate}</span>;
       },
     },
     { field: "MedicalDiagnosis", headerName: "التشخيص", width: 230 },
@@ -30,15 +31,20 @@ export default function PrescriptionTable(props) {
       field: "pharmaceutical",
       headerName: "الادوية",
       width: 330,
-      valueGetter: (params) => {
+      renderCell: (params) => {
+        // Ensure the pharmaceutical property exists and is an array
+        if (!Array.isArray(params.row.pharmaceutical)) {
+          return <span>غير معروف</span>;
+        }
+
         const pharmaceuticalArray = params.row.pharmaceutical;
         // Extract the id and name properties from each item in the array
         const pharmaceuticalNames = pharmaceuticalArray.map((item) =>
-          item.id ? item.id.name : "غير معروف"
+          item && item.id && item.id.name ? item.id.name : "غير معروف"
         );
-        console.log(pharmaceuticalNames);
+
         // Join the extracted names into a string and display it in the cell
-        return pharmaceuticalNames.join(", ");
+        return <span>{pharmaceuticalNames.join(", ")}</span>;
       },
     },
     {

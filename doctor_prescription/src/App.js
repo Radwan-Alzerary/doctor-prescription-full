@@ -1,8 +1,4 @@
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import {
-  HashRouter as Router,
-  } from 'react-router-dom';
-
 import "./App.css";
 import SideBarMenu from "./screens/global/SideBarMenu";
 import MedicalReports from "./screens/medicalReports/MedicalReports";
@@ -26,10 +22,9 @@ import Register from "./screens/auth/Register";
 import PrivateRoute from "./screens/auth/PrivateRoute";
 import { useCookies } from "react-cookie";
 import DoctorProfile from "./components/doctor/DoctorProfile";
-import Tst from "./screens/global/tst";
 import axios from "axios";
 import Gpt from "./screens/global/Gpt";
-import { Icon, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { blue } from "@mui/material/colors";
 import VoiceRecoed from "./screens/global/VoiceRecoed";
@@ -43,25 +38,6 @@ import CheckPrint from "./screens/Eco/CheckPrint";
 import Group from "./screens/pharmaceutical/Group";
 import BookedScreen from "./screens/booked/BookedScreen";
 import AutoComplete from "./screens/AutoComplete/AutoComplete";
-function Layout({ children }) {
-  return (
-    <div
-      id="app"
-      style={{
-        display: "flex",
-        height: "100%",
-        minHeight: "100px",
-        direction: "rtl",
-      }}
-    >
-      <SideBarMenu />
-      <main className="w-full">
-        <Header />
-        <div className="h-[92vh] relative bg-gray-100 w-full">{children}</div>
-      </main>
-    </div>
-  );
-}
 
 function App() {
   const location = useLocation();

@@ -1,94 +1,80 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useReactToPrint } from "react-to-print";
+import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import VisitChart from "../../components/dashboard/VisitChart";
 import { FormattedMessage } from "react-intl";
 import axios from "axios";
 import Loading from "../../components/pageCompond/Loading";
 import BackGroundShadow from "../../components/pageCompond/BackGroundShadow";
 import PartientsProfile from "../../components/Partients/PartientsProfile";
-import Webcam from "react-webcam";
 
 function Dashboard() {
-  const webRef =useRef(null);
-  let img=null
-  const showImage = ()=>{
-    img = webRef.current.getScreenshot();
-  }
-  // Declare componentRef at the component level
+  const webRef = useRef(null);
   const [showPartientProfile, setShowPartientProfile] = useState(false);
-
   const [dashboardCount, setDashboardCount] = useState({});
   const [todayPatient, setTodayPatient] = useState([]);
-  const [UpcomingPatient, setUpcomingPatient] = useState([]);
-  const [loading, setLoding] = useState(false);
+  const [upcomingPatient, setUpcomingPatient] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [settingData, setSettingData] = useState({});
-
   const [partientsSelectId, setPartientsSelectId] = useState("");
-  const currentURL = window.location.origin; // Get the current URL
-  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000
+  const currentURL = window.location.origin;
+  const serverAddress = currentURL.replace(/:\d+/, ":5000");
 
-  const onNameClickHandle = (id) => {
+  const showImage = () => {
+    const img = webRef.current.getScreenshot();
+  };
+
+  const onNameClickHandle = useCallback((id) => {
     setPartientsSelectId(id);
     setShowPartientProfile(true);
-  };
-  
+  }, []);
+
   useEffect(() => {
-    const getSettingApi = () => {
-      axios
-        .get(`${serverAddress}/setting/getdata`)
-        .then((response) => {
-          setSettingData(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching categories:", error);
-        });
+    const getSettingApi = async () => {
+      try {
+        const response = await axios.get(`${serverAddress}/setting/getdata`);
+        setSettingData(response.data);
+      } catch (error) {
+        console.error("Error fetching settings:", error);
+      }
     };
     getSettingApi();
-  }, []);
-  const handleEditPatientData = (data) => {
-    data.id = partientsSelectId;
-    axios
-      .post(`${serverAddress}/patients/edit`, data)
-      .then((response) => {
-      })
-      .catch((error) => {
-        // Handle errors if the request fails
+  }, [serverAddress]);
+
+  const handleEditPatientData = useCallback(
+    async (data) => {
+      data.id = partientsSelectId;
+      try {
+        await axios.post(`${serverAddress}/patients/edit`, data);
+      } catch (error) {
         console.error("Error making POST request:", error);
-      });
-  };
+      }
+    },
+    [partientsSelectId, serverAddress]
+  );
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
-      const currentURL = window.location.origin; // Get the current URL
-      const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
-      const dashboardResponse = await axios.get(
-        `${serverAddress}/dashboard/getcount`
-      );
+      const [dashboardResponse, todayPatientResponse, upcomingPatientResponse] =
+        await Promise.all([
+          axios.get(`${serverAddress}/dashboard/getcount`),
+          axios.get(`${serverAddress}/patients/today`),
+          axios.get(`${serverAddress}/patients/upcoming`),
+        ]);
+
       setDashboardCount(dashboardResponse.data);
-
-      // Fetch today's patients
-      const todayPatientResponse = await axios.get(
-        `${serverAddress}/patients/today`
-      );
       setTodayPatient(todayPatientResponse.data);
-
-      // Fetch upcoming patients
-      const upcomingPatientResponse = await axios.get(
-        `${serverAddress}/patients/upcoming`
-      );
       setUpcomingPatient(upcomingPatientResponse.data);
-      setLoding(true);
+      setLoading(true);
     } catch (error) {
-      setLoding(true);
-
+      setLoading(true);
       console.error("Error fetching data:", error);
     }
-  };
+  }, [serverAddress]);
 
   useEffect(() => {
-    fetchData(); // Call fetchData when the component mounts
-  }, []); // The empty dependency array ensures it runs once when mounted
-  function formatDate(dateString) {
+    fetchData();
+  }, [fetchData]);
+
+  const formatDate = useCallback((dateString) => {
     const options = {
       year: "numeric",
       month: "long",
@@ -97,222 +83,106 @@ function Dashboard() {
       minute: "2-digit",
     };
     return new Date(dateString).toLocaleDateString("en-US", options);
-  }
+  }, []);
+
+  const patientsTable = useMemo(
+    () => (patients, title) => (
+      <div className="h-96 rounded-xl w-full bg-white">
+        <div className="w-full p-4 font-bold text-xl">{title}</div>
+        <div className="relative overflow-x-auto sm:rounded-lg ">
+          <table className="w-full text-sm text-right text-gray-500 ">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  اسم المريض
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  وقت الزيارة
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  وقت اخر زيارة
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  عدد الزيارات
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {patients.map((patient) => (
+                <tr
+                  key={patient._id}
+                  className="bg-white border-b hover:bg-slate-50 cursor-pointer"
+                  onClick={() => onNameClickHandle(patient._id)}
+                >
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+                  >
+                    {patient.name}
+                  </th>
+                  <td className="px-6 py-4">
+                    {patient.visitDate[patient.visitDate.length - 1] &&
+                    patient.visitDate
+                      ? formatDate(patient.visitDate[patient.visitDate.length - 1].date)
+                      : ""}
+                  </td>
+                  <td className="px-6 py-4">
+                    {patient.visitDate[patient.visitDate.length - 2] &&
+                    patient.visitDate
+                      ? formatDate(patient.visitDate[patient.visitDate.length - 2].date)
+                      : "لا يوجد"}
+                  </td>
+                  <td className="px-6 py-4">{patient.visitDate.length}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    ),
+    [formatDate, onNameClickHandle]
+  );
 
   return (
     <div className="w-full p-4 h-[100%] overflow-auto">
-      {/* <Webcam ref={webRef}></Webcam> */}
-      {/* <button onClick={()=>{showImage()}}>csdcx</button> */}
-      {/* <img src={img}></img> */}
       {loading ? (
         <div className="flex flex-col gap-6">
-          <div className="w-full grid grid-cols-1 lg:grid-cols-5 md:grid-cols-5 gap-8   ">
-            <div className="  h-28 p-2 px-4 bg-white rounded-lg shadow-lg">
-              <p className=" text-base">
-                {" "}
-                <FormattedMessage
-                  id={"Number of patients"}
-                  defaultMessage="Hello, World!"
-                />
-              </p>
-              <h1 className=" text-6xl w-full font-medium">
-                {dashboardCount.patientsCount}
-              </h1>
-            </div>
-            <div className="  h-28 p-2 px-4 bg-white rounded-lg shadow-lg">
-              <p className=" text-base">
-                {" "}
-                <FormattedMessage
-                  id={"Rx number"}
-                  defaultMessage="Hello, World!"
-                />
-              </p>
-              <h1 className=" text-6xl w-full font-medium">
-                {dashboardCount.PrescriptionCount}
-              </h1>
-            </div>
-            <div className=" h-28 p-2 px-4 bg-white rounded-lg shadow-lg">
-              <p className=" text-base">
-                {" "}
-                <FormattedMessage
-                  id={"Drugs number"}
-                  defaultMessage="Hello, World!"
-                />
-              </p>
-              <h1 className=" text-6xl w-full font-medium">
-                {dashboardCount.pharmaceuticalCount}
-              </h1>
-            </div>
-            <div className="  h-28 p-2 px-4 bg-white rounded-lg shadow-lg">
-              <p className=" text-base">
-                {" "}
-                <FormattedMessage
-                  id={"Number of visit"}
-                  defaultMessage="Hello, World!"
-                />
-              </p>
-              <h1 className=" text-6xl w-full font-medium">
-                {" "}
-                {dashboardCount.totalVisitDateCount}
-              </h1>
-            </div>
-            <div className="  h-28 p-2 px-4 bg-white rounded-lg shadow-lg">
-              <p className=" text-base">
-                {" "}
-                <FormattedMessage
-                  id={"Number of visit per day"}
-                  defaultMessage="Hello, World!"
-                />
-              </p>
-              <h1 className=" text-6xl w-full font-medium">
-                {" "}
-                {dashboardCount.todayCont}
-              </h1>
-            </div>
+          <div className="w-full grid grid-cols-1 lg:grid-cols-5 md:grid-cols-5 gap-8">
+            {[
+              { id: "Number of patients", count: dashboardCount.patientsCount },
+              { id: "Rx number", count: dashboardCount.PrescriptionCount },
+              { id: "Drugs number", count: dashboardCount.pharmaceuticalCount },
+              { id: "Number of visit", count: dashboardCount.totalVisitDateCount },
+              { id: "Number of visit per day", count: dashboardCount.todayCont },
+            ].map(({ id, count }) => (
+              <div key={id} className="h-28 p-2 px-4 bg-white rounded-lg shadow-lg">
+                <p className="text-base">
+                  <FormattedMessage id={id} defaultMessage="Hello, World!" />
+                </p>
+                <h1 className="text-6xl w-full font-medium">{count}</h1>
+              </div>
+            ))}
           </div>
-          <div className=" rounded-xl shadow-lg bg-white p-4 z-0">
-            <VisitChart
-              dashboardVisitCount={dashboardCount.dailyVisitCounts}
-            ></VisitChart>
+          <div className="rounded-xl shadow-lg bg-white p-4 z-0">
+            <VisitChart dashboardVisitCount={dashboardCount.dailyVisitCounts} />
           </div>
           <div className="flex gap-4">
-            <div className="h-96 rounded-xl w-full bg-white">
-              <div className="w-full p-4 font-bold text-xl">زوار اليوم</div>
-              <div class="relative overflow-x-auto sm:rounded-lg ">
-                <table class="w-full text-sm text-right text-gray-500 ">
-                  <thead class="text-xs text-gray-700 uppercase bg-gray-50 ">
-                    <tr>
-                      <th scope="col" class="px-6 py-3">
-                        اسم المريض
-                      </th>
-                      <th scope="col" class="px-6 py-3">
-                        وقت الزيارة
-                      </th>
-                      <th scope="col" class="px-6 py-3">
-                        وقت اخر زيارة
-                      </th>
-                      <th scope="col" class="px-6 py-3">
-                        عدد الزيارات
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {todayPatient.map((patient, index) => (
-                      <tr
-                        class="bg-white border-b hover:bg-slate-50 cursor-pointer"
-                        onClick={() => {
-                          onNameClickHandle(patient._id);
-                        }}
-                      >
-                        <th
-                          scope="row"
-                          class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                        >
-                          {patient.name}
-                        </th>
-                        <td class="px-6 py-4">
-                          {" "}
-                          {patient.visitDate[patient.visitDate.length - 1] &&
-                          patient.visitDate
-                            ? formatDate(
-                                patient.visitDate[patient.visitDate.length - 1]
-                                  .date
-                              )
-                            : ""}
-                        </td>
-                        <td class="px-6 py-4">
-                          {" "}
-                          {patient.visitDate[patient.visitDate.length - 2] &&
-                          patient.visitDate
-                            ? formatDate(
-                                patient.visitDate[patient.visitDate.length - 2]
-                                  .date
-                              )
-                            : "لا يوجد"}
-                        </td>
-                        <td class="px-6 py-4">{patient.visitDate.length}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div className="h-96 rounded-xl w-full bg-white">
-              <div className="w-full p-4 font-bold text-xl">
-                الزيارات القادمة
-              </div>
-              <div class="relative overflow-x-auto sm:rounded-lg ">
-                <table class="w-full text-sm text-right text-gray-500 ">
-                  <thead class="text-xs text-gray-700  uppercase bg-gray-50 ">
-                    <tr>
-                      <th scope="col" class="px-6 py-3">
-                        اسم المريض
-                      </th>
-                      <th scope="col" class="px-6 py-3">
-                        تاريخ الزيارة القادمة{" "}
-                      </th>
-                      <th scope="col" class="px-6 py-3">
-                        تاريخ اخر زيارة
-                      </th>
-                      <th scope="col" class="px-6 py-3">
-                        عدد الزيارات
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {UpcomingPatient.map((patient, index) => (
-                      <tr
-                        class="bg-white border-b hover:bg-slate-50 cursor-pointer "
-                        onClick={() => {
-                          onNameClickHandle(patient._id);
-                        }}
-                      >
-                        <th
-                          scope="row"
-                          class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                        >
-                          {patient.name}
-                        </th>
-                        <td class="px-6 py-4">
-                          {formatDate(patient.nextVisit)}
-                        </td>
-                        <td class="px-6 py-4">
-                          {" "}
-                          {patient.visitDate[patient.visitDate.length - 1] &&
-                          patient.visitDate
-                            ? formatDate(
-                                patient.visitDate[patient.visitDate.length - 1]
-                                  .date
-                              )
-                            : ""}
-                        </td>
-                        <td class="px-6 py-4">{patient.visitDate.length}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            {patientsTable(todayPatient, "زوار اليوم")}
+            {patientsTable(upcomingPatient, "الزيارات القادمة")}
           </div>
         </div>
       ) : (
-        <Loading></Loading>
+        <Loading />
       )}
-      {showPartientProfile ? (
+      {showPartientProfile && (
         <>
-          <BackGroundShadow
-            onClick={() => {
-              setShowPartientProfile(false);
-            }}
-          ></BackGroundShadow>
+          <BackGroundShadow onClick={() => setShowPartientProfile(false)} />
           <PartientsProfile
             handleEditPatientData={handleEditPatientData}
             partientId={partientsSelectId}
             settingData={settingData}
-          ></PartientsProfile>
+          />
         </>
-      ) : (
-        ""
       )}
     </div>
   );

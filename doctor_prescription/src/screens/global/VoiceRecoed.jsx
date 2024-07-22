@@ -1,7 +1,6 @@
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-import useClipboard from "react-use-clipboard";
 import { useEffect, useState } from "react";
 
 const VoiceRecoed = () => {

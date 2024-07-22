@@ -4,8 +4,6 @@ import { IconButton } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { blue, red } from "@mui/material/colors";
 import { useState } from "react";
-import NewMedicalReporyForm from "../NewMedicalReporyForm";
-import BackGroundShadow from "../../pageCompond/BackGroundShadow";
 export default function MedicalReportTable(props) {
   const columns = [
     // { field: '_id', headerName: 'ID', width: 70 },
@@ -13,22 +11,24 @@ export default function MedicalReportTable(props) {
       field: "createdAt",
       headerName: "تاريخ التقرير",
       width: 170,
-      valueGetter: (params) => {
-        const createdAt = new Date(params.row.createdAt);
-        // Format the date to include year, month, day, and time
-        const formattedDate = `${createdAt.getFullYear()}-${String(
-          createdAt.getMonth() + 1
-        ).padStart(2, "0")}-${String(createdAt.getDate()).padStart(
-          2,
-          "0"
-        )} ${String(createdAt.getHours()).padStart(2, "0")}:${String(
-          createdAt.getMinutes()
-        ).padStart(2, "0")}`;
-
-        return formattedDate;
+      renderCell: (params) => {
+        if (params.row && params.row.createdAt) {
+          const createdAt = new Date(params.row.createdAt);
+          // Format the date to include year, month, day, and time
+          const formattedDate = `${createdAt.getFullYear()}-${String(
+            createdAt.getMonth() + 1
+          ).padStart(2, "0")}-${String(createdAt.getDate()).padStart(
+            2,
+            "0"
+          )} ${String(createdAt.getHours()).padStart(2, "0")}:${String(
+            createdAt.getMinutes()
+          ).padStart(2, "0")}`;
+          return <span>{formattedDate}</span>;
+        }
+        return <span>غير معروف</span>; // Return a default value if createdAt is undefined
       },
-    },
-    { field: "report", headerName: "التقرير", width: "330",      renderCell: (params) => (
+        },
+        { field: "report", headerName: "التقرير", width: "330",      renderCell: (params) => (
       <div
       className="p-editor-content ql-container ql-snow"
       style={{

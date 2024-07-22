@@ -13,7 +13,13 @@ import {
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import { allUsersRoute, host } from "../../util/APIRoutes";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import Table from "@mui/material/Table";
@@ -33,22 +39,16 @@ import SpeechRecognition, {
 import ChromeReaderModeIcon from "@mui/icons-material/ChromeReaderMode";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import { io } from "socket.io-client";
-
 import {
   Add,
   ArrowDropDown,
   ArrowDropUp,
   Book,
-  BookOnline,
   Delete,
   Edit,
   Female,
   Male,
-  Medication,
-  Report,
-  Share,
   SwapVert,
-  Vaccines,
 } from "@mui/icons-material";
 import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 import NewPartientsForm from "../../components/Partients/NewPartientsForm";
@@ -72,480 +72,464 @@ import Loading from "../../components/pageCompond/Loading";
 import CancelAlert from "../../components/pageCompond/CancelAlert";
 import DeleteAlert from "../../components/pageCompond/DeleteAlert";
 import VisitForm from "../../components/Partients/VisitForm";
+import { FixedSizeList as List } from "react-window";
 
-function Row(props) {
-  const { row } = props;
-  const [open, setOpen] = React.useState(false);
-  const getPharmaceuticalName = (params) => {
-    const pharmaceuticalArray = params;
-    // Extract the id and name properties from each item in the array
-    if (pharmaceuticalArray) {
-      const pharmaceuticalNames = pharmaceuticalArray.map((item) => {
-        if (item.id !== null) {
-          return item.id.name;
-        }
-        // You can choose to handle the case when item.id is null here,
-        // for example, return a default value or an empty string.
-        return "لا يوجد";
-      });
-      // Join the extracted names into a string and display it in the cell
-      return pharmaceuticalNames.join(", ");
-    } else {
-      return "";
-    }
-  };
+const Row = React.memo(
+  ({
+    row,
+    index,
+    pageSelect,
+    settingData,
+    onNameClickHandle,
+    onBookedHandel,
+    onVisitFormShowHandel,
+    onMedicalFormShowHandle,
+    onPrescriptionShowHande,
+    onReportShowHandel,
+    onLaboryShowHandel,
+    onEditHande,
+    onDeleteHande,
+    onPrescriptionEditHandel,
+    onPrescriptionDeleteHande,
+    currentUser,
+  }) => {
+    const [open, setOpen] = useState(false);
 
-  return (
-    <React.Fragment>
-      <TableRow
-        className={` ${
-          row.booked ? "bg-green-200 hover:bg-green-100" : "hover:bg-blue-50"
-        }`}
-        sx={{ "& > *": { borderBottom: "unset" } }}
-      >
-        <TableCell>{props.index + 1 + 20 * (props.pageSelect - 1)}</TableCell>
-        {props.settingData &&
-        props.settingData.patientsTable &&
-        props.settingData.patientsTable.patientName ? (
-          <TableCell
-            className=" cursor-pointer hover:bg-blue-100"
-            onClick={() => {
-              props.onNameClickHandle(row._id);
-            }}
-            component="th"
-            scope="row"
-            align="center"
-          >
-            <div className="flex justify-center items-center gap-4">
-              {row.name}
-              {row.bookedPriority > 0 ? (
-                <div className=" bg-cyan-500 rounded-full w-8 h-8 flex justify-center items-center">
-                  {row.bookedPriority}
-                </div>
-              ) : (
-                ""
-              )}
-            </div>
-          </TableCell>
-        ) : (
-          ""
-        )}
-        {props.settingData &&
-        props.settingData.patientsTable &&
-        props.settingData.patientsTable.patientDate ? (
-          <TableCell component="th" scope="row" align="center">
-            <div className="bg-green-100 w-full flex justify-center items-center h-6 rounded-full">
-              {new Date(row.createdAt).toLocaleString("en-GB", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-                // hour: "2-digit",
-                // minute: "2-digit",
-                // hour12: true, // Include this option for AM/PM format
-              })}
-            </div>
-          </TableCell>
-        ) : (
-          ""
-        )}
+    const getPharmaceuticalName = (params) => {
+      const pharmaceuticalArray = params;
+      if (pharmaceuticalArray) {
+        const pharmaceuticalNames = pharmaceuticalArray.map((item) => {
+          if (item.id !== null) {
+            return item.id.name;
+          }
+          return "لا يوجد";
+        });
+        return pharmaceuticalNames.join(", ");
+      } else {
+        return "";
+      }
+    };
 
-        {props.settingData &&
-        props.settingData.patientsTable &&
-        props.settingData.patientsTable.patientAge ? (
-          <TableCell component="th" scope="row" align="center">
-            {props.settingData &&
-            props.settingData.patientsTable &&
-            props.settingData.patientsTable.patientAgeYear ? (
-              <div>{row.age ? row.age : 0} سنة</div>
-            ) : (
-              ""
-            )}
-            {props.settingData &&
-            props.settingData.patientsTable &&
-            props.settingData.patientsTable.patientAgeMonth ? (
-              <div>{row.monthAge ? row.monthAge : 0} شهر</div>
-            ) : (
-              ""
-            )}
-            {props.settingData &&
-            props.settingData.patientsTable &&
-            props.settingData.patientsTable.patientAgeDay ? (
-              <div>{row.dayAge ? row.dayAge : 0} يوم</div>
-            ) : (
-              ""
-            )}
-          </TableCell>
-        ) : (
-          ""
-        )}
-        {props.settingData &&
-        props.settingData.patientsTable &&
-        props.settingData.patientsTable.patientGender ? (
-          <TableCell component="th" scope="row" align="center">
-            <div
-              className={`p-0.5 rounded-full  ${
-                row.gender === "ذكر"
-                  ? "bg-blue-200 hover:bg-blue-300"
-                  : "bg-pink-200 hover:bg-pink-300"
-              }`}
+    return (
+      <React.Fragment>
+        <TableRow
+          className={` ${
+            row.booked ? "bg-green-200 hover:bg-green-100" : "hover:bg-blue-50"
+          }`}
+          sx={{ "& > *": { borderBottom: "unset" } }}
+        >
+          <TableCell>{index + 1 + 20 * (pageSelect - 1)}</TableCell>
+          {settingData &&
+          settingData.patientsTable &&
+          settingData.patientsTable.patientName ? (
+            <TableCell
+              className=" cursor-pointer hover:bg-blue-100"
+              onClick={() => {
+                onNameClickHandle(row._id);
+              }}
+              component="th"
+              scope="row"
+              align="center"
             >
-              {row.gender === "ذكر" ? (
-                <Male className=" text-blue-700"></Male>
-              ) : (
-                <Female className=" text-pink-700"></Female>
-              )}
-            </div>
-          </TableCell>
-        ) : (
-          ""
-        )}
-        {props.settingData &&
-        props.settingData.patientsTable &&
-        props.settingData.patientsTable.patientAdresses ? (
-          <TableCell component="th" scope="row" align="center">
-            {row.adresses}
-          </TableCell>
-        ) : (
-          ""
-        )}
-        {props.settingData &&
-        props.settingData.patientsTable &&
-        props.settingData.patientsTable.patientSequance ? (
-          <TableCell component="th" scope="row" align="center">
-            {row.Sequence}
-          </TableCell>
-        ) : (
-          ""
-        )}
-        {props.settingData &&
-        props.settingData.patientsTable &&
-        props.settingData.patientsTable.patientWeghit ? (
-          <TableCell component="th" scope="row" align="center">
-            {row.weight ? row.weight + "kg" : ""}
-          </TableCell>
-        ) : (
-          ""
-        )}
-
-        {props.settingData &&
-        props.settingData.patientsTable &&
-        props.settingData.patientsTable.patientLeanth ? (
-          <TableCell component="th" scope="row" align="center">
-            {row.length ? row.length + "cm" : ""}
-          </TableCell>
-        ) : (
-          ""
-        )}
-        {props.settingData &&
-        props.settingData.patientsTable &&
-        props.settingData.patientsTable.patientVisitNum ? (
-          <TableCell component="th" scope="row" align="center">
-            {row.visitDate.length}
-          </TableCell>
-        ) : (
-          ""
-        )}
-
-        {props.currentUser ? (
-          props.currentUser.role === "doctor" ? (
-            <>
-              {props.settingData &&
-              props.settingData.patientsTable &&
-              props.settingData.patientsTable.patientAddVisit ? (
-                <TableCell align="center">
-                  <IconButton
-                    sx={{ color: blue[800] }}
-                    // className=" hover:text-yellow-500"
-                    onClick={() => {
-                      props.onVisitFormShowHandel(row._id);
-                    }}
-                    aria-label="delete"
-                  >
-                    <ChromeReaderModeIcon
-                      aria-label="expand row"
-                      size="small"
-                    ></ChromeReaderModeIcon>
-                  </IconButton>
-                </TableCell>
-              ) : (
-                ""
-              )}
-              {props.settingData &&
-              props.settingData.patientsTable &&
-              props.settingData.patientsTable.patientAddMedicalData ? (
-                <TableCell align="center">
-                  <IconButton
-                    sx={{ color: blue[800] }}
-                    // className=" hover:text-yellow-500"
-
-                    onClick={() => {
-                      props.onMedicalFormShowHandle(row._id);
-                    }}
-                    aria-label="delete"
-                  >
-                    <ContentPasteIcon
-                      aria-label="expand row"
-                      size="small"
-                    ></ContentPasteIcon>
-                  </IconButton>
-                </TableCell>
-              ) : (
-                ""
-              )}
-              {props.settingData &&
-              props.settingData.patientsTable &&
-              props.settingData.patientsTable.patientAddPrescription ? (
-                <TableCell align="center">
-                  <IconButton
-                    sx={{ color: yellow[800] }}
-                    className=" hover:text-yellow-500"
-                    onClick={() => {
-                      props.onPrescriptionShowHande(row._id);
-                    }}
-                    aria-label="delete"
-                  >
-                    <img
-                      src={process.env.PUBLIC_URL + "/rx-icon.svg"}
-                      alt=""
-                      className="w-7 h-7"
-                    />
-                  </IconButton>
-                </TableCell>
-              ) : (
-                ""
-              )}
-
-              {props.settingData &&
-              props.settingData.patientsTable &&
-              props.settingData.patientsTable.patientAddReport ? (
-                <TableCell align="center">
-                  <IconButton
-                    sx={{ color: blue[800] }}
-                    // className=" hover:text-yellow-500"
-                    onClick={() => {
-                      props.onReportShowHandel(row._id);
-                    }}
-                    aria-label="delete"
-                  >
-                    <SummarizeIcon
-                      aria-label="expand row"
-                      size="small"
-                    ></SummarizeIcon>
-                  </IconButton>
-                </TableCell>
-              ) : (
-                ""
-              )}
-              {props.settingData &&
-              props.settingData.patientsTable &&
-              props.settingData.patientsTable.patientAddLaboryTest ? (
-                <TableCell align="center">
-                  <IconButton
-                    sx={{ color: blue[800] }}
-                    // className=" hover:text-yellow-500"
-                    onClick={() => {
-                      props.onLaboryShowHandel(row._id);
-                    }}
-                    aria-label="delete"
-                  >
-                    <BiotechIcon size={"small"} />
-                  </IconButton>
-                </TableCell>
-              ) : (
-                ""
-              )}
-            </>
+              <div className="flex justify-center items-center gap-4">
+                {row.name}
+                {row.bookedPriority > 0 ? (
+                  <div className=" bg-cyan-500 rounded-full w-8 h-8 flex justify-center items-center">
+                    {row.bookedPriority}
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
+            </TableCell>
           ) : (
             ""
-          )
-        ) : (
-          ""
-        )}
-        {props.settingData &&
-        props.settingData.patientsTable &&
-        props.settingData.patientsTable.patientOption ? (
-          <TableCell align="center">
-            {props.settingData &&
-            props.settingData.patientsTable &&
-            props.settingData.patientsTable.patientBooked ? (
-              <IconButton
-                sx={{ color: purple[400] }}
-                className=" hover:text-purple-600"
-                onClick={() => props.onBookedHandel(row._id)}
-                aria-label="delete"
-                // size="large"
-              >
-                <Book fontSize="inherit" />
-              </IconButton>
-            ) : (
-              ""
-            )}
-
-            {props.currentUser ? (
-              props.currentUser.role === "doctor" ? (
-                <>
-                  {/* <IconButton
-                          sx={{ color: green[400] }}
-                          className=" hover:text-green-600"
-                          onClick={() => props.onShareHande(row._id)}
-                          aria-label="delete"
-                          // size="large"
-                        >
-                          <Share fontSize="inherit" />
-                        </IconButton> */}
-                  <IconButton
-                    onClick={() => {
-                      props.onDeleteHande(row._id);
-                    }}
-                    sx={{ color: red[400] }}
-                    className=" hover:text-red-600"
-                    aria-label="delete"
-
-                    // size="large"
-                  >
-                    <Delete fontSize="inherit" />
-                  </IconButton>
-                </>
+          )}
+          {settingData &&
+          settingData.patientsTable &&
+          settingData.patientsTable.patientDate ? (
+            <TableCell component="th" scope="row" align="center">
+              <div className="bg-green-100 w-full flex justify-center items-center h-6 rounded-full">
+                {new Date(row.createdAt).toLocaleString("en-GB", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
+              </div>
+            </TableCell>
+          ) : (
+            ""
+          )}
+          {settingData &&
+          settingData.patientsTable &&
+          settingData.patientsTable.patientAge ? (
+            <TableCell component="th" scope="row" align="center">
+              {settingData &&
+              settingData.patientsTable &&
+              settingData.patientsTable.patientAgeYear ? (
+                <div>{row.age ? row.age : 0} سنة</div>
               ) : (
                 ""
-              )
+              )}
+              {settingData &&
+              settingData.patientsTable &&
+              settingData.patientsTable.patientAgeMonth ? (
+                <div>{row.monthAge ? row.monthAge : 0} شهر</div>
+              ) : (
+                ""
+              )}
+              {settingData &&
+              settingData.patientsTable &&
+              settingData.patientsTable.patientAgeDay ? (
+                <div>{row.dayAge ? row.dayAge : 0} يوم</div>
+              ) : (
+                ""
+              )}
+            </TableCell>
+          ) : (
+            ""
+          )}
+          {settingData &&
+          settingData.patientsTable &&
+          settingData.patientsTable.patientGender ? (
+            <TableCell component="th" scope="row" align="center">
+              <div
+                className={`p-0.5 rounded-full  ${
+                  row.gender === "ذكر"
+                    ? "bg-blue-200 hover:bg-blue-300"
+                    : "bg-pink-200 hover:bg-pink-300"
+                }`}
+              >
+                {row.gender === "ذكر" ? (
+                  <Male className=" text-blue-700"></Male>
+                ) : (
+                  <Female className=" text-pink-700"></Female>
+                )}
+              </div>
+            </TableCell>
+          ) : (
+            ""
+          )}
+          {settingData &&
+          settingData.patientsTable &&
+          settingData.patientsTable.patientAdresses ? (
+            <TableCell component="th" scope="row" align="center">
+              {row.adresses}
+            </TableCell>
+          ) : (
+            ""
+          )}
+          {settingData &&
+          settingData.patientsTable &&
+          settingData.patientsTable.patientSequance ? (
+            <TableCell component="th" scope="row" align="center">
+              {row.Sequence}
+            </TableCell>
+          ) : (
+            ""
+          )}
+          {settingData &&
+          settingData.patientsTable &&
+          settingData.patientsTable.patientWeghit ? (
+            <TableCell component="th" scope="row" align="center">
+              {row.weight ? row.weight + "kg" : ""}
+            </TableCell>
+          ) : (
+            ""
+          )}
+          {settingData &&
+          settingData.patientsTable &&
+          settingData.patientsTable.patientLeanth ? (
+            <TableCell component="th" scope="row" align="center">
+              {row.length ? row.length + "cm" : ""}
+            </TableCell>
+          ) : (
+            ""
+          )}
+          {settingData &&
+          settingData.patientsTable &&
+          settingData.patientsTable.patientVisitNum ? (
+            <TableCell component="th" scope="row" align="center">
+              {row.visitDate.length}
+            </TableCell>
+          ) : (
+            ""
+          )}
+          {currentUser ? (
+            currentUser.role === "doctor" ? (
+              <>
+                {settingData &&
+                settingData.patientsTable &&
+                settingData.patientsTable.patientAddVisit ? (
+                  <TableCell align="center">
+                    <IconButton
+                      sx={{ color: blue[800] }}
+                      onClick={() => {
+                        onVisitFormShowHandel(row._id);
+                      }}
+                      aria-label="delete"
+                    >
+                      <ChromeReaderModeIcon
+                        aria-label="expand row"
+                        size="small"
+                      ></ChromeReaderModeIcon>
+                    </IconButton>
+                  </TableCell>
+                ) : (
+                  ""
+                )}
+                {settingData &&
+                settingData.patientsTable &&
+                settingData.patientsTable.patientAddMedicalData ? (
+                  <TableCell align="center">
+                    <IconButton
+                      sx={{ color: blue[800] }}
+                      onClick={() => {
+                        onMedicalFormShowHandle(row._id);
+                      }}
+                      aria-label="delete"
+                    >
+                      <ContentPasteIcon
+                        aria-label="expand row"
+                        size="small"
+                      ></ContentPasteIcon>
+                    </IconButton>
+                  </TableCell>
+                ) : (
+                  ""
+                )}
+                {settingData &&
+                settingData.patientsTable &&
+                settingData.patientsTable.patientAddPrescription ? (
+                  <TableCell align="center">
+                    <IconButton
+                      sx={{ color: yellow[800] }}
+                      className=" hover:text-yellow-500"
+                      onClick={() => {
+                        onPrescriptionShowHande(row._id);
+                      }}
+                      aria-label="delete"
+                    >
+                      <img
+                        src={process.env.PUBLIC_URL + "/rx-icon.svg"}
+                        alt=""
+                        className="w-7 h-7"
+                      />
+                    </IconButton>
+                  </TableCell>
+                ) : (
+                  ""
+                )}
+                {settingData &&
+                settingData.patientsTable &&
+                settingData.patientsTable.patientAddReport ? (
+                  <TableCell align="center">
+                    <IconButton
+                      sx={{ color: blue[800] }}
+                      onClick={() => {
+                        onReportShowHandel(row._id);
+                      }}
+                      aria-label="delete"
+                    >
+                      <SummarizeIcon
+                        aria-label="expand row"
+                        size="small"
+                      ></SummarizeIcon>
+                    </IconButton>
+                  </TableCell>
+                ) : (
+                  ""
+                )}
+                {settingData &&
+                settingData.patientsTable &&
+                settingData.patientsTable.patientAddLaboryTest ? (
+                  <TableCell align="center">
+                    <IconButton
+                      sx={{ color: blue[800] }}
+                      onClick={() => {
+                        onLaboryShowHandel(row._id);
+                      }}
+                      aria-label="delete"
+                    >
+                      <BiotechIcon size={"small"} />
+                    </IconButton>
+                  </TableCell>
+                ) : (
+                  ""
+                )}
+              </>
             ) : (
               ""
-            )}
-            <IconButton
-              sx={{ color: blue[400] }}
-              className=" hover:text-blue-600"
-              onClick={() => {
-                props.onEditHande(row._id);
-              }}
-              aria-label="delete"
-            >
-              <Edit aria-label="expand row" size="small"></Edit>
-            </IconButton>
-          </TableCell>
-        ) : (
-          ""
-        )}
-
-        {props.currentUser ? (
-          props.currentUser.role === "doctor" ? (
-            <>
-              {props.settingData &&
-              props.settingData.patientsTable &&
-              props.settingData.patientsTable.patientPrescriptionView ? (
+            )
+          ) : (
+            ""
+          )}
+          {settingData &&
+          settingData.patientsTable &&
+          settingData.patientsTable.patientOption ? (
+            <TableCell align="center">
+              {settingData &&
+              settingData.patientsTable &&
+              settingData.patientsTable.patientBooked ? (
                 <IconButton
-                  type="button"
-                  sx={{ p: "10px" }}
-                  aria-label="search"
-                  onClick={() => setOpen(!open)}
+                  sx={{ color: purple[400] }}
+                  className=" hover:text-purple-600"
+                  onClick={() => onBookedHandel(row._id)}
+                  aria-label="delete"
                 >
-                  {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                  <Book fontSize="inherit" />
                 </IconButton>
               ) : (
                 ""
               )}
-            </>
+              {currentUser ? (
+                currentUser.role === "doctor" ? (
+                  <>
+                    <IconButton
+                      onClick={() => {
+                        onDeleteHande(row._id);
+                      }}
+                      sx={{ color: red[400] }}
+                      className=" hover:text-red-600"
+                      aria-label="delete"
+                    >
+                      <Delete fontSize="inherit" />
+                    </IconButton>
+                  </>
+                ) : (
+                  ""
+                )
+              ) : (
+                ""
+              )}
+              <IconButton
+                sx={{ color: blue[400] }}
+                className=" hover:text-blue-600"
+                onClick={() => {
+                  onEditHande(row._id);
+                }}
+                aria-label="delete"
+              >
+                <Edit aria-label="expand row" size="small"></Edit>
+              </IconButton>
+            </TableCell>
           ) : (
             ""
-          )
-        ) : (
-          ""
-        )}
-      </TableRow>
-      <TableRow>
-        <TableCell
-          style={{ paddingBottom: 0, paddingTop: 0, border: "none" }}
-          colSpan={16}
-        >
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography
-                variant="h6"
-                className=" text-right font-bold"
-                gutterBottom
-                component="div"
-              >
-                تاريخ الفحوصات
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center">عدد الادوية</TableCell>
-                    <TableCell align="center">التشخيص</TableCell>
-                    <TableCell align="center">التاريخ</TableCell>
-                    <TableCell align="center">الادوية</TableCell>
-                    <TableCell align="center">الخيارات</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.prescription.map((prescription) => (
-                    <TableRow
-                      key={prescription._id}
-                      className="hover:bg-gray-50"
-                      onClick={() => {
-                        if (props.settingData.openEditPrescriptionByClick) {
-                          props.onPrescriptionEditHandel(
-                            row._id,
-                            prescription._id
-                          );
-                        }
-                      }}
-                    >
-                      <TableCell align="center">
-                        {prescription.pharmaceutical.length}
-                      </TableCell>
-                      <TableCell align="center">
-                        {prescription.MedicalDiagnosis}
-                      </TableCell>
-                      <TableCell align="center">
-                        {prescription.createdAt}
-                      </TableCell>
-                      <TableCell align="center">
-                        {getPharmaceuticalName(prescription.pharmaceutical)}
-                      </TableCell>
-                      <TableCell align="center">
-                        <IconButton
-                          onClick={() => {
-                            props.onPrescriptionDeleteHande(
-                              row._id,
-                              prescription._id
-                            );
-                          }}
-                          sx={{ color: red[400] }}
-                          className=" hover:text-red-600"
-                          aria-label="delete"
-
-                          // size="large"
-                        >
-                          <Delete fontSize="inherit" />
-                        </IconButton>
-                        <IconButton
-                          onClick={() => {
-                            props.onPrescriptionEditHandel(
-                              row._id,
-                              prescription._id
-                            );
-                          }}
-                          sx={{ color: blue[400] }}
-                          className=" hover:text-red-600"
-                          aria-label="delete"
-
-                          // size="large"
-                        >
-                          <Edit fontSize="inherit" />
-                        </IconButton>
-                      </TableCell>
+          )}
+          {currentUser ? (
+            currentUser.role === "doctor" ? (
+              <>
+                {settingData &&
+                settingData.patientsTable &&
+                settingData.patientsTable.patientPrescriptionView ? (
+                  <IconButton
+                    type="button"
+                    sx={{ p: "10px" }}
+                    aria-label="search"
+                    onClick={() => setOpen(!open)}
+                  >
+                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                  </IconButton>
+                ) : (
+                  ""
+                )}
+              </>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
+        </TableRow>
+        <TableRow>
+          <TableCell
+            style={{ paddingBottom: 0, paddingTop: 0, border: "none" }}
+            colSpan={16}
+          >
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Box sx={{ margin: 1 }}>
+                <Typography
+                  variant="h6"
+                  className=" text-right font-bold"
+                  gutterBottom
+                  component="div"
+                >
+                  تاريخ الفحوصات
+                </Typography>
+                <Table size="small" aria-label="purchases">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center">عدد الادوية</TableCell>
+                      <TableCell align="center">التشخيص</TableCell>
+                      <TableCell align="center">التاريخ</TableCell>
+                      <TableCell align="center">الادوية</TableCell>
+                      <TableCell align="center">الخيارات</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
-}
+                  </TableHead>
+                  <TableBody>
+                    {row.prescription.map((prescription) => (
+                      <TableRow
+                        key={prescription._id}
+                        className="hover:bg-gray-50"
+                        onClick={() => {
+                          if (settingData.openEditPrescriptionByClick) {
+                            onPrescriptionEditHandel(row._id, prescription._id);
+                          }
+                        }}
+                      >
+                        <TableCell align="center">
+                          {prescription.pharmaceutical.length}
+                        </TableCell>
+                        <TableCell align="center">
+                          {prescription.MedicalDiagnosis}
+                        </TableCell>
+                        <TableCell align="center">
+                          {prescription.createdAt ? prescription.createdAt : ""}
+                        </TableCell>
+                        <TableCell align="center">
+                          {getPharmaceuticalName(prescription.pharmaceutical)}
+                        </TableCell>
+                        <TableCell align="center">
+                          <IconButton
+                            onClick={() => {
+                              onPrescriptionDeleteHande(
+                                row._id,
+                                prescription._id
+                              );
+                            }}
+                            sx={{ color: red[400] }}
+                            className=" hover:text-red-600"
+                            aria-label="delete"
+                          >
+                            <Delete fontSize="inherit" />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => {
+                              onPrescriptionEditHandel(
+                                row._id,
+                                prescription._id
+                              );
+                            }}
+                            sx={{ color: blue[400] }}
+                            className=" hover:text-red-600"
+                            aria-label="delete"
+                          >
+                            <Edit fontSize="inherit" />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </React.Fragment>
+    );
+  }
+);
+
 function Partients() {
   const [showCalendar, setShowCalendar] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -603,225 +587,276 @@ function Partients() {
   const [groupList, setGroupList] = useState();
   const [selectedReport, setSelectedReport] = useState({});
   const [selectedaLabory, setSelectedaLabory] = useState({});
-  const currentURL = window.location.origin; // Get the current URL
-  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000
+  const currentURL = window.location.origin;
+  const serverAddress = currentURL.replace(/:\d+/, ":5000");
   const [midscapeData, setMidscapeData] = useState([]);
   const [pageSelect, SetPageSelect] = useState(1);
   const [patientCount, setPatientCount] = useState(20);
-  const handleReportDelete = (id) => {
-    if (settingData.abortProssesMsg) {
-      setDeleteInfo({ id: id, type: "reportDelete" });
-      setDeleteAlert(true);
-    } else {
+
+  const getPatientsList = useCallback(() => {
+    axios
+      .get(`${serverAddress}/patients/getall/${pageSelect}`, {
+        params: {
+          sort: queryType,
+          order: queryOrder,
+        },
+      })
+      .then((response) => {
+        setPatientsList(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, [pageSelect, queryOrder, queryType, serverAddress]);
+
+  const getPatientsCount = useCallback(() => {
+    axios
+      .get(`${serverAddress}/patients/getcount/`)
+      .then((response) => {
+        setPatientCount(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, [serverAddress]);
+
+  const handleReportDelete = useCallback(
+    (id) => {
+      if (settingData.abortProssesMsg) {
+        setDeleteInfo({ id: id, type: "reportDelete" });
+        setDeleteAlert(true);
+      } else {
+        axios
+          .delete(`${serverAddress}/medicalreports/delete/${id}/`)
+          .then((response) => {
+            setProfileRefresh(!profileRefresh);
+          })
+          .catch((error) => {
+            setLoading(() => true);
+            console.error(`Error deleting category with ID ${id}:`, error);
+          });
+      }
+    },
+    [profileRefresh, serverAddress, settingData.abortProssesMsg]
+  );
+
+  const onImageDeleteHandle = useCallback(
+    (data) => {
       axios
-        .delete(`${serverAddress}/medicalreports/delete/${id}/`)
+        .post(`${serverAddress}/patients/images/delete`, {
+          id: partientsSelectId,
+          imageUrl: data,
+        })
         .then((response) => {
           setProfileRefresh(!profileRefresh);
         })
         .catch((error) => {
-          setLoading(() => true);
-          console.error(`Error deleting category with ID ${id}:`, error);
+          console.error("Error making POST request:", error);
         });
-    }
-  };
-  const onImageDeleteHandle = (data) => {
-    console.log(data);
-    axios
-      .post(`${serverAddress}/patients/images/delete`, {
-        id: partientsSelectId,
-        imageUrl: data,
-      })
-      .then((response) => {
-        // getPatientsList();
-        setProfileRefresh(!profileRefresh);
-      })
-      .catch((error) => {
-        // Handle errors if the request fails
-        console.error("Error making POST request:", error);
-      });
-  };
+    },
+    [partientsSelectId, profileRefresh, serverAddress]
+  );
 
   useEffect(() => {
-    // Establish connection to the socket.io server
-    const socket = io(host);
-
-    // Listen for the "book-received" event
-    socket.on("book-received", (data) => {
-      console.log("Received book data:", data);
+    const socketConnection = io(host);
+    socketConnection.on("book-received", (data) => {
       getPatientsList();
-      // Handle the received data here
     });
-    socket.on("new-patient", (data) => {
-      console.log("Received book data:", data);
+    socketConnection.on("new-patient", (data) => {
       getPatientsList();
-      // Handle the received data here
     });
 
-    // Cleanup function to disconnect the socket when the component unmounts
     return () => {
-      socket.disconnect();
+      socketConnection.disconnect();
     };
-  }, []); // Empty dependency array ensures this effect runs only once
+  }, []);
 
-  const onBookedHandel = (id) => {
-    axios
-      .post(`${serverAddress}/patients/bookPatents`, {
-        id: id,
-      })
-      .then((response) => {
-        socket.current.emit("send-book", {
-          to: "",
-        });
-
-        getPatientsList();
-      })
-      .catch((error) => {
-        // Handle errors if the request fails
-        console.error("Error making POST request:", error);
-      });
-  };
-  const handleEditReportData = (data) => {
-    axios
-      .post(`${serverAddress}/medicalreports/editone`, {
-        id: selectedReport._id,
-        data: data,
-      })
-      .then((response) => {
-        setProfileRefresh(!profileRefresh);
-        setShowReportEditForm(false);
-      })
-      .catch((error) => {
-        // Handle errors if the request fails
-        console.error("Error making POST request:", error);
-      });
-  };
-  const handleReportEdit = (id) => {
-    axios
-      .get(`${serverAddress}/medicalreports/getone/${id}`)
-      .then((response) => {
-        setSelectedReport(response.data);
-        setShowReportEditForm(true);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-  };
-
-  const handleLabReportEdit = (id) => {
-    axios
-      .get(`${serverAddress}/labory/getone/${id}`)
-      .then((response) => {
-        setSelectedaLabory(response.data);
-        setShowLabReportEditForm(true);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-  };
-  const handleLabReportDelete = (id) => {
-    if (settingData.abortProssesMsg) {
-      setDeleteInfo({ id: id, type: "labDelete" });
-      setDeleteAlert(true);
-    } else {
+  const onBookedHandel = useCallback(
+    (id) => {
       axios
-        .delete(`${serverAddress}/labory/delete/${id}/`)
+        .post(`${serverAddress}/patients/bookPatents`, {
+          id: id,
+        })
         .then((response) => {
-          setProfileRefresh(!profileRefresh);
+          socket.current.emit("send-book", {
+            to: "",
+          });
+          getPatientsList();
         })
         .catch((error) => {
-          setLoading(() => true);
-          console.error(`Error deleting category with ID ${id}:`, error);
+          console.error("Error making POST request:", error);
         });
-    }
-  };
-  const handleEditLabReportData = (data) => {
-    axios
-      .post(`${serverAddress}/labory/editone`, {
-        id: selectedaLabory._id,
-        data: data,
-      })
-      .then((response) => {
-        setProfileRefresh(!profileRefresh);
-        setShowLabReportEditForm(false);
-      })
-      .catch((error) => {
-        // Handle errors if the request fails
-        console.error("Error making POST request:", error);
-      });
-  };
+    },
+    [serverAddress]
+  );
 
-  const handelVisitReportEdit = (id) => {
-    axios
-      .get(`${serverAddress}/visit/getone/${id}`)
-      .then((response) => {
-        setSelectedaLabory(response.data);
-        setShowVisitReportEditForm(true);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-  };
-  const handelVisitReportDelete = (id) => {
-    if (settingData.abortProssesMsg) {
-      setDeleteInfo({ id: id, type: "visitDelete" });
-      setDeleteAlert(true);
-    } else {
+  const handleEditReportData = useCallback(
+    (data) => {
       axios
-        .delete(`${serverAddress}/visit/delete/${id}/`)
+        .post(`${serverAddress}/medicalreports/editone`, {
+          id: selectedReport._id,
+          data: data,
+        })
         .then((response) => {
           setProfileRefresh(!profileRefresh);
+          setShowReportEditForm(false);
         })
         .catch((error) => {
-          setLoading(() => true);
-          console.error(`Error deleting category with ID ${id}:`, error);
+          console.error("Error making POST request:", error);
         });
-    }
-  };
-  const handelEditVisitReportData = (data) => {
-    axios
-      .post(`${serverAddress}/visit/editone`, {
-        id: selectedaLabory._id,
-        data: data,
-      })
-      .then((response) => {
-        setProfileRefresh(!profileRefresh);
-        setShowVisitReportEditForm(false);
-      })
-      .catch((error) => {
-        // Handle errors if the request fails
-        console.error("Error making POST request:", error);
-      });
-  };
-  const getAllGroup = () => {
+    },
+    [selectedReport._id, profileRefresh, serverAddress]
+  );
+
+  const handleReportEdit = useCallback(
+    (id) => {
+      axios
+        .get(`${serverAddress}/medicalreports/getone/${id}`)
+        .then((response) => {
+          setSelectedReport(response.data);
+          setShowReportEditForm(true);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    },
+    [serverAddress]
+  );
+
+  const handleLabReportEdit = useCallback(
+    (id) => {
+      axios
+        .get(`${serverAddress}/labory/getone/${id}`)
+        .then((response) => {
+          setSelectedaLabory(response.data);
+          setShowLabReportEditForm(true);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    },
+    [serverAddress]
+  );
+
+  const handleLabReportDelete = useCallback(
+    (id) => {
+      if (settingData.abortProssesMsg) {
+        setDeleteInfo({ id: id, type: "labDelete" });
+        setDeleteAlert(true);
+      } else {
+        axios
+          .delete(`${serverAddress}/labory/delete/${id}/`)
+          .then((response) => {
+            setProfileRefresh(!profileRefresh);
+          })
+          .catch((error) => {
+            setLoading(() => true);
+            console.error(`Error deleting category with ID ${id}:`, error);
+          });
+      }
+    },
+    [profileRefresh, serverAddress, settingData.abortProssesMsg]
+  );
+
+  const handleEditLabReportData = useCallback(
+    (data) => {
+      axios
+        .post(`${serverAddress}/labory/editone`, {
+          id: selectedaLabory._id,
+          data: data,
+        })
+        .then((response) => {
+          setProfileRefresh(!profileRefresh);
+          setShowLabReportEditForm(false);
+        })
+        .catch((error) => {
+          console.error("Error making POST request:", error);
+        });
+    },
+    [selectedaLabory._id, profileRefresh, serverAddress]
+  );
+
+  const handelVisitReportEdit = useCallback(
+    (id) => {
+      axios
+        .get(`${serverAddress}/visit/getone/${id}`)
+        .then((response) => {
+          setSelectedaLabory(response.data);
+          setShowVisitReportEditForm(true);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    },
+    [serverAddress]
+  );
+
+  const handelVisitReportDelete = useCallback(
+    (id) => {
+      if (settingData.abortProssesMsg) {
+        setDeleteInfo({ id: id, type: "visitDelete" });
+        setDeleteAlert(true);
+      } else {
+        axios
+          .delete(`${serverAddress}/visit/delete/${id}/`)
+          .then((response) => {
+            setProfileRefresh(!profileRefresh);
+          })
+          .catch((error) => {
+            setLoading(() => true);
+            console.error(`Error deleting category with ID ${id}:`, error);
+          });
+      }
+    },
+    [profileRefresh, serverAddress, settingData.abortProssesMsg]
+  );
+
+  const handelEditVisitReportData = useCallback(
+    (data) => {
+      axios
+        .post(`${serverAddress}/visit/editone`, {
+          id: selectedaLabory._id,
+          data: data,
+        })
+        .then((response) => {
+          setProfileRefresh(!profileRefresh);
+          setShowVisitReportEditForm(false);
+        })
+        .catch((error) => {
+          console.error("Error making POST request:", error);
+        });
+    },
+    [selectedaLabory._id, profileRefresh, serverAddress]
+  );
+
+  const getAllGroup = useCallback(() => {
     axios
       .get(`${serverAddress}/pharmaceuticalGroup/getall`)
       .then((response) => {
-        setGroupList(response.data); // Update the categories state with the fetched data
-        console.log(response.data);
+        setGroupList(response.data);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
-  };
+  }, [serverAddress]);
 
-  const changeReportHeaderName = (headerName) => {
-    const data = { reportHeaderName: headerName };
-    console.log(medicalReportsStype);
-    axios
-      .post(`${serverAddress}/medicaleeportstyle/update`, {
-        id: medicalReportsStype._id,
-        data: data,
-      })
-      .then((response) => {
-        // Handle the response if needed
-        getMedicalReportsStyle();
-        console.log("POST request successful:", response.data);
-      })
-      .catch((error) => {
-        // Handle errors if the request fails
-        console.error("Error making POST request:", error);
-      });
-  };
+  const changeReportHeaderName = useCallback(
+    (headerName) => {
+      const data = { reportHeaderName: headerName };
+      axios
+        .post(`${serverAddress}/medicaleeportstyle/update`, {
+          id: medicalReportsStype._id,
+          data: data,
+        })
+        .then((response) => {
+          getMedicalReportsStyle();
+        })
+        .catch((error) => {
+          console.error("Error making POST request:", error);
+        });
+    },
+    [medicalReportsStype._id, serverAddress]
+  );
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -859,113 +894,96 @@ function Partients() {
         });
     };
     getSettingApi();
-  }, []);
+  }, [getAllGroup, serverAddress]);
 
   useEffect(() => {
     getMedicalReportsStyle();
-  }, []); // The empty array [] means this effect runs only once, like componentDidMount
-  const getMedicalReportsStyle = () => {
+  }, []);
+
+  const getMedicalReportsStyle = useCallback(() => {
     axios
       .get(`${serverAddress}/medicaleeportstyle/getmedicalreportstype`)
       .then((response) => {
-        setMedicalReportsStype(response.data[0]); // Update the categories state with the fetched data
+        setMedicalReportsStype(response.data[0]);
         setLoading(true);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
-  };
-  const handlePrint = () => {
+  }, [serverAddress]);
+
+  const handlePrint = useCallback(() => {
     axios
       .get(
         `${serverAddress}/patients/printpatientsdata/${partientsSelectId}/prescription/${PrescriptionId}`
       )
       .then((response) => {
-        setDataToPrint(response.data); // Update the categories state with the fetched data
+        setDataToPrint(response.data);
         setprints(true);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
-  };
+  }, [partientsSelectId, PrescriptionId, serverAddress]);
+
   useEffect(() => {
     axios
       .get(`${serverAddress}/category/getall`)
       .then((response) => {
-        setCategoryList(response.data); // Update the categories state with the fetched data
+        setCategoryList(response.data);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
-  }, []); // The empty array [] means this effect runs only once, like componentDidMount
+  }, [serverAddress]);
+
   useEffect(() => {
     getPharmaceApi();
-  }, []); // The empty array [] means this effect runs only once, like componentDidMount
-  const getPharmaceApi = () => {
+  }, [serverAddress]);
+
+  const getPharmaceApi = useCallback(() => {
     axios
       .get(`${serverAddress}/pharmaceutical/getall`)
       .then((response) => {
-        setPharmaceList(response.data); // Update the categories state with the fetched data
+        setPharmaceList(response.data);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
-  };
+  }, [serverAddress]);
 
   useEffect(() => {
     axios
       .get(`${serverAddress}/intaketime/getall`)
       .then((response) => {
-        setInTakeTime(response.data); // Update the categories state with the fetched data
+        setInTakeTime(response.data);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
-  }, []); // The empty array [] means this effect runs only once, like componentDidMount
-  const getConstDiseasesApi = () => {
+  }, [serverAddress]);
+
+  const getConstDiseasesApi = useCallback(() => {
     axios
       .get(`${serverAddress}/constantdiseases/getall`)
       .then((response) => {
-        setConstantDiseases(response.data); // Update the categories state with the fetched data
+        setConstantDiseases(response.data);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
-  };
+  }, [serverAddress]);
+
   useEffect(() => {
     getConstDiseasesApi();
     getPatientsList();
     getPatientsCount();
-  }, []); // The empty array [] means this effect runs only once, like componentDidMount
-  const getPatientsList = () => {
-    axios
-      .get(`${serverAddress}/patients/getall/${pageSelect}`, {
-        params: {
-          sort: queryType,
-          order: queryOrder,
-        },
-      })
+  }, [getConstDiseasesApi, getPatientsList, getPatientsCount]);
 
-      .then((response) => {
-        setPatientsList(response.data); // Update the categories state with the fetched data
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-  };
-  const getPatientsCount = () => {
-    axios
-      .get(`${serverAddress}/patients/getcount/`)
-      .then((response) => {
-        setPatientCount(response.data); // Update the categories state with the fetched data
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-  };
   const handleAddButtonClick = () => {
     setShowAddForm(true);
   };
+
   const handleHideClick = () => {
     setNextVisit("");
     setPharmaceListInside([]);
@@ -977,372 +995,429 @@ function Partients() {
       setEditPrescriptionData("");
     }
   };
-  const handleOnBillInsideRemove = (id) => {
-    if (settingData.abortProssesMsg) {
-      setDeleteInfo({ id: id, type: "prescriptioBillnDelete" });
-      setDeleteAlert(true);
-    } else {
-      setLoading(() => false);
-      axios
-        .delete(
-          `${serverAddress}/prescription/removebill/${PrescriptionId}/pharmaceutical/${id}`
-        )
-        .then((response) => {
-          setLoading(() => true);
-          // Handle success, e.g., show a success message or update the categories list
-          console.log(`Category with ID ${id} has been deleted.`);
-          getAllPrescription(PrescriptionId);
-          // You might want to update the categories list here to reflect the changes
-        })
-        .catch((error) => {
-          setLoading(() => true);
-          console.error(`Error deleting category with ID ${id}:`, error);
-        });
-    }
-  };
+
+  const handleOnBillInsideRemove = useCallback(
+    (id) => {
+      if (settingData.abortProssesMsg) {
+        setDeleteInfo({ id: id, type: "prescriptioBillnDelete" });
+        setDeleteAlert(true);
+      } else {
+        setLoading(() => false);
+        axios
+          .delete(
+            `${serverAddress}/prescription/removebill/${PrescriptionId}/pharmaceutical/${id}`
+          )
+          .then((response) => {
+            setLoading(() => true);
+            getAllPrescription(PrescriptionId);
+          })
+          .catch((error) => {
+            setLoading(() => true);
+            console.error(`Error deleting category with ID ${id}:`, error);
+          });
+      }
+    },
+    [PrescriptionId, serverAddress, settingData.abortProssesMsg]
+  );
+
   const onShareHande = (id) => {
     console.log(`Share clicked for id ${id}`);
   };
-  const onDeleteHande = (id) => {
-    if (settingData.abortProssesMsg) {
-      setDeleteInfo({ id: id, type: "patientsDelete" });
-      setDeleteAlert(true);
-    } else {
-      setLoading(false);
-      axios
-        .delete(`${serverAddress}/patients/delete/${id}`)
-        .then((response) => {
-          setLoading(true);
-          getPatientsList();
-          // You might want to update the categories list here to reflect the changes
-        })
-        .catch((error) => {
-          setLoading(true);
 
-          // Handle error, e.g., show an error message
-          console.error(`Error deleting category with ID ${id}:`, error);
-        });
-
-      console.log(`Delete clicked for id ${id}`);
-    }
-  };
-  const onEditHande = (id) => {
-    axios
-      .get(`${serverAddress}/patients/medicalinfo/${id}`)
-      .then((response) => {
-        setUserEditData(response.data);
-        setShowPartientsEditForm(true);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-
-    console.log(`Edit clicked for id ${id}`);
-  };
-  const onPrescriptionShowHande = (id) => {
-    axios
-      .post(`${serverAddress}/prescription/new`, { PartientsId: id })
-      .then((response) => {
-        // Handle the response if needed
-        setPharmaceListInside([]);
-        setPrescriptionId(response.data.prescriptionId);
-        setPartientsSelectId(id);
+  const onDeleteHande = useCallback(
+    (id) => {
+      if (settingData.abortProssesMsg) {
+        setDeleteInfo({ id: id, type: "patientsDelete" });
+        setDeleteAlert(true);
+      } else {
+        setLoading(false);
         axios
-          .get(`${serverAddress}/patients/medicalinfo/${id}`)
+          .delete(`${serverAddress}/patients/delete/${id}`)
           .then((response) => {
-            setUserEditData(response.data);
+            setLoading(true);
+            getPatientsList();
           })
           .catch((error) => {
-            console.error("Error fetching categories:", error);
+            setLoading(true);
+            console.error(`Error deleting category with ID ${id}:`, error);
           });
+      }
+    },
+    [getPatientsList, serverAddress, settingData.abortProssesMsg]
+  );
 
-        setShowPartientsAddForm(true);
-        setUserData(response.data.patientFumbling);
-      })
-      .catch((error) => {
-        // Handle errors if the request fails
-        console.error("Error making POST request:", error);
-      });
-
-    console.log(`Prescription Show clicked for id ${id}`);
-  };
-  const onReportShowHandel = (id) => {
-    setPartientsSelectId(id);
-    axios
-      .get(`${serverAddress}/patients/getone/${id}`)
-      .then((response) => {
-        setUserEditData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-
-    setShowAddReportForm(true);
-
-    console.log(`Prescription Show clicked for id ${id}`);
-  };
-  const onLaboryShowHandel = (id) => {
-    setPartientsSelectId(id);
-    setShowLaporyReportForm(true);
-
-    console.log(`Prescription Show clicked for id ${id}`);
-  };
-  const onMedicalFormShowHandle = (id) => {
-    axios
-      .get(`${serverAddress}/patients/medicalinfo/${id}`)
-      .then((response) => {
-        setUserEditData(response.data);
-        setPartientsSelectId(id);
-        setShowMidicalForm(true);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-
-    console.log(`Prescription Show clicked for id ${id}`);
-  };
-  const handleNewPatientData = (data) => {
-    axios
-      .post(`${serverAddress}/patients/new`, data)
-      .then((response) => {
-        // Handle the response if needed
-        socket.current.emit("new-patient", {
-          to: "",
-        });
-        getConstDiseasesApi();
-        getPharmaceApi();
-        getPatientsList();
-        setShowAddForm(false);
-      })
-      .catch((error) => {
-        // Handle errors if the request fails
-        console.error("Error making POST request:", error);
-      });
-
-    // Update the state or perform actions with the data as needed
-  };
-  const handleEditPatientData = (data) => {
-    data.id = userEditData._id;
-    axios
-      .post(`${serverAddress}/patients/edit`, data)
-      .then((response) => {
-        // Handle the response if needed
-        getPharmaceApi();
-        getPatientsList();
-        setShowPartientsEditForm(false);
-        setShowMidicalForm(false);
-      })
-      .catch((error) => {
-        // Handle errors if the request fails
-        console.error("Error making POST request:", error);
-      });
-  };
-  const onBillGroupAdded = (data) => {
-    axios
-      .post(`${serverAddress}/prescription/postpharmaceuticalgroup`, data)
-      .then((response) => {
-        // Handle the response if needed
-        getAllPrescription(data.PrescriptionId);
-      })
-      .catch((error) => {
-        // Handle errors if the request fails
-        console.error("Error making POST request:", error);
-      });
-  };
-
-  const handleOnBillAdded = (data) => {
-    axios
-      .post(`${serverAddress}/prescription/postpharmaceutical`, data)
-      .then((response) => {
-        getPharmaceApi();
-        // Handle the response if needed
-        getAllPrescription(data.PrescriptionId);
-      })
-      .catch((error) => {
-        // Handle errors if the request fails
-        console.error("Error making POST request:", error);
-      });
-  };
-  const getAllPrescription = (PrescriptionId) => {
-    axios
-      .get(`${serverAddress}/prescription/getbills/${PrescriptionId}`)
-      .then((response) => {
-        setPharmaceListInside(() => response.data.prescription); // Update the categories state with the fetched data
-        medscapecheck(PrescriptionId);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-  };
-  const medscapecheck = (PrescriptionId) => {
-    axios
-      .get(`${serverAddress}/prescription/medscapecheck/${PrescriptionId}`)
-      .then((response) => {
-        setMidscapeData(() => response.data.midscapeData);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-  };
-  const onNameClickHandle = (id) => {
-    setPartientsSelectId(id);
-    axios
-      .get(`${serverAddress}/patients/medicalinfo/${id}`)
-      .then((response) => {
-        setUserEditData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-
-    setShowPartientProfile(true);
-  };
-  const handleNewPrescriptionData = (data) => {
-    data.patientId = partientsSelectId;
-    axios
-      .post(`${serverAddress}/prescription/ubdateData`, { data })
-      .then((response) => {
-        // Handle the response if needed
-        getPatientsList();
-        setEditPrescriptionData("");
-        setNextVisit("");
-        setShowPartientsAddForm(false);
-      })
-      .catch((error) => {
-        // Handle errors if the request fails
-        console.error("Error making POST request:", error);
-      });
-  };
-  const handlePrintFeedBack = () => {
-    setprints(false);
-  };
-  const HandleonPrinterClick = () => {
-    handlePrint();
-  };
-  const HandleonPrinterClickText = (data) => {
-    axios
-      .get(`${serverAddress}/patients/medicalinfo/${partientsSelectId}`)
-      .then((response) => {
-        setDataToPrint({ patients: response.data, textonly: true, data: data }); // Update the categories state with the fetched data
-        setprints(true);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-  };
-  const HandleonPrinterLabClickText = (data) => {
-    axios
-      .get(`${serverAddress}/patients/medicalinfo/${partientsSelectId}`)
-      .then((response) => {
-        setDataToPrint({
-          patients: response.data,
-          textonly: true,
-          data: data,
-          type: "Lab",
-        }); // Update the categories state with the fetched data
-        setprints(true);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-  };
-
-  const handleNewReportData = (data) => {
-    axios
-      .post(`${serverAddress}/medicalreports/new`, { data })
-      .then((response) => {
-        // Handle the response if needed
-        getPatientsList();
-        setShowAddReportForm(false);
-      })
-      .catch((error) => {
-        // Handle errors if the request fails
-        console.error("Error making POST request:", error);
-      });
-  };
-
-  const handleNewLaboryData = (data) => {
-    axios
-      .post(`${serverAddress}/labory/new`, { data })
-      .then((response) => {
-        // Handle the response if needed
-        getPatientsList();
-        setShowLaporyReportForm(false);
-      })
-      .catch((error) => {
-        // Handle errors if the request fails
-        console.error("Error making POST request:", error);
-      });
-  };
-
-  const handleNewVisit = (data) => {
-    axios
-      .post(`${serverAddress}/visit/new`, { data })
-      .then((response) => {
-        // Handle the response if needed
-        getPatientsList();
-        setShowVisitForm(false);
-      })
-      .catch((error) => {
-        // Handle errors if the request fails
-        console.error("Error making POST request:", error);
-      });
-  };
-
-  const handeSearchInput = (event) => {
-    const searchInputValue = event.target.value;
-    if (searchInputValue === "") {
-      getPatientsList();
-    } else {
+  const onEditHande = useCallback(
+    (id) => {
       axios
-        .get(`${serverAddress}/patients/getbyname/${searchInputValue}`)
+        .get(`${serverAddress}/patients/medicalinfo/${id}`)
         .then((response) => {
-          setPatientsList(response.data); // Update the categories state with the fetched data
+          setUserEditData(response.data);
+          setShowPartientsEditForm(true);
         })
         .catch((error) => {
           console.error("Error fetching categories:", error);
         });
-    }
-  };
-  const HandleOnPrescriptionDeleteHande = (patientsId, prescriptionId) => {
-    if (settingData.abortProssesMsg) {
-      setDeleteInfo({
-        id: { patientsId, prescriptionId },
-        type: "prescriptioDelete",
-      });
-      setDeleteAlert(true);
-    } else {
+    },
+    [serverAddress]
+  );
+
+  const onPrescriptionShowHande = useCallback(
+    (id) => {
       axios
-        .delete(
-          `${serverAddress}/patients/Patientsid/${patientsId}/prescriptionid/${prescriptionId}
-      `
-        )
+        .post(`${serverAddress}/prescription/new`, { PartientsId: id })
         .then((response) => {
-          setProfileRefresh(!profileRefresh);
-          // Handle success, e.g., show a success message or update the categories list
-          getPatientsList();
-          // You might want to update the categories list here to reflect the changes
+          setPharmaceListInside([]);
+          setPrescriptionId(response.data.prescriptionId);
+          setPartientsSelectId(id);
+          axios
+            .get(`${serverAddress}/patients/medicalinfo/${id}`)
+            .then((response) => {
+              setUserEditData(response.data);
+            })
+            .catch((error) => {
+              console.error("Error fetching categories:", error);
+            });
+
+          setShowPartientsAddForm(true);
+          setUserData(response.data.patientFumbling);
         })
         .catch((error) => {
-          // Handle error, e.g., show an error message
+          console.error("Error making POST request:", error);
         });
-    }
-  };
-  const onPrescriptionEditHandel = (patientsId, prescriptionId) => {
-    axios
-      .get(`${serverAddress}/prescription/getone/${prescriptionId}?`)
-      .then((response) => {
-        setPrescriptionId(response.data._id);
-        getAllPrescription(response.data._id);
-        setPartientsSelectId(patientsId);
+    },
+    [serverAddress]
+  );
 
-        setEditPrescriptionData(response.data);
-        setShowPartientsAddForm(true);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
+  const onReportShowHandel = useCallback(
+    (id) => {
+      setPartientsSelectId(id);
+      axios
+        .get(`${serverAddress}/patients/getone/${id}`)
+        .then((response) => {
+          setUserEditData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+      setShowAddReportForm(true);
+    },
+    [serverAddress]
+  );
+
+  const onLaboryShowHandel = (id) => {
+    setPartientsSelectId(id);
+    setShowLaporyReportForm(true);
   };
+
+  const onMedicalFormShowHandle = useCallback(
+    (id) => {
+      axios
+        .get(`${serverAddress}/patients/medicalinfo/${id}`)
+        .then((response) => {
+          setUserEditData(response.data);
+          setPartientsSelectId(id);
+          setShowMidicalForm(true);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    },
+    [serverAddress]
+  );
+
+  const handleNewPatientData = useCallback(
+    (data) => {
+      axios
+        .post(`${serverAddress}/patients/new`, data)
+        .then((response) => {
+          socket.current.emit("new-patient", {
+            to: "",
+          });
+          getConstDiseasesApi();
+          getPharmaceApi();
+          getPatientsList();
+          setShowAddForm(false);
+        })
+        .catch((error) => {
+          console.error("Error making POST request:", error);
+        });
+    },
+    [getConstDiseasesApi, getPatientsList, getPharmaceApi, serverAddress]
+  );
+
+  const handleEditPatientData = useCallback(
+    (data) => {
+      data.id = userEditData._id;
+      axios
+        .post(`${serverAddress}/patients/edit`, data)
+        .then((response) => {
+          getPharmaceApi();
+          getPatientsList();
+          setShowPartientsEditForm(false);
+          setShowMidicalForm(false);
+        })
+        .catch((error) => {
+          console.error("Error making POST request:", error);
+        });
+    },
+    [getPatientsList, getPharmaceApi, serverAddress, userEditData._id]
+  );
+
+  const onBillGroupAdded = useCallback(
+    (data) => {
+      axios
+        .post(`${serverAddress}/prescription/postpharmaceuticalgroup`, data)
+        .then((response) => {
+          getAllPrescription(data.PrescriptionId);
+        })
+        .catch((error) => {
+          console.error("Error making POST request:", error);
+        });
+    },
+    [serverAddress]
+  );
+
+  const handleOnBillAdded = useCallback(
+    (data) => {
+      axios
+        .post(`${serverAddress}/prescription/postpharmaceutical`, data)
+        .then((response) => {
+          getPharmaceApi();
+          getAllPrescription(data.PrescriptionId);
+        })
+        .catch((error) => {
+          console.error("Error making POST request:", error);
+        });
+    },
+    [getPharmaceApi, serverAddress]
+  );
+
+  const getAllPrescription = useCallback(
+    (PrescriptionId) => {
+      axios
+        .get(`${serverAddress}/prescription/getbills/${PrescriptionId}`)
+        .then((response) => {
+          setPharmaceListInside(response.data.prescription);
+          medscapecheck(PrescriptionId);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    },
+    [serverAddress]
+  );
+
+  const medscapecheck = useCallback(
+    (PrescriptionId) => {
+      axios
+        .get(`${serverAddress}/prescription/medscapecheck/${PrescriptionId}`)
+        .then((response) => {
+          setMidscapeData(response.data.midscapeData);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    },
+    [serverAddress]
+  );
+
+  const onNameClickHandle = useCallback(
+    (id) => {
+      setPartientsSelectId(id);
+      axios
+        .get(`${serverAddress}/patients/medicalinfo/${id}`)
+        .then((response) => {
+          setUserEditData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+
+      setShowPartientProfile(true);
+    },
+    [serverAddress]
+  );
+
+  const handleNewPrescriptionData = useCallback(
+    (data) => {
+      data.patientId = partientsSelectId;
+      axios
+        .post(`${serverAddress}/prescription/ubdateData`, { data })
+        .then((response) => {
+          getPatientsList();
+          setEditPrescriptionData("");
+          setNextVisit("");
+          setShowPartientsAddForm(false);
+        })
+        .catch((error) => {
+          console.error("Error making POST request:", error);
+        });
+    },
+    [getPatientsList, partientsSelectId, serverAddress]
+  );
+
+  const handlePrintFeedBack = () => {
+    setprints(false);
+  };
+
+  const HandleonPrinterClick = () => {
+    handlePrint();
+  };
+
+  const HandleonPrinterClickText = useCallback(
+    (data) => {
+      axios
+        .get(`${serverAddress}/patients/medicalinfo/${partientsSelectId}`)
+        .then((response) => {
+          setDataToPrint({
+            patients: response.data,
+            textonly: true,
+            data: data,
+          });
+          setprints(true);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    },
+    [partientsSelectId, serverAddress]
+  );
+
+  const HandleonPrinterLabClickText = useCallback(
+    (data) => {
+      axios
+        .get(`${serverAddress}/patients/medicalinfo/${partientsSelectId}`)
+        .then((response) => {
+          setDataToPrint({
+            patients: response.data,
+            textonly: true,
+            data: data,
+            type: "Lab",
+          });
+          setprints(true);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    },
+    [partientsSelectId, serverAddress]
+  );
+
+  const handleNewReportData = useCallback(
+    (data) => {
+      axios
+        .post(`${serverAddress}/medicalreports/new`, { data })
+        .then((response) => {
+          getPatientsList();
+          setShowAddReportForm(false);
+        })
+        .catch((error) => {
+          console.error("Error making POST request:", error);
+        });
+    },
+    [getPatientsList, serverAddress]
+  );
+
+  const handleNewLaboryData = useCallback(
+    (data) => {
+      axios
+        .post(`${serverAddress}/labory/new`, { data })
+        .then((response) => {
+          getPatientsList();
+          setShowLaporyReportForm(false);
+        })
+        .catch((error) => {
+          console.error("Error making POST request:", error);
+        });
+    },
+    [getPatientsList, serverAddress]
+  );
+
+  const handleNewVisit = useCallback(
+    (data) => {
+      axios
+        .post(`${serverAddress}/visit/new`, { data })
+        .then((response) => {
+          getPatientsList();
+          setShowVisitForm(false);
+        })
+        .catch((error) => {
+          console.error("Error making POST request:", error);
+        });
+    },
+    [getPatientsList, serverAddress]
+  );
+
+  const handeSearchInput = useCallback(
+    (event) => {
+      const searchInputValue = event.target.value;
+      if (searchInputValue === "") {
+        getPatientsList();
+      } else {
+        axios
+          .get(`${serverAddress}/patients/getbyname/${searchInputValue}`)
+          .then((response) => {
+            setPatientsList(response.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching categories:", error);
+          });
+      }
+    },
+    [getPatientsList, serverAddress]
+  );
+
+  const HandleOnPrescriptionDeleteHande = useCallback(
+    (patientsId, prescriptionId) => {
+      if (settingData.abortProssesMsg) {
+        setDeleteInfo({
+          id: { patientsId, prescriptionId },
+          type: "prescriptioDelete",
+        });
+        setDeleteAlert(true);
+      } else {
+        axios
+          .delete(
+            `${serverAddress}/patients/Patientsid/${patientsId}/prescriptionid/${prescriptionId}`
+          )
+          .then((response) => {
+            setProfileRefresh(!profileRefresh);
+            getPatientsList();
+          })
+          .catch((error) => {
+            console.error(
+              `Error deleting prescription with ID ${prescriptionId}:`,
+              error
+            );
+          });
+      }
+    },
+    [
+      getPatientsList,
+      profileRefresh,
+      serverAddress,
+      settingData.abortProssesMsg,
+    ]
+  );
+
+  const onPrescriptionEditHandel = useCallback(
+    (patientsId, prescriptionId) => {
+      axios
+        .get(`${serverAddress}/prescription/getone/${prescriptionId}?`)
+        .then((response) => {
+          setPrescriptionId(response.data._id);
+          getAllPrescription(response.data._id);
+          setPartientsSelectId(patientsId);
+          setEditPrescriptionData(response.data);
+          setShowPartientsAddForm(true);
+        })
+        .catch((error) => {
+          console.error("Error fetching prescription:", error);
+        });
+    },
+    [getAllPrescription, serverAddress]
+  );
+
   const onCancelHande = () => {
     setCanceleAlert(false);
     setShowLaporyReportForm(false);
@@ -1355,9 +1430,11 @@ function Partients() {
     setShowPartientsAddForm(false);
     setShowVisitForm(false);
   };
+
   const onCancelAborteHande = () => {
     setCanceleAlert(false);
   };
+
   useEffect(() => {
     const onQueryChange = () => {
       if (ageQuery || stateQuery || genderQuery || range[0].startDate) {
@@ -1369,123 +1446,122 @@ function Partients() {
             dateQuery: range,
           })
           .then((response) => {
-            setPatientsList(response.data); // Update the categories state with the fetched data
-            // Handle the response if needed
+            setPatientsList(response.data);
           })
           .catch((error) => {
-            // Handle errors if the request fails
             console.error("Error making POST request:", error);
           });
       }
     };
 
     onQueryChange();
-  }, [ageQuery, stateQuery, genderQuery, range]);
+  }, [ageQuery, stateQuery, genderQuery, range, serverAddress]);
 
-  const onVisitFormShowHandel = (id) => {
-    setPartientsSelectId(id);
-    axios
-      .get(`${serverAddress}/patients/getOne/${id}`)
-      .then((response) => {
-        setUserEditData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-
-    setShowVisitForm(true);
-    console.log(`visit Show clicked for id ${id}`);
-  };
-
-  const onDeleteConfirmHandel = (id, type) => {
-    console.log(id, type);
-    if (type === "patientsDelete") {
-      setLoading(false);
+  const onVisitFormShowHandel = useCallback(
+    (id) => {
+      setPartientsSelectId(id);
       axios
-        .delete(`${serverAddress}/patients/delete/${id}`)
+        .get(`${serverAddress}/patients/getOne/${id}`)
         .then((response) => {
-          setLoading(true);
-          setDeleteAlert(false);
-          getPatientsList();
-          // You might want to update the categories list here to reflect the changes
+          setUserEditData(response.data);
         })
         .catch((error) => {
-          setLoading(true);
-
-          // Handle error, e.g., show an error message
-          console.error(`Error deleting category with ID ${id}:`, error);
+          console.error("Error fetching categories:", error);
         });
 
-      console.log(`Delete clicked for id ${id}`);
-    } else if (type === "reportDelete") {
-      axios
-        .delete(`${serverAddress}/medicalreports/delete/${id}/`)
-        .then((response) => {
-          setProfileRefresh(!profileRefresh);
-          setDeleteAlert(false);
-        })
-        .catch((error) => {
-          setLoading(() => true);
-          console.error(`Error deleting category with ID ${id}:`, error);
-        });
-    } else if (type === "labDelete") {
-      axios
-        .delete(`${serverAddress}/labory/delete/${id}/`)
-        .then((response) => {
-          setProfileRefresh(!profileRefresh);
-          setDeleteAlert(false);
-        })
-        .catch((error) => {
-          setLoading(() => true);
-          console.error(`Error deleting category with ID ${id}:`, error);
-        });
-    } else if (type === "prescriptioBillnDelete") {
-      axios
-        .delete(
-          `${serverAddress}/prescription/removebill/${PrescriptionId}/pharmaceutical/${id}`
-        )
-        .then((response) => {
-          setLoading(() => true);
-          // Handle success, e.g., show a success message or update the categories list
-          console.log(`Category with ID ${id} has been deleted.`);
-          getAllPrescription(PrescriptionId);
-          // You might want to update the categories list here to reflect the changes
-        })
-        .catch((error) => {
-          setLoading(() => true);
-          console.error(`Error deleting category with ID ${id}:`, error);
-        });
-    } else if (type === "prescriptioDelete") {
-      console.log(id);
-      axios
-        .delete(
-          `${serverAddress}/patients/Patientsid/${id.patientsId}/prescriptionid/${id.prescriptionId}
-      `
-        )
-        .then((response) => {
-          setProfileRefresh(!profileRefresh);
-          setDeleteAlert(false);
+      setShowVisitForm(true);
+    },
+    [serverAddress]
+  );
 
-          // Handle success, e.g., show a success message or update the categories list
-          getPatientsList();
-          // You might want to update the categories list here to reflect the changes
-        })
-        .catch((error) => {
-          // Handle error, e.g., show an error message
-        });
-    } else if (type === "visitDelete") {
-      axios
-        .delete(`${serverAddress}/visit/delete/${id}/`)
-        .then((response) => {
-          setProfileRefresh(!profileRefresh);
-          setDeleteAlert(false);
-        })
-        .catch((error) => {
-          setLoading(() => true);
-          console.error(`Error deleting category with ID ${id}:`, error);
-        });
-    }
-  };
+  const onDeleteConfirmHandel = useCallback(
+    (id, type) => {
+      if (type === "patientsDelete") {
+        setLoading(false);
+        axios
+          .delete(`${serverAddress}/patients/delete/${id}`)
+          .then((response) => {
+            setLoading(true);
+            setDeleteAlert(false);
+            getPatientsList();
+          })
+          .catch((error) => {
+            setLoading(true);
+            console.error(`Error deleting category with ID ${id}:`, error);
+          });
+      } else if (type === "reportDelete") {
+        axios
+          .delete(`${serverAddress}/medicalreports/delete/${id}/`)
+          .then((response) => {
+            setProfileRefresh(!profileRefresh);
+            setDeleteAlert(false);
+          })
+          .catch((error) => {
+            setLoading(() => true);
+            console.error(`Error deleting category with ID ${id}:`, error);
+          });
+      } else if (type === "labDelete") {
+        axios
+          .delete(`${serverAddress}/labory/delete/${id}/`)
+          .then((response) => {
+            setProfileRefresh(!profileRefresh);
+            setDeleteAlert(false);
+          })
+          .catch((error) => {
+            setLoading(() => true);
+            console.error(`Error deleting category with ID ${id}:`, error);
+          });
+      } else if (type === "prescriptioBillnDelete") {
+        axios
+          .delete(
+            `${serverAddress}/prescription/removebill/${PrescriptionId}/pharmaceutical/${id}`
+          )
+          .then((response) => {
+            setLoading(() => true);
+            getAllPrescription(PrescriptionId);
+          })
+          .catch((error) => {
+            setLoading(() => true);
+            console.error(`Error deleting category with ID ${id}:`, error);
+          });
+      } else if (type === "prescriptioDelete") {
+        axios
+          .delete(
+            `${serverAddress}/patients/Patientsid/${id.patientsId}/prescriptionid/${id.prescriptionId}`
+          )
+          .then((response) => {
+            setProfileRefresh(!profileRefresh);
+            setDeleteAlert(false);
+            getPatientsList();
+          })
+          .catch((error) => {
+            console.error(
+              `Error deleting prescription with ID ${id.prescriptionId}:`,
+              error
+            );
+          });
+      } else if (type === "visitDelete") {
+        axios
+          .delete(`${serverAddress}/visit/delete/${id}/`)
+          .then((response) => {
+            setProfileRefresh(!profileRefresh);
+            setDeleteAlert(false);
+          })
+          .catch((error) => {
+            setLoading(() => true);
+            console.error(`Error deleting category with ID ${id}:`, error);
+          });
+      }
+    },
+    [
+      getPatientsList,
+      getAllPrescription,
+      profileRefresh,
+      serverAddress,
+      PrescriptionId,
+    ]
+  );
+
   const {
     transcript,
     listening,
@@ -1501,37 +1577,24 @@ function Partients() {
 
   useEffect(() => {
     getPatientsList();
-  }, [pageSelect]);
-
-  useEffect(() => {
-    getPatientsList();
-  }, [queryType, queryOrder]);
+  }, [pageSelect, queryType, queryOrder]);
 
   const handleQuerySelect = (query) => {
-    if (queryOrder === "asc") {
-      setQueryOrder("dec");
-    } else {
-      setQueryOrder("asc");
-    }
+    setQueryOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
     setQueryType(query);
   };
 
+  const handleAgeQueryChange = (event) => {
+    setAgeQuery(event.target.value);
+  };
+
+  const memoizedPatientsList = useMemo(() => patientsList, [patientsList]);
+
   return (
     <div className="p-2 relative h-[93vh] overflow-scroll">
-      {/* {!browserSupportsSpeechRecognition ? (
-        <span>Browser doesn't support speech recognition.</span>
-      ) : (
-        ""
-      )}
-      <p>Microphone: {listening ? "on" : "off"}</p>
-      <button onClick={SpeechRecognition.startListening}>Start</button>
-      <button onClick={SpeechRecognition.stopListening}>Stop</button>
-      <button onClick={resetTranscript}>Reset</button>
-      <p>{transcript}</p> */}
-
-      <div className=" bg-white overflow-scroll shadow-sm h-full rounded-md pb-4">
+      <div className="bg-white overflow-scroll shadow-sm h-full rounded-md pb-4">
         <div className="flex gap-4 justify-center items-center w-full">
-          <div className=" flex flex-col justify-center items-center p-4">
+          <div className="flex flex-col justify-center items-center p-4">
             <div className="flex bg-white px-4 py-1 rounded-3xl w-full shadow-md">
               <InputBase
                 onChange={handeSearchInput}
@@ -1545,7 +1608,7 @@ function Partients() {
             </div>
           </div>
 
-          <div className=" w-1/6">
+          <div className="w-1/6">
             <FormControl
               className="w-full bg-whiteh"
               size="small"
@@ -1558,9 +1621,7 @@ function Partients() {
                 />
               </InputLabel>
               <Select
-                onChange={(event) => {
-                  setAgeQuery(event.target.value);
-                }}
+                onChange={handleAgeQueryChange}
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
                 label={
@@ -1587,7 +1648,7 @@ function Partients() {
             </FormControl>
           </div>
 
-          <div className=" w-1/6">
+          <div className="w-1/6">
             <FormControl
               className="w-full bg-whiteh"
               size="small"
@@ -1602,9 +1663,7 @@ function Partients() {
               <Select
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
-                onChange={(event) => {
-                  setStateQuery(event.target.value);
-                }}
+                onChange={(event) => setStateQuery(event.target.value)}
                 label={
                   <FormattedMessage
                     id={"stateSort"}
@@ -1616,13 +1675,15 @@ function Partients() {
                   <em>الكل</em>
                 </MenuItem>
                 {constantDiseases.map((diseases, index) => (
-                  <MenuItem value={diseases._id}>{diseases.name}</MenuItem>
+                  <MenuItem key={index} value={diseases._id}>
+                    {diseases.name}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </div>
 
-          <div className=" w-1/6">
+          <div className="w-1/6">
             <FormControl
               className="w-full bg-whiteh"
               size="small"
@@ -1637,9 +1698,7 @@ function Partients() {
               <Select
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
-                onChange={(event) => {
-                  setGenderQuery(() => event.target.value);
-                }}
+                onChange={(event) => setGenderQuery(event.target.value)}
                 label={
                   <FormattedMessage
                     id={"genderSort"}
@@ -1655,56 +1714,40 @@ function Partients() {
               </Select>
             </FormControl>
           </div>
-          <div className=" w-1/6">
+          <div className="w-1/6">
             <DateRangePickerComp
               range={range}
-              setRange={(rangeValue) => {
-                setRange(rangeValue);
-              }}
-            ></DateRangePickerComp>
-          </div>
-          <div className={`${showCalendar ? "" : "hidden"}`}>
-            {/* <Calendar
-            value={selectedDayRange}
-            onChange={handleDateRangeSelection}
-            shouldHighlightWeekends
-          /> */}
+              setRange={(rangeValue) => setRange(rangeValue)}
+            />
           </div>
         </div>
-        <TableContainer dir="rtl" className="p-2  shadow">
+        <TableContainer dir="rtl" className="p-2 shadow">
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell
-                  align="center"
-                  onClick={() => {
-                    handleQuerySelect("");
-                  }}
-                >
-                  #{" "}
+                <TableCell align="center" onClick={() => handleQuerySelect("")}>
+                  #
                 </TableCell>
                 {settingData &&
                 settingData.patientsTable &&
                 settingData.patientsTable.patientName ? (
                   <TableCell
                     align="right"
-                    className=" cursor-pointer"
-                    onClick={() => {
-                      handleQuerySelect("name");
-                    }}
+                    className="cursor-pointer"
+                    onClick={() => handleQuerySelect("name")}
                   >
                     <FormattedMessage
                       id={"PatientName"}
                       defaultMessage="Hello, World!"
                     />
                     {queryType === "name" ? (
-                      queryOrder == "asc" ? (
-                        <ArrowDropDown></ArrowDropDown>
+                      queryOrder === "asc" ? (
+                        <ArrowDropDown />
                       ) : (
-                        <ArrowDropUp></ArrowDropUp>
+                        <ArrowDropUp />
                       )
                     ) : (
-                      <SwapVert></SwapVert>
+                      <SwapVert />
                     )}
                   </TableCell>
                 ) : (
@@ -1727,53 +1770,46 @@ function Partients() {
                 settingData.patientsTable.patientAge ? (
                   <TableCell
                     align="center"
-                    onClick={() => {
-                      handleQuerySelect("age");
-                    }}
-                    className=" cursor-pointer"
+                    onClick={() => handleQuerySelect("age")}
+                    className="cursor-pointer"
                   >
-                    {" "}
                     <FormattedMessage
                       id={"AgeTitle"}
                       defaultMessage="Hello, World!"
                     />
                     {queryType === "age" ? (
-                      queryOrder == "asc" ? (
-                        <ArrowDropDown></ArrowDropDown>
+                      queryOrder === "asc" ? (
+                        <ArrowDropDown />
                       ) : (
-                        <ArrowDropUp></ArrowDropUp>
+                        <ArrowDropUp />
                       )
                     ) : (
-                      <SwapVert></SwapVert>
+                      <SwapVert />
                     )}
                   </TableCell>
                 ) : (
                   ""
                 )}
-
                 {settingData &&
                 settingData.patientsTable &&
                 settingData.patientsTable.patientGender ? (
                   <TableCell
                     align="center"
-                    onClick={() => {
-                      handleQuerySelect("gender");
-                    }}
-                    className=" cursor-pointer"
+                    onClick={() => handleQuerySelect("gender")}
+                    className="cursor-pointer"
                   >
-                    {" "}
                     <FormattedMessage
                       id={"Gender"}
                       defaultMessage="Hello, World!"
                     />
                     {queryType === "gender" ? (
-                      queryOrder == "asc" ? (
-                        <ArrowDropDown></ArrowDropDown>
+                      queryOrder === "asc" ? (
+                        <ArrowDropDown />
                       ) : (
-                        <ArrowDropUp></ArrowDropUp>
+                        <ArrowDropUp />
                       )
                     ) : (
-                      <SwapVert></SwapVert>
+                      <SwapVert />
                     )}
                   </TableCell>
                 ) : (
@@ -1784,53 +1820,46 @@ function Partients() {
                 settingData.patientsTable.patientAdresses ? (
                   <TableCell
                     align="center"
-                    onClick={() => {
-                      handleQuerySelect("adresses");
-                    }}
-                    className=" cursor-pointer"
+                    onClick={() => handleQuerySelect("adresses")}
+                    className="cursor-pointer"
                   >
-                    {" "}
                     <FormattedMessage
                       id={"Address"}
                       defaultMessage="Hello, World!"
                     />
                     {queryType === "adresses" ? (
-                      queryOrder == "asc" ? (
-                        <ArrowDropDown></ArrowDropDown>
+                      queryOrder === "asc" ? (
+                        <ArrowDropDown />
                       ) : (
-                        <ArrowDropUp></ArrowDropUp>
+                        <ArrowDropUp />
                       )
                     ) : (
-                      <SwapVert></SwapVert>
+                      <SwapVert />
                     )}
                   </TableCell>
                 ) : (
                   ""
                 )}
-
                 {settingData &&
                 settingData.patientsTable &&
                 settingData.patientsTable.patientSequance ? (
                   <TableCell
                     align="center"
-                    onClick={() => {
-                      handleQuerySelect("Sequence");
-                    }}
-                    className=" cursor-pointer"
+                    onClick={() => handleQuerySelect("Sequence")}
+                    className="cursor-pointer"
                   >
-                    {" "}
                     <FormattedMessage
                       id={"Sequence"}
                       defaultMessage="Hello, World!"
                     />
                     {queryType === "Sequence" ? (
-                      queryOrder == "asc" ? (
-                        <ArrowDropDown></ArrowDropDown>
+                      queryOrder === "asc" ? (
+                        <ArrowDropDown />
                       ) : (
-                        <ArrowDropUp></ArrowDropUp>
+                        <ArrowDropUp />
                       )
                     ) : (
-                      <SwapVert></SwapVert>
+                      <SwapVert />
                     )}
                   </TableCell>
                 ) : (
@@ -1841,24 +1870,21 @@ function Partients() {
                 settingData.patientsTable.patientWeghit ? (
                   <TableCell
                     align="center"
-                    onClick={() => {
-                      handleQuerySelect("weight");
-                    }}
-                    className=" cursor-pointer"
+                    onClick={() => handleQuerySelect("weight")}
+                    className="cursor-pointer"
                   >
-                    {" "}
                     <FormattedMessage
                       id={"Weight"}
                       defaultMessage="Hello, World!"
                     />
                     {queryType === "weight" ? (
-                      queryOrder == "asc" ? (
-                        <ArrowDropDown></ArrowDropDown>
+                      queryOrder === "asc" ? (
+                        <ArrowDropDown />
                       ) : (
-                        <ArrowDropUp></ArrowDropUp>
+                        <ArrowDropUp />
                       )
                     ) : (
-                      <SwapVert></SwapVert>
+                      <SwapVert />
                     )}
                   </TableCell>
                 ) : (
@@ -1869,24 +1895,21 @@ function Partients() {
                 settingData.patientsTable.patientLeanth ? (
                   <TableCell
                     align="center"
-                    onClick={() => {
-                      handleQuerySelect("length");
-                    }}
-                    className=" cursor-pointer"
+                    onClick={() => handleQuerySelect("length")}
+                    className="cursor-pointer"
                   >
-                    {" "}
                     <FormattedMessage
                       id={"Length"}
                       defaultMessage="Hello, World!"
                     />
                     {queryType === "length" ? (
-                      queryOrder == "asc" ? (
-                        <ArrowDropDown></ArrowDropDown>
+                      queryOrder === "asc" ? (
+                        <ArrowDropDown />
                       ) : (
-                        <ArrowDropUp></ArrowDropUp>
+                        <ArrowDropUp />
                       )
                     ) : (
-                      <SwapVert></SwapVert>
+                      <SwapVert />
                     )}
                   </TableCell>
                 ) : (
@@ -1897,30 +1920,17 @@ function Partients() {
                 settingData.patientsTable.patientVisitNum ? (
                   <TableCell
                     align="center"
-                    onClick={() => {
-                      handleQuerySelect("visitCount");
-                    }}
-                    className=" cursor-pointer"
+                    onClick={() => handleQuerySelect("visitCount")}
+                    className="cursor-pointer"
                   >
-                    {" "}
                     <FormattedMessage
                       id={"VisitNumber"}
                       defaultMessage="Hello, World!"
                     />
-                    {/* {queryType === "visitCount" ? (
-                      queryOrder == "asc" ? (
-                        <ArrowDropDown></ArrowDropDown>
-                      ) : (
-                        <ArrowDropUp></ArrowDropUp>
-                      )
-                    ) : (
-                      <SwapVert></SwapVert>
-                    )} */}
                   </TableCell>
                 ) : (
                   ""
                 )}
-
                 {currentUser ? (
                   currentUser.role === "doctor" ? (
                     <>
@@ -1928,7 +1938,6 @@ function Partients() {
                       settingData.patientsTable &&
                       settingData.patientsTable.patientAddVisit ? (
                         <TableCell align="center">
-                          {" "}
                           <FormattedMessage
                             id={"visit"}
                             defaultMessage="Hello, World!"
@@ -1941,7 +1950,6 @@ function Partients() {
                       settingData.patientsTable &&
                       settingData.patientsTable.patientAddMedicalData ? (
                         <TableCell align="center">
-                          {" "}
                           <FormattedMessage
                             id={"Examination"}
                             defaultMessage="Hello, World!"
@@ -1966,7 +1974,6 @@ function Partients() {
                       settingData.patientsTable &&
                       settingData.patientsTable.patientAddReport ? (
                         <TableCell align="center">
-                          {" "}
                           <FormattedMessage
                             id={"Report"}
                             defaultMessage="Hello, World!"
@@ -1979,7 +1986,6 @@ function Partients() {
                       settingData.patientsTable &&
                       settingData.patientsTable.patientAddLaboryTest ? (
                         <TableCell align="center">
-                          {" "}
                           <FormattedMessage
                             id={"LaboratoryTesting"}
                             defaultMessage="Hello, World!"
@@ -1992,7 +1998,6 @@ function Partients() {
                       settingData.patientsTable &&
                       settingData.patientsTable.patientOption ? (
                         <TableCell align="center">
-                          {" "}
                           <FormattedMessage
                             id={"Options"}
                             defaultMessage="Hello, World!"
@@ -2013,28 +2018,22 @@ function Partients() {
             <TableBody>
               {patientsList.map((patient, index) => (
                 <Row
-                  onBookedHandel={onBookedHandel}
-                  pageSelect={pageSelect}
-                  onVisitFormShowHandel={onVisitFormShowHandel}
-                  onPrescriptionEditHandel={onPrescriptionEditHandel}
-                  onShareHande={onShareHande}
-                  settingData={settingData}
-                  onDeleteHande={onDeleteHande}
-                  setQueryType={(queryType) => {
-                    setQueryType(queryType);
-                  }}
-                  currentUser={currentUser}
-                  onPrescriptionDeleteHande={HandleOnPrescriptionDeleteHande}
-                  onEditHande={onEditHande}
-                  onMedicalFormShowHandle={onMedicalFormShowHandle}
-                  onReportShowHandel={onReportShowHandel}
-                  onLaboryShowHandel={onLaboryShowHandel}
-                  onPrescriptionShowHande={onPrescriptionShowHande}
-                  key={patient._id}
-                  onNameClickHandle={onNameClickHandle}
-                  id={patient._id}
                   row={patient}
                   index={index}
+                  pageSelect={pageSelect}
+                  settingData={settingData}
+                  onNameClickHandle={onNameClickHandle}
+                  onBookedHandel={onBookedHandel}
+                  onVisitFormShowHandel={onVisitFormShowHandel}
+                  onMedicalFormShowHandle={onMedicalFormShowHandle}
+                  onPrescriptionShowHande={onPrescriptionShowHande}
+                  onReportShowHandel={onReportShowHandel}
+                  onLaboryShowHandel={onLaboryShowHandel}
+                  onEditHande={onEditHande}
+                  onDeleteHande={onDeleteHande}
+                  onPrescriptionEditHandel={onPrescriptionEditHandel}
+                  onPrescriptionDeleteHande={HandleOnPrescriptionDeleteHande}
+                  currentUser={currentUser}
                 />
               ))}
             </TableBody>
@@ -2049,15 +2048,12 @@ function Partients() {
             variant="outlined"
             defaultPage={pageSelect}
             color="primary"
-            onChange={(event, value) => {
-              SetPageSelect(value);
-              console.log(value);
-            }}
+            onChange={(event, value) => SetPageSelect(value)}
           />
         </div>
       </div>
 
-      <div className=" fixed z-50 bottom-5 left-6">
+      <div className="fixed z-50 bottom-5 left-6">
         <Fab
           color="primary"
           onClick={handleAddButtonClick}
@@ -2067,35 +2063,31 @@ function Partients() {
           <Add />
         </Fab>
       </div>
-      {showAddForm ? (
+      {showAddForm && (
         <>
-          <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
+          <BackGroundShadow onClick={handleHideClick} />
           <NewPatientForm
             handleExit={handleHideClick}
             currentUser={currentUser}
             screenMode={settingData.pullUpFullScreenMode}
             constantDiseases={constantDiseases}
             onFormSubmit={handleNewPatientData}
-          ></NewPatientForm>
+          />
         </>
-      ) : (
-        ""
       )}
 
-      {!loading ? <Loading></Loading> : ""}
+      {!loading && <Loading />}
 
-      {showPartientsAddForm ? (
+      {showPartientsAddForm && (
         <>
-          <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
+          <BackGroundShadow onClick={handleHideClick} />
           <NewPartientsForm
             userEditData={userEditData}
             handleExit={handleHideClick}
             screenMode={settingData.pullUpFullScreenMode}
             settingData={settingData}
             groupList={groupList}
-            setNextVisit={(data) => {
-              setNextVisit(data);
-            }}
+            setNextVisit={setNextVisit}
             userData={userData}
             editPrescriptionData={editPrescriptionData}
             patientsList={patientsList}
@@ -2110,12 +2102,10 @@ function Partients() {
             onBillGroupAdded={onBillGroupAdded}
             midscapeData={midscapeData}
             onFormSubmit={handleNewPrescriptionData}
-          ></NewPartientsForm>
+          />
         </>
-      ) : (
-        ""
       )}
-      {prints && loading ? (
+      {prints && loading && (
         <div>
           <PatientReport
             prints={prints}
@@ -2125,16 +2115,10 @@ function Partients() {
             feedback={handlePrintFeedBack}
           />
         </div>
-      ) : (
-        ""
       )}
-      {showPartientProfile ? (
+      {showPartientProfile && (
         <>
-          <BackGroundShadow
-            onClick={() => {
-              setShowPartientProfile(false);
-            }}
-          ></BackGroundShadow>
+          <BackGroundShadow onClick={() => setShowPartientProfile(false)} />
           <PartientsProfile
             handleExit={handleHideClick}
             screenMode={settingData.pullUpFullScreenMode}
@@ -2153,14 +2137,12 @@ function Partients() {
             partientId={partientsSelectId}
             onPrescriptionDeleteHande={HandleOnPrescriptionDeleteHande}
             onPrescriptionEditHandel={onPrescriptionEditHandel}
-          ></PartientsProfile>
+          />
         </>
-      ) : (
-        ""
       )}
-      {showPartientsEditForm ? (
+      {showPartientsEditForm && (
         <>
-          <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
+          <BackGroundShadow onClick={handleHideClick} />
           <NewPatientForm
             handleExit={handleHideClick}
             screenMode={settingData.pullUpFullScreenMode}
@@ -2169,29 +2151,24 @@ function Partients() {
             constantDiseases={constantDiseases}
             onFormSubmit={handleEditPatientData}
             data={userEditData}
-          ></NewPatientForm>
+          />
         </>
-      ) : (
-        ""
       )}
-      {showMidicalForm ? (
+      {showMidicalForm && (
         <>
-          <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
+          <BackGroundShadow onClick={handleHideClick} />
           <MedicalForm
             handleExit={handleHideClick}
             screenMode={settingData.pullUpFullScreenMode}
             settingData={settingData}
             onFormSubmit={handleEditPatientData}
             userEditData={userEditData}
-          ></MedicalForm>
+          />
         </>
-      ) : (
-        ""
       )}
-      {showAddReportForm ? (
+      {showAddReportForm && (
         <>
-          {" "}
-          <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
+          <BackGroundShadow onClick={handleHideClick} />
           <NewMedicalReporyForm
             handleExit={handleHideClick}
             screenMode={settingData.pullUpFullScreenMode}
@@ -2202,23 +2179,15 @@ function Partients() {
             type="new"
             changeReportHeaderName={changeReportHeaderName}
             onFormSubmit={handleNewReportData}
-          ></NewMedicalReporyForm>
+          />
         </>
-      ) : (
-        ""
       )}
 
-      {showReportEditForm ? (
+      {showReportEditForm && (
         <>
-          <BackGroundShadow
-            onClick={() => {
-              setShowReportEditForm(false);
-            }}
-          ></BackGroundShadow>
+          <BackGroundShadow onClick={() => setShowReportEditForm(false)} />
           <NewMedicalReporyForm
-            handleExit={() => {
-              setShowReportEditForm(false);
-            }}
+            handleExit={() => setShowReportEditForm(false)}
             screenMode={settingData.pullUpFullScreenMode}
             medicalReportsStype={medicalReportsStype}
             partientsSelectId={partientsSelectId}
@@ -2226,28 +2195,24 @@ function Partients() {
             changeReportHeaderName={changeReportHeaderName}
             data={selectedReport}
             onFormSubmit={handleEditReportData}
-          ></NewMedicalReporyForm>
+          />
         </>
-      ) : (
-        ""
       )}
-      {showLaporyReportForm ? (
+      {showLaporyReportForm && (
         <>
-          <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
+          <BackGroundShadow onClick={handleHideClick} />
           <AddLaboratoryExamination
             handleExit={handleHideClick}
             screenMode={settingData.pullUpFullScreenMode}
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterLabClickText}
             onFormSubmit={handleNewLaboryData}
-          ></AddLaboratoryExamination>
+          />
         </>
-      ) : (
-        ""
       )}
-      {showVisitForm ? (
+      {showVisitForm && (
         <>
-          <BackGroundShadow onClick={handleHideClick}></BackGroundShadow>
+          <BackGroundShadow onClick={handleHideClick} />
           <VisitForm
             userEditData={userEditData}
             handleExit={handleHideClick}
@@ -2255,76 +2220,52 @@ function Partients() {
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterClickText}
             onFormSubmit={handleNewVisit}
-          ></VisitForm>
+          />
         </>
-      ) : (
-        ""
       )}
 
-      {showLabReportEditForm ? (
+      {showLabReportEditForm && (
         <>
-          <BackGroundShadow
-            onClick={() => {
-              setShowLabReportEditForm(false);
-            }}
-          ></BackGroundShadow>
+          <BackGroundShadow onClick={() => setShowLabReportEditForm(false)} />
           <AddLaboratoryExamination
-            handleExit={() => {
-              setShowLabReportEditForm(false);
-            }}
+            handleExit={() => setShowLabReportEditForm(false)}
             screenMode={settingData.pullUpFullScreenMode}
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterLabClickText}
             onFormSubmit={handleEditLabReportData}
             type="edit"
             data={selectedaLabory}
-          ></AddLaboratoryExamination>
+          />
         </>
-      ) : (
-        ""
       )}
-      {showVisitReportEditForm ? (
+      {showVisitReportEditForm && (
         <>
-          <BackGroundShadow
-            onClick={() => {
-              setShowVisitReportEditForm(false);
-            }}
-          ></BackGroundShadow>
+          <BackGroundShadow onClick={() => setShowVisitReportEditForm(false)} />
           <VisitForm
-            handleExit={() => {
-              setShowVisitReportEditForm(false);
-            }}
+            handleExit={() => setShowVisitReportEditForm(false)}
             screenMode={settingData.pullUpFullScreenMode}
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterClickText}
             onFormSubmit={handelEditVisitReportData}
             type="edit"
             data={selectedaLabory}
-          ></VisitForm>
+          />
         </>
-      ) : (
-        ""
       )}
 
-      {deleteAlert ? (
+      {deleteAlert && (
         <DeleteAlert
           deleteInfo={deleteInfo}
-          onShadowClick={() => {
-            setDeleteAlert(false);
-          }}
+          onShadowClick={() => setDeleteAlert(false)}
           onDeleteConfirmHandel={onDeleteConfirmHandel}
           onCancelAborteHande={onCancelHande}
-        ></DeleteAlert>
-      ) : (
-        ""
+        />
       )}
-      {canceleAlert ? (
+      {canceleAlert && (
         <CancelAlert
           onCancelHande={onCancelHande}
           onCancelAborteHande={onCancelAborteHande}
-        ></CancelAlert>
-      ) : (
-        ""
+        />
       )}
     </div>
   );

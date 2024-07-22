@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import SurgenTypeTable from "../../components/surgeon/SurgenTypeTable";
 import axios from "axios";
-import { useIsAuthenticated } from "react-auth-kit";
 import { Fab } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import BackGroundShadow from "../../components/pageCompond/BackGroundShadow";
 import NewSugenTypeForm from "../../components/surgeon/NewSugenTypeForm";
 
 function SurgenType() {
-  const { isAuthenticated } = useIsAuthenticated();
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [editingData, setEditingData] = useState(false);

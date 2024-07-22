@@ -3,7 +3,6 @@ import FullscreenOutlinedIcon from "@mui/icons-material/FullscreenOutlined";
 
 import { blue, green, red } from "@mui/material/colors";
 import { Button, IconButton } from "@mui/material";
-import { useSignOut } from "react-auth-kit";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
