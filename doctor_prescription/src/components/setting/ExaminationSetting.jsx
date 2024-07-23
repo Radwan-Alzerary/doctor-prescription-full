@@ -479,8 +479,8 @@ function ExaminationSetting(props) {
                 />
               }
             />
-          </div>
 
+          </div>
         </div>
       </div>
     </div>

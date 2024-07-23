@@ -1,10 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
+import ReactCrop from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
+import ReactModal from "react-modal";
 
 function ImageInput(props) {
   const [isDragging, setIsDragging] = useState(false);
-  const [previewSrc, setPreviewSrc] = useState("");
+  const [imgSrc, setImgSrc] = useState("");
   const [showCameraModal, setShowCameraModal] = useState(false);
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [crop, setCrop] = useState({ unit: "%", width: 30, aspect: 4 / 3 });
+  const [completedCrop, setCompletedCrop] = useState(null);
+  const [fileToCrop, setFileToCrop] = useState(null);
   const videoRef = useRef(null);
+  const imgRef = useRef(null);
 
   useEffect(() => {
     if (showCameraModal) {
@@ -13,14 +21,14 @@ function ImageInput(props) {
           const stream = await navigator.mediaDevices.getUserMedia({
             video: {
               width: { ideal: 1920 },
-              height: { ideal: 1080 }
-            }
+              height: { ideal: 1080 },
+            },
           });
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
           }
         } catch (err) {
-          console.error('Error accessing camera:', err);
+          console.error("Error accessing camera:", err);
         }
       };
       startStream();
@@ -41,13 +49,14 @@ function ImageInput(props) {
     e.preventDefault();
     setIsDragging(false);
     const file = e.dataTransfer.files[0];
-    handleFileChange(file, props.index);
+    handleFileChange(file);
   };
 
-  const handleFileChange = (file, index) => {
+  const handleFileChange = (file) => {
     if (file) {
+      setFileToCrop(file);
       displayPreview(file);
-      props.handleFileChange(file, index);
+      setShowCropModal(true);
     }
   };
 
@@ -55,7 +64,7 @@ function ImageInput(props) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      setPreviewSrc(reader.result);
+      setImgSrc(reader.result);
     };
   };
 
@@ -67,20 +76,71 @@ function ImageInput(props) {
     setShowCameraModal(false);
     if (videoRef.current.srcObject) {
       const tracks = videoRef.current.srcObject.getTracks();
-      tracks.forEach(track => track.stop());
+      tracks.forEach((track) => track.stop());
       videoRef.current.srcObject = null;
     }
   };
 
   const handleCaptureImage = () => {
-    const canvas = document.createElement('canvas');
+    const canvas = document.createElement("canvas");
     canvas.width = videoRef.current.videoWidth;
     canvas.height = videoRef.current.videoHeight;
-    canvas.getContext('2d').drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+    canvas
+      .getContext("2d")
+      .drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
     canvas.toBlob((blob) => {
-      handleFileChange(new File([blob], "camera_capture.jpg", { type: blob.type }), props.index);
+      handleFileChange(
+        new File([blob], "camera_capture.jpg", { type: blob.type })
+      );
     });
     handleCloseCameraModal();
+  };
+
+  const getCroppedImg = async (image, crop) => {
+    if (!crop || !image) {
+      return;
+    }
+    const canvas = document.createElement("canvas");
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+    canvas.width = crop.width;
+    canvas.height = crop.height;
+    const ctx = canvas.getContext("2d");
+
+    ctx.drawImage(
+      image,
+      crop.x * scaleX,
+      crop.y * scaleY,
+      crop.width * scaleX,
+      crop.height * scaleY,
+      0,
+      0,
+      crop.width,
+      crop.height
+    );
+
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          console.error("Canvas is empty");
+          return;
+        }
+        blob.name = "cropped.jpg";
+        resolve(blob);
+      }, "image/jpeg");
+    });
+  };
+
+  const handleSaveCroppedImage = async () => {
+    const croppedImageBlob = await getCroppedImg(imgRef.current, completedCrop);
+    const croppedImageUrl = URL.createObjectURL(croppedImageBlob);
+    setImgSrc(croppedImageUrl);
+    props.handleFileChange(croppedImageBlob);
+    setShowCropModal(false);
+  };
+
+  const onImageLoad = (e) => {
+    imgRef.current = e.currentTarget;
   };
 
   return (
@@ -99,9 +159,9 @@ function ImageInput(props) {
           accept="image/*"
           capture="environment"
           className="absolute inset-0 w-full h-full opacity-0 z-50"
-          onChange={(e) => handleFileChange(e.target.files[0], props.index)}
+          onChange={(e) => handleFileChange(e.target.files[0])}
         />
-        {!previewSrc ? (
+        {!imgSrc ? (
           <div className="text-center">
             <img
               className="mx-auto h-12 w-12"
@@ -111,15 +171,17 @@ function ImageInput(props) {
             <h3 className="mt-2 text-sm font-medium text-gray-900">
               <span>رفع صورة للمريض</span>
             </h3>
-            <p className="mt-1 text-xs text-gray-500">PNG، JPG، GIF بحد أقصى 10 ميجابايت</p>
+            <p className="mt-1 text-xs text-gray-500">
+              PNG، JPG، GIF بحد أقصى 10 ميجابايت
+            </p>
           </div>
         ) : (
           ""
         )}
-        {previewSrc && (
+        {imgSrc && (
           <div className="h-full w-full flex justify-center items-center">
             <img
-              src={previewSrc}
+              src={imgSrc}
               className="mx-auto max-h-full"
               id="preview"
               alt="Preview"
@@ -134,7 +196,7 @@ function ImageInput(props) {
         id="dropzone"
         onClick={handleCameraCapture}
       >
-        {!previewSrc ? (
+        {!imgSrc ? (
           <div className="text-center">
             <img
               className="mx-auto h-12 w-12"
@@ -148,10 +210,10 @@ function ImageInput(props) {
         ) : (
           ""
         )}
-        {previewSrc && (
+        {imgSrc && (
           <div className="h-full w-full flex justify-center items-center">
             <img
-              src={previewSrc}
+              src={imgSrc}
               className="mx-auto max-h-full"
               id="preview"
               alt="Preview"
@@ -172,10 +234,21 @@ function ImageInput(props) {
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900">تحضير الكاميرا</h3>
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                      تحضير الكاميرا
+                    </h3>
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500">يمكنك مشاهدة بث الفيديو الحي من الكاميرا قبل التقاط الصورة.</p>
-                      <video ref={videoRef} className="w-full h-auto" autoPlay muted playsInline></video>
+                      <p className="text-sm text-gray-500">
+                        يمكنك مشاهدة بث الفيديو الحي من الكاميرا قبل التقاط
+                        الصورة.
+                      </p>
+                      <video
+                        ref={videoRef}
+                        className="w-full h-auto"
+                        autoPlay
+                        muted
+                        playsInline
+                      ></video>
                       <button
                         type="button"
                         className="inline-flex justify-center py-2 px-4 mt-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -199,6 +272,50 @@ function ImageInput(props) {
             </div>
           </div>
         </div>
+      )}
+
+      {showCropModal && (
+        <ReactModal
+          isOpen={showCropModal}
+          onRequestClose={() => setShowCropModal(false)}
+          contentLabel="Crop Image"
+          className="fixed inset-0 flex items-center justify-center z-50"
+          overlayClassName="fixed inset-0 bg-black bg-opacity-75 z-50"
+        >
+          <div className="w-full h-full p-36 flex flex-col justify-center items-center ">
+            <div className="w-full bg-white">
+              <ReactCrop
+                src={imgSrc}
+                crop={crop}
+                onImageLoaded={(img) => (imgRef.current = img)}
+                onChange={(_, percentCrop) => setCrop(percentCrop)}
+                onComplete={(c) => setCompletedCrop(c)}
+              >
+                <img
+                  ref={imgRef}
+                  alt="Crop me"
+                  src={imgSrc}
+                  style={{ transform: `scale(1) rotate(0deg)` }}
+                  onLoad={onImageLoad}
+                />
+              </ReactCrop>
+            </div>
+            <div className="flex justify-center items-center p-2 bg-white w-full rounded-b-lg">
+              <button
+                onClick={handleSaveCroppedImage}
+                className="save-button mr-2 bg-blue-500 text-white px-12 py-2 rounded"
+              >
+                حفظ
+              </button>
+              <button
+                onClick={() => setShowCropModal(false)}
+                className="cancel-button bg-red-500 text-white px-12 py-2 rounded"
+              >
+                إلغاء
+              </button>
+            </div>
+          </div>
+        </ReactModal>
       )}
     </>
   );
