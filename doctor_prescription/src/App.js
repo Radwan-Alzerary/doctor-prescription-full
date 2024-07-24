@@ -1,4 +1,10 @@
-import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import "./App.css";
 import SideBarMenu from "./screens/global/SideBarMenu";
 import MedicalReports from "./screens/medicalReports/MedicalReports";
@@ -38,13 +44,14 @@ import CheckPrint from "./screens/Eco/CheckPrint";
 import Group from "./screens/pharmaceutical/Group";
 import BookedScreen from "./screens/booked/BookedScreen";
 import AutoComplete from "./screens/AutoComplete/AutoComplete";
+import ConstDisease from "./screens/constDisease/ConstDisease";
 
 function App() {
   const location = useLocation();
 
   // Check if the current route is '/bookedScreen'
   const hideSidebarAndHeader = location.pathname === "/bookedScreen";
-console.log(location.pathname)
+  console.log(location.pathname);
 
   const [locale, setLocale] = useState(() => {
     return Cookies.get("locale") || "ar";
@@ -139,22 +146,38 @@ console.log(location.pathname)
               ""
             )}
             <main className="w-full">
-              {isAuthenticated && !hideSidebarAndHeader ? <Header></Header> : ""}
+              {isAuthenticated && !hideSidebarAndHeader ? (
+                <Header></Header>
+              ) : (
+                ""
+              )}
 
               <div className="h-[92vh] relative bg-[#F3F4F9] w-full">
-                
                 <Routes>
                   <Route exact path="/register" element={<Register />} />
                   <Route exact path="/newcomputer" element={<Register />} />
-                  <Route exact path="/bookedScreen" element={<BookedScreen />} />
+                  <Route
+                    exact
+                    path="/bookedScreen"
+                    element={<BookedScreen />}
+                  />
                   <Route exact path="/login" element={<Login />} />
                   <Route exact path="/tst" element={<VoiceRecoed />} />
                   <Route exact path="/eco" element={<Eco />} />
-                  <Route exact path="/autocomplete" element={<AutoComplete />} />
+                  <Route
+                    exact
+                    path="/autocomplete"
+                    element={<AutoComplete />}
+                  />
                   <Route exact path="/group" element={<Group />} />
+                  <Route
+                    exact
+                    path="/constdisease"
+                    element={<ConstDisease />}
+                  />
                   <Route exact path="/checkeco" element={<CheckPrint />} />
                   <Route exact path="/" element={<PrivateRoute />}>
-                  <Route index element={<Dashboard />} />
+                    <Route index element={<Dashboard />} />
                     <Route exact path="surgen">
                       <Route exact path="list" element={<SurgenList />}></Route>
                       <Route exact path="type" element={<SurgenType />}></Route>

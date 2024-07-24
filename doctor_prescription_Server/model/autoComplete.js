@@ -10,7 +10,6 @@ const AutoComplteSchema = new mongoose.Schema(
     fractures: [{ type: String }],
     pulseRate: [{ type: String }],
     spo2: [{ type: String }],
-    
     temperature: [{ type: String }],
     bloodPressure: [{ type: String }],
     bloodSugar: [{ type: String }],
@@ -19,6 +18,8 @@ const AutoComplteSchema = new mongoose.Schema(
     rxMedicalDiagnosis: [{ type: String }],
     visitchiefComplaint: [{ type: String }],
     visitdiagnosis: [{ type: String }],
+
+    visitChronicTherapy:[{type:String}],
 
     visitPriorChronicTherapy: [{ type: String }],
     visitCauseOfVisite: [{ type: String }],

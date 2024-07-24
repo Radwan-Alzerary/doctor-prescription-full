@@ -133,5 +133,8 @@
   "management":"الادارية",
   "visitType":"نوع الزيارة",
   "ECO":"الايكو",
-  "AutoComplete":"اكمال تلقائي"
+  "AutoComplete":"اكمال تلقائي",
+  "DiseaseName": "اسم المرض",
+  "constDisease":"الامراض الثابتة",
+  "chronicTherapy": "الادوية المزمنة"
 }

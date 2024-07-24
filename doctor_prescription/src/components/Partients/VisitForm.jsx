@@ -38,6 +38,7 @@ function VisitForm({
     type: "",
     patientId: partientsSelectId,
     priority: "",
+    chronicTherapy: "",
   });
   useEffect(() => {
     if (type === "edit") {
@@ -53,6 +54,7 @@ function VisitForm({
         priority: data.priority,
         type: data.type,
         patientId: partientsSelectId,
+        chronicTherapy:data.chronicTherapy,
       });
     }
   }, []);
@@ -136,6 +138,7 @@ function VisitForm({
         <TextField
           id="outlined-required"
           size="small"
+          multiline
           value={formData.CauseOfVisite}
           onChange={(event) =>
             handleInputChange("CauseOfVisite", event.target.value)
@@ -169,6 +172,7 @@ function VisitForm({
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
+        multiline
           id="outlined-required"
           size="small"
           value={formData.PriorChronicTherapy}
@@ -205,6 +209,7 @@ function VisitForm({
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
+        multiline
           id="outlined-required"
           size="small"
           value={formData.chiefComplaint}
@@ -240,6 +245,7 @@ function VisitForm({
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
+        multiline
           id="outlined-required"
           size="small"
           value={formData.investigation}
@@ -275,6 +281,7 @@ function VisitForm({
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
+        multiline
           id="outlined-required"
           size="small"
           value={formData.diagnosis}
@@ -307,6 +314,7 @@ function VisitForm({
       </div>
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
+        multiline
           id="outlined-required"
           size="small"
           value={formData.management}
@@ -340,6 +348,43 @@ function VisitForm({
           ""
         )}
       </div>
+      <div className="flex flex-col justify-center items-center gap-4  w-full">
+        <TextField
+        multiline
+          id="outlined-required"
+          size="small"
+          value={formData.chronicTherapy}
+          onChange={(event) =>
+            handleInputChange("chronicTherapy", event.target.value)
+          } // Update the name state
+          sx={{
+            width: "100%",
+            color: "#fff",
+          }}
+          onClick={() => {
+            // Your click handler code here
+            setTextSelector("chronicTherapy");
+          }}
+          label={
+            <FormattedMessage
+              id={"chronicTherapy"}
+              defaultMessage="Hello, World!"
+            />
+          }
+          // defaultValue="Hello World"
+        />
+        {!loading && textSelector === "chronicTherapy" ? (
+          <MedicalFormChipAutoComplete
+            AutoCompletevalue={autoCompleteList.visitChronicTherapy}
+            formDataValue={formData.chronicTherapy}
+            handleInputChange={handleInputChange}
+            target={"chronicTherapy"}
+          ></MedicalFormChipAutoComplete>
+        ) : (
+          ""
+        )}
+      </div>
+
       <FormControl className=" w-1/3 bg-whiteh" size="small">
         <InputLabel id="demo-simple-select-helper-label">
           نوع الزيارة

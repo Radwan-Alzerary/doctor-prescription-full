@@ -16,6 +16,7 @@ router.post("/new", async (req, res) => {
       PriorChronicTherapy: req.body.data.PriorChronicTherapy,
       type: req.body.data.type,
       priority: req.body.data.priority,
+      chronicTherapy: req.body.data.chronicTherapy,
 
     });
     await visit.save();

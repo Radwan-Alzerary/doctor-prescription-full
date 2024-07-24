@@ -113,7 +113,7 @@
   "fractures": "fractures",
   "pulseRate": "pulse rate",
   "AgeTitle": "age",
-  
+
   "spo2": "spo2",
   "temperature": "temperature",
   "bloodPressure": "blood pressure",
@@ -128,13 +128,16 @@
   "diagnosis": "diagnosis",
   "edit visit": "edit visit",
   "add new visit": "add new visit",
-  "visit Information" : "visit Information",
-  "jop" : "jop",
+  "visit Information": "visit Information",
+  "jop": "jop",
   "group": "group Autofill",
-  "PriorChronicTherapy":"Prior Chronic Therapy",
-  "CauseOfVisite":"Cause Of Visite",
-  "management":"management",
-  "visitType":"visit Type",
-  "ECO":"ECO",
-  "AutoComplete":"AutoComplete"
+  "PriorChronicTherapy": "Prior Chronic Therapy",
+  "CauseOfVisite": "Cause Of Visite",
+  "management": "management",
+  "visitType": "visit Type",
+  "ECO": "ECO",
+  "AutoComplete": "AutoComplete",
+  "DiseaseName": "Disease Name",
+  "constDisease": "Constant Disease",
+  "chronicTherapy": "Chronic Therapy"
 }

@@ -10,11 +10,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import { useState, useMemo, useCallback } from "react";
 import Sidebaritems from "../../components/Sidebar/Sidebaritems";
 import LanguageSelector from "./lanquageSelector";
-import {
-  Abc,
-  Home,
-  MonitorHeart,
-} from "@mui/icons-material";
+import { Abc, Home, Medication, MonitorHeart } from "@mui/icons-material";
 import { FormattedMessage } from "react-intl";
 import logo from "../../logo.png";
 import AirlineSeatFlatAngledIcon from "@mui/icons-material/AirlineSeatFlatAngled";
@@ -32,7 +28,8 @@ const SideBarMenu = (props) => {
   }, []);
 
   const isUserValid = useMemo(
-    () => props.currentUser && new Date(props.currentUser.expireDate) > new Date(),
+    () =>
+      props.currentUser && new Date(props.currentUser.expireDate) > new Date(),
     [props.currentUser]
   );
 
@@ -175,6 +172,14 @@ const SideBarMenu = (props) => {
               router="/eco"
               onClick={() => handleSubmenuChange("ECO")}
             />
+            <Sidebaritems
+              active={activeSubmenu === "constDisease"}
+              title="constDisease"
+              icon={<Medication style={{ fontSize: "28px" }} />}
+              router="/constdisease"
+              onClick={() => handleSubmenuChange("constDisease")}
+            />
+
             <Sidebaritems
               active={activeSubmenu === "AutoComplete"}
               title="AutoComplete"

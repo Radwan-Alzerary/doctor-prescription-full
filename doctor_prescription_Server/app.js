@@ -91,6 +91,14 @@ updateBookedStatus();
 
 ConstantDiseases.countDocuments()
   .then((count) => {
+    ConstantDiseases.updateMany({ active: { $exists: false } }, { $set: { active: true } })
+    .then((result) => {
+      console.log(`Updated ${result.nModified} documents`);
+    })
+    .catch((error) => {
+      console.error("Error updating documents", error);
+    });
+
     if (count === 0) {
       const defaultConstantDiseases = [
         { name: "مرض مزمن" },

@@ -77,10 +77,10 @@
     "web-vitals": "^4.2.2"
   },
   "scripts": {
-    "startReact": "react-scripts start",
+    "startMillion": "craco start",
     "buildReact": "react-scripts build",
     "testReact": "react-scripts test",
-    "start": "craco start",
+    "start": "react-scripts start",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject"

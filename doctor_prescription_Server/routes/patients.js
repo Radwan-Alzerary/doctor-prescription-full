@@ -58,7 +58,6 @@ router.post("/new", async (req, res) => {
       }
     }
     patientsDate.diseases = resultArray;
-    console.log(resultArray);
     const patients = new Patients(patientsDate);
     await patients.save();
     res.status(201).json(patients);
@@ -68,7 +67,6 @@ router.post("/new", async (req, res) => {
 });
 router.post("/edit", async (req, res) => {
   try {
-    console.log(req.body);
     const id = req.body.id; // Extract the ID from the URL parameter
     const ubdateData = req.body;
     if (req.body.diseases) {
@@ -76,9 +74,9 @@ router.post("/edit", async (req, res) => {
       const resultArray = [];
 
       for (const diseaseName of diseasesArray) {
-        console.log(diseaseName.name);
+        console.log("name",diseaseName);
         const existingDisease = await ConstantDiseases.findOne({
-          name: diseaseName.name,
+          name: diseaseName,
         });
         if (existingDisease) {
           resultArray.push(existingDisease._id.toString());

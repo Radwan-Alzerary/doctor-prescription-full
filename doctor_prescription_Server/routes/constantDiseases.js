@@ -6,7 +6,7 @@ const ConstantDiseases = require("../model/constantDiseases");
 router.post("/new", async (req, res) => {
   try {
     const constantDiseases = new ConstantDiseases(req.body);
-    await category.save();
+    await constantDiseases.save();
     res.status(201).json(constantDiseases);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -16,7 +16,7 @@ router.post("/new", async (req, res) => {
 // Get all ConstantDiseases
 router.get("/getall", async (req, res) => {
   try {
-    const constantDiseases = await ConstantDiseases.find();
+    const constantDiseases = await ConstantDiseases.find({active:true} );
     res.json(constantDiseases);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -58,12 +58,14 @@ router.put("/edit/:id", async (req, res) => {
 // Delete one ConstantDiseases by ID
 router.delete("/delete/:id", async (req, res) => {
   try {
-    const constantDiseases = await ConstantDiseases.findByIdAndDelete(
+    const constantDiseases = await ConstantDiseases.findById(
       req.params.id
     );
     if (!constantDiseases) {
       return res.status(404).json({ error: "Category not found" });
     }
+    constantDiseases.active = false
+    await constantDiseases.save()
     res.json({ message: "Category deleted" });
   } catch (error) {
     res.status(500).json({ error: error.message });

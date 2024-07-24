@@ -8,7 +8,7 @@ function ImageInput(props) {
   const [imgSrc, setImgSrc] = useState("");
   const [showCameraModal, setShowCameraModal] = useState(false);
   const [showCropModal, setShowCropModal] = useState(false);
-  const [crop, setCrop] = useState({ unit: "%", width: 30, aspect: 4 / 3 });
+  const [crop, setCrop] = useState({ unit: '%', width: 100, height: 100 });
   const [completedCrop, setCompletedCrop] = useState(null);
   const [fileToCrop, setFileToCrop] = useState(null);
   const videoRef = useRef(null);
@@ -279,17 +279,18 @@ function ImageInput(props) {
           isOpen={showCropModal}
           onRequestClose={() => setShowCropModal(false)}
           contentLabel="Crop Image"
-          className="fixed inset-0 flex items-center justify-center z-50"
+          className="fixed inset-0 flex h-52  top-96 items-center justify-center z-50 p-4"
           overlayClassName="fixed inset-0 bg-black bg-opacity-75 z-50"
         >
-          <div className="w-full h-full p-36 flex flex-col justify-center items-center ">
-            <div className="w-full bg-white">
+          <div className="w-full max-w-3xl mx-auto bg-white p-4 rounded-lg flex flex-col justify-center items-center">
+            <div className="w-full flex justify-center items-center">
               <ReactCrop
                 src={imgSrc}
                 crop={crop}
                 onImageLoaded={(img) => (imgRef.current = img)}
                 onChange={(_, percentCrop) => setCrop(percentCrop)}
                 onComplete={(c) => setCompletedCrop(c)}
+                className="w-full"
               >
                 <img
                   ref={imgRef}
@@ -297,10 +298,11 @@ function ImageInput(props) {
                   src={imgSrc}
                   style={{ transform: `scale(1) rotate(0deg)` }}
                   onLoad={onImageLoad}
+                  className=" h-96"
                 />
               </ReactCrop>
             </div>
-            <div className="flex justify-center items-center p-2 bg-white w-full rounded-b-lg">
+            <div className="flex justify-center items-center p-2 w-full rounded-b-lg">
               <button
                 onClick={handleSaveCroppedImage}
                 className="save-button mr-2 bg-blue-500 text-white px-12 py-2 rounded"
