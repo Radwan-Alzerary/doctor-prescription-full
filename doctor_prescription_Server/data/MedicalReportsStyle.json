@@ -26,19 +26,12 @@
     "HeaderLeftTextActive": true,
     "HeaderLeftText": [],
     "HeaderMidleTextActive": true,
-    "HeaderMidleText": [
-      {
-        "size": "-0.125",
-        "Color": "#6DA2F8",
-        "textAlign": "center",
-        "textWeight": "normal",
-        "active": true,
-        "_id": "668a7b63153792ed8d23d45f",
-        "text": "iuhi"
-      }
-    ],
+    "HeaderMidleText": [],
     "HeaderRightTextActive": true,
     "HeaderRightText": [],
+    "barcodeActive": false,
+    "barcodeSize": "100",
+    "patientsNextVisitActive": false,
     "linesActive": false,
     "tableHeaderActive": true,
     "tableHeaderColor": "#000",
@@ -92,46 +85,16 @@
     "genderSize": 1,
     "genderMainTitleActive": true,
     "genderMainTitleColor": "#d53030",
-    "weightActive": true,
-    "weightX": 80,
-    "weightY": 3,
+    "weightActive": false,
+    "weightX": 76,
+    "weightY": 1,
     "weightAbsoulateActive": false,
     "weightColor": "#000",
     "weightSize": 1,
     "weightMainTitleActive": true,
     "weightMainTitleColor": "#000",
-    "shape": [
-      {
-        "shapetype": "rectangle",
-        "color": "#000",
-        "width": 100,
-        "height": 1,
-        "placeX": 50,
-        "placeY": 50,
-        "active": false,
-        "zindex": 100,
-        "borderRadius": 0,
-        "borderColor": "#000",
-        "borderWidth": 0,
-        "_id": "668a7b49153792ed8d23d3de"
-      }
-    ],
-    "images": [
-      {
-        "imageUrl": "/img/1720351569099-93944553.png",
-        "width": 100,
-        "height": 100,
-        "placeX": 50,
-        "placeY": 50,
-        "active": true,
-        "zindex": 100,
-        "opacity": 69,
-        "borderRadius": 0,
-        "borderColor": "#000",
-        "borderWidth": 0,
-        "_id": "668a7b4d153792ed8d23d3e8"
-      }
-    ],
+    "shape": [],
+    "images": [],
     "dateActive": true,
     "dateX": 10,
     "dateY": 31,
@@ -156,15 +119,7 @@
     "footerTextColor": "#000",
     "footerTextSize": "#000",
     "createdAt": "2023-11-26T17:13:45.460Z",
-    "updatedAt": "2024-07-15T15:53:57.583Z",
-    "__v": 0,
-    "barcodeActive": true,
-    "barcodeY": 50,
-    "barcodeX": 30,
-    "barcodeSize": "90",
-    "patientsNextVisitSize": 1,
-    "patientsNextVisitX": 1,
-    "patientsNextVisitY": 1,
-    "patientsNextVisitActive": true
+    "updatedAt": "2024-02-19T09:58:27.433Z",
+    "__v": 0
   }
 ]

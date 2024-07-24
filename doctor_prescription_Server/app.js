@@ -211,8 +211,7 @@ const fs = require('fs');
 // const socketClient = ioClient("http://api.racheta.org:4001", {
 //   reconnection: true,
 
-
-const socketClient = ioClient("http://api.racheta.org/", { // Adjust the URL and port if needed
+const socketClient = ioClient("https://api.racheta.org", { // Adjust the URL and port if needed
   reconnection: true,
 });
 

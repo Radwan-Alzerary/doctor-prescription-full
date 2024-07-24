@@ -9,7 +9,7 @@
     "midScapetype": "10417",
     "midScapeHasInteractions": "1",
     "createdAt": "2024-04-04T18:11:28.281Z",
-    "updatedAt": "2024-07-14T15:58:31.042Z",
+    "updatedAt": "2024-07-22T18:12:51.698Z",
     "__v": 0,
     "anotherIntaketime": "",
     "description": "",
@@ -40,7 +40,7 @@
     "midScapetype": "10417",
     "midScapeHasInteractions": "0",
     "createdAt": "2024-04-04T18:11:28.289Z",
-    "updatedAt": "2024-07-07T11:18:43.080Z",
+    "updatedAt": "2024-07-22T14:49:41.320Z",
     "__v": 0,
     "anotherIntaketime": "",
     "description": "",
@@ -58,8 +58,13 @@
     "midScapetype": "10417",
     "midScapeHasInteractions": "0",
     "createdAt": "2024-04-04T18:11:28.291Z",
-    "updatedAt": "2024-04-04T18:11:28.291Z",
-    "__v": 0
+    "updatedAt": "2024-07-22T18:12:56.697Z",
+    "__v": 0,
+    "anotherIntaketime": "",
+    "description": "",
+    "dose": "",
+    "doseCount": "*",
+    "tradeName": ""
   },
   {
     "_id": "660eed50b383876f2604f66f",
@@ -107729,8 +107734,13 @@
     "midScapetype": "10417",
     "midScapeHasInteractions": "1",
     "createdAt": "2024-04-04T18:11:37.938Z",
-    "updatedAt": "2024-04-04T18:11:37.938Z",
-    "__v": 0
+    "updatedAt": "2024-07-22T19:06:40.853Z",
+    "__v": 0,
+    "anotherIntaketime": "",
+    "description": "",
+    "dose": "",
+    "doseCount": "*",
+    "tradeName": ""
   },
   {
     "_id": "660eed59b383876f2605371f",

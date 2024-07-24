@@ -92,10 +92,16 @@
     "visitdiagnosis": [],
     "visitPriorChronicTherapy": [],
     "visitCauseOfVisite": [],
-    "visitManagement": [],
+    "visitManagement": [
+      "بيلسلسب"
+    ],
     "visitinvestigation": [],
     "createdAt": "2024-04-12T17:24:38.813Z",
-    "updatedAt": "2024-07-07T11:21:56.244Z",
-    "__v": 88
+    "updatedAt": "2024-07-24T15:42:44.171Z",
+    "__v": 91,
+    "visitChronicTherapy": [
+      "بللاللا",
+      "شسيؤشسي"
+    ]
   }
 ]

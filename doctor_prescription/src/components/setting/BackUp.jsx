@@ -26,7 +26,7 @@ function BackUp(props) {
       </Button>
       {props.settingData ? (
         <div className="gap-2 w-full flex flex-col justify-center items-center">
-          <Button
+          {/* <Button
             variant="contained"
             className="w-1/2"
             // color="success"
@@ -38,7 +38,7 @@ function BackUp(props) {
                 defaultMessage="Hello, World!"
               />
             }
-          </Button>
+          </Button> */}
           <div>اخر نسخ احتياطي {formatDate(props.settingData.lastBackup)} </div>
         </div>
       ) : (

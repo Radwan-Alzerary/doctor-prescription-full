@@ -1889,5 +1889,127 @@
     "createdAt": "2024-07-15T15:50:59.626Z",
     "updatedAt": "2024-07-15T15:51:01.103Z",
     "__v": 0
+  },
+  {
+    "_id": "669857ae2740699987790672",
+    "active": false,
+    "pharmaceutical": [],
+    "createdAt": "2024-07-17T23:45:50.061Z",
+    "updatedAt": "2024-07-17T23:45:50.061Z",
+    "__v": 0
+  },
+  {
+    "_id": "669857d82740699987790687",
+    "active": false,
+    "pharmaceutical": [],
+    "createdAt": "2024-07-17T23:46:32.978Z",
+    "updatedAt": "2024-07-17T23:46:32.978Z",
+    "__v": 0
+  },
+  {
+    "_id": "6698587027406999877909cf",
+    "active": false,
+    "pharmaceutical": [],
+    "createdAt": "2024-07-17T23:49:04.659Z",
+    "updatedAt": "2024-07-17T23:49:04.659Z",
+    "__v": 0
+  },
+  {
+    "_id": "6698587827406999877909e4",
+    "active": false,
+    "pharmaceutical": [],
+    "createdAt": "2024-07-17T23:49:12.664Z",
+    "updatedAt": "2024-07-17T23:49:12.664Z",
+    "__v": 0
+  },
+  {
+    "_id": "669e6e9028f9354a9b1ad4fb",
+    "active": true,
+    "pharmaceutical": [
+      {
+        "id": "660eed50b383876f2604f66b",
+        "dose": "dsa",
+        "doseNum": "*",
+        "anotherIntaketime": "",
+        "description": "",
+        "_id": "669e718528f9354a9b1ae53d"
+      },
+      {
+        "id": "660eed50b383876f2604f667",
+        "dose": "fds",
+        "doseNum": "*",
+        "anotherIntaketime": "",
+        "description": "",
+        "_id": "669ea123a676ff1ec171a6c6"
+      },
+      {
+        "id": "660eed50b383876f2604f66d",
+        "dose": "",
+        "doseNum": "*",
+        "anotherIntaketime": "",
+        "description": "",
+        "_id": "669ea128a676ff1ec171a71a"
+      }
+    ],
+    "createdAt": "2024-07-22T14:37:04.463Z",
+    "updatedAt": "2024-07-22T18:12:56.699Z",
+    "__v": 3
+  },
+  {
+    "_id": "669e7aa228f9354a9b1afc30",
+    "active": false,
+    "pharmaceutical": [],
+    "createdAt": "2024-07-22T15:28:34.715Z",
+    "updatedAt": "2024-07-22T15:28:34.715Z",
+    "__v": 0
+  },
+  {
+    "_id": "669eadb9a676ff1ec171d30d",
+    "active": true,
+    "pharmaceutical": [
+      {
+        "id": "660eed59b383876f2605371d",
+        "dose": "",
+        "doseNum": "*",
+        "anotherIntaketime": "",
+        "description": "",
+        "_id": "669eadc0a676ff1ec171d324"
+      }
+    ],
+    "createdAt": "2024-07-22T19:06:33.328Z",
+    "updatedAt": "2024-07-22T19:06:42.202Z",
+    "__v": 1
+  },
+  {
+    "_id": "669eaea2a676ff1ec171d458",
+    "active": false,
+    "pharmaceutical": [],
+    "createdAt": "2024-07-22T19:10:26.785Z",
+    "updatedAt": "2024-07-22T19:10:26.785Z",
+    "__v": 0
+  },
+  {
+    "_id": "669eaea7a676ff1ec171d46f",
+    "active": false,
+    "pharmaceutical": [],
+    "createdAt": "2024-07-22T19:10:31.446Z",
+    "updatedAt": "2024-07-22T19:10:31.446Z",
+    "__v": 0
+  },
+  {
+    "_id": "669ec6a9a676ff1ec1729593",
+    "active": false,
+    "pharmaceutical": [],
+    "createdAt": "2024-07-22T20:52:57.080Z",
+    "updatedAt": "2024-07-22T20:52:57.080Z",
+    "__v": 0
+  },
+  {
+    "_id": "669ec6c1a676ff1ec17295aa",
+    "active": false,
+    "pharmaceutical": [],
+    "createdAt": "2024-07-22T20:53:21.316Z",
+    "updatedAt": "2024-07-22T20:53:21.316Z",
+    "__v": 0
   }
 ]

@@ -231,7 +231,7 @@ function PartientsProfile(props) {
             </div>
             {partientsProfile.description ? (
               <div className=" bg-white p-3 rounded-2xl shadow my-4">
-                <div className=" font-medium text-xl">الملاحضات</div>
+                <div className=" font-medium text-xl">الملاحظات</div>
                 <div className="flex gap-4 ">
                   <p>{partientsProfile.description} </p>
                 </div>

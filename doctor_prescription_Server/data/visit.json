@@ -1,6 +1,7 @@
 [
   {
     "priority": "normal",
+    "chronicTherapy": "",
     "_id": "664211ea2cf566f3956ffe43",
     "chiefComplaint": "qssadfsfdsvfdsvdsesdfdsc",
     "dateOfVisit": "",
@@ -16,6 +17,7 @@
   },
   {
     "priority": "normal",
+    "chronicTherapy": "",
     "_id": "667748357ffe90132164172c",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -31,6 +33,7 @@
   },
   {
     "priority": "normal",
+    "chronicTherapy": "",
     "_id": "667748447ffe901321641799",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -46,6 +49,7 @@
   },
   {
     "priority": "normal",
+    "chronicTherapy": "",
     "_id": "667748457ffe9013216417ac",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -61,6 +65,7 @@
   },
   {
     "priority": "normal",
+    "chronicTherapy": "",
     "_id": "6677484b7ffe9013216417e2",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -76,6 +81,7 @@
   },
   {
     "priority": "normal",
+    "chronicTherapy": "",
     "_id": "66774f69f3dbbbabdabeecb9",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -91,6 +97,7 @@
   },
   {
     "priority": "normal",
+    "chronicTherapy": "",
     "_id": "66774f6bf3dbbbabdabeecce",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -106,6 +113,7 @@
   },
   {
     "priority": "normal",
+    "chronicTherapy": "",
     "_id": "667754338afa60c8bb9e07f4",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -121,6 +129,7 @@
   },
   {
     "priority": "normal",
+    "chronicTherapy": "",
     "_id": "667754368afa60c8bb9e0808",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -136,6 +145,7 @@
   },
   {
     "priority": "normal",
+    "chronicTherapy": "",
     "_id": "667754398afa60c8bb9e081d",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -151,6 +161,7 @@
   },
   {
     "priority": "normal",
+    "chronicTherapy": "",
     "_id": "667758fce61b6e260e7143d9",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -166,6 +177,7 @@
   },
   {
     "priority": "normal",
+    "chronicTherapy": "",
     "_id": "66775942f74d17d9253d4846",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -181,6 +193,7 @@
   },
   {
     "priority": "normal",
+    "chronicTherapy": "",
     "_id": "6679fc7ef74d17d9253d4c1b",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -195,6 +208,7 @@
     "__v": 0
   },
   {
+    "chronicTherapy": "",
     "_id": "66775b05122fb6591cf6c350",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -210,6 +224,7 @@
     "__v": 0
   },
   {
+    "chronicTherapy": "",
     "_id": "66775c991d77afea69020f31",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -225,6 +240,7 @@
     "__v": 0
   },
   {
+    "chronicTherapy": "",
     "_id": "66775c9b1d77afea69020f4b",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -240,6 +256,7 @@
     "__v": 0
   },
   {
+    "chronicTherapy": "",
     "_id": "667767aff8ad6b294b14337d",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -255,6 +272,7 @@
     "__v": 0
   },
   {
+    "chronicTherapy": "",
     "_id": "66800a20391712ec6ae85f80",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -270,6 +288,7 @@
     "__v": 0
   },
   {
+    "chronicTherapy": "",
     "_id": "66800a2f391712ec6ae8601e",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -285,6 +304,7 @@
     "__v": 0
   },
   {
+    "chronicTherapy": "",
     "_id": "66800ab2dc497c6cc6f4558d",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -300,6 +320,7 @@
     "__v": 0
   },
   {
+    "chronicTherapy": "",
     "_id": "66800ceedc497c6cc6f4562a",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -315,6 +336,7 @@
     "__v": 0
   },
   {
+    "chronicTherapy": "",
     "_id": "66800cf1dc497c6cc6f4564e",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -330,6 +352,7 @@
     "__v": 0
   },
   {
+    "chronicTherapy": "",
     "_id": "66800cf2dc497c6cc6f45672",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -345,6 +368,7 @@
     "__v": 0
   },
   {
+    "chronicTherapy": "",
     "_id": "66800cf3dc497c6cc6f45696",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -360,6 +384,7 @@
     "__v": 0
   },
   {
+    "chronicTherapy": "",
     "_id": "66800cf4dc497c6cc6f456ba",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -375,6 +400,7 @@
     "__v": 0
   },
   {
+    "chronicTherapy": "",
     "_id": "66800cf6dc497c6cc6f456de",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -390,6 +416,7 @@
     "__v": 0
   },
   {
+    "chronicTherapy": "",
     "_id": "66800cf7dc497c6cc6f45702",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -405,6 +432,7 @@
     "__v": 0
   },
   {
+    "chronicTherapy": "",
     "_id": "66808489d1dae8a8f7c37065",
     "chiefComplaint": "",
     "dateOfVisit": "",
@@ -417,6 +445,86 @@
     "priority": "high",
     "createdAt": "2024-06-29T22:02:49.600Z",
     "updatedAt": "2024-06-29T22:02:49.600Z",
+    "__v": 0
+  },
+  {
+    "chronicTherapy": "",
+    "_id": "669ea3b6a676ff1ec171bbaa",
+    "chiefComplaint": "",
+    "dateOfVisit": "",
+    "investigation": "",
+    "diagnosis": "",
+    "PriorChronicTherapy": "",
+    "CauseOfVisite": "",
+    "management": "",
+    "type": "",
+    "priority": "",
+    "createdAt": "2024-07-22T18:23:50.222Z",
+    "updatedAt": "2024-07-22T18:23:50.222Z",
+    "__v": 0
+  },
+  {
+    "chronicTherapy": "",
+    "_id": "669eaa4da676ff1ec171c291",
+    "chiefComplaint": "",
+    "dateOfVisit": "",
+    "investigation": "",
+    "diagnosis": "",
+    "PriorChronicTherapy": "",
+    "CauseOfVisite": "drxcfvghbjnkmljknhbgvfcdertrfghjnkmjnhbgvyfrtyguhbnuybcrtufvygbhjnkhbgvfcdrcfgvhbjnkbvfcdtfryguhijnhbgvftyrdtfyguhijkihgtfrdesrtfyghjknhbgvftr",
+    "management": "",
+    "type": "",
+    "priority": "",
+    "createdAt": "2024-07-22T18:51:57.876Z",
+    "updatedAt": "2024-07-22T18:51:57.876Z",
+    "__v": 0
+  },
+  {
+    "_id": "66a121315b43f2d2d44f3283",
+    "chiefComplaint": "ييي",
+    "dateOfVisit": "",
+    "investigation": "ي",
+    "diagnosis": "ي",
+    "PriorChronicTherapy": "ءءءءء",
+    "CauseOfVisite": "ئء",
+    "management": "ي",
+    "type": "",
+    "priority": "",
+    "chronicTherapy": "",
+    "createdAt": "2024-07-24T15:43:45.994Z",
+    "updatedAt": "2024-07-24T15:43:45.994Z",
+    "__v": 0
+  },
+  {
+    "_id": "66a1217833f2918155570e8d",
+    "chiefComplaint": "",
+    "dateOfVisit": "",
+    "investigation": "",
+    "diagnosis": "",
+    "PriorChronicTherapy": "",
+    "CauseOfVisite": "بيريسبر",
+    "management": "",
+    "type": "",
+    "priority": "",
+    "chronicTherapy": "",
+    "createdAt": "2024-07-24T15:44:56.574Z",
+    "updatedAt": "2024-07-24T15:44:56.574Z",
+    "__v": 0
+  },
+  {
+    "_id": "66a1219f33f2918155570ece",
+    "chiefComplaint": "",
+    "dateOfVisit": "",
+    "investigation": "",
+    "diagnosis": "",
+    "PriorChronicTherapy": "dsc",
+    "CauseOfVisite": "fdsfsd\nsfdvsdc\nDFsdf\nasd\nxzc\nasd\nsd\n",
+    "management": "",
+    "type": "",
+    "priority": "",
+    "chronicTherapy": "",
+    "createdAt": "2024-07-24T15:45:35.205Z",
+    "updatedAt": "2024-07-24T15:45:35.205Z",
     "__v": 0
   }
 ]
