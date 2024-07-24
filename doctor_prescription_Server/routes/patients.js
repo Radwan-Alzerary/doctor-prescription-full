@@ -72,11 +72,20 @@ router.post("/edit", async (req, res) => {
     if (req.body.diseases) {
       const diseasesArray = req.body.diseases;
       const resultArray = [];
-
       for (const diseaseName of diseasesArray) {
-        console.log("name",diseaseName);
+        let name = "";
+        if (diseaseName.name) {
+          name = diseaseName.name;
+          console.log(diseaseName.name);
+          console.log("in database")
+
+        } else {
+          name = diseaseName;
+          console.log("not in database")
+        }
+        console.log(name)
         const existingDisease = await ConstantDiseases.findOne({
-          name: diseaseName,
+          name: name,
         });
         if (existingDisease) {
           resultArray.push(existingDisease._id.toString());
@@ -166,7 +175,6 @@ router.get("/getall/:page", async (req, res) => {
 
     let sort = { booked: -1 }; // Always include booked: -1
 
-    console.log(req.query);
     if (sortField) {
       // Construct the sort object dynamically based on query parameters
       sort[sortField] = sortOrder;
@@ -241,8 +249,6 @@ router.get("/getall/:page", async (req, res) => {
         };
       }
     }
-    console.log(setting.patientsTable.DateViewQuery);
-    console.log(dateFilter);
     const patients = await Patients.find({ name: { $ne: "" }, ...dateFilter })
       .populate({
         path: "prescription",
@@ -274,7 +280,6 @@ router.get("/checktoken", async (req, res) => {
           const today = new Date();
           const futureDate = new Date(today);
           futureDate.setDate(today.getDate() + dayNum);
-          console.log(futureDate);
         } else {
           res.status(400).json({ result: "token expire", day: dayNum });
         }
@@ -282,8 +287,6 @@ router.get("/checktoken", async (req, res) => {
       .catch(function (error) {
         console.log(error);
       });
-
-    console.log(dayNum);
 
     // Send the response from the other server back to the client
     res.status(200).json({ result: "token correct", day: dayNum });
@@ -325,7 +328,6 @@ router.get("/medicalinfo/:partientId", async (req, res) => {
       .populate("diseases")
       .populate("labory")
       .populate("visit");
-    console.log(patients);
     res.json(patients);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -354,7 +356,6 @@ router.get("/getbyname/:searchName", async (req, res) => {
 });
 router.post("/queryselect/", async (req, res) => {
   try {
-    console.log(req.body);
     const [minAge, maxAge] = req.body.ageQuery.split("-").map(Number);
     const query = {};
     if (req.body.ageQuery) {
@@ -448,7 +449,6 @@ router.get(
       )
         .populate("pharmaceutical.id")
         .populate("pharmaceutical.inTakeTime");
-      console.log({ patients, prescription });
       res.json({ patients, prescription });
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -522,7 +522,6 @@ router.post("/galaryimage", upload.single("image"), async (req, res, next) => {
   }
 });
 router.post("/images/delete", async (req, res, next) => {
-  console.log(req.body);
   const patientId = req.body.id;
   const imageUrl = req.body.imageUrl;
   try {
