@@ -46,10 +46,9 @@ router.post("/importimages", upload.single("image"), async (req, res, next) => {
   console.log(req.body);
   const { filename, path } = req.file;
   const { name } = req.body;
-  console.log(filename, path, name);
-  const url = req.protocol + "://" + req.get("host");
+  console.log(req.body)
   const imagePath = req.file ? "/img/" + req.file.filename : null;
-  console.log(imagePath);
+  console.log(req.file);
   try {
     const doc = await MedicalReportsStype.findById(req.body.id);
     if (!doc) {

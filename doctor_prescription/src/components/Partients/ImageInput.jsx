@@ -54,9 +54,14 @@ function ImageInput(props) {
 
   const handleFileChange = (file) => {
     if (file) {
-      setFileToCrop(file);
-      displayPreview(file);
-      setShowCropModal(true);
+      if (props.crop) {
+        setFileToCrop(file);
+        displayPreview(file);
+        setShowCropModal(true);
+      } else {
+        displayPreview(file);
+        props.handleFileChange(file,props.index);
+      }
     }
   };
 
@@ -135,7 +140,7 @@ function ImageInput(props) {
     const croppedImageBlob = await getCroppedImg(imgRef.current, completedCrop);
     const croppedImageUrl = URL.createObjectURL(croppedImageBlob);
     setImgSrc(croppedImageUrl);
-    props.handleFileChange(croppedImageBlob);
+    props.handleFileChange(croppedImageBlob,props.index);
     setShowCropModal(false);
   };
 
@@ -274,7 +279,7 @@ function ImageInput(props) {
         </div>
       )}
 
-      {showCropModal && (
+      {showCropModal && props.crop && (
         <ReactModal
           isOpen={showCropModal}
           onRequestClose={() => setShowCropModal(false)}
