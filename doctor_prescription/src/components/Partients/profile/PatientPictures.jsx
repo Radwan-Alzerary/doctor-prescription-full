@@ -70,7 +70,7 @@ export default function PatientPictures(props) {
             </div>
           </div>
         ))}
-        <ImageInput handleFileChange={handleFileChange}></ImageInput>
+        <ImageInput handleFileChange={handleFileChange} crop ></ImageInput>
       </div>
       {showImage ? (
         <>
