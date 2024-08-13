@@ -8,6 +8,8 @@ const fs = require("fs");
 const Visit = require("../model/visit"); // Make sure to adjust the path as needed
 const Medicalreports = require("../model/medicalReport"); // Make sure to adjust the path as needed
 const systemSetting = require("../model/systemSetting");
+const Pharmaceutical = require("../model/pharmaceutical");
+const { startScanning } = require("../services/scanningService");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -77,13 +79,12 @@ router.post("/edit", async (req, res) => {
         if (diseaseName.name) {
           name = diseaseName.name;
           console.log(diseaseName.name);
-          console.log("in database")
-
+          console.log("in database");
         } else {
           name = diseaseName;
-          console.log("not in database")
+          console.log("not in database");
         }
-        console.log(name)
+        console.log(name);
         const existingDisease = await ConstantDiseases.findOne({
           name: name,
         });
@@ -112,6 +113,25 @@ router.post("/edit", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+router.post("/scan", async (req, res) => {
+  try {
+    const scannedFilePath = await startScanning();
+    let newPath = scannedFilePath.replace("public", "");
+    const medicalReportsStype = await Patients.findByIdAndUpdate(
+      req.body.id,
+      { $push: { galary: newPath } },
+      { new: true }
+    );
+    if (!medicalReportsStype) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+    res.json(medicalReportsStype);
+  } catch (error) {
+    res.status(500).send("Error starting scanning process: " + error.message);
+  }
+});
+
 router.get("/getall", async (req, res) => {
   try {
     const patients = await Patients.find({ name: { $ne: "" } })
@@ -789,4 +809,230 @@ router.post("/bookpatents", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+// Route to add patients from POST data
+router.get("/add-patients", async (req, res) => {
+  try {
+    const jsonFilePath = "remName.json";
+    console.log(process.cwd());
+
+    // Read the JSON file
+    const jsonData = fs.readFileSync(jsonFilePath, "utf8");
+
+    // Parse the JSON data
+    const patients = JSON.parse(jsonData);
+
+    // Map the JSON fields to the Mongoose model fields
+    const mappedPatients = patients.map((patient) => {
+      return {
+        name: patient.name,
+        // Assuming gender is not available in JSON, setting a default value
+        gender: "انثى",
+        // Calculating age based on birthdate if available, else setting to null
+        age: patient.birthdate
+          ? new Date().getFullYear() - new Date(patient.birthdate).getFullYear()
+          : null,
+        // Assuming monthAge and dayAge are not available in JSON, setting to null
+        Sequence: patient.serial,
+        // Other fields not available in JSON are set to their defaults or null
+        booked: false,
+        bookedDate: null,
+        bookedPriority: null,
+        length: null,
+        phonNumber: null,
+        adresses: null,
+        galary: [],
+        visitDate: [],
+        fumbling: null,
+        medicalDiagnosis: null,
+        currentMedicalHistory: null,
+        medicalHistory: null,
+        previousSurgeries: null,
+        familyHistory: null,
+        fractures: null,
+        pulseRate: null,
+        spo2: null,
+        temperature: null,
+        bloodPressure: null,
+        bloodSugar: null,
+        miscarriageState: false,
+        MiscarriageNo: null,
+        MiscarriageData: [],
+        pregnancyState: false,
+        pregnancyData: {},
+        ExaminationFindining: null,
+        InvestigationFinding: null,
+        visitCount: 0,
+        diseases: [],
+        description: null,
+        jop: null,
+        prescription: [],
+        surgery: [],
+        medicalReport: [],
+        labory: [],
+        visit: [],
+        nextVisit: null,
+        Medicine: [],
+        bloodType: null,
+        MaritalStatus: null,
+        lastEditDate: new Date(patient.adddate),
+        numberOfChildren: null,
+        childrenData: [],
+        MedicalAnalysis: null,
+      };
+    });
+
+    // Add patients to the database
+    await Patients.insertMany(mappedPatients);
+    res.status(200).send("Patients added successfully");
+  } catch (error) {
+    console.error("Error adding patients:", error);
+    res.status(500).send("An error occurred while adding patients");
+  }
+});
+
+router.get("/add-visits", async (req, res) => {
+  try {
+    const jsonFilePath = "remVisit.json";
+    console.log(process.cwd());
+
+    // Read the JSON file
+    const jsonData = fs.readFileSync(jsonFilePath, "utf8");
+
+    // Parse the JSON data
+    const visits = JSON.parse(jsonData);
+
+    for (const visit of visits) {
+      const patrint = await Patients.findOne({ Sequence: visit.patintid });
+      // Create a new visit document
+      console.log(patrint);
+      if (patrint) {
+        const newVisit = new Visit({
+          chiefComplaint: "",
+          dateOfVisit: visit.visitdata,
+          investigation: visit.result2,
+          diagnosis: visit.result,
+          PriorChronicTherapy: "",
+          CauseOfVisite: "",
+          management: "",
+          type: "",
+          priority: "normal",
+          patients: patrint.id, // Assuming patintid is the patient reference
+          chronicTherapy: "",
+          analysis: visit.pregment,
+          riskFactor: "",
+          pastMedicalHistory: "",
+          drugHistory: "",
+          suspendedDx: "",
+          sequence: visit.sequence.toString(),
+        });
+
+        // Save the visit document
+        await newVisit.save();
+        if (visit.peridtime) {
+          patrint.pregnancyState = true;
+          patrint.pregnancyData.DateOfLastPeriod = visit.peridtime;
+          await patrint.save();
+        }
+
+        // Find the patient by patintid and update their visits array
+        await Patients.findByIdAndUpdate(
+          patrint.id,
+          { $push: { visit: newVisit._id } },
+          { new: true, useFindAndModify: false }
+        );
+      }
+    }
+
+    res.status(200).send("Visits added and patients updated successfully");
+  } catch (error) {
+    console.error("Error adding visits and updating patients:", error);
+    res
+      .status(500)
+      .send("An error occurred while adding visits and updating patients");
+  }
+});
+
+router.get("/add-drug", async (req, res) => {
+  try {
+    const jsonFilePath = "remDrug.json";
+    console.log(process.cwd());
+
+    // Read the JSON file
+    const jsonData = fs.readFileSync(jsonFilePath, "utf8");
+
+    // Parse the JSON data
+    const drugs = JSON.parse(jsonData);
+
+    for (const visit of drugs) {
+      const newVisit = new Pharmaceutical({
+        name: visit.drugname,
+        dose: visit.comment,
+        description: visit.drugid,
+      });
+
+      // Save the visit document
+      await newVisit.save();
+    }
+
+    res.status(200).send("Visits added and patients updated successfully");
+  } catch (error) {
+    console.error("Error adding visits and updating patients:", error);
+    res
+      .status(500)
+      .send("An error occurred while adding visits and updating patients");
+  }
+});
+
+router.get("/drug-pateint", async (req, res) => {
+  try {
+    const jsonFilePath = "remPres.json";
+    console.log(process.cwd());
+
+    // Read the JSON file
+    const jsonData = fs.readFileSync(jsonFilePath, "utf8");
+
+    // Parse the JSON data
+    const prescription = JSON.parse(jsonData);
+
+    for (const pres of prescription) {
+      const visit = await Visit.findOne({ sequence: pres.patintID });
+      if (visit) {
+        const patient = await Patients.findById(visit.patients);
+
+        const pharm = await Pharmaceutical.findOne({
+          description: pres.drugID,
+        });
+        const newPrs = new Prescription({
+          MedicalDiagnosis: pres.comment,
+          active: true,
+          pharmaceutical: [
+            {
+              id: pharm.id,
+              description: pres.intake,
+            },
+          ],
+        });
+
+        // Save the visit document
+        await newPrs.save();
+        console.log(newPrs._id);
+
+        await Patients.findByIdAndUpdate(
+          patient.id,
+          { $push: { prescription: newPrs._id } },
+          { new: true, useFindAndModify: false }
+        );
+      }
+    }
+
+    res.status(200).send("Visits added and patients updated successfully");
+  } catch (error) {
+    console.error("Error adding visits and updating patients:", error);
+    res
+      .status(500)
+      .send("An error occurred while adding visits and updating patients");
+  }
+});
+
 module.exports = router;

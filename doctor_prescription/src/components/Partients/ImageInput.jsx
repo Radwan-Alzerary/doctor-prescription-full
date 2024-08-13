@@ -8,7 +8,7 @@ function ImageInput(props) {
   const [imgSrc, setImgSrc] = useState("");
   const [showCameraModal, setShowCameraModal] = useState(false);
   const [showCropModal, setShowCropModal] = useState(false);
-  const [crop, setCrop] = useState({ unit: '%', width: 100, height: 100 });
+  const [crop, setCrop] = useState({ unit: "%", width: 100, height: 100 });
   const [completedCrop, setCompletedCrop] = useState(null);
   const [fileToCrop, setFileToCrop] = useState(null);
   const videoRef = useRef(null);
@@ -60,9 +60,13 @@ function ImageInput(props) {
         setShowCropModal(true);
       } else {
         displayPreview(file);
-        props.handleFileChange(file,props.index);
+        props.handleFileChange(file, props.index);
       }
     }
+  };
+
+  const handleScannerCapture = () => {
+    props.handleScannerHandle();
   };
 
   const displayPreview = (file) => {
@@ -140,7 +144,7 @@ function ImageInput(props) {
     const croppedImageBlob = await getCroppedImg(imgRef.current, completedCrop);
     const croppedImageUrl = URL.createObjectURL(croppedImageBlob);
     setImgSrc(croppedImageUrl);
-    props.handleFileChange(croppedImageBlob,props.index);
+    props.handleFileChange(croppedImageBlob, props.index);
     setShowCropModal(false);
   };
 
@@ -210,6 +214,39 @@ function ImageInput(props) {
             />
             <h3 className="mt-2 text-sm font-medium text-gray-900">
               <span>التقاط صورة للمريض</span>
+            </h3>
+          </div>
+        ) : (
+          ""
+        )}
+        {imgSrc && (
+          <div className="h-full w-full flex justify-center items-center">
+            <img
+              src={imgSrc}
+              className="mx-auto max-h-full"
+              id="preview"
+              alt="Preview"
+            />
+          </div>
+        )}
+      </div>
+
+      <div
+        className={`w-full h-[160px] relative border-2 border-gray-300 bg-white border-dashed rounded-lg p-6 cursor-pointer ${
+          isDragging ? "border-indigo-600" : ""
+        }`}
+        id="dropzone"
+        onClick={()=>{handleScannerCapture()}}
+      >
+        {!imgSrc ? (
+          <div className="text-center">
+            <img
+              className="mx-auto h-12 w-12"
+              src="https://www.svgrepo.com/show/528885/camera-square.svg"
+              alt=""
+            />
+            <h3 className="mt-2 text-sm font-medium text-gray-900">
+              <span>عمل سكان</span>
             </h3>
           </div>
         ) : (

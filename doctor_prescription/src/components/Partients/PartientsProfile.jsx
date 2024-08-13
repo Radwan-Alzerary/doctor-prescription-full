@@ -315,6 +315,7 @@ function PartientsProfile(props) {
       {profileSelect === "patientPictures" ? (
         <>
           <PatientPictures
+          handleScannerHandle={props.handleScannerHandle}
             onImageDeleteHandle={props.onImageDeleteHandle}
             refreshPaitent={refreshPaitent}
             id={partientsProfile._id}

@@ -1,10 +1,16 @@
 node_modules/
 locales/
 public/img/foodimg/
-public/img/
+public/
+/
 image.png
 data.json
 data.csv
 data1.csv
 book.json
 dbo.tblPatient.json
+rem/
+remDrug.json
+remName.json
+remPres.json
+remVisit.json

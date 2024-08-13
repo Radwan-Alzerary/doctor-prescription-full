@@ -104,8 +104,8 @@ function VisitForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className={`fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center ${
-        screenMode ? "h-[100%] w-full p-4" : "w-3/5 "
+      className={`fixed flex flex-col items-center overflow-scroll left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5  ${
+        screenMode ? "h-[100%] w-full p-4" : "w-3/5 h-[90%]"
       } }  bg-white p-5 rounded-xl z-50`}
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
@@ -312,6 +312,7 @@ function VisitForm({
           ""
         )}
       </div>
+
       <div className="flex flex-col justify-center items-center gap-4  w-full">
         <TextField
         multiline
@@ -384,6 +385,189 @@ function VisitForm({
           ""
         )}
       </div>
+
+
+      <div className="flex flex-col justify-center items-center gap-4  w-full">
+        <TextField
+        multiline
+          id="outlined-required"
+          size="small"
+          value={formData.analysis}
+          onChange={(event) =>
+            handleInputChange("analysis", event.target.value)
+          } // Update the name state
+          sx={{
+            width: "100%",
+            color: "#fff",
+          }}
+          onClick={() => {
+            // Your click handler code here
+            setTextSelector("analysis");
+          }}
+          label={
+            <FormattedMessage
+              id={"analysis"}
+              defaultMessage="Hello, World!"
+            />
+          }
+          // defaultValue="Hello World"
+        />
+        {!loading && textSelector === "analysis" ? (
+          <MedicalFormChipAutoComplete
+            AutoCompletevalue={autoCompleteList.visitAnalysis}
+            formDataValue={formData.analysis}
+            handleInputChange={handleInputChange}
+            target={"analysis"}
+          ></MedicalFormChipAutoComplete>
+        ) : (
+          ""
+        )}
+      </div>
+      <div className="flex flex-col justify-center items-center gap-4  w-full">
+        <TextField
+        multiline
+          id="outlined-required"
+          size="small"
+          value={formData.riskFactor}
+          onChange={(event) =>
+            handleInputChange("riskFactor", event.target.value)
+          } // Update the name state
+          sx={{
+            width: "100%",
+            color: "#fff",
+          }}
+          onClick={() => {
+            // Your click handler code here
+            setTextSelector("riskFactor");
+          }}
+          label={
+            <FormattedMessage
+              id={"riskFactor"}
+              defaultMessage="Hello, World!"
+            />
+          }
+          // defaultValue="Hello World"
+        />
+        {!loading && textSelector === "riskFactor" ? (
+          <MedicalFormChipAutoComplete
+            AutoCompletevalue={autoCompleteList.visitRiskFactor}
+            formDataValue={formData.riskFactor}
+            handleInputChange={handleInputChange}
+            target={"riskFactor"}
+          ></MedicalFormChipAutoComplete>
+        ) : (
+          ""
+        )}
+      </div>
+      <div className="flex flex-col justify-center items-center gap-4  w-full">
+        <TextField
+        multiline
+          id="outlined-required"
+          size="small"
+          value={formData.pastMedicalHistory}
+          onChange={(event) =>
+            handleInputChange("pastMedicalHistory", event.target.value)
+          } // Update the name state
+          sx={{
+            width: "100%",
+            color: "#fff",
+          }}
+          onClick={() => {
+            // Your click handler code here
+            setTextSelector("pastMedicalHistory");
+          }}
+          label={
+            <FormattedMessage
+              id={"pastMedicalHistory"}
+              defaultMessage="Hello, World!"
+            />
+          }
+          // defaultValue="Hello World"
+        />
+        {!loading && textSelector === "pastMedicalHistory" ? (
+          <MedicalFormChipAutoComplete
+            AutoCompletevalue={autoCompleteList.visitPastMedicalHistory}
+            formDataValue={formData.pastMedicalHistory}
+            handleInputChange={handleInputChange}
+            target={"pastMedicalHistory"}
+          ></MedicalFormChipAutoComplete>
+        ) : (
+          ""
+        )}
+      </div>
+      <div className="flex flex-col justify-center items-center gap-4  w-full">
+        <TextField
+        multiline
+          id="outlined-required"
+          size="small"
+          value={formData.drugHistory}
+          onChange={(event) =>
+            handleInputChange("drugHistory", event.target.value)
+          } // Update the name state
+          sx={{
+            width: "100%",
+            color: "#fff",
+          }}
+          onClick={() => {
+            // Your click handler code here
+            setTextSelector("drugHistory");
+          }}
+          label={
+            <FormattedMessage
+              id={"drugHistory"}
+              defaultMessage="Hello, World!"
+            />
+          }
+          // defaultValue="Hello World"
+        />
+        {!loading && textSelector === "drugHistory" ? (
+          <MedicalFormChipAutoComplete
+            AutoCompletevalue={autoCompleteList.visitDrugHistory}
+            formDataValue={formData.drugHistory}
+            handleInputChange={handleInputChange}
+            target={"drugHistory"}
+          ></MedicalFormChipAutoComplete>
+        ) : (
+          ""
+        )}
+      </div>
+      <div className="flex flex-col justify-center items-center gap-4  w-full">
+        <TextField
+        multiline
+          id="outlined-required"
+          size="small"
+          value={formData.suspendedDx}
+          onChange={(event) =>
+            handleInputChange("suspendedDx", event.target.value)
+          } // Update the name state
+          sx={{
+            width: "100%",
+            color: "#fff",
+          }}
+          onClick={() => {
+            // Your click handler code here
+            setTextSelector("suspendedDx");
+          }}
+          label={
+            <FormattedMessage
+              id={"suspendedDx"}
+              defaultMessage="Hello, World!"
+            />
+          }
+          // defaultValue="Hello World"
+        />
+        {!loading && textSelector === "suspendedDx" ? (
+          <MedicalFormChipAutoComplete
+            AutoCompletevalue={autoCompleteList.visitSuspendedDx}
+            formDataValue={formData.suspendedDx}
+            handleInputChange={handleInputChange}
+            target={"suspendedDx"}
+          ></MedicalFormChipAutoComplete>
+        ) : (
+          ""
+        )}
+      </div>
+
 
       <FormControl className=" w-1/3 bg-whiteh" size="small">
         <InputLabel id="demo-simple-select-helper-label">

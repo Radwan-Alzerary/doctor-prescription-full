@@ -81,7 +81,7 @@
     "buildReact": "react-scripts build",
     "testReact": "react-scripts test",
     "start": "react-scripts start",
-    "build": "craco build",
+    "build": "react-scripts build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },

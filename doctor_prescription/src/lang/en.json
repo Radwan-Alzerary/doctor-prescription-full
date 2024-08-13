@@ -139,5 +139,10 @@
   "AutoComplete": "AutoComplete",
   "DiseaseName": "Disease Name",
   "constDisease": "Constant Disease",
-  "chronicTherapy": "Chronic Therapy"
+  "chronicTherapy": "Chronic Therapy",
+  "analysis": "analysis",
+  "riskFactor": "Risk Factor",
+  "pastMedicalHistory": "Past Medical History",
+  "drugHistory": "Drug History",
+  "suspendedDx": "suspended Dx"
 }

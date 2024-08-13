@@ -12,6 +12,12 @@ const visitSqema = new mongoose.Schema(
     priority: { type: String, default: "normal" },
     patients: { type: mongoose.Schema.Types.ObjectId, ref: "Patients" },
     chronicTherapy: { type: String, default: "" },
+    analysis: { type: String, default: "" },
+    riskFactor: { type: String, default: "" },
+    pastMedicalHistory: { type: String, default: "" },
+    drugHistory: { type: String, default: "" },
+    suspendedDx: { type: String, default: "" },
+    sequence:{type:String}
   },
   {
     timestamps: true,

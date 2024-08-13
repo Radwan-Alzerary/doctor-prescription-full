@@ -551,7 +551,6 @@ function Partients() {
   const [partientsSelectId, setPartientsSelectId] = useState("");
   const [PrescriptionId, setPrescriptionId] = useState("");
   const [pharmaceList, setPharmaceList] = useState([]);
-  const [tradNamepharmaceList, setTradNamePharmaceList] = useState([]);
   const [pharmaceListInside, setPharmaceListInside] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   const [inTakeTimeList, setInTakeTime] = useState([]);
@@ -619,6 +618,19 @@ function Partients() {
         console.error("Error fetching categories:", error);
       });
   }, [serverAddress]);
+
+  const handleScannerHandle = () => {
+    axios
+      .post(`${serverAddress}/patients/scan/`, {
+        id: partientsSelectId,
+      })
+      .then((response) => {
+        setProfileRefresh(!profileRefresh);
+      })
+      .catch((error) => {
+        console.error("Error making POST request:", error);
+      });
+  };
 
   const handleReportDelete = useCallback(
     (id) => {
@@ -2120,6 +2132,7 @@ function Partients() {
         <>
           <BackGroundShadow onClick={() => setShowPartientProfile(false)} />
           <PartientsProfile
+            handleScannerHandle={handleScannerHandle}
             handleExit={handleHideClick}
             screenMode={settingData.pullUpFullScreenMode}
             onImageDeleteHandle={onImageDeleteHandle}
