@@ -17,6 +17,11 @@ router.post("/new", async (req, res) => {
       type: req.body.data.type,
       priority: req.body.data.priority,
       chronicTherapy: req.body.data.chronicTherapy,
+      analysis: req.body.data.analysis,
+      riskFactor: req.body.data.riskFactor,
+      pastMedicalHistory: req.body.data.pastMedicalHistory,
+      drugHistory: req.body.data.drugHistory,
+      suspendedDx: req.body.data.suspendedDx
 
     });
     await visit.save();
@@ -92,6 +97,12 @@ router.post("/editone/", async (req, res) => {
       management: req.body.data.management,
       type: req.body.data.type,
       priority: req.body.data.priority,
+      analysis: req.body.data.analysis,
+      riskFactor: req.body.data.riskFactor,
+      pastMedicalHistory: req.body.data.pastMedicalHistory,
+      drugHistory: req.body.data.drugHistory,
+      suspendedDx: req.body.data.suspendedDx
+  
     });
 
     res.json(medicalreports);

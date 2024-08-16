@@ -10,9 +10,13 @@ const path = require("path");
 const cors = require("cors");
 const morgan = require("morgan");
 const compression = require("compression");
+const bonjour = require('bonjour')();
+
+// Advertise a HTTP server on port 5000
 const app = express();
 const port = process.env.PORT || 5000;
 const diff = require("diff");
+bonjour.publish({ name: 'My HTTP Server', type: 'http', port: port  });
 
 app.use(compression());
 app.use(morgan("dev"));
@@ -46,6 +50,8 @@ const corsOptions = {
     /^(http:\/\/.+:80)$/,
     /^(http:\/\/.+:3000)$/,
     /^(http:\/\/.+:5000)$/,
+    /^(http:\/\/.+:3001)$/,
+    /^(http:\/\/.+:3100)$/,
   ],
   credentials: true,
   "Access-Control-Allow-Credentials": true,
@@ -174,6 +180,8 @@ const io = require("socket.io")(server, {
       /^(http:\/\/.+:80)$/,
       /^(http:\/\/.+:3000)$/,
       /^(http:\/\/.+:5000)$/,
+      /^(http:\/\/.+:3001)$/,
+      /^(http:\/\/.+:3100)$/,
     ],
     credentials: true,
   },
@@ -203,20 +211,17 @@ io.on("connection", (socket) => {
   });
 });
 
+
 // Socket.IO Client Code
 const ioClient = require("socket.io-client");
 const { default: mongoose } = require('mongoose');
 const fs = require('fs');
-
-// const socketClient = ioClient("http://api.racheta.org:4001", {
-//   reconnection: true,
 
 const socketClient = ioClient("https://api.racheta.org", { // Adjust the URL and port if needed
   reconnection: true,
 });
 
 let hasExportedData = false; // Flag to track if data has been exported
-
 
 mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB');

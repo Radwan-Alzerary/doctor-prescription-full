@@ -10,6 +10,7 @@ import Loading from "../../components/pageCompond/Loading";
 import PropertySetting from "../../components/setting/PropertySetting";
 import ExaminationSetting from "../../components/setting/ExaminationSetting";
 import PartientsTableSetting from "../../components/setting/PartientsTableSetting";
+import VisitFormSetting from "../../components/setting/VisitFormSetting";
 
 function Setting(props) {
   const [cashire, setCashire] = useState([]);
@@ -220,6 +221,15 @@ function Setting(props) {
               <PartientsTableSetting></PartientsTableSetting>
             </div>
           </div>
+
+          <div className="flex gap-3">
+            <div className=" bg-white rounded-xl p-4 w-full">
+              <div>تخصيصات الزيارات</div>
+              <VisitFormSetting></VisitFormSetting>
+            </div>
+          </div>
+
+
           <div>
             <div>تفعيل النسخة</div>
             <ProgramActive onActiveSubmit={onActiveSubmit}></ProgramActive>

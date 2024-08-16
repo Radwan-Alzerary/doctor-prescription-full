@@ -2232,6 +2232,8 @@ function Partients() {
             screenMode={settingData.pullUpFullScreenMode}
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterClickText}
+            settingData={settingData}
+
             onFormSubmit={handleNewVisit}
           />
         </>
@@ -2260,6 +2262,8 @@ function Partients() {
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterClickText}
             onFormSubmit={handelEditVisitReportData}
+            settingData={settingData}
+
             type="edit"
             data={selectedaLabory}
           />

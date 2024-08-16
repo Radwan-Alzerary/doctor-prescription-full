@@ -24,7 +24,13 @@ const AutoComplteSchema = new mongoose.Schema(
     visitPriorChronicTherapy: [{ type: String }],
     visitCauseOfVisite: [{ type: String }],
     visitManagement: [{ type: String }],
-    visitinvestigation: [{ type: String }],
+    visitAnalysis: [{ type: String }],
+    visitRiskFactor: [{ type: String }],
+    visitPastMedicalHistory: [{ type: String }],
+    visitDrugHistory: [{ type: String }],
+    visitSuspendedDx: [{ type: String }],
+
+
   },
   {
     timestamps: true,
