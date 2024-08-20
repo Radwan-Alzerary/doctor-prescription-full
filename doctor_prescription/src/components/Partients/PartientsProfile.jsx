@@ -42,6 +42,16 @@ function PartientsProfile(props) {
   const handleEditPatientData = (data) => {
     data.id = partientsProfile._id;
   };
+  const sections = [
+    { id: "mainInfoSite", label: "المعلومات الشخصية" },
+    { id: "midicalInfo", label: "طبلة المريض" },
+    { id: "patientPictures", label: "معرض المريض" },
+    { id: "visitReport", label: "الزيارات" },
+    { id: "prescriptionSite", label: "الوصفات" },
+    { id: "reportSite", label: "التقارير الطبية" },
+    { id: "labory", label: "التقرير المختبري" },
+    { id: "History", label: "تاريخ الزيارات" },
+  ];
 
   return (
     <form
@@ -49,11 +59,11 @@ function PartientsProfile(props) {
         props.screenMode ? "h-[100%] w-full p-4" : "w-3/5 h-[85%] "
       } }  bg-slate-50 p-5 rounded-xl z-30`}
     >
-         {props.screenMode ? (
+      {props.screenMode ? (
         <div className=" flex justify-start items-start text-right w-full ">
           <IconButton
             onClick={() => {
-              props.handleExit()
+              props.handleExit();
             }}
           >
             <CloseSharp className=" text-red-700  top-5 right-5"></CloseSharp>
@@ -62,7 +72,6 @@ function PartientsProfile(props) {
       ) : (
         ""
       )}
-
 
       <div className="w-full flex flex-col  text-center items-center">
         <Avatar
@@ -73,105 +82,18 @@ function PartientsProfile(props) {
         <h5>المريض : {partientsProfile.name}</h5>
         <h5>{partientsProfile.phonNumber}</h5>
       </div>
-      <div className="flex gap-8 w-full justify-center text-center">
-        <div
-          onClick={() => {
-            setProfileSelect("mainInfoSite");
-          }}
-          className={`${
-            profileSelect === "mainInfoSite" ? "bg-green-200" : "bg-slate-200"
-          }  p-2 w-48 rounded-full hover:bg-slate-100 cursor-pointer`}
-        >
-          المعلومات الشخصية
-        </div>
-        {/* <div
-          onClick={() => {
-            setProfileSelect("pregmentSite");
-          }}
-          className={`${
-            profileSelect === "pregmentSite" ? "bg-green-200" : "bg-slate-200"
-          }  p-2 w-48 rounded-full hover:bg-slate-100 cursor-pointer`}
-        >
-          معلومات الحمل{" "}
-        </div> */}
-
-        <div
-          onClick={() => {
-            setProfileSelect("midicalInfo");
-          }}
-          className={`${
-            profileSelect === "midicalInfo" ? "bg-green-200" : "bg-slate-200"
-          }  p-2 w-48 rounded-full hover:bg-slate-100 cursor-pointer`}
-        >
-          طبلة المريض
-        </div>
-
-        <div
-          onClick={() => {
-            setProfileSelect("patientPictures");
-          }}
-          className={`${
-            profileSelect === "patientPictures"
-              ? "bg-green-200"
-              : "bg-slate-200"
-          }  p-2 w-48 rounded-full hover:bg-slate-100 cursor-pointer`}
-        >
-          معرض المريض
-        </div>
-        <div
-          onClick={() => {
-            setProfileSelect("visitReport");
-          }}
-          className={`${
-            profileSelect === "visitReport" ? "bg-green-200" : "bg-slate-200"
-          }  p-2 w-48 rounded-full hover:bg-slate-100 cursor-pointer`}
-        >
-          الزيارات
-        </div>
-
-        <div
-          onClick={() => {
-            setProfileSelect("prescriptionSite");
-          }}
-          className={`${
-            profileSelect === "prescriptionSite"
-              ? "bg-green-200"
-              : "bg-slate-200"
-          }  p-2 w-48 rounded-full hover:bg-slate-100 cursor-pointer`}
-        >
-          الوصفات
-        </div>
-        <div
-          onClick={() => {
-            setProfileSelect("reportSite");
-          }}
-          className={`${
-            profileSelect === "reportSite" ? "bg-green-200" : "bg-slate-200"
-          }  p-2 w-48 rounded-full hover:bg-slate-100 cursor-pointer`}
-        >
-          التقارير الطبية
-        </div>
-        <div
-          onClick={() => {
-            setProfileSelect("labory");
-          }}
-          className={`${
-            profileSelect === "labory" ? "bg-green-200" : "bg-slate-200"
-          }  p-2 w-48 rounded-full hover:bg-slate-100 cursor-pointer`}
-        >
-          التقرير المختبري
-        </div>
-
-        <div
-          onClick={() => {
-            setProfileSelect("History");
-          }}
-          className={`${
-            profileSelect === "History" ? "bg-green-200" : "bg-slate-200"
-          }  p-2 w-48 rounded-full hover:bg-slate-100 cursor-pointer`}
-        >
-          تاريخ الزيارات
-        </div>
+      <div className="flex  w-full justify-center text-center">
+        {sections.map((section) => (
+          <div
+            key={section.id}
+            onClick={() => setProfileSelect(section.id)}
+            className={`${
+              profileSelect === section.id ? "bg-green-200" : "bg-slate-200"
+            } p-2.5 w-48 justify-center items-center  hover:bg-slate-100 cursor-pointer`}
+          >
+            {section.label}
+          </div>
+        ))}
       </div>
       {profileSelect === "mainInfoSite" ? (
         <div className="w-full  overflow-scroll  h-full py-4">
@@ -315,7 +237,7 @@ function PartientsProfile(props) {
       {profileSelect === "patientPictures" ? (
         <>
           <PatientPictures
-          handleScannerHandle={props.handleScannerHandle}
+            handleScannerHandle={props.handleScannerHandle}
             onImageDeleteHandle={props.onImageDeleteHandle}
             refreshPaitent={refreshPaitent}
             id={partientsProfile._id}
@@ -325,7 +247,6 @@ function PartientsProfile(props) {
       ) : (
         ""
       )}
-
       {profileSelect === "visitReport" ? (
         <>
           <VisitReportTable
@@ -338,7 +259,6 @@ function PartientsProfile(props) {
       ) : (
         ""
       )}
-
       {profileSelect === "prescriptionSite" ? (
         <>
           <PrescriptionTable
@@ -373,7 +293,6 @@ function PartientsProfile(props) {
       ) : (
         ""
       )}
-
       {profileSelect === "History" ? (
         <VisitDateTable visitData={partientsProfile.visitDate}></VisitDateTable>
       ) : (

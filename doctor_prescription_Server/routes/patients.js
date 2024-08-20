@@ -316,6 +316,7 @@ router.get("/checktoken", async (req, res) => {
     res.status(500).json({ error: "An error occurred" });
   }
 });
+
 router.get("/getbyname/", async (req, res) => {
   const searchName = req.params.searchName;
   try {
@@ -334,6 +335,66 @@ router.get("/getbyname/", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
+router.get("/getbymedical/", async (req, res) => {
+  const searchName = req.params.searchName;
+  try {
+    const patients = await Patients.find()
+      .populate({
+        path: "prescription",
+        match: { active: true }, // Filter prescriptions with active: true
+        populate: {
+          path: "pharmaceutical.id",
+        },
+      })
+      .sort({ updatedAt: -1 }); // Sort by 'updatedAt' field in descending order
+    res.json(patients);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+router.get("/getbymedical/:searchName", async (req, res) => {
+  const searchName = req.params.searchName;
+  try {
+    const patients = await Patients.find({
+      $or: [
+        { name: { $regex: searchName, $options: "i" } },
+        { fumbling: { $regex: searchName, $options: "i" } },
+        { medicalDiagnosis: { $regex: searchName, $options: "i" } },
+        { currentMedicalHistory: { $regex: searchName, $options: "i" } },
+        { medicalHistory: { $regex: searchName, $options: "i" } },
+        { previousSurgeries: { $regex: searchName, $options: "i" } },
+        { familyHistory: { $regex: searchName, $options: "i" } },
+        { fractures: { $regex: searchName, $options: "i" } },
+        { pulseRate: { $regex: searchName, $options: "i" } },
+        { spo2: { $regex: searchName, $options: "i" } },
+        { temperature: { $regex: searchName, $options: "i" } },
+        { bloodPressure: { $regex: searchName, $options: "i" } },
+        { bloodSugar: { $regex: searchName, $options: "i" } },
+        { ExaminationFindining: { $regex: searchName, $options: "i" } },
+        { InvestigationFinding: { $regex: searchName, $options: "i" } },
+      ],
+    })
+      .populate({
+        path: "prescription",
+        match: { active: true }, // Filter prescriptions with active: true
+        populate: {
+          path: "pharmaceutical.id",
+        },
+      })
+      .sort({ updatedAt: -1 }) // Sort by 'updatedAt' field in descending order
+      .limit(10);
+
+    res.json(patients);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 router.get("/medicalinfo/:partientId", async (req, res) => {
   try {
     const patients = await Patients.findById(req.params.partientId)

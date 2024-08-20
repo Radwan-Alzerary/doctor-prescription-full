@@ -1379,6 +1379,26 @@ function Partients() {
     [getPatientsList, serverAddress]
   );
 
+  const handeSearchMidicalInput = useCallback(
+    (event) => {
+      const searchInputValue = event.target.value;
+      if (searchInputValue === "") {
+        getPatientsList();
+      } else {
+        axios
+          .get(`${serverAddress}/patients/getbymedical/${searchInputValue}`)
+          .then((response) => {
+            setPatientsList(response.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching categories:", error);
+          });
+      }
+    },
+    [getPatientsList, serverAddress]
+  );
+
+
   const HandleOnPrescriptionDeleteHande = useCallback(
     (patientsId, prescriptionId) => {
       if (settingData.abortProssesMsg) {
@@ -1607,7 +1627,9 @@ function Partients() {
       <div className="bg-white overflow-scroll shadow-sm h-full rounded-md pb-4">
         <div className="flex gap-4 justify-center items-center w-full">
           <div className="flex flex-col justify-center items-center p-4">
-            <div className="flex bg-white px-4 py-1 rounded-3xl w-full shadow-md">
+            <div className="flex  bg-white px-4 py-1 rounded-3xl w-full shadow-md">
+              <div>
+
               <InputBase
                 onChange={handeSearchInput}
                 sx={{ ml: 1, flex: 1 }}
@@ -1617,6 +1639,18 @@ function Partients() {
               <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
                 <SearchIcon />
               </IconButton>
+              </div>
+
+              <InputBase
+                onChange={handeSearchMidicalInput}
+                sx={{ ml: 1, flex: 1 }}
+                placeholder="البحث داخل الطبلة"
+                inputProps={{ "aria-label": "البحث داخل الطبلة" }}
+              />
+              <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
+                <SearchIcon />
+              </IconButton>
+
             </div>
           </div>
 
@@ -2195,7 +2229,6 @@ function Partients() {
           />
         </>
       )}
-
       {showReportEditForm && (
         <>
           <BackGroundShadow onClick={() => setShowReportEditForm(false)} />
@@ -2238,7 +2271,6 @@ function Partients() {
           />
         </>
       )}
-
       {showLabReportEditForm && (
         <>
           <BackGroundShadow onClick={() => setShowLabReportEditForm(false)} />
@@ -2269,7 +2301,6 @@ function Partients() {
           />
         </>
       )}
-
       {deleteAlert && (
         <DeleteAlert
           deleteInfo={deleteInfo}

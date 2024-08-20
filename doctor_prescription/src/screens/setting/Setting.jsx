@@ -11,6 +11,7 @@ import PropertySetting from "../../components/setting/PropertySetting";
 import ExaminationSetting from "../../components/setting/ExaminationSetting";
 import PartientsTableSetting from "../../components/setting/PartientsTableSetting";
 import VisitFormSetting from "../../components/setting/VisitFormSetting";
+import TextScaleSelector from "./TextSelector";
 
 function Setting(props) {
   const [cashire, setCashire] = useState([]);
@@ -251,6 +252,8 @@ function Setting(props) {
             </Button>
           </div>
         </div>
+        <TextScaleSelector></TextScaleSelector>
+
       </div>
     </div>
   );

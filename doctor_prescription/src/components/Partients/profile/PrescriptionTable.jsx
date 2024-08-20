@@ -7,12 +7,11 @@ import { blue, red } from "@mui/material/colors";
 export default function PrescriptionTable(props) {
   const columns = [
     {
-      field: "date",
+      field: "createdAt",
       headerName: "تاريخ الزيارة",
       width: 140,
       renderCell: (params) => {
         const createdAt = new Date(params.value);
-
         // Format the date to include year, month, day, and time
         const formattedDate = `${createdAt.getFullYear()}-${String(
           createdAt.getMonth() + 1
@@ -22,11 +21,13 @@ export default function PrescriptionTable(props) {
         )} ${String(createdAt.getHours()).padStart(2, "0")}:${String(
           createdAt.getMinutes()
         ).padStart(2, "0")}`;
-
         return <span>{formattedDate}</span>;
       },
     },
+    // Add other columns if needed
+
     { field: "MedicalDiagnosis", headerName: "التشخيص", width: 230 },
+
     {
       field: "pharmaceutical",
       headerName: "الادوية",
@@ -47,6 +48,7 @@ export default function PrescriptionTable(props) {
         return <span>{pharmaceuticalNames.join(", ")}</span>;
       },
     },
+
     {
       field: "actions",
       headerName: "الخيارات",

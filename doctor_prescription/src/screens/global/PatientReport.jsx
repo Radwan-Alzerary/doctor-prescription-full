@@ -510,7 +510,7 @@ function PatientReport(props) {
           </div>
           <div className="flex z-50 justify-around items-center my-2 ">
             {props.medicalReportsStype.nameActive &&
-            !props.medicalReportsStype.ageAbsoulateActive ? (
+            !props.medicalReportsStype.nameAbsoulateActive ? (
               <div
                 className={`flex gap-2 ${
                   props.medicalReportsStype.nameAbsoulateActive

@@ -62,6 +62,7 @@ function PatentMedicalForm(props) {
       ) : (
         ""
       )}
+
       {props.settingData.currentMedicalHistoryActive ? (
         <TextField
           value={formData.currentMedicalHistory}
@@ -86,6 +87,7 @@ function PatentMedicalForm(props) {
       ) : (
         ""
       )}
+
       {props.settingData.medicalHistoryActive ? (
         <TextField
           value={formData.medicalHistory}
@@ -110,6 +112,7 @@ function PatentMedicalForm(props) {
       ) : (
         ""
       )}
+
       {props.settingData.previousSurgeriesActive ? (
         <TextField
           value={formData.previousSurgeries}
@@ -134,6 +137,7 @@ function PatentMedicalForm(props) {
       ) : (
         ""
       )}
+
       {props.settingData.familyHistoryActive ? (
         <TextField
           value={formData.familyHistory}
@@ -161,6 +165,7 @@ function PatentMedicalForm(props) {
       ) : (
         ""
       )}
+
       {props.settingData.fumblingActive ? (
         <TextField
           value={formData.fumbling}
@@ -186,7 +191,9 @@ function PatentMedicalForm(props) {
       ) : (
         ""
       )}
+
       {props.settingData.fracturesActive ? (
+
         <TextField
           value={formData.fractures}
           onChange={(event) => {
@@ -208,6 +215,7 @@ function PatentMedicalForm(props) {
       ) : (
         ""
       )}
+
       {props.settingData.ExaminationFindiningActive ? (
         <TextField
           value={formData.ExaminationFindining}
@@ -232,6 +240,7 @@ function PatentMedicalForm(props) {
       ) : (
         ""
       )}
+
       {props.settingData.pulseRateActive ? (
         <TextField
           value={formData.pulseRate}
@@ -253,6 +262,7 @@ function PatentMedicalForm(props) {
       ) : (
         ""
       )}
+
       {props.settingData.spo2Active ? (
         <TextField
           value={formData.spo2}
@@ -274,6 +284,7 @@ function PatentMedicalForm(props) {
       ) : (
         ""
       )}
+
       {props.settingData.temperatureActive ? (
         <TextField
           value={formData.temperature}
@@ -298,6 +309,7 @@ function PatentMedicalForm(props) {
       ) : (
         ""
       )}
+
       {props.settingData.bloodPressureActive ? (
         <TextField
           value={formData.bloodPressure}
@@ -323,6 +335,7 @@ function PatentMedicalForm(props) {
       ) : (
         ""
       )}
+
       {props.settingData.bloodSugarActive ? (
         <TextField
           value={formData.bloodSugar}
@@ -347,6 +360,7 @@ function PatentMedicalForm(props) {
       ) : (
         ""
       )}
+
       {props.settingData.InvestigationFindingActive ? (
         <TextField
           value={formData.InvestigationFinding}
@@ -372,6 +386,7 @@ function PatentMedicalForm(props) {
       ) : (
         ""
       )}
+      
       {props.settingData.miscarriageStateActive && formData.miscarriageState ? (
         <>
           <div>الاسقاطات</div>
