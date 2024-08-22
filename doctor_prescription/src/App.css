@@ -1,14 +1,6 @@
 .App {
   text-align: center;
 }
-:root {
-  --text-scale: 1;
-}
-
-html {
-  font-size: calc(16px * var(--text-scale));
-}
-
 
 .App-logo {
   height: 40vmin;

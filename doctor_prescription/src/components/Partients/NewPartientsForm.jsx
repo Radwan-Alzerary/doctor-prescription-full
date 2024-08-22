@@ -20,7 +20,6 @@ import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import Cookies from "js-cookie";
 import { DateTimePicker } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
 import MedicalFormChipAutoComplete from "./MedicalFormChipAutoComplete";
 import axios from "axios";
 function EditPartients(props) {
@@ -30,7 +29,6 @@ function EditPartients(props) {
   const [dose, setDose] = useState("");
   const [tradeName, setTradeName] = useState("");
   const [billId, setBillId] = useState("");
-  const [group, setGroup] = useState("");
   const [nextVisit, setNextVisit] = useState("");
   const [doseNumFirst, setDoseNumFirst] = useState("");
   const [doseNumSecend, setDoseNumSecend] = useState("");
@@ -46,6 +44,138 @@ function EditPartients(props) {
   const [pharmGroupSelected, setPharmGroupSelected] = useState("");
   const currentURL = window.location.origin; // Get the current URL
   const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000
+
+  const arabicKeyboardToEnglishMap = {
+    ض: "q",
+    ص: "w",
+    ث: "e",
+    ق: "r",
+    ف: "t",
+    غ: "y",
+    ع: "u",
+    ه: "i",
+    خ: "o",
+    ح: "p",
+    ج: "[",
+    د: "]",
+    ش: "a",
+    س: "s",
+    ي: "d",
+    ب: "f",
+    ل: "g",
+    ا: "h",
+    ت: "j",
+    ن: "k",
+    م: "l",
+    ك: ";",
+    ط: "'",
+    ئ: "z",
+    ء: "x",
+    ؤ: "c",
+    ر: "v",
+    لا: "b", // Special case for "لا"
+    ى: "n",
+    ة: "m",
+    و: ",",
+    ز: ".",
+    ظ: "/",
+    ذ: "`",
+  };
+
+  const shiftArabicKeyboardToEnglishMap = {
+    "َ": "Q",
+    "ً": "W",
+    "ُ": "E",
+    "ٌ": "R",
+    "ِ": "T",
+    "ٍ": "Y",
+    "ّ": "U",
+    "ْ": "I",
+    ـ: "O",
+    "،": "P",
+    "؛": "{",
+    "؟": "}",
+    "◌": "A",
+    "ْ": "S",
+    "ٓ": "D",
+    ء: "F",
+    أ: "G",
+    إ: "H",
+    ؤ: "J",
+    ئ: "K",
+    ى: "L",
+    آ: ":",
+    ة: '"',
+    ى: "Z",
+    آ: "X",
+    إ: "C",
+    أ: "V",
+    ؤ: "B",
+    ئ: "N",
+    ى: "M",
+    ة: "<",
+    "؟": ">",
+    "،": "?",
+    ذ: "~",
+  };
+
+  const isArabic = (text) => {
+    const arabicRegex = /[\u0600-\u06FF]/;
+    return arabicRegex.test(text);
+  };
+
+  const [lastChar, setLastChar] = useState('');
+  const [lastInputTime, setLastInputTime] = useState(Date.now());
+
+  const convertToEnglish = (text) => {
+    let result = '';
+    let i = 0;
+
+    while (i < text.length) {
+      const char = text[i];
+      const nextChar = text[i + 1];
+      const combination = char + nextChar;
+
+      if (arabicKeyboardToEnglishMap[combination]) {
+        result += arabicKeyboardToEnglishMap[combination];
+        i += 2; // Skip the next character since it's part of the combination
+      } else if (arabicKeyboardToEnglishMap[char]) {
+        result += arabicKeyboardToEnglishMap[char];
+        i += 1;
+      } else if (shiftArabicKeyboardToEnglishMap[char]) {
+        result += shiftArabicKeyboardToEnglishMap[char];
+        i += 1;
+      } else {
+        result += char; // Return the original character if it's not in the map
+        i += 1;
+      }
+    }
+
+    return result;
+  };
+
+  const handleAutoInputChange = (event, newInputValue) => {
+    const currentTime = Date.now();
+    const timeDiff = currentTime - lastInputTime;
+
+    if (isArabic(newInputValue)) {
+      // Check if "لا" is typed within 2ms
+      if (lastChar === 'ل' && newInputValue.endsWith('ا') && timeDiff <= 50) {
+        setLastChar(''); // Reset lastChar
+        setLastInputTime(currentTime); // Update last input time
+        const finalInputValue = convertToEnglish(newInputValue.slice(0, -2) + 'لا');
+        setInputValue(finalInputValue);
+      } else {
+        setLastChar(newInputValue.slice(-1)); // Save the last character
+        setLastInputTime(currentTime); // Update last input time
+        const finalInputValue = convertToEnglish(newInputValue);
+        setInputValue(finalInputValue);
+      }
+    } else {
+      setInputValue(newInputValue);
+    }
+  };
+
   useEffect(() => {
     const getAutoCompleteList = () => {
       axios
@@ -225,13 +355,13 @@ function EditPartients(props) {
 
   return (
     <form
-      className={`fixed flex ${
+      className={`fixed flex overflow-scroll ${
         props.screenMode
           ? "h-[100%] w-full "
           : props.settingData.billSelectFromGroup
-          ? "w-[90%]"
-          : "w-3/5"
-      } } justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  items-center  p-5 rounded-xl z-50`}
+          ? "w-[90%] h-[85%]"
+          : "w-3/5 h-[85%]"
+      } }  left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  items-center  p-5 rounded-xl z-50`}
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
@@ -339,8 +469,8 @@ function EditPartients(props) {
             <FormattedMessage
               id={"Medical Diagnosis"}
               defaultMessage="Hello, World!"
-            /> : 
-            {props.userEditData ? props.userEditData.name : ""}
+            />{" "}
+            :{props.userEditData ? props.userEditData.name : ""}
           </h5>
         </div>
         <TextField
@@ -394,7 +524,7 @@ function EditPartients(props) {
               onChange={(newValue) => {
                 setNextVisit(newValue.$d);
                 props.setNextVisit(newValue.$d);
-                console.log(newValue.$d)
+                console.log(newValue.$d);
               }}
               className="w-full"
             />
@@ -428,17 +558,28 @@ function EditPartients(props) {
                     option.tradeName ? `(${option.tradeName})` : ""
                   }`;
                 }}
-                filterOptions={filterOptions}
+                filterOptions={(options, { inputValue }) => {
+                  const filteredInputValue = isArabic(inputValue)
+                    ? convertToEnglish(inputValue)
+                    : inputValue;
+
+                  return options.filter(
+                    (option) =>
+                      option.name
+                        .toLowerCase()
+                        .includes(filteredInputValue.toLowerCase()) ||
+                      (option.tradeName &&
+                        option.tradeName
+                          .toLowerCase()
+                          .includes(filteredInputValue.toLowerCase()))
+                  );
+                }}
                 sx={{ width: "33%" }}
                 onChange={(event, newValue) => {
                   setValue(newValue);
                 }}
                 inputValue={inputValue}
-                onInputChange={(event, newInputValue) => {
-                  setValue(null);
-                  setBillId("");
-                  setInputValue(newInputValue);
-                }}
+                onInputChange={handleAutoInputChange}
                 isOptionEqualToValue={(option, value) =>
                   option.name === value || option.tradeName === value
                 }
@@ -448,7 +589,7 @@ function EditPartients(props) {
                     label={
                       <FormattedMessage
                         id={"Drug name"}
-                        defaultMessage="Hello, World!"
+                        defaultMessage="Drug name"
                       />
                     }
                   />
@@ -461,7 +602,26 @@ function EditPartients(props) {
                     size="small"
                     value={tradeName}
                     onChange={(event) => {
-                      setTradeName(event.target.value);
+                      const currentTime = Date.now();
+                      const timeDiff = currentTime - lastInputTime;
+                  
+                      if (isArabic(event.target.value)) {
+                        // Check if "لا" is typed within 2ms
+                        if (lastChar === 'ل' && event.target.value.endsWith('ا') && timeDiff <= 50) {
+                          setLastChar(''); // Reset lastChar
+                          setLastInputTime(currentTime); // Update last input time
+                          const finalInputValue = convertToEnglish(event.target.value.slice(0, -2) + 'لا');
+                          setTradeName(finalInputValue);
+                        } else {
+
+                          setLastChar(event.target.value.slice(-1)); // Save the last character
+                          setLastInputTime(currentTime); // Update last input time
+                          const finalInputValue = convertToEnglish(event.target.value);
+                          setTradeName(finalInputValue);
+                        }
+                      } else {
+                        setTradeName(event.target.value);
+                      }
                     }} // Update the name state
                     sx={{
                       width: "42%",

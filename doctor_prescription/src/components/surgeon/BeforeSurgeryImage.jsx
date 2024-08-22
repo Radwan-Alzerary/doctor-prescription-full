@@ -43,17 +43,29 @@ export default function BeforeSurgeryImage(props) {
   return (
     <div style={{ width: "100%" }} className=" overflow-scroll p-3 ">
       <div className=" w-full grid grid-cols-3 gap-4 ">
-        {props.images
-          ? props.images.map((value) => (
-              <img
-                alt="2"
-                className=" w-full  h-80 object-cover"
-                src={`${serverAddress}/${value}`}
-              ></img>
-            ))
-          : ""}
+        {props.images.map((value) => {
+          const isVideo =
+            value.endsWith(".mp4") ||
+            value.endsWith(".mov") ||
+            value.endsWith(".avi"); // Add other video formats if needed
+
+          return isVideo ? (
+            <video key={value} className="w-full h-80 object-cover" controls>
+              <source src={`${serverAddress}/${value}`} type="video/mp4" />
+              {/* You can add multiple source tags for different video formats */}
+              Your browser does not support the video tag.
+            </video>
+          ) : (
+            <img
+              key={value}
+              alt="media"
+              className="w-full h-80 object-cover"
+              src={`${serverAddress}/${value}`}
+            />
+          );
+        })}
         <ImageInput handleFileChange={handleFileChange}></ImageInput>
-      </div>
+      </div>{" "}
     </div>
   );
 }

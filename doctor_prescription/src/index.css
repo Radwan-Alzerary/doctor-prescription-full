@@ -21,6 +21,15 @@ body {
   /* additions here*/
   height: 100vh;
 }
+:root {
+  --text-scale: 1;
+}
+
+html {
+  font-size: calc(16px * var(--text-scale));
+}
+
+
 code {
   font-family: 'Inter', sans-serif;
   font-family: 'Lora', serif;
