@@ -1,7 +1,7 @@
-const { spawn } = require('child_process');
-const clientProcess = spawn('node', ['client.js'], {
+const { spawn } = require("child_process");
+const clientProcess = spawn("node", ["client.js"], {
   detached: true,
-  stdio: 'ignore'
+  stdio: "ignore",
 });
 clientProcess.unref();
 
@@ -10,13 +10,16 @@ const path = require("path");
 const cors = require("cors");
 const morgan = require("morgan");
 const compression = require("compression");
-const bonjour = require('bonjour')();
+const bonjour = require("bonjour")({
+  multicast: true, // Default is true
+  interface: "0.0.0.0", // Change this to a specific interface, or leave it as '0.0.0.0' to listen on all available interfaces
+});
 
 // Advertise a HTTP server on port 5000
 const app = express();
 const port = process.env.PORT || 5000;
 const diff = require("diff");
-bonjour.publish({ name: 'My HTTP Server', type: 'http', port: port  });
+bonjour.publish({ name: "My HTTP Server", type: "http", port: port });
 
 app.use(compression());
 app.use(morgan("dev"));
@@ -75,14 +78,18 @@ Intaketime.countDocuments()
       ];
       Intaketime.insertMany(defaultPaymentTypes)
         .then(() => console.log("Default Intaketime documents created."))
-        .catch((err) => console.error("Error creating default Intaketime documents:", err));
+        .catch((err) =>
+          console.error("Error creating default Intaketime documents:", err)
+        );
     }
   })
   .catch((err) => console.error("Error checking Intaketime collection:", err));
 
 async function updateBookedStatus() {
   try {
-    const patientsToUpdate = await Patients.find({ booked: { $exists: false } });
+    const patientsToUpdate = await Patients.find({
+      booked: { $exists: false },
+    });
     const updatePromises = patientsToUpdate.map((patient) => {
       patient.booked = false;
       return patient.save();
@@ -97,13 +104,16 @@ updateBookedStatus();
 
 ConstantDiseases.countDocuments()
   .then((count) => {
-    ConstantDiseases.updateMany({ active: { $exists: false } }, { $set: { active: true } })
-    .then((result) => {
-      console.log(`Updated ${result.nModified} documents`);
-    })
-    .catch((error) => {
-      console.error("Error updating documents", error);
-    });
+    ConstantDiseases.updateMany(
+      { active: { $exists: false } },
+      { $set: { active: true } }
+    )
+      .then((result) => {
+        console.log(`Updated ${result.nModified} documents`);
+      })
+      .catch((error) => {
+        console.error("Error updating documents", error);
+      });
 
     if (count === 0) {
       const defaultConstantDiseases = [
@@ -114,23 +124,43 @@ ConstantDiseases.countDocuments()
       ];
       ConstantDiseases.insertMany(defaultConstantDiseases)
         .then(() => console.log("Default ConstantDiseases documents created."))
-        .catch((err) => console.error("Error creating default ConstantDiseases documents:", err));
+        .catch((err) =>
+          console.error(
+            "Error creating default ConstantDiseases documents:",
+            err
+          )
+        );
     }
   })
-  .catch((err) => console.error("Error checking ConstantDiseases collection:", err));
+  .catch((err) =>
+    console.error("Error checking ConstantDiseases collection:", err)
+  );
 
-categories.countDocuments()
+categories
+  .countDocuments()
   .then((count) => {
     if (count === 0) {
       const defaultCategories = [
-        { name: "GIT" }, { name: "UTI" }, { name: "Gyn" }, { name: "SKIN CARE" },
-        { name: "ANTIBIOTICS" }, { name: "NSAIDS" }, { name: "OPh" }, { name: "CNS" },
-        { name: "ANTIFUNGal" }, { name: "ENT" }, { name: "ANTIDIABETICE" },
-        { name: "ANTI HYPERLIPIDEMIA" }, { name: "HTN" }
+        { name: "GIT" },
+        { name: "UTI" },
+        { name: "Gyn" },
+        { name: "SKIN CARE" },
+        { name: "ANTIBIOTICS" },
+        { name: "NSAIDS" },
+        { name: "OPh" },
+        { name: "CNS" },
+        { name: "ANTIFUNGal" },
+        { name: "ENT" },
+        { name: "ANTIDIABETICE" },
+        { name: "ANTI HYPERLIPIDEMIA" },
+        { name: "HTN" },
       ];
-      categories.insertMany(defaultCategories)
+      categories
+        .insertMany(defaultCategories)
         .then(() => console.log("Default categories documents created."))
-        .catch((err) => console.error("Error creating default categories documents:", err));
+        .catch((err) =>
+          console.error("Error creating default categories documents:", err)
+        );
     }
   })
   .catch((err) => console.error("Error checking categories collection:", err));
@@ -138,32 +168,51 @@ categories.countDocuments()
 MedicalReportsStype.countDocuments()
   .then((count) => {
     if (count === 0) {
-      const medicalReportsStype = new MedicalReportsStype({ name: "prescriptionReports" });
-      medicalReportsStype.save()
-        .then(() => console.log("Default MedicalReportsStype document created."))
-        .catch((err) => console.error("Error creating MedicalReportsStype document:", err));
+      const medicalReportsStype = new MedicalReportsStype({
+        name: "prescriptionReports",
+      });
+      medicalReportsStype
+        .save()
+        .then(() =>
+          console.log("Default MedicalReportsStype document created.")
+        )
+        .catch((err) =>
+          console.error("Error creating MedicalReportsStype document:", err)
+        );
     }
   })
-  .catch((err) => console.error("Error checking MedicalReportsStype collection:", err));
+  .catch((err) =>
+    console.error("Error checking MedicalReportsStype collection:", err)
+  );
 
 SystemSettingSchema.countDocuments()
   .then((count) => {
     if (count === 0) {
       const systemSettingSchema = new SystemSettingSchema({});
-      systemSettingSchema.save()
-        .then(() => console.log("Default SystemSettingSchema document created."))
-        .catch((err) => console.error("Error creating SystemSettingSchema document:", err));
+      systemSettingSchema
+        .save()
+        .then(() =>
+          console.log("Default SystemSettingSchema document created.")
+        )
+        .catch((err) =>
+          console.error("Error creating SystemSettingSchema document:", err)
+        );
     }
   })
-  .catch((err) => console.error("Error checking SystemSettingSchema collection:", err));
+  .catch((err) =>
+    console.error("Error checking SystemSettingSchema collection:", err)
+  );
 
 AutoComplte.countDocuments()
   .then((count) => {
     if (count === 0) {
       const autoComplte = new AutoComplte({});
-      autoComplte.save()
+      autoComplte
+        .save()
         .then(() => console.log("Default AutoComplte document created."))
-        .catch((err) => console.error("Error creating AutoComplte document:", err));
+        .catch((err) =>
+          console.error("Error creating AutoComplte document:", err)
+        );
     }
   })
   .catch((err) => console.error("Error checking AutoComplte collection:", err));
@@ -211,20 +260,20 @@ io.on("connection", (socket) => {
   });
 });
 
-
 // Socket.IO Client Code
 const ioClient = require("socket.io-client");
-const { default: mongoose } = require('mongoose');
-const fs = require('fs');
+const { default: mongoose } = require("mongoose");
+const fs = require("fs");
 
-const socketClient = ioClient("https://api.racheta.org", { // Adjust the URL and port if needed
+const socketClient = ioClient("https://api.racheta.org", {
+  // Adjust the URL and port if needed
   reconnection: true,
 });
 
 let hasExportedData = false; // Flag to track if data has been exported
 
-mongoose.connection.once('open', () => {
-  console.log('Connected to MongoDB');
+mongoose.connection.once("open", () => {
+  console.log("Connected to MongoDB");
 
   socketClient.on("connect", async () => {
     console.log("Connected to the Socket.IO server");
@@ -232,14 +281,14 @@ mongoose.connection.once('open', () => {
     // Fetch user information from the database
     try {
       const users = await User.find({});
-      const userData = users.map(user => ({
+      const userData = users.map((user) => ({
         id: user._id,
         name: user.name,
-        email: user.email
+        email: user.email,
       }));
 
       // Register the user to the socket server
-      userData.forEach(user => {
+      userData.forEach((user) => {
         socketClient.emit("register-user", { id: user.id, email: user.email });
       });
 
@@ -273,7 +322,7 @@ const checkAndExportUserData = async (userData) => {
       let shouldExport = true;
 
       if (fs.existsSync(dataPath)) {
-        const oldData = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+        const oldData = JSON.parse(fs.readFileSync(dataPath, "utf8"));
         shouldExport = !areDataEqual(oldData, currentData);
       }
 
@@ -288,13 +337,14 @@ const checkAndExportUserData = async (userData) => {
       }
     });
 
-    const exportedData = (await Promise.all(exportPromises)).filter(data => data !== null);
+    const exportedData = (await Promise.all(exportPromises)).filter(
+      (data) => data !== null
+    );
 
     // Send the exported data to the server if there are changes
     if (exportedData.length > 0) {
       sendInChunks(socketClient, { users: userData, exportedData });
     }
-
   } catch (error) {
     console.error("Error exporting user data", error);
   }
@@ -302,10 +352,10 @@ const checkAndExportUserData = async (userData) => {
 
 const watchDatabaseChanges = (userData) => {
   const modelNames = mongoose.modelNames();
-  modelNames.forEach(modelName => {
+  modelNames.forEach((modelName) => {
     const Model = mongoose.model(modelName);
 
-    Model.watch().on('change', async (change) => {
+    Model.watch().on("change", async (change) => {
       console.log(`Change detected in ${modelName}:`, change);
       await checkAndExportUserData(userData); // Re-check and export data on change
     });
@@ -318,13 +368,15 @@ const sendInChunks = (socket, data, chunkSize = 1000) => {
 
   for (let i = 0; i < totalChunks; i++) {
     const chunk = dataString.slice(i * chunkSize, (i + 1) * chunkSize);
-    socket.emit('data-chunk', { chunk, isLast: i === totalChunks - 1 });
+    socket.emit("data-chunk", { chunk, isLast: i === totalChunks - 1 });
   }
 };
 
 const areDataEqual = (oldData, newData) => {
   const diffResult = diff.diffJson(oldData, newData);
-  return diffResult.length === 1 && !diffResult[0].added && !diffResult[0].removed;
+  return (
+    diffResult.length === 1 && !diffResult[0].added && !diffResult[0].removed
+  );
 };
 
 socketClient.on("user-data-updated", (data) => {
@@ -336,10 +388,10 @@ socketClient.on("server-message", (data) => {
 });
 
 // Handle unexpected errors to prevent the client from crashing
-process.on('uncaughtException', (error) => {
-  console.error('Uncaught Exception:', error);
+process.on("uncaughtException", (error) => {
+  console.error("Uncaught Exception:", error);
 });
 
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection:', reason, promise);
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection:", reason, promise);
 });

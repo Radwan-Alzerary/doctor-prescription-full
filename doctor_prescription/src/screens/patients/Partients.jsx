@@ -621,14 +621,28 @@ function Partients() {
 
   const handleScannerHandle = () => {
     axios
-      .post(`${serverAddress}/patients/scan/`, {
+      .post("http://localhost:3200/scan", {
         id: partientsSelectId,
       })
       .then((response) => {
         setProfileRefresh(!profileRefresh);
       })
       .catch((error) => {
-        console.error("Error making POST request:", error);
+        console.error(
+          "Error posting to localhost, trying serverAddress:",
+          error
+        );
+        // If there's an error with localhost, try posting to the server address
+        axios
+          .post(`${serverAddress}/patients/scan/`, {
+            id: partientsSelectId,
+          })
+          .then((response) => {
+            setProfileRefresh(!profileRefresh);
+          })
+          .catch((error) => {
+            console.error("Error making POST request:", error);
+          });
       });
   };
 
@@ -1398,7 +1412,6 @@ function Partients() {
     [getPatientsList, serverAddress]
   );
 
-
   const HandleOnPrescriptionDeleteHande = useCallback(
     (patientsId, prescriptionId) => {
       if (settingData.abortProssesMsg) {
@@ -1629,16 +1642,19 @@ function Partients() {
           <div className="flex flex-col justify-center items-center p-4">
             <div className="flex  bg-white px-4 py-1 rounded-3xl w-full shadow-md">
               <div>
-
-              <InputBase
-                onChange={handeSearchInput}
-                sx={{ ml: 1, flex: 1 }}
-                placeholder="البحث عن مريض"
-                inputProps={{ "aria-label": "البحث عن مريض" }}
-              />
-              <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-                <SearchIcon />
-              </IconButton>
+                <InputBase
+                  onChange={handeSearchInput}
+                  sx={{ ml: 1, flex: 1 }}
+                  placeholder="البحث عن مريض"
+                  inputProps={{ "aria-label": "البحث عن مريض" }}
+                />
+                <IconButton
+                  type="button"
+                  sx={{ p: "10px" }}
+                  aria-label="search"
+                >
+                  <SearchIcon />
+                </IconButton>
               </div>
 
               <InputBase
@@ -1650,7 +1666,6 @@ function Partients() {
               <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
                 <SearchIcon />
               </IconButton>
-
             </div>
           </div>
 
@@ -2266,7 +2281,6 @@ function Partients() {
             partientsSelectId={partientsSelectId}
             onPrinterClick={HandleonPrinterClickText}
             settingData={settingData}
-
             onFormSubmit={handleNewVisit}
           />
         </>
@@ -2295,7 +2309,6 @@ function Partients() {
             onPrinterClick={HandleonPrinterClickText}
             onFormSubmit={handelEditVisitReportData}
             settingData={settingData}
-
             type="edit"
             data={selectedaLabory}
           />

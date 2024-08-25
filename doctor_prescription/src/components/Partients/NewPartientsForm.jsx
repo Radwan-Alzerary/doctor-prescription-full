@@ -124,11 +124,11 @@ function EditPartients(props) {
     return arabicRegex.test(text);
   };
 
-  const [lastChar, setLastChar] = useState('');
+  const [lastChar, setLastChar] = useState("");
   const [lastInputTime, setLastInputTime] = useState(Date.now());
 
   const convertToEnglish = (text) => {
-    let result = '';
+    let result = "";
     let i = 0;
 
     while (i < text.length) {
@@ -160,10 +160,12 @@ function EditPartients(props) {
 
     if (isArabic(newInputValue)) {
       // Check if "لا" is typed within 2ms
-      if (lastChar === 'ل' && newInputValue.endsWith('ا') && timeDiff <= 50) {
-        setLastChar(''); // Reset lastChar
+      if (lastChar === "ل" && newInputValue.endsWith("ا") && timeDiff <= 50) {
+        setLastChar(""); // Reset lastChar
         setLastInputTime(currentTime); // Update last input time
-        const finalInputValue = convertToEnglish(newInputValue.slice(0, -2) + 'لا');
+        const finalInputValue = convertToEnglish(
+          newInputValue.slice(0, -2) + "لا"
+        );
         setInputValue(finalInputValue);
       } else {
         setLastChar(newInputValue.slice(-1)); // Save the last character
@@ -546,55 +548,57 @@ function EditPartients(props) {
         <div className="w-full ">
           <div className="">
             <div className="flex gap-4 justify-center mb-2 items-center">
-              <Autocomplete
-                freeSolo
-                size="small"
-                disableListWrap
-                disablePortal
-                id="combo-box-demo"
-                options={props.pharmaceList}
-                getOptionLabel={(option) => {
-                  return `${option.name} ${
-                    option.tradeName ? `(${option.tradeName})` : ""
-                  }`;
-                }}
-                filterOptions={(options, { inputValue }) => {
-                  const filteredInputValue = isArabic(inputValue)
-                    ? convertToEnglish(inputValue)
-                    : inputValue;
+            <Autocomplete
+  freeSolo
+  size="small"
+  disableListWrap
+  disablePortal
+  id="combo-box-demo"
+  options={props.pharmaceList}
+  getOptionLabel={(option) => {
+    return `${option.name} ${
+      option.tradeName ? `(${option.tradeName})` : ""
+    }`;
+  }}
+  filterOptions={(options, { inputValue }) => {
+    const filteredInputValue = isArabic(inputValue)
+      ? convertToEnglish(inputValue)
+      : inputValue;
 
-                  return options.filter(
-                    (option) =>
-                      option.name
-                        .toLowerCase()
-                        .includes(filteredInputValue.toLowerCase()) ||
-                      (option.tradeName &&
-                        option.tradeName
-                          .toLowerCase()
-                          .includes(filteredInputValue.toLowerCase()))
-                  );
-                }}
-                sx={{ width: "33%" }}
-                onChange={(event, newValue) => {
-                  setValue(newValue);
-                }}
-                inputValue={inputValue}
-                onInputChange={handleAutoInputChange}
-                isOptionEqualToValue={(option, value) =>
-                  option.name === value || option.tradeName === value
-                }
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={
-                      <FormattedMessage
-                        id={"Drug name"}
-                        defaultMessage="Drug name"
-                      />
-                    }
-                  />
-                )}
-              />
+    return options
+      .filter(
+        (option) =>
+          option.name
+            .toLowerCase()
+            .startsWith(filteredInputValue.toLowerCase()) ||
+          (option.tradeName &&
+            option.tradeName
+              .toLowerCase()
+              .startsWith(filteredInputValue.toLowerCase()))
+      )
+      .slice(0, 20); // Limit to 20 options
+  }}
+  sx={{ width: "33%" }}
+  onChange={(event, newValue) => {
+    setValue(newValue);
+  }}
+  inputValue={inputValue}
+  onInputChange={handleAutoInputChange}
+  isOptionEqualToValue={(option, value) =>
+    option.name === value || option.tradeName === value
+  }
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      label={
+        <FormattedMessage
+          id={"Drug name"}
+          defaultMessage="Drug name"
+        />
+      }
+    />
+  )}
+/>
               {pharmaceuticalInputs ? (
                 <>
                   <TextField
@@ -604,19 +608,26 @@ function EditPartients(props) {
                     onChange={(event) => {
                       const currentTime = Date.now();
                       const timeDiff = currentTime - lastInputTime;
-                  
+
                       if (isArabic(event.target.value)) {
                         // Check if "لا" is typed within 2ms
-                        if (lastChar === 'ل' && event.target.value.endsWith('ا') && timeDiff <= 50) {
-                          setLastChar(''); // Reset lastChar
+                        if (
+                          lastChar === "ل" &&
+                          event.target.value.endsWith("ا") &&
+                          timeDiff <= 50
+                        ) {
+                          setLastChar(""); // Reset lastChar
                           setLastInputTime(currentTime); // Update last input time
-                          const finalInputValue = convertToEnglish(event.target.value.slice(0, -2) + 'لا');
+                          const finalInputValue = convertToEnglish(
+                            event.target.value.slice(0, -2) + "لا"
+                          );
                           setTradeName(finalInputValue);
                         } else {
-
                           setLastChar(event.target.value.slice(-1)); // Save the last character
                           setLastInputTime(currentTime); // Update last input time
-                          const finalInputValue = convertToEnglish(event.target.value);
+                          const finalInputValue = convertToEnglish(
+                            event.target.value
+                          );
                           setTradeName(finalInputValue);
                         }
                       } else {
