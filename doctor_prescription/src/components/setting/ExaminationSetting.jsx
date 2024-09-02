@@ -19,6 +19,7 @@ function ExaminationSetting(props) {
     temperatureActive: "",
     bloodPressureActive: "",
     bloodSugarActive: "",
+    DateOfLastPeriodActive:"",
     miscarriageStateActive: "",
   });
   const currentURL = window.location.origin; // Get the current URL
@@ -482,6 +483,39 @@ function ExaminationSetting(props) {
 
           </div>
         </div>
+
+        <div className=" border p-3 shadow rounded">
+          <div className="flex w-full justify-between items-center">
+            <div>
+              {/* <FormattedMessage
+                id={"DateOfLastPeriodActive"}
+                defaultMessage="Hello, World!"
+              /> */}
+              اخر موعد للدورة
+            </div>
+            <FormControlLabel
+              sx={{
+                display: "block",
+              }}
+              control={
+                <Switch
+                  checked={property.DateOfLastPeriodActive}
+                  onChange={(event) => {
+                    handleInputChange(
+                      "DateOfLastPeriodActive",
+                      !property.DateOfLastPeriodActive
+                    );
+                  }}
+                  color="primary"
+                />
+              }
+            />
+          </div>
+        </div>
+
+
+
+
       </div>
     </div>
   );

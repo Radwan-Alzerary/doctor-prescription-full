@@ -25,7 +25,7 @@ const SystemSettingSchema = new mongoose.Schema(
     spo2Active: { type: Boolean, default: true },
     temperatureActive: { type: Boolean, default: true },
     pullUpFullScreenMode: { type: Boolean, default: false },
-
+    DateOfLastPeriodActive: { type: Boolean, default: false },
     bloodPressureActive: { type: Boolean, default: true },
     bloodSugarActive: { type: Boolean, default: true },
     miscarriageStateActive: { type: Boolean, default: true },

@@ -63,6 +63,7 @@ const PatientsSchema = new mongoose.Schema(
     bloodPressure: { type: String },
     bloodSugar: { type: String },
     miscarriageState: { type: Boolean, default: false },
+    DateOfLastPeriod: { type: Date },
     MiscarriageNo: { type: Number },
     MiscarriageData: [{ reason: { type: String }, date: { type: String } }],
     pregnancyState: { type: Boolean, default: false },

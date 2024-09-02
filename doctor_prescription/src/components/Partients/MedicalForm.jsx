@@ -41,6 +41,7 @@ function MedicalForm(props) {
     bloodSugar: "",
     ExaminationFindining: "",
     InvestigationFinding: "",
+    DateOfLastPeriod: "",
   });
   const [locale, setLocale] = useState(() => {
     return Cookies.get("locale") || "ar";
@@ -937,6 +938,40 @@ function MedicalForm(props) {
               )}
             </>
           )}
+
+          {props.settingData.DateOfLastPeriodActive && (
+            <>
+              <div className="flex w-full items-center">
+                <TextField
+                  value={
+                    formData.DateOfLastPeriod
+                      ? dayjs(formData.DateOfLastPeriod)
+                          .add(9, "month")
+                          .format("YYYY-MM-DD")
+                      : ""
+                  }
+                  type="date"
+                  onChange={(event) =>
+                    handleInputChange("DateOfLastPeriod", event.target.value)
+                  }
+                  onClick={() => setTextSelector("DateOfLastPeriod")}
+                  id="outlined-multiline-static"
+                  size="small"
+                  sx={{
+                    width: "100%",
+                    color: "#fff",
+                  }}
+                  label={
+                    <FormattedMessage
+                      id={"DateOfLastPeriod"}
+                      defaultMessage="تاريخ اخر دورة"
+                    />
+                  }
+                />
+              </div>
+            </>
+          )}
+
           {props.settingData.miscarriageStateActive && (
             <>
               <p> اسقاط حمل</p>
@@ -981,6 +1016,7 @@ function MedicalForm(props) {
               )}
             </>
           )}
+
           {props.settingData.pregnancyActive && (
             <>
               <p>حمل حالي</p>

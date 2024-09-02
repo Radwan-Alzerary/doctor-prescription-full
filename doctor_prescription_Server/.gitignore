@@ -2,6 +2,7 @@ node_modules/
 locales/
 public/img/foodimg/
 public/
+public/rem-image
 /
 image.png
 data.json

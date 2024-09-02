@@ -815,7 +815,11 @@ function PatientReport(props) {
                       <>
                         {props.dataToPrint.prescription.pharmaceutical.map(
                           (drug, index) => (
-                            <tr className="text-center my-20">
+                            <tr
+                              className={`text-center my-20 ${
+                                index % 2 !== 1 ? "bg-gray-100" : ""
+                              }`}
+                            >
                               {props.medicalReportsStype.col6Active ? (
                                 <th
                                   className="text-center"

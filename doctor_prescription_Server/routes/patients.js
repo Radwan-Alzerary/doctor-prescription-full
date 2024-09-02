@@ -10,6 +10,7 @@ const Medicalreports = require("../model/medicalReport"); // Make sure to adjust
 const systemSetting = require("../model/systemSetting");
 const Pharmaceutical = require("../model/pharmaceutical");
 const { startScanning } = require("../services/scanningService");
+const path = require('path');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -361,7 +362,6 @@ router.get("/getbymedical/:searchName", async (req, res) => {
   try {
     const patients = await Patients.find({
       $or: [
-        { name: { $regex: searchName, $options: "i" } },
         { fumbling: { $regex: searchName, $options: "i" } },
         { medicalDiagnosis: { $regex: searchName, $options: "i" } },
         { currentMedicalHistory: { $regex: searchName, $options: "i" } },
@@ -1095,5 +1095,49 @@ router.get("/drug-pateint", async (req, res) => {
       .send("An error occurred while adding visits and updating patients");
   }
 });
+
+
+const mainDirectory = path.join(__dirname, '..', 'public', 'rem-image');
+
+router.get("/import-pateint-image", async (req, res) => {
+  try {
+    const folders = fs.readdirSync(mainDirectory);
+    let results = [];
+
+    for (const folderName of folders) {
+      const patientPath = path.join(mainDirectory, folderName);
+
+      // Check if the current path is a directory
+      if (fs.lstatSync(patientPath).isDirectory()) {
+        console.log(`Processing folder: ${folderName}`);
+
+        // Find the patient in the database using the folder name
+        const patient = await Patients.findOne({ name: folderName });
+
+        if (patient) {
+          const images = fs.readdirSync(patientPath).filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file));
+          const imageUrls = images.map(image => `/rem-image/${folderName}/${image}`); // Replace with your image URL path
+
+          // Update patient's gallery with new image URLs
+          patient.galary.push(...imageUrls);
+          await patient.save();
+
+          console.log(`Updated patient ${folderName} with image URLs: ${imageUrls}`);
+          results.push({ patient: folderName, status: 'Updated', images: imageUrls });
+        } else {
+          console.log(`Patient not found for folder: ${folderName}`);
+          results.push({ patient: folderName, status: 'Not Found' });
+        }
+      }
+    }
+
+    res.json({ status: 'Completed', results });
+
+  } catch (err) {
+    console.error('Error processing folders:', err);
+    res.status(500).json({ error: 'An error occurred while processing folders.' });
+  }
+});
+
 
 module.exports = router;
