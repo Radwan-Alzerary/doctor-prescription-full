@@ -395,3 +395,10 @@ process.on("uncaughtException", (error) => {
 process.on("unhandledRejection", (reason, promise) => {
   console.error("Unhandled Rejection:", reason, promise);
 });
+
+process.on('SIGINT', () => {
+  bonjour.unpublishAll(() => {
+    bonjour.destroy();
+    process.exit();
+  });
+});

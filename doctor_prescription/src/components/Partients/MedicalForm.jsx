@@ -946,7 +946,6 @@ function MedicalForm(props) {
                   value={
                     formData.DateOfLastPeriod
                       ? dayjs(formData.DateOfLastPeriod)
-                          .add(9, "month")
                           .format("YYYY-MM-DD")
                       : ""
                   }
