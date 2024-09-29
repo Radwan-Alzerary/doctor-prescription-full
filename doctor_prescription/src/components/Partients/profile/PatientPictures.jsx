@@ -1,87 +1,93 @@
-import * as React from "react";
+import React, { useState } from 'react'
+import { Trash2, Upload, Camera } from 'lucide-react'
 import ImageInput from "../ImageInput";
-import { useState } from "react";
-import ImageView from "./ImageView";
-import { Delete } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import AdvancedImageView from './AdvancedImageView';
 
-export default function PatientPictures(props) {
-  const [file, setFile] = useState(null);
-  const [showImage, setShowImage] = useState(false);
-  const [imageSelector, setImageSelector] = useState("");
-  const currentURL = window.location.origin; // Get the current URL
-  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000      // Fetch dashboard data first
+
+const ImageView = ({ imageUrl, handleHideImage }) => (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white p-4 rounded-lg max-w-3xl max-h-full overflow-auto">
+      <img src={imageUrl} alt="Full size" className="max-w-full h-auto" />
+      <button
+        onClick={handleHideImage}
+        className="mt-4 px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors duration-200"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)
+
+export default function PatientPictures({ images, id, refreshPaitent, handleScannerHandle, onImageDeleteHandle }) {
+  const [showImage, setShowImage] = useState(false)
+  const [imageSelector, setImageSelector] = useState('')
+  const serverAddress = window.location.origin.replace(/:\d+/, ':5000')
 
   const handleFileChange = async (file) => {
-    const selectedFile = file;
-    setFile(selectedFile);
-    console.log(file);
-    console.log(file);
-    if (!file) {
-      return;
-    }
+    if (!file) return
 
-    const formData = new FormData();
-    formData.append("image", file);
-    formData.append("id", props.id);
+    const formData = new FormData()
+    formData.append('image', file)
+    formData.append('id', id)
 
     try {
       const response = await fetch(`${serverAddress}/patients/galaryimage/`, {
-        method: "POST",
+        method: 'POST',
         body: formData,
-      });
+      })
 
       if (response.ok) {
-        setFile(null);
-        props.refreshPaitent();
-        console.log("xx");
+        refreshPaitent()
       } else {
-        // alert("Error uploading image");
+        console.error('Error uploading image')
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error('Error:', error)
     }
-  };
-  const handelImageView = (imageUrl) => {
-    setShowImage(true);
-    setImageSelector(imageUrl);
-    console.log(imageUrl);
-  };
+  }
+
+  const handleImageView = (imageUrl) => {
+    setShowImage(true)
+    setImageSelector(imageUrl)
+  }
+
   const handleHideImage = () => {
-    setShowImage(false);
-  };
+    setShowImage(false)
+  }
+
   return (
-    <div style={{ width: "100%" }} className=" overflow-scroll p-3 ">
-      <div className=" w-full grid grid-cols-3 gap-4 ">
-        {props.images.map((value) => (
-          <div className=" relative">
+    <div className="w-full p-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {images.map((value, index) => (
+          <div key={index} className="relative group">
             <img
-              alt="2"
-              onClick={() => {
-                handelImageView(`${serverAddress}/${value}`);
-              }}
-              className=" w-full  h-80 object-cover"
               src={`${serverAddress}/${value}`}
-            ></img>
-            <div className=" absolute w-12 h-12 flexx top-0 right-0">
-              <IconButton className=" bg-white" onClick={()=>{props.onImageDeleteHandle(value)}}>
-                <Delete className=" text-center justify-center items-center text-red-500"></Delete>
-              </IconButton>
-            </div>
+              alt={`Patient image ${index + 1}`}
+              className="w-full h-80 object-cover rounded-lg cursor-pointer transition-transform duration-200 transform group-hover:scale-105"
+              onClick={() => handleImageView(`${serverAddress}/${value}`)}
+            />
+            <button
+              onClick={() => onImageDeleteHandle(value)}
+              className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+              aria-label="Delete image"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
           </div>
         ))}
-        <ImageInput handleFileChange={handleFileChange} handleScannerHandle={props.handleScannerHandle} crop ></ImageInput>
+        <ImageInput handleFileChange={handleFileChange} handleScannerHandle={handleScannerHandle} />
       </div>
-      {showImage ? (
-        <>
-          <ImageView
-            imageSelector={imageSelector}
-            handleHideImage={handleHideImage}
-          ></ImageView>
-        </>
-      ) : (
-        ""
+      {showImage && (
+        <AdvancedImageView
+        imageUrl={imageSelector}
+        handleHideImage={handleHideImage}
+        onSave={(editedImage) => {
+          console.log('Saving edited image:', editedImage)
+          // Implement your save logic here
+          handleHideImage()
+        }}
+      />
       )}
     </div>
-  );
+  )
 }

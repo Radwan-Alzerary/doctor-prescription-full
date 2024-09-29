@@ -1625,7 +1625,7 @@ function Partients() {
     setCanceleAlert(false);
     setShowLaporyReportForm(false);
     setShowPartientsEditForm(false);
-    setShowPartientProfile(false);
+    // setShowPartientProfile(false);
     setDeleteAlert(false);
     setShowAddReportForm(false);
     setShowMidicalForm(false);
@@ -2340,7 +2340,7 @@ function Partients() {
           <BackGroundShadow onClick={() => setShowPartientProfile(false)} />
           <PartientsProfile
             handleScannerHandle={handleScannerHandle}
-            handleExit={handleHideClick}
+            handleExit={()=>setShowPartientProfile(false)}
             screenMode={settingData.pullUpFullScreenMode}
             onImageDeleteHandle={onImageDeleteHandle}
             settingData={settingData}
@@ -2431,7 +2431,7 @@ function Partients() {
       )}
       {showVisitForm && (
         <>
-          <BackGroundShadow onClick={handleHideClick} />
+          <BackGroundShadow onClick={()=>setShowVisitForm(false)} />
           <VisitForm
             userEditData={userEditData}
             handleExit={handleHideClick}

@@ -85,6 +85,16 @@ router.get("/getone/:id", async (req, res) => {
   }
 });
 
+router.get("/history/:id", async (req, res) => {
+  try {
+    const medicalreports = await Patients.findById(req.params.id).populate("visit");
+    res.json(medicalreports.visit);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 router.post("/editone/", async (req, res) => {
   try {
     console.log(req.body);

@@ -357,7 +357,7 @@ function EditPartients(props) {
 
   return (
     <form
-      className={`fixed flex overflow-scroll ${
+      className={`fixed flex overflow-scroll z-[500] ${
         props.screenMode
           ? "h-[100%] w-full "
           : props.settingData.billSelectFromGroup

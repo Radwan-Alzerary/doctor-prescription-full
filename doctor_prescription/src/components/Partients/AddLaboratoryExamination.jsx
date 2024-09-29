@@ -55,7 +55,7 @@ function AddLaboratoryExamination({
   return (
     <form
       onSubmit={handleSubmit}
-      className="fixed flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl z-50"
+      className="fixed  z-[500] flex flex-col justify-center left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center w-3/5 bg-white p-5 rounded-xl"
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
       }}

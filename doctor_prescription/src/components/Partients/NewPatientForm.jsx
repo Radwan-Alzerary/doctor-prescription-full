@@ -226,9 +226,9 @@ function NewPatientForm(props) {
 
   return (
     <form
-      className={`fixed overflow-scroll  flex flex-col ${
+      className={`fixed overflow-scroll  flex flex-col  z-[500]${
         props.screenMode ? "h-[100%] w-full p-4" : "h-[90%] w-[70%] "
-      }   left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center  bg-white p-5 rounded-xl z-50`}
+      }   left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center  bg-white p-5 rounded-xl `}
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
       style={{
         direction: locale === "en" ? "ltr" : "rtl",

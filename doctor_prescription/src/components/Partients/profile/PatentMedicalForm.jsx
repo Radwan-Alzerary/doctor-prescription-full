@@ -1,480 +1,141 @@
-import { Autocomplete, Button, IconButton, TextField } from "@mui/material";
-import dayjs from "dayjs";
-import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
-import { FormattedMessage } from "react-intl";
+import React, { useState, useEffect } from 'react'
+import { useIntl } from 'react-intl'
+import { Save, Printer } from 'lucide-react'
+import dayjs from 'dayjs'
 
-function PatentMedicalForm(props) {
-  const [formData, setFormData] = useState({});
-  const [locale, setLocale] = useState(() => {
-    return Cookies.get("locale") || "ar";
-  });
+const TextField = ({ label, value, onChange, multiline = false, rows = 1 }) => (
+  <div className="w-full mb-4">
+    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+    {multiline ? (
+      <textarea
+        className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        rows={rows}
+      />
+    ) : (
+      <input
+        type="text"
+        className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    )}
+  </div>
+)
+
+const SectionTitle = ({ title }) => (
+  <h3 className="text-lg font-semibold text-gray-800 mb-4 mt-8 pb-2 border-b border-gray-200">{title}</h3>
+)
+
+const PatientMedicalForm = ({ userEditData, settingData, handleEditPatientData }) => {
+  const [formData, setFormData] = useState({})
+  const intl = useIntl()
 
   useEffect(() => {
-    const { diseases, ...formDataWithoutDiseases } = props.userEditData;
-    setFormData(formDataWithoutDiseases);
-    // console.log(formDataWithoutDiseases)
-  }, []);
+    const { diseases, ...formDataWithoutDiseases } = userEditData
+    setFormData(formDataWithoutDiseases)
+  }, [userEditData])
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-  };
-
-  // Handle changes in form fields
   const handleInputChange = (name, value) => {
-    props.handleEditPatientData({ [name]: value });
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+    handleEditPatientData({ [name]: value })
+    setFormData((prevData) => ({ ...prevData, [name]: value }))
+  }
+
+  const renderTextField = (key, label, multiline = false, rows = 2) => {
+    if (!settingData[`${key}Active`]) return null
+    return (
+      <TextField
+        label={intl.formatMessage({ id: label })}
+        value={formData[key] || ''}
+        onChange={(value) => handleInputChange(key, value)}
+        multiline={multiline}
+        rows={rows}
+      />
+    )
+  }
+
   return (
-    <form
-      className="flex w-full flex-col overflow-scroll gap-5 items-center bg-white p-5 rounded-xl z-50"
-      onSubmit={handleSubmit} // Step 4: Attach the submit handler
-      style={{
-        direction: locale === "en" ? "ltr" : "rtl",
-      }}
-    >
-      <div className="w-full flex gap-9"></div>
-      {props.settingData.medicalDiagnosisActive ? (
-        <TextField
-          value={formData.medicalDiagnosis}
-          onChange={(event) => {
-            handleInputChange("medicalDiagnosis", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"Diagnostic Details"}
-              defaultMessage="Hello, World!"
-            />
-          }
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
+    <form className="w-full max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-lg">
+      {/* <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        {intl.formatMessage({ id: 'Patient Medical Form' })}
+      </h2> */}
 
-      {props.settingData.currentMedicalHistoryActive ? (
-        <TextField
-          value={formData.currentMedicalHistory}
-          onChange={(event) => {
-            handleInputChange("currentMedicalHistory", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"Present Medical History"}
-              defaultMessage="Hello, World!"
-            />
-          }
-        />
-      ) : (
-        ""
-      )}
-
-      {props.settingData.medicalHistoryActive ? (
-        <TextField
-          value={formData.medicalHistory}
-          onChange={(event) => {
-            handleInputChange("medicalHistory", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"Medical History"}
-              defaultMessage="Hello, World!"
-            />
-          } // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-
-      {props.settingData.previousSurgeriesActive ? (
-        <TextField
-          value={formData.previousSurgeries}
-          onChange={(event) => {
-            handleInputChange("previousSurgeries", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"Previous Surgical Procedures"}
-              defaultMessage="Hello, World!"
-            />
-          } // defaultValue="Hello World"        Present Medical History
-        />
-      ) : (
-        ""
-      )}
-
-      {props.settingData.familyHistoryActive ? (
-        <TextField
-          value={formData.familyHistory}
-          onChange={(event) => {
-            handleInputChange("familyHistory", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"Family Medical History"}
-              defaultMessage="Hello, World!"
-            />
-          }
-          Diagnostic
-          Details
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-
-      {props.settingData.fumblingActive ? (
-        <TextField
-          value={formData.fumbling}
-          onChange={(event) => {
-            handleInputChange("fumbling", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"Medication Allergies"}
-              defaultMessage="Hello, World!"
-            />
-          }
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-
-      {props.settingData.fracturesActive ? (
-
-        <TextField
-          value={formData.fractures}
-          onChange={(event) => {
-            handleInputChange("fractures", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage id={"fractures"} defaultMessage="Hello, World!" />
-          }
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-
-      {props.settingData.ExaminationFindiningActive ? (
-        <TextField
-          value={formData.ExaminationFindining}
-          onChange={(event) => {
-            handleInputChange("ExaminationFindining", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"ExaminationFindining"}
-              defaultMessage="Hello, World!"
-            />
-          }
-        />
-      ) : (
-        ""
-      )}
-
-      {props.settingData.pulseRateActive ? (
-        <TextField
-          value={formData.pulseRate}
-          onChange={(event) => {
-            handleInputChange("pulseRate", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage id={"pulseRate"} defaultMessage="Hello, World!" />
-          }
-        />
-      ) : (
-        ""
-      )}
-
-      {props.settingData.spo2Active ? (
-        <TextField
-          value={formData.spo2}
-          onChange={(event) => {
-            handleInputChange("spo2", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage id={"spo2"} defaultMessage="Hello, World!" />
-          }
-        />
-      ) : (
-        ""
-      )}
-
-      {props.settingData.temperatureActive ? (
-        <TextField
-          value={formData.temperature}
-          onChange={(event) => {
-            handleInputChange("temperature", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"temperature"}
-              defaultMessage="Hello, World!"
-            />
-          }
-        />
-      ) : (
-        ""
-      )}
-
-      {props.settingData.bloodPressureActive ? (
-        <TextField
-          value={formData.bloodPressure}
-          onChange={(event) => {
-            handleInputChange("bloodPressure", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"bloodPressure"}
-              defaultMessage="Hello, World!"
-            />
-          }
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-
-      {props.settingData.bloodSugarActive ? (
-        <TextField
-          value={formData.bloodSugar}
-          onChange={(event) => {
-            handleInputChange("bloodSugar", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"bloodSugar"}
-              defaultMessage="Hello, World!"
-            />
-          }
-        />
-      ) : (
-        ""
-      )}
-
-      {props.settingData.InvestigationFindingActive ? (
-        <TextField
-          value={formData.InvestigationFinding}
-          onChange={(event) => {
-            handleInputChange("InvestigationFinding", event.target.value);
-          }}
-          id="outlined-multiline-static"
-          size="small"
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          multiline
-          rows={2}
-          label={
-            <FormattedMessage
-              id={"InvestigationFinding"}
-              defaultMessage="Hello, World!"
-            />
-          }
-          // defaultValue="Hello World"
-        />
-      ) : (
-        ""
-      )}
-      
-      {props.settingData.miscarriageStateActive && formData.miscarriageState ? (
-        <>
-          <div>الاسقاطات</div>
-          <div className="flex justify-between w-full">
-            {props.userEditData
-              ? props.userEditData.MiscarriageData
-                ? props.userEditData.MiscarriageData.map((child, index) => (
-                    <div className="">
-                      <div>{`اسقاط رقم ${index + 1}`}</div>
-                      <div>{`السبب  : ${child.reason}`}</div>
-                      <div>
-                        تاريخ الاسقاط :{" "}
-                        {new Date(child.date).toLocaleDateString("en-GB")}
-                      </div>
-                    </div>
-                  ))
-                : ""
-              : ""}
-          </div>
-        </>
-      ) : (
-        ""
-      )}
-
-      {props.settingData.pregnancyActive && formData.pregnancyState ? (
-        <>
-          {" "}
-          <div>الحمل الحالي</div>
-          <div className="flex flex-col w-full justify-between">
-            <div className="flex justify-between items-center">
-              <div>تاريخ اخر دورة</div>
-              <div>
-                {new Date(
-                  props.userEditData.pregnancyData?.DateOfLastPeriod
-                ).toLocaleDateString("en-GB") || ""}
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <div>تسلسل الحمل</div>
-              <div>
-                {props.userEditData.pregnancyData?.PregnancySequence || ""}
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <div>نوع الولادة السابقة</div>
-              <div>
-                {props.userEditData.pregnancyData?.TypeOfPreviousBirth || ""}
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <div>صنف دم الزوج</div>
-              <div>
-                {props.userEditData.pregnancyData?.HusbandsBloodType || ""}
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <div>ملاحضات حول الحمل</div>
-              <div>{props.userEditData.pregnancyData?.comment || ""}</div>
-            </div>
-            {props.userEditData.pregnancyData.DateOfLastPeriod ? (
-                <div className="flex justify-between w-full">
-                  <div>موعد الانجاب</div>
-                  <div>
-                    {" "}
-                    {props.userEditData
-                      ? dayjs(props.userEditData.pregnancyData.DateOfLastPeriod)
-                          .add(9, "month")
-                          .format("YYYY-MM-DD")
-                      : ""}
-                  </div>
-                </div>
-              ) : (
-                ""
-              )}
-
-          </div>
-        </>
-      ) : (
-        ""
-      )}
-
-      <div className="flex gap-6 w-full justify-between">
-        <IconButton>
-          {/* <PrintRounded color="action"></PrintRounded> */}
-        </IconButton>
+      <SectionTitle title={intl.formatMessage({ id: 'Medical Information' })} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {renderTextField('medicalDiagnosis', 'Diagnostic Details', true)}
+        {renderTextField('currentMedicalHistory', 'Present Medical History', true)}
+        {renderTextField('medicalHistory', 'Medical History', true)}
+        {renderTextField('previousSurgeries', 'Previous Surgical Procedures', true)}
+        {renderTextField('familyHistory', 'Family Medical History', true)}
+        {renderTextField('fumbling', 'Medication Allergies', true)}
+        {renderTextField('fractures', 'Fractures', true)}
       </div>
+
+      <SectionTitle title={intl.formatMessage({ id: 'Examination Findings' })} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {renderTextField('ExaminationFindining', 'Examination Findings', true)}
+        {renderTextField('pulseRate', 'Pulse Rate')}
+        {renderTextField('spo2', 'SPO2')}
+        {renderTextField('temperature', 'Temperature')}
+        {renderTextField('bloodPressure', 'Blood Pressure')}
+        {renderTextField('bloodSugar', 'Blood Sugar')}
+      </div>
+
+      <SectionTitle title={intl.formatMessage({ id: 'Investigation Findings' })} />
+      {renderTextField('InvestigationFinding', 'Investigation Findings', true)}
+
+      {settingData.miscarriageStateActive && formData.miscarriageState && (
+        <>
+          <SectionTitle title={intl.formatMessage({ id: 'Miscarriages' })} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {userEditData?.MiscarriageData?.map((miscarriage, index) => (
+              <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-medium mb-2">{intl.formatMessage({ id: 'Miscarriage' })} #{index + 1}</h4>
+                <p><strong>{intl.formatMessage({ id: 'Reason' })}:</strong> {miscarriage.reason}</p>
+                <p><strong>{intl.formatMessage({ id: 'Date' })}:</strong> {new Date(miscarriage.date).toLocaleDateString()}</p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {settingData.pregnancyActive && formData.pregnancyState && (
+        <>
+          <SectionTitle title={intl.formatMessage({ id: 'Current Pregnancy' })} />
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <p><strong>{intl.formatMessage({ id: 'Last Period Date' })}:</strong> {new Date(userEditData.pregnancyData?.DateOfLastPeriod).toLocaleDateString()}</p>
+              <p><strong>{intl.formatMessage({ id: 'Pregnancy Sequence' })}:</strong> {userEditData.pregnancyData?.PregnancySequence}</p>
+              <p><strong>{intl.formatMessage({ id: 'Previous Birth Type' })}:</strong> {userEditData.pregnancyData?.TypeOfPreviousBirth}</p>
+              <p><strong>{intl.formatMessage({ id: "Husband's Blood Type" })}:</strong> {userEditData.pregnancyData?.HusbandsBloodType}</p>
+              <p><strong>{intl.formatMessage({ id: 'Pregnancy Notes' })}:</strong> {userEditData.pregnancyData?.comment}</p>
+              {userEditData.pregnancyData?.DateOfLastPeriod && (
+                <p><strong>{intl.formatMessage({ id: 'Expected Delivery Date' })}:</strong> {dayjs(userEditData.pregnancyData.DateOfLastPeriod).add(9, 'month').format('YYYY-MM-DD')}</p>
+              )}
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* <div className="flex justify-between mt-8">
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          <Save className="inline-block mr-2" size={20} />
+          {intl.formatMessage({ id: 'Save' })}
+        </button>
+        <button
+          type="button"
+          className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+        >
+          <Printer className="inline-block mr-2" size={20} />
+          {intl.formatMessage({ id: 'Print' })}
+        </button>
+      </div> */}
     </form>
-  );
+  )
 }
 
-export default PatentMedicalForm;
+export default PatientMedicalForm

@@ -185,6 +185,8 @@ router.get("/getbyname/:searchName", async (req, res) => {
   try {
     const pharmaceutical = await Pharmaceutical.find({
       name: { $regex: searchName, $options: "i" },
+      active: { $ne: false },
+
     });
     res.json(pharmaceutical);
   } catch (error) {
@@ -193,7 +195,8 @@ router.get("/getbyname/:searchName", async (req, res) => {
 });
 router.get("/getbyname/", async (req, res) => {
   try {
-    const pharmaceutical = await Pharmaceutical.find({});
+    const pharmaceutical = await Pharmaceutical.find({      active: { $ne: false },
+    });
     res.json(pharmaceutical);
   } catch (error) {
     res.status(500).json({ error: error.message });

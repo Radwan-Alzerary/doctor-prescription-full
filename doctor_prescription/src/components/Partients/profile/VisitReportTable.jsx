@@ -1,122 +1,78 @@
-import * as React from "react";
-import { DataGrid } from "@mui/x-data-grid";
-import { Delete, Edit } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
-import { blue, red } from "@mui/material/colors";
+import React from 'react'
+import { ChevronRight, Trash2, Edit2, AlertCircle } from 'lucide-react'
 
-const VisitReportTable = (props) => {
-  const columns = [
-    {
-      field: "createdAt",
-      headerName: "تاريخ التقرير",
-      width: 170,
-      renderCell: (params) => {
-        if (params.row && params.row.createdAt) {
-          const createdAt = new Date(params.row.createdAt);
-          // Format the date to include year, month, day, and time
-          const formattedDate = `${createdAt.getFullYear()}-${String(
-            createdAt.getMonth() + 1
-          ).padStart(2, "0")}-${String(createdAt.getDate()).padStart(
-            2,
-            "0"
-          )} ${String(createdAt.getHours()).padStart(2, "0")}:${String(
-            createdAt.getMinutes()
-          ).padStart(2, "0")}`;
-          return <span>{formattedDate}</span>;
-        }
-        return <span>غير معروف</span>; // Return a default value if createdAt is undefined
-      },
-    },
-    { field: "CauseOfVisite", headerName: "سبب الزيارة", width: "120" },
-    {
-      field: "chiefComplaint",
-      headerName: "تفاصيل التشخيص المرضي",
-      width: "120",
-    },
-    { field: "investigation", headerName: "الفحص السريري", width: "120" },
-    { field: "diagnosis", headerName: "التشخيص", width: "80" },
-    { field: "management", headerName: "الادارية", width: "80" },
-    {
-      field: "priority",
-      headerName: "الأولوية",
-      width: 120,
-    },
-    {
-      field: "actions",
-      headerName: "الخيارات",
-      width: 100,
-      renderCell: (params) => (
-        <div className="flex justify-center items-center">
-          <IconButton
-            onClick={() => {
-              props.onVisitDeleteHandel(params.row._id);
-            }}
-            sx={{ color: red[400] }}
-            className=" hover:text-red-600"
-            aria-label="delete"
-          >
-            <Delete fontSize="inherit" />
-          </IconButton>
-          <IconButton
-            onClick={() => {
-              props.onVisitEditHandel(params.row._id);
-            }}
-            sx={{ color: blue[400] }}
-            className=" hover:text-red-600"
-            aria-label="edit"
-          >
-            <Edit fontSize="inherit" />
-          </IconButton>
-        </div>
-      ),
-    },
-  ];
-
-  // Function to determine row class based on priority
-  const getRowClassName = (params) => {
-    const priority = params.row.priority;
-
-    // Apply different row styles based on priority
-    if (priority === "normal") {
-      return "bg-white"; // White background for normal priority
-    } else if (priority === "medium") {
-      return "bg-red-200"; // Light red background for medium priority
-    } else if (priority === "high") {
-      return "bg-red-400"; // Darker red background for high priority
-    } else if (priority === "dangers") {
-      return "bg-red-600"; // Darker red background for high priority
+const VisitReportTable = ({ visitData, onVisitDeleteHandel, onVisitEditHandel }) => {
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case 'normal':
+        return 'bg-green-100 text-green-800'
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800'
+      case 'high':
+        return 'bg-orange-100 text-orange-800'
+      case 'dangers':
+        return 'bg-red-100 text-red-800'
+      default:
+        return 'bg-gray-100 text-gray-800'
     }
-
-    // Default row style if priority doesn't match known values
-    return "";
-  };
-
-  // Handle row click event
-  const handleRowClick = (params) => {
-    console.log("Row clicked:", params.row);
-    props.onVisitEditHandel(params.row._id);
-
-    // You can perform additional actions here, such as navigating to a detailed view
-  };
+  }
 
   return (
-    <div style={{ height: 700, width: "100%" }}>
-      <DataGrid
-        rows={props.visitData}
-        columns={columns}
-        getRowId={(row) => row._id} // Use _id as the custom id
-        getRowClassName={getRowClassName} // Apply row styles dynamically based on priority
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
-          },
-        }}
-        pageSizeOptions={[5, 10]}
-        checkboxSelection
-        onRowClick={handleRowClick} // Add row click event handler
-      />
+    <div className="space-y-4">
+      {visitData.map((visit) => (
+        <div key={visit._id} className="bg-white shadow rounded-lg overflow-hidden">
+          <div className="p-4 sm:p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-2">
+                <span className="text-sm font-medium text-gray-500">
+                  {new Date(visit.createdAt).toLocaleString()}
+                </span>
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(visit.priority)}`}>
+                  {visit.priority}
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => onVisitEditHandel(visit._id)}
+                  className="p-1 rounded-full text-blue-600 hover:bg-blue-100 transition-colors duration-200"
+                >
+                  <Edit2 size={16} />
+                </button>
+                <button
+                  onClick={() => onVisitDeleteHandel(visit._id)}
+                  className="p-1 rounded-full text-red-600 hover:bg-red-100 transition-colors duration-200"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{visit.CauseOfVisite}</h3>
+            <p className="text-sm text-gray-600 mb-4">{visit.chiefComplaint}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="font-medium text-gray-500">الفحص السريري:</span> {visit.investigation}
+              </div>
+              <div>
+                <span className="font-medium text-gray-500">التشخيص:</span> {visit.diagnosis}
+              </div>
+              <div>
+                <span className="font-medium text-gray-500">الادارية:</span> {visit.management}
+              </div>
+            </div>
+          </div>
+          <div className="bg-gray-50 px-4 py-3 sm:px-6">
+            <button
+              onClick={() => onVisitEditHandel(visit._id)}
+              className="flex items-center justify-center w-full text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors duration-200"
+            >
+              عرض التفاصيل الكاملة
+              <ChevronRight size={16} className="ml-1" />
+            </button>
+          </div>
+        </div>
+      ))}
     </div>
-  );
-};
+  )
+}
 
-export default VisitReportTable;
+export default VisitReportTable

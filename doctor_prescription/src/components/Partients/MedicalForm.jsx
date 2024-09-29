@@ -1,31 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { CloseSharp, Mic, MicOff } from "@mui/icons-material";
-import {
-  Button,
-  FormControl,
-  FormControlLabel,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  Switch,
-  TextField,
-} from "@mui/material";
-import dayjs from "dayjs";
-import Cookies from "js-cookie";
-import { FormattedMessage } from "react-intl";
-import axios from "axios";
-import MedicalFormChipAutoComplete from "./MedicalFormChipAutoComplete";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
+import React, { useEffect, useState } from "react"
+import { FormattedMessage, useIntl } from "react-intl"
+import { X, Mic, MicOff, Printer } from "lucide-react"
+import Cookies from "js-cookie"
+import axios from "axios"
+import dayjs from "dayjs"
+import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition"
+import MedicalFormChipAutoComplete from "./MedicalFormChipAutoComplete"
 
-function MedicalForm(props) {
-  const currentURL = window.location.origin; // Get the current URL
-  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000
-  const [textSelector, setTextSelector] = useState("");
-  const [autoCompleteList, setAutoCompleteList] = useState();
-  const [loading, setLoading] = useState(true);
+function MedicalForm({
+  onFormSubmit,
+  partientsSelectId,
+  onPrinterClick,
+  type,
+  data,
+  settingData,
+  screenMode,
+  handleExit,
+  userEditData,
+  
+}) {
+  const intl = useIntl()
+  const [textSelector, setTextSelector] = useState("")
+  const [autoCompleteList, setAutoCompleteList] = useState({})
+  const [loading, setLoading] = useState(true)
   const [formData, setFormData] = useState({
     fumbling: "",
     medicalDiagnosis: "",
@@ -42,1173 +39,379 @@ function MedicalForm(props) {
     ExaminationFindining: "",
     InvestigationFinding: "",
     DateOfLastPeriod: "",
-  });
-  const [locale, setLocale] = useState(() => {
-    return Cookies.get("locale") || "ar";
-  });
-  const [oldText, setOldText] = useState("");
-  const { transcript, listening, resetTranscript } = useSpeechRecognition();
+    miscarriageState: false,
+    MiscarriageNo: 0,
+    MiscarriageData: [],
+    pregnancyState: false,
+    pregnancyData: {},
+  })
+  const [locale, setLocale] = useState(() => Cookies.get("locale") || "ar")
+  const [oldText, setOldText] = useState("")
+  const { transcript, listening, resetTranscript } = useSpeechRecognition()
 
   useEffect(() => {
     if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
-      console.error("Browser doesn't support speech recognition.");
-      return;
+      console.error("Browser doesn't support speech recognition.")
+      return
     }
-    console.log("lisint", listening);
     if (listening) {
-      console.log(transcript);
-      console.log("oldText", oldText);
-      const text = oldText ? oldText : "";
-      console.log("oldText", text);
-
-      handleInputChange(textSelector, `${text} ${transcript}`);
+      const text = oldText || ""
+      handleInputChange(textSelector, `${text} ${transcript}`)
     }
-  }, [transcript, listening]);
-
-  const startListening = (name) => {
-    resetTranscript();
-    setTextSelector(name);
-    setOldText(formData[name]);
-    SpeechRecognition.startListening({ continuous: true });
-  };
-
-  const stopListening = () => {
-    SpeechRecognition.stopListening();
-  };
+  }, [transcript, listening])
 
   useEffect(() => {
-    const getAutoCompleteList = () => {
-      axios
-        .get(`${serverAddress}/autoComplete/getall/`)
-        .then((response) => {
-          setAutoCompleteList(response.data);
-          setLoading(false);
-          console.log(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching categories:", error);
-        });
-    };
-    getAutoCompleteList();
-  }, []);
-
+    const getAutoCompleteList = async () => {
+      try {
+        const currentURL = window.location.origin
+        const serverAddress = currentURL.replace(/:\d+/, ":5000")
+        const response = await axios.get(`${serverAddress}/autoComplete/getall/`)
+        setAutoCompleteList(response.data)
+        setLoading(false)
+      } catch (error) {
+        console.error("Error fetching categories:", error)
+        setLoading(false)
+      }
+    }
+    getAutoCompleteList()
+  }, [])
   useEffect(() => {
-    const { diseases, ...formDataWithoutDiseases } = props.userEditData;
+    const { diseases, ...formDataWithoutDiseases } = userEditData;
     setFormData(formDataWithoutDiseases);
   }, []);
 
+  const startListening = (name) => {
+    resetTranscript()
+    setTextSelector(name)
+    setOldText(formData[name])
+    SpeechRecognition.startListening({ continuous: true })
+  }
+
+  const stopListening = () => {
+    SpeechRecognition.stopListening()
+  }
+
   const handleSubmit = (event) => {
-    event.preventDefault();
-    props.onFormSubmit(formData);
-  };
+    event.preventDefault()
+    onFormSubmit(formData)
+  }
 
   const handleInputChange = (name, value) => {
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+    setFormData({ ...formData, [name]: value })
+  }
 
   const handleChildrenDataChange = (childIndex, property, value) => {
-    const updatedChildrenData = [...formData.MiscarriageData];
+    const updatedChildrenData = [...formData.MiscarriageData]
     updatedChildrenData[childIndex] = {
       ...updatedChildrenData[childIndex],
       [property]: value,
-    };
-
-    setFormData({
-      ...formData,
-      MiscarriageData: updatedChildrenData,
-    });
-  };
+    }
+    setFormData({ ...formData, MiscarriageData: updatedChildrenData })
+  }
 
   const formatDate = (date) => {
-    if (!date) return "";
-    const formattedDate = new Date(date).toISOString().split("T")[0];
-    return formattedDate;
-  };
+    if (!date) return ""
+    return dayjs(date).format("YYYY-MM-DD")
+  }
 
-  const renderChildFields = () => {
-    const childFields = [];
+  const renderField = (fieldName, label, multiline = false) => {
+    if (!settingData[`${fieldName}Active`]) return null
 
-    for (let i = 0; i < formData.MiscarriageNo; i++) {
-      childFields.push(
-        <div key={i} className="flex flex-col gap-4">
-          <TextField
-            id={`child-reason-${i}`}
-            size="small"
-            value={formData.MiscarriageData[i]?.reason || ""}
-            onChange={(event) =>
-              handleChildrenDataChange(i, "reason", event.target.value)
-            }
-            label={`${i + 1} سبب الاسقاطات`}
-            sx={{
-              textAlign: "right",
-              color: "#fff",
-            }}
-            InputProps={{
-              style: { textAlign: "right" },
-            }}
+    return (
+      <div className="mb-4">
+        <label htmlFor={fieldName} className="block text-sm font-medium text-gray-700 mb-1">
+          <FormattedMessage id={label} />
+        </label>
+        <div className="flex items-center">
+          <textarea
+            id={fieldName}
+            value={formData[fieldName]}
+            onChange={(e) => handleInputChange(fieldName, e.target.value)}
+            onClick={() => setTextSelector(fieldName)}
+            className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            rows={multiline ? 3 : 1}
           />
-          <TextField
-            id={`child-date-${i}`}
-            size="small"
-            value={formData.MiscarriageData[i]?.date || ""}
-            onChange={(event) =>
-              handleChildrenDataChange(i, "date", event.target.value)
-            }
-            sx={{
-              textAlign: "right",
-              color: "#fff",
-            }}
-            type="date"
-            InputProps={{
-              style: { textAlign: "right" },
-            }}
-          />
+          <button
+            type="button"
+            onClick={() => (!listening ? startListening(fieldName) : stopListening())}
+            className={`ml-2 p-2 rounded-full ${listening && textSelector === fieldName ? "bg-red-500" : "bg-blue-500"
+              } text-white`}
+          >
+            {listening && textSelector === fieldName ? (
+              <MicOff className="w-5 h-5" />
+            ) : (
+              <Mic className="w-5 h-5" />
+            )}
+          </button>
         </div>
-      );
-    }
+        {!loading && textSelector === fieldName && autoCompleteList[fieldName] && (
+          <MedicalFormChipAutoComplete
+            AutoCompletevalue={autoCompleteList[fieldName]}
+            formDataValue={formData[fieldName]}
+            handleInputChange={handleInputChange}
+            target={fieldName}
+          />
 
-    return childFields;
-  };
+
+        )}
+      </div>
+    )
+  }
 
   return (
     <form
-      className={`fixed flex flex-col overflow-scroll h-[90%] left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center ${
-        props.screenMode ? "h-[100%] w-full p-4" : "h-[90%]  "
-      } } w-3/5 bg-white p-5 rounded-xl z-50`}
       onSubmit={handleSubmit}
-      style={{
-        direction: locale === "en" ? "ltr" : "rtl",
-      }}
+      className={`fixed flex flex-col overflow-scroll h-[90%] left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center ${screenMode ? "h-[100%] w-full p-4" : "h-[90%]  "
+        } } w-3/5 bg-white p-5 rounded-xl z-50`}
+      style={{ direction: locale === "en" ? "ltr" : "rtl" }}
     >
-      {props.screenMode ? (
-        <div className=" flex justify-start items-start text-right w-full ">
-          <IconButton onClick={props.handleExit}>
-            <CloseSharp className=" text-red-700  top-5 right-5" />
-          </IconButton>
-        </div>
-      ) : (
-        ""
-      )}
+      <div className="flex w-full justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">
+          <FormattedMessage id="Examination for" />: <span className="font-normal">{userEditData.name}</span>
+        </h2>
+        {screenMode && (
+          <button type="button" onClick={handleExit} className="text-gray-500 hover:text-gray-700">
+            <X className="w-6 h-6" />
+          </button>
+        )}
+      </div>
 
-      {!loading ? (
-        <>
-          <div className="w-full flex gap-9"></div>
-          <div className=" text-right w-full">
-            <h5>
-              <FormattedMessage
-                id={"Examination for"}
-                defaultMessage="Hello, World!"
-              />
-              : <span className=" font-bold">{props.userEditData.name}</span>
-            </h5>
+      <div className="space-y-6 w-full">
+        {renderField("medicalDiagnosis", "Diagnostic Details", true)}
+        {renderField("currentMedicalHistory", "Present Medical History", true)}
+        {renderField("medicalHistory", "Medical History", true)}
+        {renderField("previousSurgeries", "Previous Surgical Procedures", true)}
+        {renderField("familyHistory", "Family Medical History", true)}
+        {renderField("fumbling", "Medication Allergies", true)}
+        {renderField("InvestigationFinding", "InvestigationFinding", true)}
+        {renderField("fractures", "fractures", true)}
+        {renderField("ExaminationFindining", "ExaminationFindining", true)}
+        {renderField("pulseRate", "pulseRate")}
+        {renderField("spo2", "spo2")}
+        {renderField("temperature", "temperature")}
+        {renderField("bloodPressure", "bloodPressure")}
+        {renderField("bloodSugar", "bloodSugar")}
+
+        {settingData.DateOfLastPeriodActive && (
+          <div className="mb-4">
+            <label htmlFor="DateOfLastPeriod" className="block text-sm font-medium text-gray-700 mb-1">
+              <FormattedMessage id="DateOfLastPeriod" />
+            </label>
+            <input
+              type="date"
+              id="DateOfLastPeriod"
+              value={formatDate(formData.DateOfLastPeriod)}
+              onChange={(e) => handleInputChange("DateOfLastPeriod", e.target.value)}
+              className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           </div>
-          {props.settingData.medicalDiagnosisActive && (
-            <>
-              <div className="flex w-full items-center">
-                <TextField
-                  value={formData.medicalDiagnosis}
-                  onChange={(event) =>
-                    handleInputChange("medicalDiagnosis", event.target.value)
-                  }
-                  onClick={() => setTextSelector("medicalDiagnosis")}
-                  id="outlined-multiline-static"
-                  size="small"
-                  sx={{
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                  multiline
-                  rows={2}
-                  label={
-                    <FormattedMessage
-                      id={"Diagnostic Details"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                />
-                <IconButton
-                  onClick={() =>
-                    !listening
-                      ? startListening("medicalDiagnosis")
-                      : stopListening()
-                  }
-                  color={
-                    listening && textSelector === "medicalDiagnosis"
-                      ? "primary"
-                      : "default"
-                  }
-                >
-                  {listening && textSelector === "medicalDiagnosis" ? (
-                    <MicOff />
-                  ) : (
-                    <Mic />
-                  )}
-                </IconButton>
-              </div>
-              {textSelector === "medicalDiagnosis" && (
-                <MedicalFormChipAutoComplete
-                  AutoCompletevalue={autoCompleteList.medicalDiagnosis}
-                  formDataValue={formData.medicalDiagnosis}
-                  handleInputChange={handleInputChange}
-                  target={"medicalDiagnosis"}
-                />
-              )}
-            </>
-          )}
-          {props.settingData.currentMedicalHistoryActive && (
-            <>
-              <div className="flex w-full items-center">
-                <TextField
-                  value={formData.currentMedicalHistory}
-                  onChange={(event) =>
-                    handleInputChange(
-                      "currentMedicalHistory",
-                      event.target.value
-                    )
-                  }
-                  onClick={() => setTextSelector("currentMedicalHistory")}
-                  id="outlined-multiline-static"
-                  size="small"
-                  sx={{
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                  multiline
-                  rows={2}
-                  label={
-                    <FormattedMessage
-                      id={"Present Medical History"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                />
-                <IconButton
-                  onClick={() =>
-                    !listening
-                      ? startListening("currentMedicalHistory")
-                      : stopListening()
-                  }
-                  color={
-                    listening && textSelector === "currentMedicalHistory"
-                      ? "primary"
-                      : "default"
-                  }
-                >
-                  {listening && textSelector === "currentMedicalHistory" ? (
-                    <MicOff />
-                  ) : (
-                    <Mic />
-                  )}
-                </IconButton>
-              </div>
-              {textSelector === "currentMedicalHistory" && (
-                <MedicalFormChipAutoComplete
-                  AutoCompletevalue={autoCompleteList.currentMedicalHistory}
-                  formDataValue={formData.currentMedicalHistory}
-                  handleInputChange={handleInputChange}
-                  target={"currentMedicalHistory"}
-                />
-              )}
-            </>
-          )}
-          {props.settingData.medicalHistoryActive && (
-            <>
-              <div className="flex w-full items-center">
-                <TextField
-                  value={formData.medicalHistory}
-                  onChange={(event) =>
-                    handleInputChange("medicalHistory", event.target.value)
-                  }
-                  onClick={() => setTextSelector("medicalHistory")}
-                  id="outlined-multiline-static"
-                  size="small"
-                  sx={{
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                  multiline
-                  rows={2}
-                  label={
-                    <FormattedMessage
-                      id={"Medical History"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                />
-                <IconButton
-                  onClick={() =>
-                    !listening
-                      ? startListening("medicalHistory")
-                      : stopListening()
-                  }
-                  color={
-                    listening && textSelector === "medicalHistory"
-                      ? "primary"
-                      : "default"
-                  }
-                >
-                  {listening && textSelector === "medicalHistory" ? (
-                    <MicOff />
-                  ) : (
-                    <Mic />
-                  )}
-                </IconButton>
-              </div>
-              {textSelector === "medicalHistory" && (
-                <MedicalFormChipAutoComplete
-                  AutoCompletevalue={autoCompleteList.medicalHistory}
-                  formDataValue={formData.medicalHistory}
-                  handleInputChange={handleInputChange}
-                  target={"medicalHistory"}
-                />
-              )}
-            </>
-          )}
-          {props.settingData.previousSurgeriesActive && (
-            <>
-              <div className="flex w-full items-center">
-                <TextField
-                  value={formData.previousSurgeries}
-                  onChange={(event) =>
-                    handleInputChange("previousSurgeries", event.target.value)
-                  }
-                  onClick={() => setTextSelector("previousSurgeries")}
-                  id="outlined-multiline-static"
-                  size="small"
-                  sx={{
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                  multiline
-                  rows={2}
-                  label={
-                    <FormattedMessage
-                      id={"Previous Surgical Procedures"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                />
-                <IconButton
-                  onClick={() =>
-                    !listening
-                      ? startListening("previousSurgeries")
-                      : stopListening()
-                  }
-                  color={
-                    listening && textSelector === "previousSurgeries"
-                      ? "primary"
-                      : "default"
-                  }
-                >
-                  {listening && textSelector === "previousSurgeries" ? (
-                    <MicOff />
-                  ) : (
-                    <Mic />
-                  )}
-                </IconButton>
-              </div>
-              {textSelector === "previousSurgeries" && (
-                <MedicalFormChipAutoComplete
-                  AutoCompletevalue={autoCompleteList.previousSurgeries}
-                  formDataValue={formData.previousSurgeries}
-                  handleInputChange={handleInputChange}
-                  target={"previousSurgeries"}
-                />
-              )}
-            </>
-          )}
-          {props.settingData.familyHistoryActive && (
-            <>
-              <div className="flex w-full items-center">
-                <TextField
-                  value={formData.familyHistory}
-                  onChange={(event) =>
-                    handleInputChange("familyHistory", event.target.value)
-                  }
-                  onClick={() => setTextSelector("familyHistory")}
-                  id="outlined-multiline-static"
-                  size="small"
-                  sx={{
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                  multiline
-                  rows={2}
-                  label={
-                    <FormattedMessage
-                      id={"Family Medical History"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                />
-                <IconButton
-                  onClick={() =>
-                    !listening
-                      ? startListening("familyHistory")
-                      : stopListening()
-                  }
-                  color={
-                    listening && textSelector === "familyHistory"
-                      ? "primary"
-                      : "default"
-                  }
-                >
-                  {listening && textSelector === "familyHistory" ? (
-                    <MicOff />
-                  ) : (
-                    <Mic />
-                  )}
-                </IconButton>
-              </div>
-              {textSelector === "familyHistory" && (
-                <MedicalFormChipAutoComplete
-                  AutoCompletevalue={autoCompleteList.familyHistory}
-                  formDataValue={formData.familyHistory}
-                  handleInputChange={handleInputChange}
-                  target={"familyHistory"}
-                />
-              )}
-            </>
-          )}
-          {props.settingData.fumblingActive && (
-            <>
-              <div className="flex w-full items-center">
-                <TextField
-                  value={formData.fumbling}
-                  onChange={(event) =>
-                    handleInputChange("fumbling", event.target.value)
-                  }
-                  onClick={() => setTextSelector("fumbling")}
-                  id="outlined-multiline-static"
-                  size="small"
-                  sx={{
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                  multiline
-                  rows={2}
-                  label={
-                    <FormattedMessage
-                      id={"Medication Allergies"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                />
-                <IconButton
-                  onClick={() =>
-                    !listening ? startListening("fumbling") : stopListening()
-                  }
-                  color={
-                    listening && textSelector === "fumbling"
-                      ? "primary"
-                      : "default"
-                  }
-                >
-                  {listening && textSelector === "fumbling" ? (
-                    <MicOff />
-                  ) : (
-                    <Mic />
-                  )}
-                </IconButton>
-              </div>
-              {textSelector === "fumbling" && (
-                <MedicalFormChipAutoComplete
-                  AutoCompletevalue={autoCompleteList.fumbling}
-                  formDataValue={formData.fumbling}
-                  handleInputChange={handleInputChange}
-                  target={"fumbling"}
-                />
-              )}
-            </>
-          )}
-          {props.settingData.InvestigationFindingActive && (
-            <>
-              <div className="flex w-full items-center">
-                <TextField
-                  value={formData.InvestigationFinding}
-                  onChange={(event) =>
-                    handleInputChange(
-                      "InvestigationFinding",
-                      event.target.value
-                    )
-                  }
-                  onClick={() => setTextSelector("InvestigationFinding")}
-                  id="outlined-multiline-static"
-                  size="small"
-                  sx={{
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                  multiline
-                  rows={2}
-                  label={
-                    <FormattedMessage
-                      id={"InvestigationFinding"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                />
-                <IconButton
-                  onClick={() =>
-                    !listening
-                      ? startListening("InvestigationFinding")
-                      : stopListening()
-                  }
-                  color={
-                    listening && textSelector === "InvestigationFinding"
-                      ? "primary"
-                      : "default"
-                  }
-                >
-                  {listening && textSelector === "InvestigationFinding" ? (
-                    <MicOff />
-                  ) : (
-                    <Mic />
-                  )}
-                </IconButton>
-              </div>
-              {textSelector === "InvestigationFinding" && (
-                <MedicalFormChipAutoComplete
-                  AutoCompletevalue={autoCompleteList.InvestigationFinding}
-                  formDataValue={formData.InvestigationFinding}
-                  handleInputChange={handleInputChange}
-                  target={"InvestigationFinding"}
-                />
-              )}
-            </>
-          )}
-          {props.settingData.fracturesActive && (
-            <>
-              <div className="flex w-full items-center">
-                <TextField
-                  value={formData.fractures}
-                  onChange={(event) =>
-                    handleInputChange("fractures", event.target.value)
-                  }
-                  onClick={() => setTextSelector("fractures")}
-                  id="outlined-multiline-static"
-                  size="small"
-                  sx={{
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                  multiline
-                  rows={2}
-                  label={
-                    <FormattedMessage
-                      id={"fractures"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                />
-                <IconButton
-                  onClick={() =>
-                    !listening ? startListening("fractures") : stopListening()
-                  }
-                  color={
-                    listening && textSelector === "fractures"
-                      ? "primary"
-                      : "default"
-                  }
-                >
-                  {listening && textSelector === "fractures" ? (
-                    <MicOff />
-                  ) : (
-                    <Mic />
-                  )}
-                </IconButton>
-              </div>
-              {textSelector === "fractures" && (
-                <MedicalFormChipAutoComplete
-                  AutoCompletevalue={autoCompleteList.fractures}
-                  formDataValue={formData.fractures}
-                  handleInputChange={handleInputChange}
-                  target={"fractures"}
-                />
-              )}
-            </>
-          )}
-          {props.settingData.ExaminationFindiningActive && (
-            <>
-              <div className="flex w-full items-center">
-                <TextField
-                  value={formData.ExaminationFindining}
-                  onChange={(event) =>
-                    handleInputChange(
-                      "ExaminationFindining",
-                      event.target.value
-                    )
-                  }
-                  onClick={() => setTextSelector("ExaminationFindining")}
-                  id="outlined-multiline-static"
-                  size="small"
-                  sx={{
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                  multiline
-                  rows={2}
-                  label={
-                    <FormattedMessage
-                      id={"ExaminationFindining"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                />
-                <IconButton
-                  onClick={() =>
-                    !listening
-                      ? startListening("ExaminationFindining")
-                      : stopListening()
-                  }
-                  color={
-                    listening && textSelector === "ExaminationFindining"
-                      ? "primary"
-                      : "default"
-                  }
-                >
-                  {listening && textSelector === "ExaminationFindining" ? (
-                    <MicOff />
-                  ) : (
-                    <Mic />
-                  )}
-                </IconButton>
-              </div>
-              {textSelector === "ExaminationFindining" && (
-                <MedicalFormChipAutoComplete
-                  AutoCompletevalue={autoCompleteList.ExaminationFindining}
-                  formDataValue={formData.ExaminationFindining}
-                  handleInputChange={handleInputChange}
-                  target={"ExaminationFindining"}
-                />
-              )}
-            </>
-          )}
-          {props.settingData.pulseRateActive && (
-            <>
-              <div className="flex w-full items-center">
-                <TextField
-                  value={formData.pulseRate}
-                  onChange={(event) =>
-                    handleInputChange("pulseRate", event.target.value)
-                  }
-                  onClick={() => setTextSelector("pulseRate")}
-                  id="outlined-multiline-static"
-                  size="small"
-                  sx={{
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                  multiline
-                  rows={2}
-                  label={
-                    <FormattedMessage
-                      id={"pulseRate"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                />
-                <IconButton
-                  onClick={() =>
-                    !listening ? startListening("pulseRate") : stopListening()
-                  }
-                  color={
-                    listening && textSelector === "pulseRate"
-                      ? "primary"
-                      : "default"
-                  }
-                >
-                  {listening && textSelector === "pulseRate" ? (
-                    <MicOff />
-                  ) : (
-                    <Mic />
-                  )}
-                </IconButton>
-              </div>
-              {textSelector === "pulseRate" && (
-                <MedicalFormChipAutoComplete
-                  AutoCompletevalue={autoCompleteList.pulseRate}
-                  formDataValue={formData.pulseRate}
-                  handleInputChange={handleInputChange}
-                  target={"pulseRate"}
-                />
-              )}
-            </>
-          )}
-          {props.settingData.spo2Active && (
-            <>
-              <div className="flex w-full items-center">
-                <TextField
-                  value={formData.spo2}
-                  onChange={(event) =>
-                    handleInputChange("spo2", event.target.value)
-                  }
-                  onClick={() => setTextSelector("spo2")}
-                  id="outlined-multiline-static"
-                  size="small"
-                  sx={{
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                  multiline
-                  rows={2}
-                  label={
-                    <FormattedMessage
-                      id={"spo2"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                />
-                <IconButton
-                  onClick={() =>
-                    !listening ? startListening("spo2") : stopListening()
-                  }
-                  color={
-                    listening && textSelector === "spo2" ? "primary" : "default"
-                  }
-                >
-                  {listening && textSelector === "spo2" ? <MicOff /> : <Mic />}
-                </IconButton>
-              </div>
-              {textSelector === "spo2" && (
-                <MedicalFormChipAutoComplete
-                  AutoCompletevalue={autoCompleteList.spo2}
-                  formDataValue={formData.spo2}
-                  handleInputChange={handleInputChange}
-                  target={"spo2"}
-                />
-              )}
-            </>
-          )}
-          {props.settingData.temperatureActive && (
-            <>
-              <div className="flex w-full items-center">
-                <TextField
-                  value={formData.temperature}
-                  onChange={(event) =>
-                    handleInputChange("temperature", event.target.value)
-                  }
-                  onClick={() => setTextSelector("temperature")}
-                  id="outlined-multiline-static"
-                  size="small"
-                  sx={{
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                  multiline
-                  rows={2}
-                  label={
-                    <FormattedMessage
-                      id={"temperature"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                />
-                <IconButton
-                  onClick={() =>
-                    !listening ? startListening("temperature") : stopListening()
-                  }
-                  color={
-                    listening && textSelector === "temperature"
-                      ? "primary"
-                      : "default"
-                  }
-                >
-                  {listening && textSelector === "temperature" ? (
-                    <MicOff />
-                  ) : (
-                    <Mic />
-                  )}
-                </IconButton>
-              </div>
-              {textSelector === "temperature" && (
-                <MedicalFormChipAutoComplete
-                  AutoCompletevalue={autoCompleteList.temperature}
-                  formDataValue={formData.temperature}
-                  handleInputChange={handleInputChange}
-                  target={"temperature"}
-                />
-              )}
-            </>
-          )}
-          {props.settingData.bloodPressureActive && (
-            <>
-              <div className="flex w-full items-center">
-                <TextField
-                  value={formData.bloodPressure}
-                  onChange={(event) =>
-                    handleInputChange("bloodPressure", event.target.value)
-                  }
-                  onClick={() => setTextSelector("bloodPressure")}
-                  id="outlined-multiline-static"
-                  size="small"
-                  sx={{
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                  multiline
-                  rows={2}
-                  label={
-                    <FormattedMessage
-                      id={"bloodPressure"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                />
-                <IconButton
-                  onClick={() =>
-                    !listening
-                      ? startListening("bloodPressure")
-                      : stopListening()
-                  }
-                  color={
-                    listening && textSelector === "bloodPressure"
-                      ? "primary"
-                      : "default"
-                  }
-                >
-                  {listening && textSelector === "bloodPressure" ? (
-                    <MicOff />
-                  ) : (
-                    <Mic />
-                  )}
-                </IconButton>
-              </div>
-              {textSelector === "bloodPressure" && (
-                <MedicalFormChipAutoComplete
-                  AutoCompletevalue={autoCompleteList.bloodPressure}
-                  formDataValue={formData.bloodPressure}
-                  handleInputChange={handleInputChange}
-                  target={"bloodPressure"}
-                />
-              )}
-            </>
-          )}
-          {props.settingData.bloodSugarActive && (
-            <>
-              <div className="flex w-full items-center">
-                <TextField
-                  value={formData.bloodSugar}
-                  onChange={(event) =>
-                    handleInputChange("bloodSugar", event.target.value)
-                  }
-                  onClick={() => setTextSelector("bloodSugar")}
-                  id="outlined-multiline-static"
-                  size="small"
-                  sx={{
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                  multiline
-                  rows={2}
-                  label={
-                    <FormattedMessage
-                      id={"bloodSugar"}
-                      defaultMessage="Hello, World!"
-                    />
-                  }
-                />
-                <IconButton
-                  onClick={() =>
-                    !listening ? startListening("bloodSugar") : stopListening()
-                  }
-                  color={
-                    listening && textSelector === "bloodSugar"
-                      ? "primary"
-                      : "default"
-                  }
-                >
-                  {listening && textSelector === "bloodSugar" ? (
-                    <MicOff />
-                  ) : (
-                    <Mic />
-                  )}
-                </IconButton>
-              </div>
-              {textSelector === "bloodSugar" && (
-                <MedicalFormChipAutoComplete
-                  AutoCompletevalue={autoCompleteList.bloodSugar}
-                  formDataValue={formData.bloodSugar}
-                  handleInputChange={handleInputChange}
-                  target={"bloodSugar"}
-                />
-              )}
-            </>
-          )}
+        )}
 
-          {props.settingData.DateOfLastPeriodActive && (
-            <>
-              <div className="flex w-full items-center">
-                <TextField
-                  value={
-                    formData.DateOfLastPeriod
-                      ? dayjs(formData.DateOfLastPeriod)
-                          .format("YYYY-MM-DD")
-                      : ""
-                  }
-                  type="date"
-                  onChange={(event) =>
-                    handleInputChange("DateOfLastPeriod", event.target.value)
-                  }
-                  onClick={() => setTextSelector("DateOfLastPeriod")}
-                  id="outlined-multiline-static"
-                  size="small"
-                  sx={{
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                  label={
-                    <FormattedMessage
-                      id={"DateOfLastPeriod"}
-                      defaultMessage="تاريخ اخر دورة"
-                    />
-                  }
-                />
-              </div>
-            </>
-          )}
-
-          {props.settingData.miscarriageStateActive && (
-            <>
-              <p> اسقاط حمل</p>
-              <FormControlLabel
-                sx={{
-                  display: "block",
-                }}
-                control={
-                  <Switch
-                    checked={formData.miscarriageState}
-                    onChange={(event) =>
-                      handleInputChange(
-                        "miscarriageState",
-                        !formData.miscarriageState
-                      )
-                    }
-                    color="primary"
-                  />
-                }
+        {settingData.miscarriageStateActive && (
+          <div className="mb-4">
+            <label className="flex items-center space-x-3 mb-3">
+              <span className="text-gray-700 font-medium">اسقاط حمل</span>
+              <input
+                type="checkbox"
+                checked={formData.miscarriageState}
+                onChange={() => handleInputChange("miscarriageState", !formData.miscarriageState)}
+                className="form-checkbox h-5 w-5 text-blue-600"
               />
-              {formData.miscarriageState && (
-                <>
-                  <TextField
-                    value={formData.MiscarriageNo}
-                    onChange={(event) =>
-                      handleInputChange("MiscarriageNo", event.target.value)
-                    }
-                    id="outlined-multiline-static"
-                    size="small"
-                    sx={{
-                      width: "100%",
-                      color: "#fff",
-                    }}
+            </label>
+            {formData.miscarriageState && (
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="MiscarriageNo" className="block text-sm font-medium text-gray-700 mb-1">
+                    عدد الاسقاطات
+                  </label>
+                  <input
                     type="number"
-                    multiline
-                    label={"عدد الاسقاطات"}
+                    id="MiscarriageNo"
+                    value={formData.MiscarriageNo}
+                    onChange={(e) => handleInputChange("MiscarriageNo", e.target.value)}
+                    className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
-                  <div className="flex gap-4 flex-wrap">
-                    {renderChildFields()}
+                </div>
+                {[...Array(Number(formData.MiscarriageNo))].map((_, index) => (
+                  <div key={index} className="space-y-2">
+                    <input
+                      type="text"
+                      value={formData.MiscarriageData[index]?.reason || ""}
+                      onChange={(e) => handleChildrenDataChange(index, "reason", e.target.value)}
+                      placeholder={`${index + 1} سبب الاسقاطات`}
+                      className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <input
+                      type="date"
+                      value={formatDate(formData.MiscarriageData[index]?.date)}
+                      onChange={(e) => handleChildrenDataChange(index, "date", e.target.value)}
+                      className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
                   </div>
-                </>
-              )}
-            </>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
-          {props.settingData.pregnancyActive && (
-            <>
-              <p>حمل حالي</p>
-              <FormControlLabel
-                sx={{
-                  display: "block",
-                }}
-                control={
-                  <Switch
-                    checked={formData.pregnancyState}
-                    onChange={(event) =>
-                      handleInputChange(
-                        "pregnancyState",
-                        !formData.pregnancyState
-                      )
-                    }
-                    color="primary"
-                  />
-                }
+        {settingData.pregnancyActive && (
+          <div className="mb-4">
+            <label className="flex items-center space-x-3 mb-3">
+              <span className="text-gray-700 font-medium">حمل حالي</span>
+              <input
+                type="checkbox"
+                checked={formData.pregnancyState}
+                onChange={() => handleInputChange("pregnancyState", !formData.pregnancyState)}
+                className="form-checkbox h-5 w-5 text-blue-600"
               />
-              {formData.pregnancyState && (
-                <>
-                  <div className="flex w-full gap-4">
-                    <div style={{ direction: "ltr" }}>
-                      <TextField
-                        size="small"
-                        value={
-                          formatDate(
-                            formData.pregnancyData?.DateOfLastPeriod
-                          ) || ""
-                        }
-                        onChange={(event) =>
-                          setFormData({
-                            ...formData,
-                            pregnancyData: {
-                              ...formData.pregnancyData,
-                              DateOfLastPeriod: event.target.value,
-                            },
-                          })
-                        }
-                        sx={{
-                          width: "100%",
-                          textAlign: "right",
-                          color: "#fff",
-                        }}
-                        type="date"
-                        InputProps={{
-                          style: { textAlign: "right" },
-                        }}
-                        label="تاريخ اخر دورة"
-                      />
-                    </div>
-                    <TextField
-                      value={formData.pregnancyData?.PregnancySequence || ""}
-                      onChange={(event) =>
+            </label>
+            {formData.pregnancyState && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="DateOfLastPeriod" className="block text-sm font-medium text-gray-700 mb-1">
+                      تاريخ اخر دورة
+                    </label>
+                    <input
+                      type="date"
+                      id="DateOfLastPeriod"
+                      value={formatDate(formData.pregnancyData?.DateOfLastPeriod)}
+                      onChange={(e) =>
                         setFormData({
                           ...formData,
                           pregnancyData: {
                             ...formData.pregnancyData,
-                            PregnancySequence: event.target.value,
+                            DateOfLastPeriod: e.target.value,
                           },
                         })
                       }
-                      id="outlined-multiline-static"
-                      type="Number"
-                      size="small"
-                      sx={{
-                        width: "100%",
-                        color: "#fff",
-                      }}
-                      label="تسلسل الحمل"
+                      className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  <div className="flex w-full gap-4">
-                    <FormControl className=" w-full bg-whiteh" size="small">
-                      <InputLabel id="demo-simple-select-helper-label">
-                        نوع الولادة السابقة{" "}
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-helper-label"
-                        id="demo-simple-select-helper"
-                        value={
-                          formData.pregnancyData?.TypeOfPreviousBirth || ""
-                        }
-                        onChange={(event) =>
-                          setFormData({
-                            ...formData,
-                            pregnancyData: {
-                              ...formData.pregnancyData,
-                              TypeOfPreviousBirth: event.target.value,
-                            },
-                          })
-                        }
-                        label="نوع الولادة السابقة"
-                      >
-                        <MenuItem value={"طبيعية"}>طبيعية</MenuItem>
-                        <MenuItem value={"قيصرية"}>قيصرية</MenuItem>
-                      </Select>
-                    </FormControl>
-                    <FormControl className=" w-full bg-whiteh" size="small">
-                      <InputLabel id="demo-simple-select-helper-label">
-                        فصيلة دم الزوج{" "}
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-helper-label"
-                        id="demo-simple-select-helper"
-                        value={formData.pregnancyData?.HusbandsBloodType || ""}
-                        onChange={(event) =>
-                          setFormData({
-                            ...formData,
-                            pregnancyData: {
-                              ...formData.pregnancyData,
-                              HusbandsBloodType: event.target.value,
-                            },
-                          })
-                        }
-                        label="فصيلة دم الزوج"
-                      >
-                        <MenuItem value={"A+"}>A+</MenuItem>
-                        <MenuItem value={"A-"}>A-</MenuItem>
-                        <MenuItem value={"B+"}>B+</MenuItem>
-                        <MenuItem value={"B-"}>B-</MenuItem>
-                        <MenuItem value={"AB+"}>AB+</MenuItem>
-                        <MenuItem value={"AB-"}>AB-</MenuItem>
-                        <MenuItem value={"O+"}>O+</MenuItem>
-                        <MenuItem value={"O-"}>O-</MenuItem>
-                      </Select>
-                    </FormControl>
+                  <div>
+                    <label htmlFor="PregnancySequence" className="block text-sm font-medium text-gray-700 mb-1">
+                      تسلسل الحمل
+                    </label>
+                    <input
+                      type="number"
+                      id="PregnancySequence"
+                      value={formData.pregnancyData?.PregnancySequence || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          pregnancyData: {
+                            ...formData.pregnancyData,
+                            PregnancySequence: e.target.value,
+                          },
+                        })
+                      }
+                      className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
                   </div>
-                  <TextField
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="TypeOfPreviousBirth" className="block text-sm font-medium text-gray-700 mb-1">
+                      نوع الولادة السابقة
+                    </label>
+                    <select
+                      id="TypeOfPreviousBirth"
+                      value={formData.pregnancyData?.TypeOfPreviousBirth || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          pregnancyData: {
+                            ...formData.pregnancyData,
+                            TypeOfPreviousBirth: e.target.value,
+                          },
+                        })
+                      }
+                      className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">اختر نوع الولادة</option>
+                      <option value="طبيعية">طبيعية</option>
+                      <option value="قيصرية">قيصرية</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="HusbandsBloodType" className="block text-sm font-medium text-gray-700 mb-1">
+                      فصيلة دم الزوج
+                    </label>
+                    <select
+                      id="HusbandsBloodType"
+                      value={formData.pregnancyData?.HusbandsBloodType || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          pregnancyData: {
+                            ...formData.pregnancyData,
+                            HusbandsBloodType: e.target.value,
+                          },
+                        })
+                      }
+                      className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">اختر فصيلة الدم</option>
+                      {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="pregnancyComment" className="block text-sm font-medium text-gray-700 mb-1">
+                    ملاحظات حول الحمل
+                  </label>
+                  <textarea
+                    id="pregnancyComment"
                     value={formData.pregnancyData?.comment || ""}
-                    onChange={(event) =>
+                    onChange={(e) =>
                       setFormData({
                         ...formData,
                         pregnancyData: {
                           ...formData.pregnancyData,
-                          comment: event.target.value,
+                          comment: e.target.value,
                         },
                       })
                     }
-                    id="outlined-multiline-static"
-                    size="small"
-                    sx={{
-                      width: "100%",
-                      color: "#fff",
-                    }}
-                    label="ملاحظات حول الحمل"
+                    className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={3}
                   />
-                  {formData.pregnancyData &&
-                    formData.pregnancyData.DateOfLastPeriod && (
-                      <div className="flex justify-between w-full">
-                        <div>موعد الانجاب</div>
-                        <div>
-                          {formData.pregnancyData
-                            ? dayjs(formData.pregnancyData.DateOfLastPeriod)
-                                .add(9, "month")
-                                .format("YYYY-MM-DD")
-                            : ""}
-                        </div>
-                      </div>
-                    )}
-                </>
-              )}
-            </>
-          )}
-        </>
-      ) : (
-        ""
-      )}
+                </div>
+                {formData.pregnancyData && formData.pregnancyData.DateOfLastPeriod && (
+                  <div className="flex justify-between items-center bg-blue-50 p-3 rounded-lg">
+                    <span className="font-medium">موعد الانجاب:</span>
+                    <span className="font-bold">
+                      {dayjs(formData.pregnancyData.DateOfLastPeriod).add(9, "month").format("YYYY-MM-DD")}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
-      <div className="flex gap-6 w-full justify-between">
-        <IconButton>
-          {/* <PrintRounded color="action"></PrintRounded> */}
-        </IconButton>
-
-        <Button
-          sx={{ width: "100%" }}
-          type="submit"
-          variant="contained"
-          className="w-full"
-          color="success"
+      <div className="mt-6 flex w-full justify-center items-center">
+        {/* <button
+          type="button"
+          onClick={() => onPrinterClick(formData)}
+          className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
-          <FormattedMessage
-            id={"add patient page"}
-            defaultMessage="Hello, World!"
-          />
-        </Button>
-        {/* <IconButton onClick={props.onPrinterClick}>
-          <PrintRounded color="action"></PrintRounded>
-        </IconButton> */}
+          <Printer className="w-5 h-5 mr-2" />
+          <FormattedMessage id="Print" />
+        </button> */}
+        <button
+          type="submit"
+          className="  w-full  text-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          <FormattedMessage id="add patient page" />
+        </button>
       </div>
     </form>
-  );
+  )
 }
 
-export default MedicalForm;
+export default MedicalForm

@@ -39,6 +39,7 @@ const data = {
         dose: "الجرعة",
         doseNum: "عدد الجرع",
         inTakeTime: { name: "وقت التناول" },
+        description:"This code provides a complete and functional `PrescriptionsDesign` "
       },
       {
         id: { name: "اسم الدواء", tradeName: "الاسم العلمي" },

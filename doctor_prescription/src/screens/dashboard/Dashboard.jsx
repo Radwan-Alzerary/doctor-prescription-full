@@ -5,7 +5,7 @@ import axios from "axios";
 import Loading from "../../components/pageCompond/Loading";
 import BackGroundShadow from "../../components/pageCompond/BackGroundShadow";
 import PartientsProfile from "../../components/Partients/PartientsProfile";
-
+import { BarChart, Calendar, Users, Pill, Clipboard } from "lucide-react"
 function Dashboard() {
   const webRef = useRef(null);
   const [showPartientProfile, setShowPartientProfile] = useState(false);
@@ -122,13 +122,13 @@ function Dashboard() {
                   </th>
                   <td className="px-6 py-4">
                     {patient.visitDate[patient.visitDate.length - 1] &&
-                    patient.visitDate
+                      patient.visitDate
                       ? formatDate(patient.visitDate[patient.visitDate.length - 1].date)
                       : ""}
                   </td>
                   <td className="px-6 py-4">
                     {patient.visitDate[patient.visitDate.length - 2] &&
-                    patient.visitDate
+                      patient.visitDate
                       ? formatDate(patient.visitDate[patient.visitDate.length - 2].date)
                       : "لا يوجد"}
                   </td>
@@ -143,23 +143,30 @@ function Dashboard() {
     [formatDate, onNameClickHandle]
   );
 
+  const statsCards = [
+    { id: "Number of patients", count: dashboardCount.patientsCount, icon: Users },
+    { id: "Rx number", count: dashboardCount.PrescriptionCount, icon: Clipboard },
+    { id: "Drugs number", count: dashboardCount.pharmaceuticalCount, icon: Pill },
+    { id: "Number of visit", count: dashboardCount.totalVisitDateCount, icon: Calendar },
+    { id: "Number of visit per day", count: dashboardCount.todayCont, icon: BarChart },
+  ]
+
+
+
   return (
     <div className="w-full p-4 h-[100%] overflow-auto">
       {loading ? (
         <div className="flex flex-col gap-6">
-          <div className="w-full grid grid-cols-1 lg:grid-cols-5 md:grid-cols-5 gap-8">
-            {[
-              { id: "Number of patients", count: dashboardCount.patientsCount },
-              { id: "Rx number", count: dashboardCount.PrescriptionCount },
-              { id: "Drugs number", count: dashboardCount.pharmaceuticalCount },
-              { id: "Number of visit", count: dashboardCount.totalVisitDateCount },
-              { id: "Number of visit per day", count: dashboardCount.todayCont },
-            ].map(({ id, count }) => (
-              <div key={id} className="h-28 p-2 px-4 bg-white rounded-lg shadow-lg">
-                <p className="text-base">
-                  <FormattedMessage id={id} defaultMessage="Hello, World!" />
-                </p>
-                <h1 className="text-6xl w-full font-medium">{count}</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+            {statsCards.map(({ id, count, icon: Icon }) => (
+              <div key={id} className="bg-white rounded-xl shadow-lg p-6 flex items-center">
+                <Icon className="h-12 w-12 text-blue-500 mr-4" />
+                <div>
+                  <p className="text-sm text-gray-500">
+                    <FormattedMessage id={id} />
+                  </p>
+                  <p className="text-2xl font-semibold text-gray-800">{count}</p>
+                </div>
               </div>
             ))}
           </div>

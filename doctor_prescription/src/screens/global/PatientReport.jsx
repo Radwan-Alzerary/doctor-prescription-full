@@ -61,14 +61,12 @@ function PatientReport(props) {
           direction: "rtl",
           textAlign: "right",
 
-          paddingLeft: `${
-            props.medicalReportsStype.leftPading +
+          paddingLeft: `${props.medicalReportsStype.leftPading +
             props.medicalReportsStype.xPading
-          }px`,
-          paddingRight: `${
-            props.medicalReportsStype.rightPading +
+            }px`,
+          paddingRight: `${props.medicalReportsStype.rightPading +
             props.medicalReportsStype.xPading
-          }px`,
+            }px`,
         }}
       >
         <img
@@ -108,53 +106,51 @@ function PatientReport(props) {
 
         {shape
           ? shape.map((shape, index) => (
-              <div
-                className={`${
-                  shape.Active ? "hidden" : "flex"
+            <div
+              className={`${shape.Active ? "hidden" : "flex"
                 } absolute text-center  flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center `}
-                style={{
-                  height: `${shape.height}px`,
-                  width: `${shape.width}%`,
-                  left: `${shape.placeX}%`,
-                  opacity: `${!shape.active ? 0 : "100%"}`,
-                  top: `${shape.placeY}%`,
-                  zIndex: `${shape.zindex}`,
-                  background: `${shape.color}`,
-                  borderColor: `${shape.borderColor}`,
-                  borderWidth: `${shape.borderWidth}px`,
-                  borderRadius: `${
-                    shape.shapetype === "circle"
-                      ? "100%"
-                      : `${shape.borderRadius}px`
+              style={{
+                height: `${shape.height}px`,
+                width: `${shape.width}%`,
+                left: `${shape.placeX}%`,
+                opacity: `${!shape.active ? 0 : "100%"}`,
+                top: `${shape.placeY}%`,
+                zIndex: `${shape.zindex}`,
+                background: `${shape.color}`,
+                borderColor: `${shape.borderColor}`,
+                borderWidth: `${shape.borderWidth}px`,
+                borderRadius: `${shape.shapetype === "circle"
+                  ? "100%"
+                  : `${shape.borderRadius}px`
                   }`,
-                }}
-              ></div>
-            ))
+              }}
+            ></div>
+          ))
           : ""}
 
         {images
           ? images.map((image, index) => (
-              <div
-                className={`absolute overflow-hidden text-center  flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center `}
-                style={{
-                  height: `${image.height}px`,
-                  width: `${image.width}px`,
-                  left: `${image.placeX}%`,
-                  opacity: `${!image.active ? 0 : `${image.opacity}%`}`,
-                  top: `${image.placeY}%`,
-                  zIndex: `${image.zindex}`,
-                  borderColor: `${image.borderColor}`,
-                  borderWidth: `${image.borderWidth}px`,
-                  borderRadius: `${`${image.borderRadius}px`}`,
-                }}
-              >
-                <img
-                  alt=""
-                  className="w-full h-full"
-                  src={`${serverAddress}` + image.imageUrl}
-                ></img>
-              </div>
-            ))
+            <div
+              className={`absolute overflow-hidden text-center  flex-col justify-center transform translate-x-[-50%] translate-y-[-50%]  gap-5 items-center `}
+              style={{
+                height: `${image.height}px`,
+                width: `${image.width}px`,
+                left: `${image.placeX}%`,
+                opacity: `${!image.active ? 0 : `${image.opacity}%`}`,
+                top: `${image.placeY}%`,
+                zIndex: `${image.zindex}`,
+                borderColor: `${image.borderColor}`,
+                borderWidth: `${image.borderWidth}px`,
+                borderRadius: `${`${image.borderRadius}px`}`,
+              }}
+            >
+              <img
+                alt=""
+                className="w-full h-full"
+                src={`${serverAddress}` + image.imageUrl}
+              ></img>
+            </div>
+          ))
           : ""}
 
         {props.medicalReportsStype.barcodeActive ? (
@@ -189,10 +185,10 @@ function PatientReport(props) {
 
             {props.nextVisit
               ? new Date(props.nextVisit).toLocaleDateString("en-GB", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                })
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              })
               : ""}
           </div>
         ) : (
@@ -200,11 +196,10 @@ function PatientReport(props) {
         )}
 
         {props.medicalReportsStype.nameActive &&
-        props.medicalReportsStype.nameAbsoulateActive ? (
+          props.medicalReportsStype.nameAbsoulateActive ? (
           <div
-            className={`flex gap-2 z-50 text-right ${
-              props.medicalReportsStype.nameAbsoulateActive ? "absolute" : ""
-            }`}
+            className={`flex gap-2 z-50 text-right ${props.medicalReportsStype.nameAbsoulateActive ? "absolute" : ""
+              }`}
             style={{
               top: `${props.medicalReportsStype.nameY}%`,
               left: `${props.medicalReportsStype.nameX}%`,
@@ -218,7 +213,7 @@ function PatientReport(props) {
               }}
             >
               {props.medicalReportsStype.patientsTitleActive &&
-              props.medicalReportsStype.nameMainTitleActive
+                props.medicalReportsStype.nameMainTitleActive
                 ? "اسم المريض : "
                 : ""}
             </h2>
@@ -236,11 +231,10 @@ function PatientReport(props) {
           ""
         )}
         {props.medicalReportsStype.ageActive &&
-        props.medicalReportsStype.ageAbsoulateActive ? (
+          props.medicalReportsStype.ageAbsoulateActive ? (
           <div
-            className={`flex gap-2 z-50 ${
-              props.medicalReportsStype.ageAbsoulateActive ? "absolute" : ""
-            }`}
+            className={`flex gap-2 z-50 ${props.medicalReportsStype.ageAbsoulateActive ? "absolute" : ""
+              }`}
             style={{
               top: `${props.medicalReportsStype.ageY}%`,
               left: `${props.medicalReportsStype.ageX}%`,
@@ -254,7 +248,7 @@ function PatientReport(props) {
               }}
             >
               {props.medicalReportsStype.patientsTitleActive &&
-              props.medicalReportsStype.ageMainTitleActive
+                props.medicalReportsStype.ageMainTitleActive
                 ? "العمر : "
                 : ""}
             </h2>
@@ -269,8 +263,8 @@ function PatientReport(props) {
               {props.dataToPrint.patients.age > 0
                 ? props.dataToPrint.patients.age
                 : props.dataToPrint.patients.monthAge
-                ? props.dataToPrint.patients.monthAge + " شهر "
-                : "غير معرف"}
+                  ? props.dataToPrint.patients.monthAge + " شهر "
+                  : "غير معرف"}
             </h2>
           </div>
         ) : (
@@ -278,11 +272,10 @@ function PatientReport(props) {
         )}
 
         {props.medicalReportsStype.genderActive &&
-        props.medicalReportsStype.genderAbsoulateActive ? (
+          props.medicalReportsStype.genderAbsoulateActive ? (
           <div
-            className={`flex gap-2 z-50 ${
-              props.medicalReportsStype.genderAbsoulateActive ? "absolute" : ""
-            }`}
+            className={`flex gap-2 z-50 ${props.medicalReportsStype.genderAbsoulateActive ? "absolute" : ""
+              }`}
             style={{
               top: `${props.medicalReportsStype.genderY}%`,
               left: `${props.medicalReportsStype.genderX}%`,
@@ -296,7 +289,7 @@ function PatientReport(props) {
               }}
             >
               {props.medicalReportsStype.patientsTitleActive &&
-              props.medicalReportsStype.genderMainTitleActive
+                props.medicalReportsStype.genderMainTitleActive
                 ? "الجنس : "
                 : ""}
             </h2>
@@ -318,11 +311,10 @@ function PatientReport(props) {
         )}
 
         {props.medicalReportsStype.dateActive &&
-        props.medicalReportsStype.dateAbsoulateActive ? (
+          props.medicalReportsStype.dateAbsoulateActive ? (
           <div
-            className={`flex gap-2 z-50 ${
-              props.medicalReportsStype.dateAbsoulateActive ? "absolute" : ""
-            }`}
+            className={`flex gap-2 z-50 ${props.medicalReportsStype.dateAbsoulateActive ? "absolute" : ""
+              }`}
             style={{
               top: `${props.medicalReportsStype.dateY}%`,
               left: `${props.medicalReportsStype.dateX}%`,
@@ -336,7 +328,7 @@ function PatientReport(props) {
               }}
             >
               {props.medicalReportsStype.patientsTitleActive &&
-              props.medicalReportsStype.dateMainTitleActive
+                props.medicalReportsStype.dateMainTitleActive
                 ? "التاريخ : "
                 : ""}
             </h2>
@@ -349,12 +341,12 @@ function PatientReport(props) {
             >
               {!props.dataToPrint.textonly
                 ? new Date(
-                    props.dataToPrint.prescription.createdAt
-                  ).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  })
+                  props.dataToPrint.prescription.createdAt
+                ).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })
                 : ""}
             </h2>
           </div>
@@ -363,11 +355,10 @@ function PatientReport(props) {
         )}
 
         {props.medicalReportsStype.weightActive &&
-        props.medicalReportsStype.weightAbsoulateActive ? (
+          props.medicalReportsStype.weightAbsoulateActive ? (
           <div
-            className={`flex gap-2 z-50 ${
-              props.medicalReportsStype.weightAbsoulateActive ? "absolute" : ""
-            }`}
+            className={`flex gap-2 z-50 ${props.medicalReportsStype.weightAbsoulateActive ? "absolute" : ""
+              }`}
             style={{
               top: `${props.medicalReportsStype.weightY}%`,
               left: `${props.medicalReportsStype.weightX}%`,
@@ -381,7 +372,7 @@ function PatientReport(props) {
               }}
             >
               {props.medicalReportsStype.patientsTitleActive &&
-              props.medicalReportsStype.weightMainTitleActive
+                props.medicalReportsStype.weightMainTitleActive
                 ? "الوزن : "
                 : ""}
             </h2>
@@ -510,13 +501,12 @@ function PatientReport(props) {
           </div>
           <div className="flex z-50 justify-around items-center my-2 ">
             {props.medicalReportsStype.nameActive &&
-            !props.medicalReportsStype.nameAbsoulateActive ? (
+              !props.medicalReportsStype.nameAbsoulateActive ? (
               <div
-                className={`flex gap-2 ${
-                  props.medicalReportsStype.nameAbsoulateActive
-                    ? "absolute"
-                    : ""
-                }`}
+                className={`flex gap-2 ${props.medicalReportsStype.nameAbsoulateActive
+                  ? "absolute"
+                  : ""
+                  }`}
                 style={{
                   top: `${props.medicalReportsStype.nameY}px`,
                   left: `${props.medicalReportsStype.nameX}px`,
@@ -530,7 +520,7 @@ function PatientReport(props) {
                   }}
                 >
                   {props.medicalReportsStype.patientsTitleActive &&
-                  props.medicalReportsStype.nameMainTitleActive
+                    props.medicalReportsStype.nameMainTitleActive
                     ? "اسم المريض : "
                     : ""}
                 </h2>
@@ -548,11 +538,10 @@ function PatientReport(props) {
               ""
             )}
             {props.medicalReportsStype.ageActive &&
-            !props.medicalReportsStype.ageAbsoulateActive ? (
+              !props.medicalReportsStype.ageAbsoulateActive ? (
               <div
-                className={`flex gap-2 z-50 ${
-                  props.medicalReportsStype.ageAbsoulateActive ? "absolute" : ""
-                }`}
+                className={`flex gap-2 z-50 ${props.medicalReportsStype.ageAbsoulateActive ? "absolute" : ""
+                  }`}
                 style={{
                   top: `${props.medicalReportsStype.ageY}px`,
                   left: `${props.medicalReportsStype.ageX}px`,
@@ -566,7 +555,7 @@ function PatientReport(props) {
                   }}
                 >
                   {props.medicalReportsStype.patientsTitleActive &&
-                  props.medicalReportsStype.ageMainTitleActive
+                    props.medicalReportsStype.ageMainTitleActive
                     ? "العمر : "
                     : ""}
                 </h2>
@@ -581,28 +570,27 @@ function PatientReport(props) {
                   {props.dataToPrint.patients.age > 0
                     ? props.dataToPrint.patients.age
                     : props.dataToPrint.patients.monthAge >= 2
-                    ? props.dataToPrint.patients.monthAge + " شهر "
-                    : props.dataToPrint.patients.monthAge &&
-                      props.dataToPrint.patients.monthAge < 2
-                    ? props.dataToPrint.patients.monthAge * 30 +
-                      props.dataToPrint.patients.dayAge +
-                      " يوم "
-                    : props.dataToPrint.patients.dayAge
-                    ? props.dataToPrint.patients.dayAge + " يوم "
-                    : "غير معرف"}
+                      ? props.dataToPrint.patients.monthAge + " شهر "
+                      : props.dataToPrint.patients.monthAge &&
+                        props.dataToPrint.patients.monthAge < 2
+                        ? props.dataToPrint.patients.monthAge * 30 +
+                        props.dataToPrint.patients.dayAge +
+                        " يوم "
+                        : props.dataToPrint.patients.dayAge
+                          ? props.dataToPrint.patients.dayAge + " يوم "
+                          : "غير معرف"}
                 </h2>
               </div>
             ) : (
               ""
             )}
             {props.medicalReportsStype.dateActive &&
-            !props.medicalReportsStype.dateAbsoulateActive ? (
+              !props.medicalReportsStype.dateAbsoulateActive ? (
               <div
-                className={`flex gap-2 ${
-                  props.medicalReportsStype.dateAbsoulateActive
-                    ? "absolute"
-                    : ""
-                }`}
+                className={`flex gap-2 ${props.medicalReportsStype.dateAbsoulateActive
+                  ? "absolute"
+                  : ""
+                  }`}
                 style={{
                   top: `${props.medicalReportsStype.dateY}px`,
                   left: `${props.medicalReportsStype.dateX}px`,
@@ -616,7 +604,7 @@ function PatientReport(props) {
                   }}
                 >
                   {props.medicalReportsStype.patientsTitleActive &&
-                  props.medicalReportsStype.dateMainTitleActive
+                    props.medicalReportsStype.dateMainTitleActive
                     ? "التاريخ : "
                     : ""}
                 </h2>
@@ -630,12 +618,12 @@ function PatientReport(props) {
                   {" "}
                   {!props.dataToPrint.textonly
                     ? new Date(
-                        props.dataToPrint.prescription.createdAt
-                      ).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })
+                      props.dataToPrint.prescription.createdAt
+                    ).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })
                     : ""}
                 </h2>
               </div>
@@ -643,13 +631,12 @@ function PatientReport(props) {
               ""
             )}
             {props.medicalReportsStype.weightActive &&
-            !props.medicalReportsStype.weightAbsoulateActive ? (
+              !props.medicalReportsStype.weightAbsoulateActive ? (
               <div
-                className={`flex gap-2 ${
-                  props.medicalReportsStype.weightAbsoulateActive
-                    ? "absolute"
-                    : ""
-                }`}
+                className={`flex gap-2 ${props.medicalReportsStype.weightAbsoulateActive
+                  ? "absolute"
+                  : ""
+                  }`}
                 style={{
                   top: `${props.medicalReportsStype.weightY}%`,
                   left: `${props.medicalReportsStype.weightX}%`,
@@ -663,7 +650,7 @@ function PatientReport(props) {
                   }}
                 >
                   {props.medicalReportsStype.patientsTitleActive &&
-                  props.medicalReportsStype.weightMainTitleActive
+                    props.medicalReportsStype.weightMainTitleActive
                     ? "الوزن : "
                     : ""}
                 </h2>
@@ -697,7 +684,7 @@ function PatientReport(props) {
                   <thead class="text-xs text-center text-gray-700 uppercase   ">
                     {props.medicalReportsStype.tableHeaderActive ? (
                       <tr>
-                        {props.medicalReportsStype.col6Active ? (
+                        {/* {props.medicalReportsStype.col6Active ? (
                           <th
                             className="text-center"
                             scope="col"
@@ -711,11 +698,11 @@ function PatientReport(props) {
                           </th>
                         ) : (
                           ""
-                        )}
+                        )} */}
 
                         {props.medicalReportsStype.col5Active ? (
                           <th
-                            className="text-center"
+                            className="text-center "
                             scope="col"
                             class="px-3 py-3 "
                             style={{
@@ -815,102 +802,107 @@ function PatientReport(props) {
                       <>
                         {props.dataToPrint.prescription.pharmaceutical.map(
                           (drug, index) => (
-                            <tr
-                              className={`text-center my-20 ${
-                                index % 2 !== 1 ? "bg-gray-100" : ""
-                              }`}
-                            >
+                            <>
+                              <tr
+                                className={`text-center my-20 ${index % 2 !== 1 ? "bg-gray-100" : ""
+                                  }`}
+                              >
+                                {props.medicalReportsStype.col5Active ? (
+                                  <td
+                                    class="px-3 py-3 text-center "
+                                    style={{
+                                      fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
+                                      color: `${props.medicalReportsStype.tableContentColor}`,
+                                    }}
+                                  >
+                                    {drug.inTakeTime
+                                      ? drug.inTakeTime.name
+                                      : drug.anotherIntaketime}
+                                  </td>
+                                ) : (
+                                  ""
+                                )}
+                                {props.medicalReportsStype.col4Active ? (
+                                  <td
+                                    class="px-3 py-3 text-center"
+                                    style={{
+                                      fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
+                                      color: `${props.medicalReportsStype.tableContentColor}`,
+                                    }}
+                                  >
+                                    {drug.doseNum}
+                                  </td>
+                                ) : (
+                                  ""
+                                )}
+                                {props.medicalReportsStype.col3Active ? (
+                                  <td
+                                    class="px-3 py-3 text-center"
+                                    style={{
+                                      fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
+                                      color: `${props.medicalReportsStype.tableContentColor}`,
+                                    }}
+                                  >
+                                    {drug.dose}
+                                  </td>
+                                ) : (
+                                  ""
+                                )}
+
+                                {props.medicalReportsStype.col2Active ? (
+                                  <td
+                                    class="px-3 py-3 text-center"
+                                    style={{
+                                      fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
+                                      color: `${props.medicalReportsStype.tableContentColor}`,
+                                    }}
+                                  >
+                                    <div className="flex">
+                                      {drug.id.tradeName ? (
+                                        <div className=" text-red-500"> ({drug.id.tradeName})</div>
+                                      ) : (
+                                        ""
+                                      )}
+                                      <div> {drug.id.name} </div>
+                                    </div>
+                                  </td>
+                                ) : (
+                                  ""
+                                )}
+                                {props.medicalReportsStype.col1Active ? (
+                                  <td
+                                    class="px-3 py-3 text-center"
+                                    style={{
+                                      fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
+                                      color: `${props.medicalReportsStype.tableContentColor}`,
+                                    }}
+                                  >
+                                    {index + 1}
+                                  </td>
+
+                                ) : (
+                                  ""
+                                )}
+
+                              </tr>
+
                               {props.medicalReportsStype.col6Active ? (
-                                <th
-                                  className="text-center"
-                                  scope="row"
-                                  class="px-3 py-3 font-medium text-gray-900 whitespace-nowrap "
-                                  style={{
-                                    fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
-                                    color: `${props.medicalReportsStype.tableContentColor}`,
-                                  }}
-                                >
-                                  {drug.description}
-                                </th>
-                              ) : (
-                                ""
-                              )}
-                              {props.medicalReportsStype.col5Active ? (
-                                <td
-                                  class="px-3 py-3 text-center"
-                                  style={{
-                                    fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
-                                    color: `${props.medicalReportsStype.tableContentColor}`,
-                                  }}
-                                >
-                                  {drug.inTakeTime
-                                    ? drug.inTakeTime.name
-                                    : drug.anotherIntaketime}
-                                </td>
-                              ) : (
-                                ""
-                              )}
-                              {props.medicalReportsStype.col4Active ? (
-                                <td
-                                  class="px-3 py-3 text-center"
-                                  style={{
-                                    fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
-                                    color: `${props.medicalReportsStype.tableContentColor}`,
-                                  }}
-                                >
-                                  {drug.doseNum}
-                                </td>
-                              ) : (
-                                ""
-                              )}
-                              {props.medicalReportsStype.col3Active ? (
-                                <td
-                                  class="px-3 py-3 text-center"
-                                  style={{
-                                    fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
-                                    color: `${props.medicalReportsStype.tableContentColor}`,
-                                  }}
-                                >
-                                  {drug.dose}
-                                </td>
+                                <div>
+                                
+                                    <div className="w-full">
+                                      {drug.description}
+                                    </div>
+
+
+                                </div>
                               ) : (
                                 ""
                               )}
 
-                              {props.medicalReportsStype.col2Active ? (
-                                <td
-                                  class="px-3 py-3 text-center"
-                                  style={{
-                                    fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
-                                    color: `${props.medicalReportsStype.tableContentColor}`,
-                                  }}
-                                >
-                                  {drug.id.tradeName ? (
-                                    <div>{drug.id.tradeName}</div>
-                                  ) : (
-                                    ""
-                                  )}
-                                  <div>{drug.id.name}</div>
-                                </td>
-                              ) : (
-                                ""
-                              )}
-                              {props.medicalReportsStype.col1Active ? (
-                                <td
-                                  class="px-3 py-3 text-center"
-                                  style={{
-                                    fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
-                                    color: `${props.medicalReportsStype.tableContentColor}`,
-                                  }}
-                                >
-                                  {index + 1}
-                                </td>
-                              ) : (
-                                ""
-                              )}
-                            </tr>
+                            </>
                           )
                         )}
+
                       </>
                     ) : (
                       ""

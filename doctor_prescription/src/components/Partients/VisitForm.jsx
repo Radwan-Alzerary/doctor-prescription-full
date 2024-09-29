@@ -1,21 +1,146 @@
-import React, { useEffect, useState } from "react";
-import {
-  // ... (your other imports)
-  Button,
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
-import { CloseSharp, PrintRounded } from "@mui/icons-material";
-import { FormattedMessage } from "react-intl";
-import Cookies from "js-cookie";
-import axios from "axios";
-import MedicalFormChipAutoComplete from "./MedicalFormChipAutoComplete";
-import { red } from "@mui/material/colors";
+import React, { useEffect, useState } from "react"
+import { FormattedMessage, useIntl } from "react-intl"
+import { X, Printer, ChevronDown, Clock, ChevronRight } from "lucide-react"
+import Cookies from "js-cookie"
+import axios from "axios"
+import MedicalFormChipAutoComplete from "./MedicalFormChipAutoComplete"
+import BackGroundShadow from "../pageCompond/BackGroundShadow"
 
+const TextField = ({ label, value, onChange, multiline = false, onClick }) => (
+  <div className="w-full mb-4">
+    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+    {multiline ? (
+      <textarea
+        className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onClick={onClick}
+        rows={3}
+      />
+    ) : (
+      <input
+        type="text"
+        className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onClick={onClick}
+      />
+    )}
+  </div>
+)
+
+const Select = ({ label, value, onChange, options }) => (
+  <div className="w-full mb-4">
+    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+    <div className="relative">
+      <select
+        className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+    </div>
+  </div>
+)
+
+// const MedicalFormChipAutoComplete = ({ AutoCompletevalue, formDataValue, handleInputChange, target }) => {
+//   return (
+//     <div className="flex flex-wrap gap-2 mt-2">
+//       {AutoCompletevalue.map((item, index) => (
+//         <button
+//           key={index}
+//           type="button"
+//           onClick={() => handleInputChange(target, formDataValue ? `${formDataValue}, ${item}` : item)}
+//           className="px-2 py-1 text-sm bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+//         >
+//           {item}
+//         </button>
+//       ))}
+//     </div>
+//   )
+// }
+const VisitHistoryModal = ({ visits, onClose, settingData }) => {
+  const intl = useIntl()
+  const [expandedVisit, setExpandedVisit] = useState(null)
+
+  const renderField = (visit, fieldName, label) => {
+    if (!settingData.visitForm?.[`visit${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}`]) return null;
+    return (
+      <p className="mb-2">
+        <strong>{intl.formatMessage({ id: label })}:</strong> {visit[fieldName]}
+      </p>
+    )
+  }
+
+  const toggleExpand = (index) => {
+    setExpandedVisit(expandedVisit === index ? null : index)
+  }
+
+  return (
+    <>
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-600 bg-opacity-50 flex items-center justify-center">
+      <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-gray-800">
+            <FormattedMessage id="Visit History" />
+          </h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+        {visits.map((visit, index) => (
+          <div key={index} className="mb-6 p-4 border rounded-lg">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-lg font-semibold">{new Date(visit.createdAt).toLocaleString()}</h3>
+              <button
+                className="text-blue-600 hover:text-blue-800 flex items-center"
+                onClick={() => toggleExpand(index)}
+              >
+                {expandedVisit === index ? (
+                  <>
+                    <FormattedMessage id="Hide Details" />
+                    <ChevronDown className="w-4 h-4 ml-1" />
+                  </>
+                ) : (
+                  <>
+                    <FormattedMessage id="View Details" />
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </>
+                )}
+              </button>
+            </div>
+            {renderField(visit, 'CauseOfVisite', 'CauseOfVisite')}
+            {renderField(visit, 'chiefComplaint', 'Diagnostic Details')}
+            {renderField(visit, 'diagnosis', 'diagnosis')}
+            {expandedVisit === index && (
+              <div className="mt-4 space-y-2">
+                {renderField(visit, 'PriorChronicTherapy', 'PriorChronicTherapy')}
+                {renderField(visit, 'investigation', 'InvestigationFinding')}
+                {renderField(visit, 'management', 'management')}
+                {renderField(visit, 'chronicTherapy', 'chronicTherapy')}
+                {renderField(visit, 'analysis', 'analysis')}
+                {renderField(visit, 'riskFactor', 'riskFactor')}
+                {renderField(visit, 'pastMedicalHistory', 'pastMedicalHistory')}
+                {renderField(visit, 'drugHistory', 'drugHistory')}
+                {renderField(visit, 'suspendedDx', 'suspendedDx')}
+                {renderField(visit, 'type', 'Visit Type')}
+                {renderField(visit, 'priority', 'Priority')}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+    </>
+
+  )
+}
 function VisitForm({
   onFormSubmit,
   partientsSelectId,
@@ -27,7 +152,7 @@ function VisitForm({
   userEditData,
   settingData
 }) {
-  // Define state to store form input data
+  const intl = useIntl()
   const [formData, setFormData] = useState({
     chiefComplaint: "",
     dateOfVisit: "",
@@ -45,665 +170,170 @@ function VisitForm({
     pastMedicalHistory: "",
     drugHistory: "",
     suspendedDx: "",
-  });
-  useEffect(() => {
-    if (type === "edit") {
-      setFormData({
-        ...formData,
-        chiefComplaint: data.chiefComplaint,
-        dateOfVisit: data.dateOfVisit,
-        investigation: data.investigation,
-        diagnosis: data.diagnosis,
-        CauseOfVisite: data.CauseOfVisite,
-        management: data.management,
-        PriorChronicTherapy: data.PriorChronicTherapy,
-        priority: data.priority,
-        type: data.type,
-        patientId: partientsSelectId,
-        chronicTherapy: data.chronicTherapy,
-        analysis: data.analysis,
-        riskFactor: data.riskFactor,
-        pastMedicalHistory: data.pastMedicalHistory,
-        drugHistory: data.drugHistory,
-        suspendedDx: data.suspendedDx,
-      });
-    }
-  }, []);
+  })
 
   const [locale, setLocale] = useState(() => {
-    return Cookies.get("locale") || "ar";
-  });
-  const currentURL = window.location.origin; // Get the current URL
-  const serverAddress = currentURL.replace(/:\d+/, ":5000"); // Replace the port with 5000
-  const [autoCompleteList, setAutoCompleteList] = useState();
-  const [loading, setLoading] = useState(true);
-  const [textSelector, setTextSelector] = useState("");
+    return Cookies.get("locale") || "ar"
+  })
+
+  const [autoCompleteList, setAutoCompleteList] = useState({})
+  const [loading, setLoading] = useState(true)
+  const [textSelector, setTextSelector] = useState("")
+  const [showVisitHistory, setShowVisitHistory] = useState(false)
+  const [visitHistory, setVisitHistory] = useState([])
 
   useEffect(() => {
-    const getAutoCompleteList = () => {
-      axios
-        .get(`${serverAddress}/autoComplete/getall/`)
-        .then((response) => {
-          setAutoCompleteList(response.data);
-          setLoading(false);
-          console.log(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching categories:", error);
-        });
-    };
-    getAutoCompleteList();
-  }, []);
+    if (type === "edit") {
+      setFormData({ ...formData, ...data })
+    }
+  }, [type, data])
 
-  // Handle form submission
+  useEffect(() => {
+    const getAutoCompleteList = async () => {
+      try {
+        const currentURL = window.location.origin
+        const serverAddress = currentURL.replace(/:\d+/, ":5000")
+        const response = await axios.get(`${serverAddress}/autoComplete/getall/`)
+        setAutoCompleteList(response.data)
+        setLoading(false)
+      } catch (error) {
+        console.error("Error fetching categories:", error)
+        setLoading(false)
+      }
+    }
+    getAutoCompleteList()
+  }, [])
+
   const handleSubmit = (event) => {
-    event.preventDefault();
-    // Call the onFormSubmit function passed as a prop with the formData
-    console.log(formData);
-    onFormSubmit(formData);
-  };
+    event.preventDefault()
+    onFormSubmit(formData)
+  }
 
-  // Handle changes in form fields
   const handleInputChange = (name, value) => {
-    // Update the formData state with the input data
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+    setFormData({ ...formData, [name]: value })
+  }
 
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className={`fixed flex flex-col items-center overflow-scroll left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5  ${
-        screenMode ? "h-[100%] w-full p-4" : "w-3/5 h-[90%]"
-      } }  bg-white p-5 rounded-xl z-50`}
-      style={{
-        direction: locale === "en" ? "ltr" : "rtl",
-      }}
-    >
-      {screenMode ? (
-        <div className=" flex justify-start items-start text-right w-full ">
-          <IconButton
-            onClick={() => {
-              handleExit();
-            }}
-          >
-            <CloseSharp className=" text-red-700  top-5 right-5"></CloseSharp>
-          </IconButton>
-        </div>
-      ) : (
-        ""
-      )}
-
-
-      <div className=" text-right w-full">
-        <h5>
-          {" "}
-          <FormattedMessage
-            id={"visit Information"}
-            defaultMessage="Hello, World!"
-          />{" "}
-          :{userEditData ? userEditData.name : ""}
-        </h5>
-      </div>
-
-
-
-
-{settingData.visitForm ? settingData.visitForm.visitCauseOfVisite ?   
-      <div className="flex flex-col justify-center items-center gap-4  w-full">
-      <TextField
-        id="outlined-required"
-        size="small"
-        multiline
-        value={formData.CauseOfVisite}
-        onChange={(event) =>
-          handleInputChange("CauseOfVisite", event.target.value)
-        } // Update the name state
-        onClick={() => {
-          // Your click handler code here
-          setTextSelector("CauseOfVisite");
-        }}
-        sx={{
-          width: "100%",
-          color: "#fff",
-        }}
-        label={
-          <FormattedMessage
-            id={"CauseOfVisite"}
-            defaultMessage="Hello, World!"
-          />
-        }
-        // defaultValue="Hello World"
-      />
-      {!loading && textSelector === "CauseOfVisite" ? (
-        <MedicalFormChipAutoComplete
-          AutoCompletevalue={autoCompleteList.visitCauseOfVisite}
-          formDataValue={formData.CauseOfVisite}
-          handleInputChange={handleInputChange}
-          target={"CauseOfVisite"}
-        ></MedicalFormChipAutoComplete>
-      ) : (
-        ""
-      )}
-    </div>
-
-: ""  : ""}
-{settingData.visitForm ? settingData.visitForm.visitPriorChronicTherapy ?  
-   <div className="flex flex-col justify-center items-center gap-4  w-full">
-   <TextField
-   multiline
-     id="outlined-required"
-     size="small"
-     value={formData.PriorChronicTherapy}
-     onChange={(event) =>
-       handleInputChange("PriorChronicTherapy", event.target.value)
-     } // Update the name state
-     sx={{
-       width: "100%",
-       color: "#fff",
-     }}
-     label={
-       <FormattedMessage
-         id={"PriorChronicTherapy"}
-         defaultMessage="Hello, World!"
-       />
-     }
-     onClick={() => {
-       // Your click handler code here
-       setTextSelector("PriorChronicTherapy");
-     }}
-
-     // defaultValue="Hello World"
-   />
-   {!loading && textSelector === "PriorChronicTherapy" ? (
-     <MedicalFormChipAutoComplete
-       AutoCompletevalue={autoCompleteList.visitPriorChronicTherapy}
-       formDataValue={formData.PriorChronicTherapy}
-       handleInputChange={handleInputChange}
-       target={"PriorChronicTherapy"}
-     ></MedicalFormChipAutoComplete>
-   ) : (
-     ""
-   )}
- </div>  
-: ""  : ""}
-
-{settingData.visitForm ? settingData.visitForm.visitchiefComplaint ?   
-<>
-<div className="flex flex-col justify-center items-center gap-4  w-full">
+  const renderField = (fieldName, label, multiline = false) => {
+    if (!settingData.visitForm?.[`visit${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}`]) return null;
+    return (
+      <div className="w-full mb-4">
         <TextField
-          multiline
-          id="outlined-required"
-          size="small"
-          value={formData.chiefComplaint}
-          onClick={() => {
-            // Your click handler code here
-            setTextSelector("chiefComplaint");
-          }}
-          onChange={(event) =>
-            handleInputChange("chiefComplaint", event.target.value)
-          } // Update the name state
-          sx={{
-            width: "100%",
-            color: "#fff",
-          }}
-          label={
-            <FormattedMessage
-              id={"Diagnostic Details"}
-              defaultMessage="Hello, World!"
-            />
-          }
-          // defaultValue="Hello World"
+          label={intl.formatMessage({ id: label })}
+          value={formData[fieldName]}
+          onChange={(value) => handleInputChange(fieldName, value)}
+          multiline={multiline}
+          onClick={() => setTextSelector(fieldName)}
         />
-        {!loading && textSelector === "chiefComplaint" ? (
+        {!loading && textSelector === fieldName && (
           <MedicalFormChipAutoComplete
-            AutoCompletevalue={autoCompleteList.visitchiefComplaint}
-            formDataValue={formData.chiefComplaint}
+            AutoCompletevalue={autoCompleteList[`visit${fieldName}`] || []}
+            formDataValue={formData[fieldName]}
             handleInputChange={handleInputChange}
-            target={"chiefComplaint"}
-          ></MedicalFormChipAutoComplete>
-        ) : (
-          ""
+            target={fieldName}
+          />
         )}
       </div>
+    )
+  }
 
-</>
- : ""  : ""}
- {settingData.visitForm ? settingData.visitForm.visitInvestigation ?      
-      <div className="flex flex-col justify-center items-center gap-4  w-full">
-      <TextField
-        multiline
-        id="outlined-required"
-        size="small"
-        value={formData.investigation}
-        onChange={(event) =>
-          handleInputChange("investigation", event.target.value)
-        } // Update the name state
-        sx={{
-          width: "100%",
-          color: "#fff",
-        }}
-        onClick={() => {
-          // Your click handler code here
-          setTextSelector("investigation");
-        }}
-        label={
-          <FormattedMessage
-            id={"InvestigationFinding"}
-            defaultMessage="Hello, World!"
-          />
-        }
-        // defaultValue="Hello World"
-      />
-      {!loading && textSelector === "investigation" ? (
-        <MedicalFormChipAutoComplete
-          AutoCompletevalue={autoCompleteList.visitinvestigation}
-          formDataValue={formData.investigation}
-          handleInputChange={handleInputChange}
-          target={"investigation"}
-        ></MedicalFormChipAutoComplete>
-      ) : (
-        ""
-      )}
-    </div>
+  const fetchVisitHistory = async () => {
+    try {
+      const currentURL = window.location.origin
+      const serverAddress = currentURL.replace(/:\d+/, ":5000")
+      const response = await axios.get(`${serverAddress}/visit/history/${partientsSelectId}`)
+      setVisitHistory(response.data)
+      setShowVisitHistory(true)
+    } catch (error) {
+      console.error("Error fetching visit history:", error)
+    }
+  }
 
-: ""  : ""}
-{settingData.visitForm ? settingData.visitForm.visitDiagnosis ?    
-      <div className="flex flex-col justify-center items-center gap-4  w-full">
-      <TextField
-        multiline
-        id="outlined-required"
-        size="small"
-        value={formData.diagnosis}
-        onClick={() => {
-          // Your click handler code here
-          setTextSelector("diagnosis");
+  return (
+    <div
+    >
+      <div className={`fixed flex flex-col items-center overflow-scroll left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  gap-5  ${screenMode ? "h-[100%] w-full p-4" : "w-3/5 h-[90%]"
+        } }  bg-white p-5 rounded-xl z-50`}
+        style={{
+          direction: locale === "en" ? "ltr" : "rtl",
         }}
-        onChange={(event) =>
-          handleInputChange("diagnosis", event.target.value)
-        } // Update the name state
-        sx={{
-          width: "100%",
-          color: "#fff",
-        }}
-        label={
-          <FormattedMessage id={"diagnosis"} defaultMessage="Hello, World!" />
-        }
-        // defaultValue="Hello World"
-      />
-      {!loading && textSelector === "diagnosis" ? (
-        <MedicalFormChipAutoComplete
-          AutoCompletevalue={autoCompleteList.visitdiagnosis}
-          formDataValue={formData.diagnosis}
-          handleInputChange={handleInputChange}
-          target={"diagnosis"}
-        ></MedicalFormChipAutoComplete>
-      ) : (
-        ""
-      )}
-    </div>
-: ""  : ""}
-{settingData.visitForm ? settingData.visitForm.visitManagement ?     
-      <div className="flex flex-col justify-center items-center gap-4  w-full">
-      <TextField
-        multiline
-        id="outlined-required"
-        size="small"
-        value={formData.management}
-        onChange={(event) =>
-          handleInputChange("management", event.target.value)
-        } // Update the name state
-        sx={{
-          width: "100%",
-          color: "#fff",
-        }}
-        onClick={() => {
-          // Your click handler code here
-          setTextSelector("management");
-        }}
-        label={
-          <FormattedMessage
-            id={"management"}
-            defaultMessage="Hello, World!"
-          />
-        }
-        // defaultValue="Hello World"
-      />
-      {!loading && textSelector === "management" ? (
-        <MedicalFormChipAutoComplete
-          AutoCompletevalue={autoCompleteList.visitManagement}
-          formDataValue={formData.management}
-          handleInputChange={handleInputChange}
-          target={"management"}
-        ></MedicalFormChipAutoComplete>
-      ) : (
-        ""
-      )}
-    </div>
-
-: ""  : ""}
-{settingData.visitForm ? settingData.visitForm.visitChronicTherapy ?   
-      <div className="flex flex-col justify-center items-center gap-4  w-full">
-      <TextField
-        multiline
-        id="outlined-required"
-        size="small"
-        value={formData.chronicTherapy}
-        onChange={(event) =>
-          handleInputChange("chronicTherapy", event.target.value)
-        } // Update the name state
-        sx={{
-          width: "100%",
-          color: "#fff",
-        }}
-        onClick={() => {
-          // Your click handler code here
-          setTextSelector("chronicTherapy");
-        }}
-        label={
-          <FormattedMessage
-            id={"chronicTherapy"}
-            defaultMessage="Hello, World!"
-          />
-        }
-        // defaultValue="Hello World"
-      />
-      {!loading && textSelector === "chronicTherapy" ? (
-        <MedicalFormChipAutoComplete
-          AutoCompletevalue={autoCompleteList.visitChronicTherapy}
-          formDataValue={formData.chronicTherapy}
-          handleInputChange={handleInputChange}
-          target={"chronicTherapy"}
-        ></MedicalFormChipAutoComplete>
-      ) : (
-        ""
-      )}
-    </div>
-
-: ""  : ""}
-
-{settingData.visitForm ? settingData.visitForm.visitAnalysis ?  
-      <div className="flex flex-col justify-center items-center gap-4  w-full">
-      <TextField
-        multiline
-        id="outlined-required"
-        size="small"
-        value={formData.analysis}
-        onChange={(event) =>
-          handleInputChange("analysis", event.target.value)
-        } // Update the name state
-        sx={{
-          width: "100%",
-          color: "#fff",
-        }}
-        onClick={() => {
-          // Your click handler code here
-          setTextSelector("analysis");
-        }}
-        label={
-          <FormattedMessage id={"analysis"} defaultMessage="Hello, World!" />
-        }
-        // defaultValue="Hello World"
-      />
-      {!loading && textSelector === "analysis" ? (
-        <MedicalFormChipAutoComplete
-          AutoCompletevalue={autoCompleteList.visitAnalysis}
-          formDataValue={formData.analysis}
-          handleInputChange={handleInputChange}
-          target={"analysis"}
-        ></MedicalFormChipAutoComplete>
-      ) : (
-        ""
-      )}
-    </div>
-
-: ""  : ""}
-
-{settingData.visitForm ? settingData.visitForm.visitRiskFactor ?  
-      <div className="flex flex-col justify-center items-center gap-4  w-full">
-      <TextField
-        multiline
-        id="outlined-required"
-        size="small"
-        value={formData.riskFactor}
-        onChange={(event) =>
-          handleInputChange("riskFactor", event.target.value)
-        } // Update the name state
-        sx={{
-          width: "100%",
-          color: "#fff",
-        }}
-        onClick={() => {
-          // Your click handler code here
-          setTextSelector("riskFactor");
-        }}
-        label={
-          <FormattedMessage
-            id={"riskFactor"}
-            defaultMessage="Hello, World!"
-          />
-        }
-        // defaultValue="Hello World"
-      />
-      {!loading && textSelector === "riskFactor" ? (
-        <MedicalFormChipAutoComplete
-          AutoCompletevalue={autoCompleteList.visitRiskFactor}
-          formDataValue={formData.riskFactor}
-          handleInputChange={handleInputChange}
-          target={"riskFactor"}
-        ></MedicalFormChipAutoComplete>
-      ) : (
-        ""
-      )}
-    </div>
-
-: ""  : ""}
-{settingData.visitForm ? settingData.visitForm.visitPastMedicalHistory ?     
-      <div className="flex flex-col justify-center items-center gap-4  w-full">
-      <TextField
-        multiline
-        id="outlined-required"
-        size="small"
-        value={formData.pastMedicalHistory}
-        onChange={(event) =>
-          handleInputChange("pastMedicalHistory", event.target.value)
-        } // Update the name state
-        sx={{
-          width: "100%",
-          color: "#fff",
-        }}
-        onClick={() => {
-          // Your click handler code here
-          setTextSelector("pastMedicalHistory");
-        }}
-        label={
-          <FormattedMessage
-            id={"pastMedicalHistory"}
-            defaultMessage="Hello, World!"
-          />
-        }
-        // defaultValue="Hello World"
-      />
-      {!loading && textSelector === "pastMedicalHistory" ? (
-        <MedicalFormChipAutoComplete
-          AutoCompletevalue={autoCompleteList.visitPastMedicalHistory}
-          formDataValue={formData.pastMedicalHistory}
-          handleInputChange={handleInputChange}
-          target={"pastMedicalHistory"}
-        ></MedicalFormChipAutoComplete>
-      ) : (
-        ""
-      )}
-    </div>
-
-: ""  : ""}
-{settingData.visitForm ? settingData.visitForm.visitDrugHistory ?     
-      <div className="flex flex-col justify-center items-center gap-4  w-full">
-      <TextField
-        multiline
-        id="outlined-required"
-        size="small"
-        value={formData.drugHistory}
-        onChange={(event) =>
-          handleInputChange("drugHistory", event.target.value)
-        } // Update the name state
-        sx={{
-          width: "100%",
-          color: "#fff",
-        }}
-        onClick={() => {
-          // Your click handler code here
-          setTextSelector("drugHistory");
-        }}
-        label={
-          <FormattedMessage
-            id={"drugHistory"}
-            defaultMessage="Hello, World!"
-          />
-        }
-        // defaultValue="Hello World"
-      />
-      {!loading && textSelector === "drugHistory" ? (
-        <MedicalFormChipAutoComplete
-          AutoCompletevalue={autoCompleteList.visitDrugHistory}
-          formDataValue={formData.drugHistory}
-          handleInputChange={handleInputChange}
-          target={"drugHistory"}
-        ></MedicalFormChipAutoComplete>
-      ) : (
-        ""
-      )}
-    </div>
-
-: ""  : ""}
-{settingData.visitForm ? settingData.visitForm.visitSuspendedDx ?  
-      <div className="flex flex-col justify-center items-center gap-4  w-full">
-      <TextField
-        multiline
-        id="outlined-required"
-        size="small"
-        value={formData.suspendedDx}
-        onChange={(event) =>
-          handleInputChange("suspendedDx", event.target.value)
-        } // Update the name state
-        sx={{
-          width: "100%",
-          color: "#fff",
-        }}
-        onClick={() => {
-          // Your click handler code here
-          setTextSelector("suspendedDx");
-        }}
-        label={
-          <FormattedMessage
-            id={"suspendedDx"}
-            defaultMessage="Hello, World!"
-          />
-        }
-        // defaultValue="Hello World"
-      />
-      {!loading && textSelector === "suspendedDx" ? (
-        <MedicalFormChipAutoComplete
-          AutoCompletevalue={autoCompleteList.visitSuspendedDx}
-          formDataValue={formData.suspendedDx}
-          handleInputChange={handleInputChange}
-          target={"suspendedDx"}
-        ></MedicalFormChipAutoComplete>
-      ) : (
-        ""
-      )}
-    </div>
-: ""  : ""}
-{settingData.visitForm ? settingData.visitForm.visitType ?   
-
-<FormControl className=" w-1/3 bg-whiteh" size="small">
-<InputLabel id="demo-simple-select-helper-label">
-  نوع الزيارة
-</InputLabel>
-<Select
-  labelId="demo-simple-select-helper-label"
-  id="demo-simple-select-helper"
-  // value={age}
-  value={formData.type}
-  onChange={(event) => handleInputChange("type", event.target.value)} // Update the name state
-  label="الصنف"
-  // onChange={handleAgeChange}
->
-  <MenuItem value={"زيارة"}>زيارة</MenuItem>
-  <MenuItem value={"مراجعة"}>مراجعة</MenuItem>
-</Select>
-</FormControl>  
-: ""  : ""}
-{settingData.visitForm ? settingData.visitForm.visitPriority ?     
-      <FormControl className=" w-1/3 bg-whiteh" size="small">
-      <InputLabel id="demo-simple-select-helper-label">الاولوية </InputLabel>
-      <Select
-        labelId="demo-simple-select-helper-label"
-        id="demo-simple-select-helper"
-        // value={age}
-        value={formData.priority}
-        onChange={(event) =>
-          handleInputChange("priority", event.target.value)
-        } // Update the name state
-        label="الاولوية"
-        // onChange={handleAgeChange}
       >
-        <MenuItem value={"normal"}>اعتيادية</MenuItem>
-        <MenuItem value={"medium"} sx={{ backgroundColor: red[200] }}>
-          متوسطة
-        </MenuItem>
-        <MenuItem value={"high"} sx={{ backgroundColor: red[300] }}>
-          عالية
-        </MenuItem>
-        <MenuItem
-          className=" bg-red-200"
-          sx={{ backgroundColor: red[400] }}
-          value={"dangers"}
-        >
-          خطيرة
-        </MenuItem>
-      </Select>
-    </FormControl>
+        <form onSubmit={handleSubmit} className="space-y-6 w-full" style={{ direction: locale === "en" ? "ltr" : "rtl" }}>
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold text-gray-800">
+              <FormattedMessage id="visit Information" />
+              {userEditData ? `: ${userEditData.name}` : ""}
+            </h2>
+            {screenMode && (
+              <button onClick={handleExit} className="text-gray-500 hover:text-gray-700">
+                <X className="w-6 h-6" />
+              </button>
+            )}
+          </div>
 
-: ""  : ""}
+          <button
+            type="button"
+            onClick={fetchVisitHistory}
+            className="mb-4 px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center"
+          >
+            <Clock className="w-5 h-5 mr-2" />
+            <FormattedMessage id="Show Visit History" />
+          </button>
 
+          {renderField("CauseOfVisite", "CauseOfVisite", true)}
+          {renderField("PriorChronicTherapy", "PriorChronicTherapy", true)}
+          {renderField("chiefComplaint", "Diagnostic Details", true)}
+          {renderField("investigation", "InvestigationFinding", true)}
+          {renderField("diagnosis", "diagnosis", true)}
+          {renderField("management", "management", true)}
+          {renderField("chronicTherapy", "chronicTherapy", true)}
+          {renderField("analysis", "analysis", true)}
+          {renderField("riskFactor", "riskFactor", true)}
+          {renderField("pastMedicalHistory", "pastMedicalHistory", true)}
+          {renderField("drugHistory", "drugHistory", true)}
+          {renderField("suspendedDx", "suspendedDx", true)}
 
-      <div className="flex gap-6 w-full justify-between">
-        <IconButton>
-          {/* <PrintRounded color="action"></PrintRounded> */}
-        </IconButton>
-
-        <Button
-          sx={{ width: "33%" }}
-          type="submit"
-          variant="contained"
-          className="w-full"
-          color="success"
-        >
-          {type === "edit" ? (
-            <FormattedMessage
-              id={"edit visit"}
-              defaultMessage="Hello, World!"
-            />
-          ) : (
-            <FormattedMessage
-              id={"add new visit"}
-              defaultMessage="Hello, World!"
+          {settingData.visitForm?.visitType && (
+            <Select
+              label={intl.formatMessage({ id: "Visit Type" })}
+              value={formData.type}
+              onChange={(value) => handleInputChange("type", value)}
+              options={[
+                { value: "زيارة", label: "زيارة" },
+                { value: "مراجعة", label: "مراجعة" },
+              ]}
             />
           )}
-        </Button>
-        <IconButton
-          onClick={() => {
-            onPrinterClick(formData.report);
-          }}
-        >
-          <PrintRounded color="action"></PrintRounded>
-        </IconButton>
-      </div>{" "}
-    </form>
-  );
+
+          {settingData.visitForm?.visitPriority && (
+            <Select
+              label={intl.formatMessage({ id: "Priority" })}
+              value={formData.priority}
+              onChange={(value) => handleInputChange("priority", value)}
+              options={[
+                { value: "normal", label: "اعتيادية" },
+                { value: "medium", label: "متوسطة" },
+                { value: "high", label: "عالية" },
+                { value: "dangers", label: "خطيرة" },
+              ]}
+            />
+          )}
+
+          <div className="flex justify-between items-center">
+            <button
+              type="submit"
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              <FormattedMessage id={type === "edit" ? "edit visit" : "add new visit"} />
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {showVisitHistory && (
+        <VisitHistoryModal settingData={settingData} visits={visitHistory} onClose={() => setShowVisitHistory(false)} />
+      )}
+    </div>
+  )
 }
 
-export default VisitForm;
+export default VisitForm
