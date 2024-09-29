@@ -131,7 +131,7 @@ const Row = React.memo(
               scope="row"
               align="center"
             >
-              <div className="flex justify-center items-center gap-4">
+              <div className="flex justify-center items-center gap-4 font-bold text-base">
                 {row.name}
                 {row.bookedPriority > 0 ? (
                   <div className=" bg-cyan-500 rounded-full w-8 h-8 flex justify-center items-center">
@@ -771,20 +771,6 @@ function Partients() {
     [serverAddress]
   );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const handleBarcodeAdd = async (barcode) => {
 
     // Make a copy of the currentRequestQueue in a local variable
@@ -800,35 +786,120 @@ function Partients() {
       console.error("Error fetching categories:", error);
     }
   };
+
+  const previousKeyRef = useRef('');
+
+  const arabicToEnglishMap = {
+    'ض': 'q',
+    'ص': 'w',
+    'ث': 'e',
+    'ق': 'r',
+    'ف': 't',
+    'غ': 'y',
+    'ع': 'u',
+    'ه': 'i',
+    'خ': 'o',
+    'ح': 'p',
+    'ج': '[',
+    'د': ']',
+    'ش': 'a',
+    'س': 's',
+    'ي': 'd',
+    'ب': 'f',
+    'ل': 'g', // Adjusted to 'l'
+    'ا': 'h', // Adjusted to 'a'
+    'ت': 'g',
+    'ن': 'k',
+    'م': 'm',
+    'ك': ';',
+    'ط': "'",
+    'ئ': 'z',
+    'ء': 'x',
+    'ؤ': 'c',
+    'ر': 'v',
+    'ى': 'n',
+    'ة': 'h', // Adjusted as per standard layouts
+    'و': ',',
+    'ز': '.',
+    'ظ': '/',
+    'لا': 'b', // Include 'لا' if it's a single character
+    // Arabic-Indic digits
+    '٠': '0',
+    '١': '1',
+    '٢': '2',
+    '٣': '3',
+    '٤': '4',
+    '٥': '5',
+    '٦': '6',
+    '٧': '7',
+    '٨': '8',
+    '٩': '9',
+  };
+
   const handleKeyPress = useCallback(
     (event) => {
-      if (event.key === "Enter") {
+      let key = event.key;
+      console.log('Raw key:', key);
+
+      // Map Arabic characters to English
+      if (arabicToEnglishMap[key]) {
+        key = arabicToEnglishMap[key];
+        console.log('Mapped key:', key);
+      } else {
+        console.log('No mapping found for:', key);
+      }
+
+      if (key === "Enter") {
         if (barcodeRef.current !== "") {
           // Barcode scanned, handle it
           console.log("Barcode Scanned:", barcodeRef.current);
-          setOrginBarcode(barcodeRef.current);
+          // setOrginBarcode(barcodeRef.current); // Uncomment if you use this function
           handleBarcodeAdd(barcodeRef.current);
           barcodeRef.current = "";
           setBarcode("");
         }
       } else {
-        // Key pressed, update barcode
-        barcodeRef.current += event.key;
-        setBarcode((prevBarcode) => prevBarcode + event.key);
+        // Check for 'ل' followed by 'ا' and map to 'b'
+        if (
+          previousKeyRef.current === arabicToEnglishMap['ل'] &&
+          key === arabicToEnglishMap['ا']
+        ) {
+          // Remove the last character (mapped 'ل')
+          barcodeRef.current = barcodeRef.current.slice(0, -1);
+          // Replace with 'b'
+          barcodeRef.current += 'b';
+          setBarcode((prevBarcode) => prevBarcode.slice(0, -1) + 'b');
+        } else {
+          // Key pressed, update barcode
+          barcodeRef.current += key;
+          setBarcode((prevBarcode) => prevBarcode + key);
+        }
 
         // Clear barcode after a delay if no additional key is pressed
         if (timeoutRef.current !== null) {
           clearTimeout(timeoutRef.current);
         }
+
+        // Reset the timeout
+        timeoutRef.current = setTimeout(() => {
+          barcodeRef.current = "";
+          setBarcode("");
+        }, 2000);
       }
+
+      // Update previousKeyRef for next iteration
+      previousKeyRef.current = key;
     },
     [handleBarcodeAdd]
   );
-  timeoutRef.current = setTimeout(() => {
-    barcodeRef.current = "";
-    setBarcode("");
-  }, 2000);
 
+  useEffect(() => {
+    window.addEventListener('keypress', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keypress', handleKeyPress);
+    };
+  }, [handleKeyPress]);
 
  useEffect(() => {
     const handleKeyPressEvent = (event) => handleKeyPress(event);
