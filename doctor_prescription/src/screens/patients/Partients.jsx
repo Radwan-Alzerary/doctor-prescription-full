@@ -2337,7 +2337,7 @@ function Partients() {
       )}
       {showPartientProfile && (
         <>
-          <BackGroundShadow onClick={() => setShowPartientProfile(false)} />
+          <BackGroundShadow z onClick={() => setShowPartientProfile(false)} />
           <PartientsProfile
             handleScannerHandle={handleScannerHandle}
             handleExit={()=>setShowPartientProfile(false)}

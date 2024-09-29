@@ -10,8 +10,7 @@ function BackGroundShadow(props) {
   return (
     <div
       onClick={handleItemClick}
-      className=" fixed inset-0 bg-gray-800 bg-opacity-50 backdrop-blur-sm z-50
-overflow-y-auto"
+      className={` fixed inset-0 bg-gray-800 bg-opacity-50 backdrop-blur-sm  z-${props.z ? "[1]" : "[50]" } overflow-y-auto`}
     ></div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FormattedMessage, useIntl } from 'react-intl'
+import { FormattedDate, FormattedMessage, useIntl } from 'react-intl'
 import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Calendar, FileText, Clipboard, TestTube } from 'lucide-react'
 
 const SortableHeader = ({ children, onClick, sorted, direction }) => (
@@ -22,16 +22,6 @@ const VisitDateTable = ({ visitData }) => {
   const [pageSize, setPageSize] = useState(5)
   const [sortConfig, setSortConfig] = useState({ key: 'date', direction: 'desc' })
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString)
-    return date.toLocaleString(intl.locale, {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  }
 
   const sortedData = React.useMemo(() => {
     const sortableData = [...visitData]
@@ -113,7 +103,7 @@ const VisitDateTable = ({ visitData }) => {
             {paginatedData.map((row) => (
               <tr key={row._id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {formatDate(row.createdAt)}
+                  {FormattedDate(row.date)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {row.visitReportCount}
