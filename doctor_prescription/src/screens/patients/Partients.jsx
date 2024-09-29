@@ -592,6 +592,13 @@ function Partients() {
   const [pageSelect, SetPageSelect] = useState(1);
   const [patientCount, setPatientCount] = useState(20);
 
+  const barcodeRef = useRef("");
+  const timeoutRef = useRef(null);
+  const [orginBarcode, setOrginBarcode] = useState("");
+  const [barcode, setBarcode] = useState("");
+
+
+
   const getPatientsList = useCallback(() => {
     axios
       .get(`${serverAddress}/patients/getall/${pageSelect}`, {
@@ -764,6 +771,86 @@ function Partients() {
     [serverAddress]
   );
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const handleBarcodeAdd = async (barcode) => {
+
+    // Make a copy of the currentRequestQueue in a local variable
+    // const queueId = currentRequestQueue;
+
+    try {
+      const response = await axios.get(`${serverAddress}/patients/getbybarcode/${barcode}`)
+      // productInsideQuiue();
+      if(response.data){
+        setPatientsList(response.data)
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+  const handleKeyPress = useCallback(
+    (event) => {
+      if (event.key === "Enter") {
+        if (barcodeRef.current !== "") {
+          // Barcode scanned, handle it
+          console.log("Barcode Scanned:", barcodeRef.current);
+          setOrginBarcode(barcodeRef.current);
+          handleBarcodeAdd(barcodeRef.current);
+          barcodeRef.current = "";
+          setBarcode("");
+        }
+      } else {
+        // Key pressed, update barcode
+        barcodeRef.current += event.key;
+        setBarcode((prevBarcode) => prevBarcode + event.key);
+
+        // Clear barcode after a delay if no additional key is pressed
+        if (timeoutRef.current !== null) {
+          clearTimeout(timeoutRef.current);
+        }
+      }
+    },
+    [handleBarcodeAdd]
+  );
+  timeoutRef.current = setTimeout(() => {
+    barcodeRef.current = "";
+    setBarcode("");
+  }, 2000);
+
+
+ useEffect(() => {
+    const handleKeyPressEvent = (event) => handleKeyPress(event);
+    window.addEventListener("keypress", handleKeyPressEvent);
+
+    return () => {
+      window.removeEventListener("keypress", handleKeyPressEvent);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [handleKeyPress]);
+
+
+
+
+
+
+
+
+
+  
   const handleLabReportDelete = useCallback(
     (id) => {
       if (settingData.abortProssesMsg) {

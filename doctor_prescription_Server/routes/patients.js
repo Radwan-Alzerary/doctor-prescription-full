@@ -287,7 +287,6 @@ router.get("/getall/:page", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 router.get("/checktoken", async (req, res) => {
   let dayNum = 0;
   try {
@@ -317,7 +316,6 @@ router.get("/checktoken", async (req, res) => {
     res.status(500).json({ error: "An error occurred" });
   }
 });
-
 router.get("/getbyname/", async (req, res) => {
   const searchName = req.params.searchName;
   try {
@@ -336,8 +334,28 @@ router.get("/getbyname/", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-
+router.get("/getbybarcode/:searchName", async (req, res) => {
+  const searchName = req.params.searchName;
+  try {
+    const patients = await Patients.find({
+      _id: searchName,
+    })
+      .populate({
+        path: "prescription",
+        match: { active: true }, // Filter prescriptions with active: true
+        populate: {
+          path: "pharmaceutical.id",
+        },
+      })
+      .sort({ updatedAt: -1 }) // Sort by 'updatedAt' field in descending order
+      .limit(10);
+      console.log(patients)
+      console.log(searchName)
+      res.json(patients);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 router.get("/getbymedical/", async (req, res) => {
   const searchName = req.params.searchName;
   try {
@@ -355,8 +373,6 @@ router.get("/getbymedical/", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-
 router.get("/getbymedical/:searchName", async (req, res) => {
   const searchName = req.params.searchName;
   try {
@@ -393,8 +409,6 @@ router.get("/getbymedical/:searchName", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-
 router.get("/medicalinfo/:partientId", async (req, res) => {
   try {
     const patients = await Patients.findById(req.params.partientId)
@@ -870,7 +884,6 @@ router.post("/bookpatents", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
 // Route to add patients from POST data
 router.get("/add-patients", async (req, res) => {
   try {
@@ -951,7 +964,6 @@ router.get("/add-patients", async (req, res) => {
     res.status(500).send("An error occurred while adding patients");
   }
 });
-
 router.get("/add-visits", async (req, res) => {
   try {
     const jsonFilePath = "remVisit.json";
@@ -1013,7 +1025,6 @@ router.get("/add-visits", async (req, res) => {
       .send("An error occurred while adding visits and updating patients");
   }
 });
-
 router.get("/add-drug", async (req, res) => {
   try {
     const jsonFilePath = "remDrug.json";
@@ -1044,7 +1055,6 @@ router.get("/add-drug", async (req, res) => {
       .send("An error occurred while adding visits and updating patients");
   }
 });
-
 router.get("/drug-pateint", async (req, res) => {
   try {
     const jsonFilePath = "remPres.json";
@@ -1095,10 +1105,7 @@ router.get("/drug-pateint", async (req, res) => {
       .send("An error occurred while adding visits and updating patients");
   }
 });
-
-
 const mainDirectory = path.join(__dirname, '..', 'public', 'rem-image');
-
 router.get("/import-pateint-image", async (req, res) => {
   try {
     const folders = fs.readdirSync(mainDirectory);
