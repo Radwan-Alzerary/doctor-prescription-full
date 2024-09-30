@@ -2284,7 +2284,7 @@ function Partients() {
       </div>
       {showAddForm && (
         <>
-          <BackGroundShadow onClick={handleHideClick} />
+          <BackGroundShadow z onClick={handleHideClick} />
           <NewPatientForm
             handleExit={handleHideClick}
             currentUser={currentUser}
@@ -2362,7 +2362,7 @@ function Partients() {
       )}
       {showPartientsEditForm && (
         <>
-          <BackGroundShadow onClick={handleHideClick} />
+          <BackGroundShadow  z onClick={handleHideClick} />
           <NewPatientForm
             handleExit={handleHideClick}
             screenMode={settingData.pullUpFullScreenMode}
