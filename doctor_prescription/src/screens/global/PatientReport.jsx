@@ -679,9 +679,9 @@ function PatientReport(props) {
 
           <div className=" w-full z-50 h-1/2  ">
             <div class="z-50 ">
-              <table class="w-full z-50 text-sm  text-center text-gray-500 ">
+              <table class="w-full z-50 text-sm  text-center  ">
                 {!props.dataToPrint.textonly ? (
-                  <thead class="text-xs text-center text-gray-700 uppercase   ">
+                  <thead class="text-xs text-center uppercase   ">
                     {props.medicalReportsStype.tableHeaderActive ? (
                       <tr>
                         {/* {props.medicalReportsStype.col6Active ? (
@@ -889,7 +889,7 @@ function PatientReport(props) {
                               {props.medicalReportsStype.col6Active ? (
                                 <div>
                                 
-                                    <div className="w-full">
+                                    <div className="w-full text-black font-normal text-base">
                                       {drug.description}
                                     </div>
 
