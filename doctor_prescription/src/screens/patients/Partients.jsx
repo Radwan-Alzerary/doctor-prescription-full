@@ -113,15 +113,14 @@ const Row = React.memo(
     return (
       <React.Fragment>
         <TableRow
-          className={` ${
-            row.booked ? "bg-green-200 hover:bg-green-100" : "hover:bg-blue-50"
-          }`}
+          className={` ${row.booked ? "bg-green-200 hover:bg-green-100" : "hover:bg-blue-50"
+            }`}
           sx={{ "& > *": { borderBottom: "unset" } }}
         >
           <TableCell>{index + 1 + 20 * (pageSelect - 1)}</TableCell>
           {settingData &&
-          settingData.patientsTable &&
-          settingData.patientsTable.patientName ? (
+            settingData.patientsTable &&
+            settingData.patientsTable.patientName ? (
             <TableCell
               className=" cursor-pointer hover:bg-blue-100"
               onClick={() => {
@@ -146,8 +145,8 @@ const Row = React.memo(
             ""
           )}
           {settingData &&
-          settingData.patientsTable &&
-          settingData.patientsTable.patientDate ? (
+            settingData.patientsTable &&
+            settingData.patientsTable.patientDate ? (
             <TableCell component="th" scope="row" align="center">
               <div className="bg-green-100 w-full flex justify-center items-center h-6 rounded-full">
                 {new Date(row.createdAt).toLocaleString("en-GB", {
@@ -161,26 +160,26 @@ const Row = React.memo(
             ""
           )}
           {settingData &&
-          settingData.patientsTable &&
-          settingData.patientsTable.patientAge ? (
+            settingData.patientsTable &&
+            settingData.patientsTable.patientAge ? (
             <TableCell component="th" scope="row" align="center">
               {settingData &&
-              settingData.patientsTable &&
-              settingData.patientsTable.patientAgeYear ? (
+                settingData.patientsTable &&
+                settingData.patientsTable.patientAgeYear ? (
                 <div>{row.age ? row.age : 0} سنة</div>
               ) : (
                 ""
               )}
               {settingData &&
-              settingData.patientsTable &&
-              settingData.patientsTable.patientAgeMonth ? (
+                settingData.patientsTable &&
+                settingData.patientsTable.patientAgeMonth ? (
                 <div>{row.monthAge ? row.monthAge : 0} شهر</div>
               ) : (
                 ""
               )}
               {settingData &&
-              settingData.patientsTable &&
-              settingData.patientsTable.patientAgeDay ? (
+                settingData.patientsTable &&
+                settingData.patientsTable.patientAgeDay ? (
                 <div>{row.dayAge ? row.dayAge : 0} يوم</div>
               ) : (
                 ""
@@ -190,15 +189,14 @@ const Row = React.memo(
             ""
           )}
           {settingData &&
-          settingData.patientsTable &&
-          settingData.patientsTable.patientGender ? (
+            settingData.patientsTable &&
+            settingData.patientsTable.patientGender ? (
             <TableCell component="th" scope="row" align="center">
               <div
-                className={`p-0.5 rounded-full  ${
-                  row.gender === "ذكر"
+                className={`p-0.5 rounded-full  ${row.gender === "ذكر"
                     ? "bg-blue-200 hover:bg-blue-300"
                     : "bg-pink-200 hover:bg-pink-300"
-                }`}
+                  }`}
               >
                 {row.gender === "ذكر" ? (
                   <Male className=" text-blue-700"></Male>
@@ -211,8 +209,8 @@ const Row = React.memo(
             ""
           )}
           {settingData &&
-          settingData.patientsTable &&
-          settingData.patientsTable.patientAdresses ? (
+            settingData.patientsTable &&
+            settingData.patientsTable.patientAdresses ? (
             <TableCell component="th" scope="row" align="center">
               {row.adresses}
             </TableCell>
@@ -220,8 +218,8 @@ const Row = React.memo(
             ""
           )}
           {settingData &&
-          settingData.patientsTable &&
-          settingData.patientsTable.patientSequance ? (
+            settingData.patientsTable &&
+            settingData.patientsTable.patientSequance ? (
             <TableCell component="th" scope="row" align="center">
               {row.Sequence}
             </TableCell>
@@ -229,8 +227,8 @@ const Row = React.memo(
             ""
           )}
           {settingData &&
-          settingData.patientsTable &&
-          settingData.patientsTable.patientWeghit ? (
+            settingData.patientsTable &&
+            settingData.patientsTable.patientWeghit ? (
             <TableCell component="th" scope="row" align="center">
               {row.weight ? row.weight + "kg" : ""}
             </TableCell>
@@ -238,8 +236,8 @@ const Row = React.memo(
             ""
           )}
           {settingData &&
-          settingData.patientsTable &&
-          settingData.patientsTable.patientLeanth ? (
+            settingData.patientsTable &&
+            settingData.patientsTable.patientLeanth ? (
             <TableCell component="th" scope="row" align="center">
               {row.length ? row.length + "cm" : ""}
             </TableCell>
@@ -247,8 +245,8 @@ const Row = React.memo(
             ""
           )}
           {settingData &&
-          settingData.patientsTable &&
-          settingData.patientsTable.patientVisitNum ? (
+            settingData.patientsTable &&
+            settingData.patientsTable.patientVisitNum ? (
             <TableCell component="th" scope="row" align="center">
               {row.visitDate.length}
             </TableCell>
@@ -259,8 +257,8 @@ const Row = React.memo(
             currentUser.role === "doctor" ? (
               <>
                 {settingData &&
-                settingData.patientsTable &&
-                settingData.patientsTable.patientAddVisit ? (
+                  settingData.patientsTable &&
+                  settingData.patientsTable.patientAddVisit ? (
                   <TableCell align="center">
                     <IconButton
                       sx={{ color: blue[800] }}
@@ -279,8 +277,8 @@ const Row = React.memo(
                   ""
                 )}
                 {settingData &&
-                settingData.patientsTable &&
-                settingData.patientsTable.patientAddMedicalData ? (
+                  settingData.patientsTable &&
+                  settingData.patientsTable.patientAddMedicalData ? (
                   <TableCell align="center">
                     <IconButton
                       sx={{ color: blue[800] }}
@@ -299,8 +297,8 @@ const Row = React.memo(
                   ""
                 )}
                 {settingData &&
-                settingData.patientsTable &&
-                settingData.patientsTable.patientAddPrescription ? (
+                  settingData.patientsTable &&
+                  settingData.patientsTable.patientAddPrescription ? (
                   <TableCell align="center">
                     <IconButton
                       sx={{ color: yellow[800] }}
@@ -321,8 +319,8 @@ const Row = React.memo(
                   ""
                 )}
                 {settingData &&
-                settingData.patientsTable &&
-                settingData.patientsTable.patientAddReport ? (
+                  settingData.patientsTable &&
+                  settingData.patientsTable.patientAddReport ? (
                   <TableCell align="center">
                     <IconButton
                       sx={{ color: blue[800] }}
@@ -341,8 +339,8 @@ const Row = React.memo(
                   ""
                 )}
                 {settingData &&
-                settingData.patientsTable &&
-                settingData.patientsTable.patientAddLaboryTest ? (
+                  settingData.patientsTable &&
+                  settingData.patientsTable.patientAddLaboryTest ? (
                   <TableCell align="center">
                     <IconButton
                       sx={{ color: blue[800] }}
@@ -365,12 +363,12 @@ const Row = React.memo(
             ""
           )}
           {settingData &&
-          settingData.patientsTable &&
-          settingData.patientsTable.patientOption ? (
+            settingData.patientsTable &&
+            settingData.patientsTable.patientOption ? (
             <TableCell align="center">
               {settingData &&
-              settingData.patientsTable &&
-              settingData.patientsTable.patientBooked ? (
+                settingData.patientsTable &&
+                settingData.patientsTable.patientBooked ? (
                 <IconButton
                   sx={{ color: purple[400] }}
                   className=" hover:text-purple-600"
@@ -420,8 +418,8 @@ const Row = React.memo(
             currentUser.role === "doctor" ? (
               <>
                 {settingData &&
-                settingData.patientsTable &&
-                settingData.patientsTable.patientPrescriptionView ? (
+                  settingData.patientsTable &&
+                  settingData.patientsTable.patientPrescriptionView ? (
                   <IconButton
                     type="button"
                     sx={{ p: "10px" }}
@@ -477,12 +475,8 @@ const Row = React.memo(
                           }
                         }}
                       >
-                        <TableCell align="center">
-                          {prescription.pharmaceutical.length}
-                        </TableCell>
-                        <TableCell align="center">
-                          {prescription.MedicalDiagnosis}
-                        </TableCell>
+                        <TableCell align="center">{prescription.pharmaceutical.length}</TableCell>
+                        <TableCell align="center">{prescription.MedicalDiagnosis}</TableCell>
                         <TableCell align="center">
                           {prescription.createdAt ? prescription.createdAt : ""}
                         </TableCell>
@@ -491,11 +485,9 @@ const Row = React.memo(
                         </TableCell>
                         <TableCell align="center">
                           <IconButton
-                            onClick={() => {
-                              onPrescriptionDeleteHande(
-                                row._id,
-                                prescription._id
-                              );
+                            onClick={(e) => {
+                              e.stopPropagation(); // Stop event propagation
+                              onPrescriptionDeleteHande(row._id, prescription._id);
                             }}
                             sx={{ color: red[400] }}
                             className=" hover:text-red-600"
@@ -504,15 +496,13 @@ const Row = React.memo(
                             <Delete fontSize="inherit" />
                           </IconButton>
                           <IconButton
-                            onClick={() => {
-                              onPrescriptionEditHandel(
-                                row._id,
-                                prescription._id
-                              );
+                            onClick={(e) => {
+                              e.stopPropagation(); // Stop event propagation
+                              onPrescriptionEditHandel(row._id, prescription._id);
                             }}
                             sx={{ color: blue[400] }}
                             className=" hover:text-red-600"
-                            aria-label="delete"
+                            aria-label="edit"
                           >
                             <Edit fontSize="inherit" />
                           </IconButton>
@@ -779,7 +769,7 @@ function Partients() {
     try {
       const response = await axios.get(`${serverAddress}/patients/getbybarcode/${barcode}`)
       // productInsideQuiue();
-      if(response.data){
+      if (response.data) {
         setPatientsList(response.data)
       }
     } catch (error) {
@@ -901,7 +891,7 @@ function Partients() {
     };
   }, [handleKeyPress]);
 
- useEffect(() => {
+  useEffect(() => {
     const handleKeyPressEvent = (event) => handleKeyPress(event);
     window.addEventListener("keypress", handleKeyPressEvent);
 
@@ -921,7 +911,7 @@ function Partients() {
 
 
 
-  
+
   const handleLabReportDelete = useCallback(
     (id) => {
       if (settingData.abortProssesMsg) {
@@ -1948,8 +1938,8 @@ function Partients() {
                   #
                 </TableCell>
                 {settingData &&
-                settingData.patientsTable &&
-                settingData.patientsTable.patientName ? (
+                  settingData.patientsTable &&
+                  settingData.patientsTable.patientName ? (
                   <TableCell
                     align="right"
                     className="cursor-pointer"
@@ -1973,8 +1963,8 @@ function Partients() {
                   ""
                 )}
                 {settingData &&
-                settingData.patientsTable &&
-                settingData.patientsTable.patientDate ? (
+                  settingData.patientsTable &&
+                  settingData.patientsTable.patientDate ? (
                   <TableCell align="center">
                     <FormattedMessage
                       id={"Date"}
@@ -1985,8 +1975,8 @@ function Partients() {
                   ""
                 )}
                 {settingData &&
-                settingData.patientsTable &&
-                settingData.patientsTable.patientAge ? (
+                  settingData.patientsTable &&
+                  settingData.patientsTable.patientAge ? (
                   <TableCell
                     align="center"
                     onClick={() => handleQuerySelect("age")}
@@ -2010,8 +2000,8 @@ function Partients() {
                   ""
                 )}
                 {settingData &&
-                settingData.patientsTable &&
-                settingData.patientsTable.patientGender ? (
+                  settingData.patientsTable &&
+                  settingData.patientsTable.patientGender ? (
                   <TableCell
                     align="center"
                     onClick={() => handleQuerySelect("gender")}
@@ -2035,8 +2025,8 @@ function Partients() {
                   ""
                 )}
                 {settingData &&
-                settingData.patientsTable &&
-                settingData.patientsTable.patientAdresses ? (
+                  settingData.patientsTable &&
+                  settingData.patientsTable.patientAdresses ? (
                   <TableCell
                     align="center"
                     onClick={() => handleQuerySelect("adresses")}
@@ -2060,8 +2050,8 @@ function Partients() {
                   ""
                 )}
                 {settingData &&
-                settingData.patientsTable &&
-                settingData.patientsTable.patientSequance ? (
+                  settingData.patientsTable &&
+                  settingData.patientsTable.patientSequance ? (
                   <TableCell
                     align="center"
                     onClick={() => handleQuerySelect("Sequence")}
@@ -2085,8 +2075,8 @@ function Partients() {
                   ""
                 )}
                 {settingData &&
-                settingData.patientsTable &&
-                settingData.patientsTable.patientWeghit ? (
+                  settingData.patientsTable &&
+                  settingData.patientsTable.patientWeghit ? (
                   <TableCell
                     align="center"
                     onClick={() => handleQuerySelect("weight")}
@@ -2110,8 +2100,8 @@ function Partients() {
                   ""
                 )}
                 {settingData &&
-                settingData.patientsTable &&
-                settingData.patientsTable.patientLeanth ? (
+                  settingData.patientsTable &&
+                  settingData.patientsTable.patientLeanth ? (
                   <TableCell
                     align="center"
                     onClick={() => handleQuerySelect("length")}
@@ -2135,8 +2125,8 @@ function Partients() {
                   ""
                 )}
                 {settingData &&
-                settingData.patientsTable &&
-                settingData.patientsTable.patientVisitNum ? (
+                  settingData.patientsTable &&
+                  settingData.patientsTable.patientVisitNum ? (
                   <TableCell
                     align="center"
                     onClick={() => handleQuerySelect("visitCount")}
@@ -2154,8 +2144,8 @@ function Partients() {
                   currentUser.role === "doctor" ? (
                     <>
                       {settingData &&
-                      settingData.patientsTable &&
-                      settingData.patientsTable.patientAddVisit ? (
+                        settingData.patientsTable &&
+                        settingData.patientsTable.patientAddVisit ? (
                         <TableCell align="center">
                           <FormattedMessage
                             id={"visit"}
@@ -2166,8 +2156,8 @@ function Partients() {
                         ""
                       )}
                       {settingData &&
-                      settingData.patientsTable &&
-                      settingData.patientsTable.patientAddMedicalData ? (
+                        settingData.patientsTable &&
+                        settingData.patientsTable.patientAddMedicalData ? (
                         <TableCell align="center">
                           <FormattedMessage
                             id={"Examination"}
@@ -2178,8 +2168,8 @@ function Partients() {
                         ""
                       )}
                       {settingData &&
-                      settingData.patientsTable &&
-                      settingData.patientsTable.patientAddPrescription ? (
+                        settingData.patientsTable &&
+                        settingData.patientsTable.patientAddPrescription ? (
                         <TableCell align="center">
                           <FormattedMessage
                             id={"Rx"}
@@ -2190,8 +2180,8 @@ function Partients() {
                         ""
                       )}
                       {settingData &&
-                      settingData.patientsTable &&
-                      settingData.patientsTable.patientAddReport ? (
+                        settingData.patientsTable &&
+                        settingData.patientsTable.patientAddReport ? (
                         <TableCell align="center">
                           <FormattedMessage
                             id={"Report"}
@@ -2202,8 +2192,8 @@ function Partients() {
                         ""
                       )}
                       {settingData &&
-                      settingData.patientsTable &&
-                      settingData.patientsTable.patientAddLaboryTest ? (
+                        settingData.patientsTable &&
+                        settingData.patientsTable.patientAddLaboryTest ? (
                         <TableCell align="center">
                           <FormattedMessage
                             id={"LaboratoryTesting"}
@@ -2214,8 +2204,8 @@ function Partients() {
                         ""
                       )}
                       {settingData &&
-                      settingData.patientsTable &&
-                      settingData.patientsTable.patientOption ? (
+                        settingData.patientsTable &&
+                        settingData.patientsTable.patientOption ? (
                         <TableCell align="center">
                           <FormattedMessage
                             id={"Options"}
@@ -2340,7 +2330,7 @@ function Partients() {
           <BackGroundShadow z onClick={() => setShowPartientProfile(false)} />
           <PartientsProfile
             handleScannerHandle={handleScannerHandle}
-            handleExit={()=>setShowPartientProfile(false)}
+            handleExit={() => setShowPartientProfile(false)}
             screenMode={settingData.pullUpFullScreenMode}
             onImageDeleteHandle={onImageDeleteHandle}
             settingData={settingData}
@@ -2362,7 +2352,7 @@ function Partients() {
       )}
       {showPartientsEditForm && (
         <>
-          <BackGroundShadow  z onClick={handleHideClick} />
+          <BackGroundShadow z onClick={handleHideClick} />
           <NewPatientForm
             handleExit={handleHideClick}
             screenMode={settingData.pullUpFullScreenMode}
@@ -2431,7 +2421,7 @@ function Partients() {
       )}
       {showVisitForm && (
         <>
-          <BackGroundShadow onClick={()=>setShowVisitForm(false)} />
+          <BackGroundShadow onClick={() => setShowVisitForm(false)} />
           <VisitForm
             userEditData={userEditData}
             handleExit={handleHideClick}
