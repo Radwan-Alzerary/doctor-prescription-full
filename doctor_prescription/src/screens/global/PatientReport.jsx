@@ -851,13 +851,13 @@ function PatientReport(props) {
 
                                 {props.medicalReportsStype.col2Active ? (
                                   <td
-                                    class="px-3 py-3 text-center"
+                                    class="px-3 py-3  text-left"
                                     style={{
                                       fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
                                       color: `${props.medicalReportsStype.tableContentColor}`,
                                     }}
                                   >
-                                    <div className="flex">
+                                    <div className="flex justify-end">
                                       {drug.id.tradeName ? (
                                         <div className=" text-red-500"> ({drug.id.tradeName})</div>
                                       ) : (
