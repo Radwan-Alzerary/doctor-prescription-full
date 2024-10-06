@@ -855,6 +855,7 @@ function PatientReport(props) {
                                     style={{
                                       fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
                                       color: `${props.medicalReportsStype.tableContentColor}`,
+                                      fontWeight: "bold",
                                     }}
                                   >
                                     <div className="flex justify-end">
