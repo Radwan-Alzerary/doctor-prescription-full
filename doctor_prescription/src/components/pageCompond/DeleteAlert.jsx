@@ -3,9 +3,9 @@ import React from "react";
 
 function DeleteAlert(props) {
   return (
-    <div className=" fixed right-0 w-screen h-screen top-0 z-50 flex justify-center items-center">
+    <div className=" fixed right-0 w-screen h-screen top-0 z-[900] flex justify-center items-center">
       <div onClick={props.onShadowClick} className=" absolute right-0 top-0 w-full h-full opacity-20 z-10 bg-black"></div>
-      <div className="w-1/2 h-64 bg-white z-50 flex flex-col  justify-center items-center gap-5">
+      <div className="w-1/2 h-64 bg-white z-[900] flex flex-col  justify-center items-center gap-5">
         <p className="text-xl">هل انت متاكد من عملية الحذف ؟</p>
         <div className="flex w-full justify-between gap-4 px-4 ">
           <Button
