@@ -68,7 +68,7 @@ function PartientsProfile({
   ]
 
   return (
-      <div className={`bg-white fixed z-[50] left-[50%] top-[45%] overflow-scroll h-[90%]  transform translate-x-[-50%] translate-y-[-50%] ${screenMode ? 'w-full min-h-screen' : 'w-[95%] max-w-7xl mx-auto my-8'}  rounded-lg shadow-xl`}>
+      <div className={`bg-white fixed z-[50] left-[50%] top-[45%] overflow-scroll h-[95%]  transform translate-x-[-50%] translate-y-[-50%] ${screenMode ? 'w-full min-h-screen' : 'w-[95%] max-w-7xl mx-auto my-8'}  rounded-lg shadow-xl`}>
         <div className="flex justify-between items-center p-6 border-b">
           <h2 className="text-2xl font-bold">ملف المريض</h2>
           <button onClick={handleExit} className="text-gray-500 hover:text-gray-700">

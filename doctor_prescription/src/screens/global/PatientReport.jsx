@@ -809,7 +809,7 @@ function PatientReport(props) {
                               >
                                 {props.medicalReportsStype.col5Active ? (
                                   <td
-                                    class="px-3 py-3 text-center "
+                                    class="px-3 py-1 text-center "
                                     style={{
                                       fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
                                       color: `${props.medicalReportsStype.tableContentColor}`,
@@ -824,7 +824,7 @@ function PatientReport(props) {
                                 )}
                                 {props.medicalReportsStype.col4Active ? (
                                   <td
-                                    class="px-3 py-3 text-center"
+                                    class="px-3 py-1 text-center"
                                     style={{
                                       fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
                                       color: `${props.medicalReportsStype.tableContentColor}`,
@@ -837,7 +837,7 @@ function PatientReport(props) {
                                 )}
                                 {props.medicalReportsStype.col3Active ? (
                                   <td
-                                    class="px-3 py-3 text-center"
+                                    class="px-3 py-1 text-center"
                                     style={{
                                       fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
                                       color: `${props.medicalReportsStype.tableContentColor}`,
@@ -851,7 +851,7 @@ function PatientReport(props) {
 
                                 {props.medicalReportsStype.col2Active ? (
                                   <td
-                                    class="px-3 py-3  text-left"
+                                    class="px-3 py-1  text-left"
                                     style={{
                                       fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
                                       color: `${props.medicalReportsStype.tableContentColor}`,
@@ -872,7 +872,7 @@ function PatientReport(props) {
                                 )}
                                 {props.medicalReportsStype.col1Active ? (
                                   <td
-                                    class="px-3 py-3 text-center"
+                                    class="px-3 py-1 text-center"
                                     style={{
                                       fontSize: `${props.medicalReportsStype.tableContentTextSize}rem`,
                                       color: `${props.medicalReportsStype.tableContentColor}`,
