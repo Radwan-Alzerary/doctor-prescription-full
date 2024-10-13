@@ -208,6 +208,7 @@ function EditPartients(props) {
     dataBillForm.PrescriptionId = props.PrescriptionId;
     props.onBillAdded(dataBillForm);
     setDose("");
+    setBillId("");
     setTradeName("");
     setDoseNumFirst("");
     setDoseNumSecend("");
@@ -357,13 +358,12 @@ function EditPartients(props) {
 
   return (
     <form
-      className={`fixed flex overflow-scroll z-[500] ${
-        props.screenMode
+      className={`fixed flex overflow-scroll z-[500] ${props.screenMode
           ? "h-[100%] w-full "
           : props.settingData.billSelectFromGroup
-          ? "w-[90%] h-[85%]"
-          : "w-3/5 h-[85%]"
-      } }  left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  items-center  p-5 rounded-xl z-50`}
+            ? "w-[90%] h-[85%]"
+            : "w-3/5 h-[85%]"
+        } }  left-[50%] top-[50%] transform translate-x-[-50%] translate-y-[-50%]  items-center  p-5 rounded-xl z-50`}
       onSubmit={handleSubmit} // Step 4: Attach the submit handler
       style={{
         direction: locale === "en" ? "ltr" : "rtl",
@@ -427,9 +427,8 @@ function EditPartients(props) {
       )}
 
       <div
-        className={`${
-          props.settingData.billSelectFromGroup ? `w-2/3` : `w-full`
-        }  h-full bg-white p-4 `}
+        className={`${props.settingData.billSelectFromGroup ? `w-2/3` : `w-full`
+          }  h-full bg-white p-4 `}
         style={{ direction: locale === "en" ? "ltr" : "rtl" }}
       >
         {props.screenMode ? (
@@ -463,7 +462,7 @@ function EditPartients(props) {
                 handeAddGroupBill(newValue);
               }}
               inputValue={inputValue}
-              onInputChange={(event, newInputValue) => {}}
+              onInputChange={(event, newInputValue) => { }}
               renderInput={(params) => (
                 <TextField {...params} label={"اضافة كروب ادوية"} />
               )}
@@ -494,7 +493,7 @@ function EditPartients(props) {
               defaultMessage="Hello, World!"
             />
           }
-          // defaultValue="Hello World"
+        // defaultValue="Hello World"
         />
         {!loading ? (
           <MedicalFormChipAutoComplete
@@ -548,57 +547,56 @@ function EditPartients(props) {
         <div className="w-full ">
           <div className="">
             <div className="flex gap-4 justify-center mb-2 items-center">
-            <Autocomplete
-  freeSolo
-  size="small"
-  disableListWrap
-  disablePortal
-  id="combo-box-demo"
-  options={props.pharmaceList}
-  getOptionLabel={(option) => {
-    return `${option.name} ${
-      option.tradeName ? `(${option.tradeName})` : ""
-    }`;
-  }}
-  filterOptions={(options, { inputValue }) => {
-    const filteredInputValue = isArabic(inputValue)
-      ? convertToEnglish(inputValue)
-      : inputValue;
+              <Autocomplete
+                freeSolo
+                size="small"
+                disableListWrap
+                disablePortal
+                id="combo-box-demo"
+                options={props.pharmaceList}
+                getOptionLabel={(option) => {
+                  return `${option.name} ${option.tradeName ? `(${option.tradeName})` : ""
+                    }`;
+                }}
+                filterOptions={(options, { inputValue }) => {
+                  const filteredInputValue = isArabic(inputValue)
+                    ? convertToEnglish(inputValue)
+                    : inputValue;
 
-    return options
-      .filter(
-        (option) =>
-          option.name
-            .toLowerCase()
-            .startsWith(filteredInputValue.toLowerCase()) ||
-          (option.tradeName &&
-            option.tradeName
-              .toLowerCase()
-              .startsWith(filteredInputValue.toLowerCase()))
-      )
-      .slice(0, 20); // Limit to 20 options
-  }}
-  sx={{ width: "33%" }}
-  onChange={(event, newValue) => {
-    setValue(newValue);
-  }}
-  inputValue={inputValue}
-  onInputChange={handleAutoInputChange}
-  isOptionEqualToValue={(option, value) =>
-    option.name === value || option.tradeName === value
-  }
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      label={
-        <FormattedMessage
-          id={"Drug name"}
-          defaultMessage="Drug name"
-        />
-      }
-    />
-  )}
-/>
+                  return options
+                    .filter(
+                      (option) =>
+                        option.name
+                          .toLowerCase()
+                          .startsWith(filteredInputValue.toLowerCase()) ||
+                        (option.tradeName &&
+                          option.tradeName
+                            .toLowerCase()
+                            .startsWith(filteredInputValue.toLowerCase()))
+                    )
+                    .slice(0, 20); // Limit to 20 options
+                }}
+                sx={{ width: "33%" }}
+                onChange={(event, newValue) => {
+                  setValue(newValue);
+                }}
+                inputValue={inputValue}
+                onInputChange={handleAutoInputChange}
+                isOptionEqualToValue={(option, value) =>
+                  option.name === value || option.tradeName === value
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={
+                      <FormattedMessage
+                        id={"Drug name"}
+                        defaultMessage="Drug name"
+                      />
+                    }
+                  />
+                )}
+              />
               {pharmaceuticalInputs ? (
                 <>
                   <TextField
@@ -644,7 +642,7 @@ function EditPartients(props) {
                         defaultMessage="Hello, World!"
                       />
                     }
-                    // defaultValue="Hello World"
+                  // defaultValue="Hello World"
                   />
 
                   <TextField
@@ -665,7 +663,7 @@ function EditPartients(props) {
                         defaultMessage="Hello, World!"
                       />
                     }
-                    // defaultValue="Hello World"
+                  // defaultValue="Hello World"
                   />
                   {/* First TextField */}
 
@@ -757,7 +755,7 @@ function EditPartients(props) {
                         />
                       }
 
-                      // defaultValue="Hello World"
+                    // defaultValue="Hello World"
                     />
                   ) : (
                     ""
@@ -779,7 +777,7 @@ function EditPartients(props) {
                         defaultMessage="Hello, World!"
                       />
                     }
-                    // defaultValue="Hello World"
+                  // defaultValue="Hello World"
                   />
                 </>
               ) : (
