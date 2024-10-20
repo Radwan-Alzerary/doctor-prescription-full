@@ -115,6 +115,46 @@ router.post("/edit", async (req, res) => {
   }
 });
 
+
+
+// Route to get the last visit of type "زيارة" for a patient
+router.post("/last-visit", async (req, res) => {
+  const { patientId } = req.body;
+
+  if (!patientId) {
+    return res.status(400).json({ error: "Patient ID is required" });
+  }
+
+  try {
+    // Check if the provided patientId is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(patientId)) {
+      return res.status(400).json({ error: "Invalid patient ID" });
+    }
+
+    // Fetch the patient and populate the visits array
+    const patient = await Patients.findOne({ _id: patientId })
+      .populate({
+        path: "visit",
+        match: { type: "زيارة" }, // Filter the visits to only include type "زيارة"
+        options: { sort: { date: -1 }, limit: 1 }, // Sort by date descending and limit to the latest one
+      })
+      .exec();
+
+    // Check if the patient and the visit exist
+    if (!patient || !patient.visit.length) {
+      return res.status(404).json({ message: "No visit with type 'زيارة' found" });
+    }
+
+    // Return the last visit of type "زيارة"
+    return res.status(200).json({ lastVisit: patient.visit[0] });
+  } catch (error) {
+    console.error("Error fetching the last visit with type 'زيارة':", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
 router.post("/scan", async (req, res) => {
   try {
     const scannedFilePath = await startScanning();

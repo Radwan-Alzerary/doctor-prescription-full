@@ -45,6 +45,7 @@ import Group from "./screens/pharmaceutical/Group";
 import BookedScreen from "./screens/booked/BookedScreen";
 import AutoComplete from "./screens/AutoComplete/AutoComplete";
 import ConstDisease from "./screens/constDisease/ConstDisease";
+import FinancialScreen from "./screens/financial/FinancialScreen";
 
 function App() {
   const location = useLocation();
@@ -177,8 +178,8 @@ function App() {
                   />
                   <Route exact path="/checkeco" element={<CheckPrint />} />
                   <Route exact path="/" element={<PrivateRoute />}>
-                    <Route index element={<Dashboard />} />
-                    <Route exact path="surgen">
+                  <Route index element={<Dashboard />} />
+                  <Route exact path="surgen">
                       <Route exact path="list" element={<SurgenList />}></Route>
                       <Route exact path="type" element={<SurgenType />}></Route>
                       <Route
@@ -199,6 +200,7 @@ function App() {
                     </Route>
 
                     <Route exact path="Chats" element={<Chats />} />
+                    <Route exact path="PriceCheck" element={<FinancialScreen />} />
                     <Route
                       exact
                       path="dashboard"

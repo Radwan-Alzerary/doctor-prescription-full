@@ -10,7 +10,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import { useState, useMemo, useCallback } from "react";
 import Sidebaritems from "../../components/Sidebar/Sidebaritems";
 import LanguageSelector from "./lanquageSelector";
-import { Abc, Home, Medication, MonitorHeart } from "@mui/icons-material";
+import { Abc, Home, Medication, MonitorHeart, PriceCheck } from "@mui/icons-material";
 import { FormattedMessage } from "react-intl";
 import logo from "../../logo.png";
 import AirlineSeatFlatAngledIcon from "@mui/icons-material/AirlineSeatFlatAngled";
@@ -53,6 +53,7 @@ const SideBarMenu = (props) => {
           },
         }}
       >
+
         <MenuItem
           icon={<MenuOutlinedIcon />}
           onClick={handleMenuToggle}
@@ -187,6 +188,14 @@ const SideBarMenu = (props) => {
               router="/AutoComplete"
               onClick={() => handleSubmenuChange("AutoComplete")}
             />
+            <Sidebaritems
+              active={activeSubmenu === "PriceCheck"}
+              title="PriceCheck"
+              icon={<PriceCheck style={{ fontSize: "28px" }} />}
+              router="/PriceCheck"
+              onClick={() => handleSubmenuChange("PriceCheck")}
+            />
+
           </>
         )}
 

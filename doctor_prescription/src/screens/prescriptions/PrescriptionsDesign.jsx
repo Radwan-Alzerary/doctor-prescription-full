@@ -39,7 +39,7 @@ const data = {
         dose: "الجرعة",
         doseNum: "عدد الجرع",
         inTakeTime: { name: "وقت التناول" },
-        description:"This code provides a complete and functional `PrescriptionsDesign` "
+        description: "This code provides a complete and functional `PrescriptionsDesign` "
       },
       {
         id: { name: "اسم الدواء", tradeName: "الاسم العلمي" },
@@ -434,7 +434,7 @@ function PrescriptionsDesign() {
                   }}
                   type="color"
                   className=" border-none rounded-full"
-                  // value={color} onChange={e => setColor(e.target.value)}
+                // value={color} onChange={e => setColor(e.target.value)}
                 />
               </div>
               <FormControlLabel
@@ -504,7 +504,7 @@ function PrescriptionsDesign() {
                   }}
                   type="color"
                   className=" border-none rounded-full"
-                  // value={color} onChange={e => setColor(e.target.value)}
+                // value={color} onChange={e => setColor(e.target.value)}
                 />
               </div>
               <FormControlLabel
@@ -2486,7 +2486,7 @@ function PrescriptionsDesign() {
             <div className="flex w-full  mt-4 font-bold">
               <p>معلومات الزيارة القادمة</p>
             </div>
-            
+
 
 
             <div className="flex">
@@ -2598,6 +2598,16 @@ function PrescriptionsDesign() {
                 size="small"
                 sx={{ width: "20%" }}
               ></TextField>
+              <TextField
+                value={medicalReportsStype.spaceBetweenRows}
+                onChange={(event) => {
+                  handleInputChange("spaceBetweenRows", event.target.value);
+                }}
+                label="تقليص المسافة بين الادوية"
+                size="small"
+                sx={{ width: "20%" }}
+              ></TextField>
+
             </div>
             <div className="flex justify-center items-center flex-col">
               <p>تفعيل الخطوط </p>
@@ -2626,100 +2636,100 @@ function PrescriptionsDesign() {
             <div>
               {textRandom
                 ? textRandom.map((textData, index) => (
-                    <>
-                      <div>السطر {index + 1}</div>
-                      <div className="flex justify-between items-center w-full">
-                        <TextField
-                          value={medicalReportsStype.textRandom[index].title}
+                  <>
+                    <div>السطر {index + 1}</div>
+                    <div className="flex justify-between items-center w-full">
+                      <TextField
+                        value={medicalReportsStype.textRandom[index].title}
+                        onChange={(event) => {
+                          onRandomTextInput(
+                            "title",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                        label="معلومات السطر"
+                        size="small"
+                      ></TextField>
+                      <TextField
+                        type="number"
+                        label="حجم الخط"
+                        size="small"
+                        value={medicalReportsStype.textRandom[index].size}
+                        onChange={(event) => {
+                          onRandomTextInput(
+                            "size",
+                            event.target.value,
+                            index
+                          );
+                          console.log(event.target.value);
+                        }}
+                      ></TextField>
+                      <TextField
+                        type="number"
+                        label="x"
+                        size="small"
+                        value={medicalReportsStype.textRandom[index].x}
+                        onChange={(event) => {
+                          onRandomTextInput(
+                            "x",
+                            event.target.value,
+                            index,
+                            onRandomTextInput
+                          );
+
+                          console.log(event.target.value);
+                        }}
+                        inputProps={{ min: "0", max: "100" }}
+                      ></TextField>
+                      <TextField
+                        type="number"
+                        label="y"
+                        size="small"
+                        value={medicalReportsStype.textRandom[index].y}
+                        onChange={(event) => {
+                          onRandomTextInput("y", event.target.value, index);
+                          console.log(event.target.value);
+                        }}
+                        inputProps={{ min: "0", max: "100" }}
+                      ></TextField>
+
+                      <div className="flex flex-col justify-center items-center">
+                        <p>اللون</p>
+                        <input
+                          type="color"
+                          className=" border-none rounded-full"
+                          value={medicalReportsStype.textRandom[index].color}
                           onChange={(event) => {
                             onRandomTextInput(
-                              "title",
+                              "color",
                               event.target.value,
                               index
                             );
                             console.log(event.target.value);
                           }}
-                          label="معلومات السطر"
-                          size="small"
-                        ></TextField>
-                        <TextField
-                          type="number"
-                          label="حجم الخط"
-                          size="small"
-                          value={medicalReportsStype.textRandom[index].size}
-                          onChange={(event) => {
-                            onRandomTextInput(
-                              "size",
-                              event.target.value,
-                              index
-                            );
-                            console.log(event.target.value);
-                          }}
-                        ></TextField>
-                        <TextField
-                          type="number"
-                          label="x"
-                          size="small"
-                          value={medicalReportsStype.textRandom[index].x}
-                          onChange={(event) => {
-                            onRandomTextInput(
-                              "x",
-                              event.target.value,
-                              index,
-                              onRandomTextInput
-                            );
-
-                            console.log(event.target.value);
-                          }}
-                          inputProps={{ min: "0", max: "100" }}
-                        ></TextField>
-                        <TextField
-                          type="number"
-                          label="y"
-                          size="small"
-                          value={medicalReportsStype.textRandom[index].y}
-                          onChange={(event) => {
-                            onRandomTextInput("y", event.target.value, index);
-                            console.log(event.target.value);
-                          }}
-                          inputProps={{ min: "0", max: "100" }}
-                        ></TextField>
-
-                        <div className="flex flex-col justify-center items-center">
-                          <p>اللون</p>
-                          <input
-                            type="color"
-                            className=" border-none rounded-full"
-                            value={medicalReportsStype.textRandom[index].color}
-                            onChange={(event) => {
-                              onRandomTextInput(
-                                "color",
-                                event.target.value,
-                                index
-                              );
-                              console.log(event.target.value);
-                            }}
-                          />
-                        </div>
-                        <IconButton
-                          onClick={() => {
-                            HandleOnTextRemove("randomText", textData._id);
-                          }}
-                          type="button"
-                          sx={{ p: "10px" }}
-                          aria-label="search"
-                        >
-                          <DeleteIcon></DeleteIcon>
-                        </IconButton>
-                        <FormControlLabel
-                          sx={{
-                            display: "block",
-                          }}
-                          control={<Switch color="primary" />}
                         />
                       </div>
-                    </>
-                  ))
+                      <IconButton
+                        onClick={() => {
+                          HandleOnTextRemove("randomText", textData._id);
+                        }}
+                        type="button"
+                        sx={{ p: "10px" }}
+                        aria-label="search"
+                      >
+                        <DeleteIcon></DeleteIcon>
+                      </IconButton>
+                      <FormControlLabel
+                        sx={{
+                          display: "block",
+                        }}
+                        control={<Switch color="primary" />}
+                      />
+                    </div>
+                  </>
+                ))
                 : ""}
               <div
                 onClick={() => {

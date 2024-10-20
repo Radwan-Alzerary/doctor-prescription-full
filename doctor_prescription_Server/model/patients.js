@@ -105,6 +105,8 @@ const PatientsSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "MedicalAnalysis",
     },
+    freeVisitDate: { type: Date },
+
   },
   {
     timestamps: true,

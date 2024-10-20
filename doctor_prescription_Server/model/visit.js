@@ -17,7 +17,20 @@ const visitSqema = new mongoose.Schema(
     pastMedicalHistory: { type: String, default: "" },
     drugHistory: { type: String, default: "" },
     suspendedDx: { type: String, default: "" },
-    sequence:{type:String}
+    sequence: { type: String },
+    TotalAmount: { type: Number },
+    TheArrivingAmount
+      : { type: Number },
+    SessionPrice: { type: Number },
+    DateOfSecondvisit: { type: Date },
+    TypeOfExamination: { type: String },
+    Notes: { type: String },
+    NumberOfMaxillaryImplants: { type: Number },
+    NumberOfMandibularImplants: { type: Number },
+    NumberOfDaysForFreeReview: { type: Number },
+
+    freeVisitDate: { type: Date },
+
   },
   {
     timestamps: true,

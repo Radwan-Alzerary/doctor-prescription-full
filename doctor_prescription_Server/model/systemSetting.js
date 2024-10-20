@@ -99,6 +99,19 @@ const SystemSettingSchema = new mongoose.Schema(
       visitPastMedicalHistory: { type: Boolean, default: true },
       visitDrugHistory: { type: Boolean, default: true },
       visitSuspendedDx: { type: Boolean, default: true },
+
+      visitTotalAmount: { type: Boolean, default: false },
+      visitTheArrivingAmount: { type: Boolean, default: false },
+      visitSessionPrice: { type: Boolean, default: false },
+      visitDateOfSecondvisit: { type: Boolean, default: false },
+      visitTypeOfExamination: { type: Boolean, default: false },
+      visitNotes: { type: Boolean, default: false },
+      visitNumberOfMandibularImplants: { type: Boolean, default: true },
+      visitNumberOfMaxillaryImplants: { type: Boolean, default: true },
+      visitDentistryActive: { type: Boolean, default: false },
+
+      visitNumberOfDaysForFreeReview: { type: Boolean, default: false },
+
     },
     pregnancyActive: { type: Boolean, default: true },
     spesialLogo: { type: Boolean, default: false },
@@ -106,6 +119,15 @@ const SystemSettingSchema = new mongoose.Schema(
     isForWoman: { type: Boolean, default: false },
     billSelectFromGroup: { type: Boolean, default: false },
     isForSurgery: { type: Boolean, default: false },
+    finanical: {
+      active: { type: Boolean, default: false },
+      visitFinanicalSystem: { type: Boolean, default: false },
+      CostOfVisit: { type: Number, default: 0 },
+      ReviewCost: { type: Number, default: 0 },
+      ReviewCost: { type: Number, default: 0 },
+      visitNumberOfDaysForFreeReview: { type: Number, default: 0 },
+    }
+
   },
   {
     timestamps: true,

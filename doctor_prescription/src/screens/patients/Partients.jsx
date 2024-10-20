@@ -109,7 +109,10 @@ const Row = React.memo(
         return "";
       }
     };
-
+    const isBeforeFreeVisitDate = (freeVisitDate) => {
+      return new Date() < new Date(freeVisitDate);
+    };
+    
     return (
       <React.Fragment>
         <TableRow
@@ -130,9 +133,10 @@ const Row = React.memo(
               scope="row"
               align="center"
             >
-              <div className="flex justify-center items-center gap-4 font-bold text-base">
-                {row.name}
-                {row.bookedPriority > 0 ? (
+              <div className={`flex ${new Date() < new Date(row.freeVisitDate) ? 'text-green-400' : ''} justify-center items-center gap-4 font-bold text-base`}>
+              {row.name}
+              
+              {row.bookedPriority > 0 ? (
                   <div className=" bg-cyan-500 rounded-full w-8 h-8 flex justify-center items-center">
                     {row.bookedPriority}
                   </div>
@@ -149,7 +153,7 @@ const Row = React.memo(
             settingData.patientsTable.patientDate ? (
             <TableCell component="th" scope="row" align="center">
               <div className="bg-green-100 w-full flex justify-center items-center h-6 rounded-full">
-                {new Date(row.createdAt).toLocaleString("en-GB", {
+                {new Date(row.updatedAt).toLocaleString("en-GB", {
                   day: "2-digit",
                   month: "2-digit",
                   year: "numeric",
@@ -194,8 +198,8 @@ const Row = React.memo(
             <TableCell component="th" scope="row" align="center">
               <div
                 className={`p-0.5 rounded-full  ${row.gender === "ذكر"
-                    ? "bg-blue-200 hover:bg-blue-300"
-                    : "bg-pink-200 hover:bg-pink-300"
+                  ? "bg-blue-200 hover:bg-blue-300"
+                  : "bg-pink-200 hover:bg-pink-300"
                   }`}
               >
                 {row.gender === "ذكر" ? (
@@ -902,14 +906,6 @@ function Partients() {
       }
     };
   }, [handleKeyPress]);
-
-
-
-
-
-
-
-
 
 
   const handleLabReportDelete = useCallback(

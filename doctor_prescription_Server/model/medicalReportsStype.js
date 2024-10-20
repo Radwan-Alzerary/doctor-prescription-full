@@ -10,6 +10,8 @@ const MedicalReportsStyleSchema = new mongoose.Schema(
     leftPading: { type: String, default: 0 },
     topPading: { type: String, default: 0 },
     bottomPading: { type: String, default: 0 },
+    spaceBetweenRows: { type: Number, default: 0 },
+
 
     mainNameHeaderColor: { type: String, default: "#EF4444" },
     mainNameHeader: { type: String, default: "اسم الطبيب" },

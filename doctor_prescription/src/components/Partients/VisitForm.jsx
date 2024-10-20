@@ -5,6 +5,8 @@ import Cookies from "js-cookie"
 import axios from "axios"
 import MedicalFormChipAutoComplete from "./MedicalFormChipAutoComplete"
 import BackGroundShadow from "../pageCompond/BackGroundShadow"
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 
 const TextField = ({ label, value, onChange, multiline = false, onClick }) => (
   <div className="w-full mb-4">
@@ -84,59 +86,59 @@ const VisitHistoryModal = ({ visits, onClose, settingData }) => {
 
   return (
     <>
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-600 bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-gray-800">
-            <FormattedMessage id="Visit History" />
-          </h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-        {visits.map((visit, index) => (
-          <div key={index} className="mb-6 p-4 border rounded-lg">
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-lg font-semibold">{new Date(visit.createdAt).toLocaleString()}</h3>
-              <button
-                className="text-blue-600 hover:text-blue-800 flex items-center"
-                onClick={() => toggleExpand(index)}
-              >
-                {expandedVisit === index ? (
-                  <>
-                    <FormattedMessage id="Hide Details" />
-                    <ChevronDown className="w-4 h-4 ml-1" />
-                  </>
-                ) : (
-                  <>
-                    <FormattedMessage id="View Details" />
-                    <ChevronRight className="w-4 h-4 ml-1" />
-                  </>
-                )}
-              </button>
-            </div>
-            {renderField(visit, 'CauseOfVisite', 'CauseOfVisite')}
-            {renderField(visit, 'chiefComplaint', 'Diagnostic Details')}
-            {renderField(visit, 'diagnosis', 'diagnosis')}
-            {expandedVisit === index && (
-              <div className="mt-4 space-y-2">
-                {renderField(visit, 'PriorChronicTherapy', 'PriorChronicTherapy')}
-                {renderField(visit, 'investigation', 'InvestigationFinding')}
-                {renderField(visit, 'management', 'management')}
-                {renderField(visit, 'chronicTherapy', 'chronicTherapy')}
-                {renderField(visit, 'analysis', 'analysis')}
-                {renderField(visit, 'riskFactor', 'riskFactor')}
-                {renderField(visit, 'pastMedicalHistory', 'pastMedicalHistory')}
-                {renderField(visit, 'drugHistory', 'drugHistory')}
-                {renderField(visit, 'suspendedDx', 'suspendedDx')}
-                {renderField(visit, 'type', 'Visit Type')}
-                {renderField(visit, 'priority', 'Priority')}
-              </div>
-            )}
+      <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-600 bg-opacity-50 flex items-center justify-center">
+        <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-800">
+              <FormattedMessage id="Visit History" />
+            </h2>
+            <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+              <X className="w-6 h-6" />
+            </button>
           </div>
-        ))}
+          {visits.map((visit, index) => (
+            <div key={index} className="mb-6 p-4 border rounded-lg">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-lg font-semibold">{new Date(visit.createdAt).toLocaleString()}</h3>
+                <button
+                  className="text-blue-600 hover:text-blue-800 flex items-center"
+                  onClick={() => toggleExpand(index)}
+                >
+                  {expandedVisit === index ? (
+                    <>
+                      <FormattedMessage id="Hide Details" />
+                      <ChevronDown className="w-4 h-4 ml-1" />
+                    </>
+                  ) : (
+                    <>
+                      <FormattedMessage id="View Details" />
+                      <ChevronRight className="w-4 h-4 ml-1" />
+                    </>
+                  )}
+                </button>
+              </div>
+              {renderField(visit, 'CauseOfVisite', 'CauseOfVisite')}
+              {renderField(visit, 'chiefComplaint', 'Diagnostic Details')}
+              {renderField(visit, 'diagnosis', 'diagnosis')}
+              {expandedVisit === index && (
+                <div className="mt-4 space-y-2">
+                  {renderField(visit, 'PriorChronicTherapy', 'PriorChronicTherapy')}
+                  {renderField(visit, 'investigation', 'InvestigationFinding')}
+                  {renderField(visit, 'management', 'management')}
+                  {renderField(visit, 'chronicTherapy', 'chronicTherapy')}
+                  {renderField(visit, 'analysis', 'analysis')}
+                  {renderField(visit, 'riskFactor', 'riskFactor')}
+                  {renderField(visit, 'pastMedicalHistory', 'pastMedicalHistory')}
+                  {renderField(visit, 'drugHistory', 'drugHistory')}
+                  {renderField(visit, 'suspendedDx', 'suspendedDx')}
+                  {renderField(visit, 'type', 'Visit Type')}
+                  {renderField(visit, 'priority', 'Priority')}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
     </>
 
   )
@@ -170,6 +172,13 @@ function VisitForm({
     pastMedicalHistory: "",
     drugHistory: "",
     suspendedDx: "",
+    TotalAmount: "",
+    TheArrivingAmount: "",
+    SessionPrice: "",
+    DateOfSecondvisit: "",
+    Notes: "",
+    NumberOfMaxillaryImplants: "",
+    NumberOfMandibularImplants: "",
   })
 
   const [locale, setLocale] = useState(() => {
@@ -213,8 +222,8 @@ function VisitForm({
     setFormData({ ...formData, [name]: value })
   }
 
-  const renderField = (fieldName, label, multiline = false) => {
-    if (!settingData.visitForm?.[`visit${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}`]) return null;
+  const renderField = (fieldName, label, multiline = false, activeName) => {
+    if (!settingData.visitForm?.[`visit${activeName.charAt(0).toUpperCase() + activeName.slice(1)}`]) return null;
     return (
       <div className="w-full mb-4">
         <TextField
@@ -279,18 +288,68 @@ function VisitForm({
             <FormattedMessage id="Show Visit History" />
           </button>
 
-          {renderField("CauseOfVisite", "CauseOfVisite", true)}
-          {renderField("PriorChronicTherapy", "PriorChronicTherapy", true)}
-          {renderField("chiefComplaint", "Diagnostic Details", true)}
-          {renderField("investigation", "InvestigationFinding", true)}
-          {renderField("diagnosis", "diagnosis", true)}
-          {renderField("management", "management", true)}
-          {renderField("chronicTherapy", "chronicTherapy", true)}
-          {renderField("analysis", "analysis", true)}
-          {renderField("riskFactor", "riskFactor", true)}
-          {renderField("pastMedicalHistory", "pastMedicalHistory", true)}
-          {renderField("drugHistory", "drugHistory", true)}
-          {renderField("suspendedDx", "suspendedDx", true)}
+          {renderField("CauseOfVisite", "CauseOfVisite", true, "CauseOfVisite")}
+          {renderField("PriorChronicTherapy", "PriorChronicTherapy", true, "PriorChronicTherapy")}
+          {renderField("chiefComplaint", "Diagnostic Details", true, "Diagnostic Details")}
+          {renderField("investigation", "InvestigationFinding", true, "InvestigationFinding")}
+          {renderField("diagnosis", "diagnosis", true, "diagnosis")}
+          {renderField("management", "management", true, "management")}
+          {renderField("chronicTherapy", "chronicTherapy", true, "chronicTherapy")}
+          {renderField("analysis", "analysis", true, "analysis")}
+          {renderField("riskFactor", "riskFactor", true, "riskFactor")}
+          {renderField("pastMedicalHistory", "pastMedicalHistory", true, "pastMedicalHistory")}
+          {renderField("drugHistory", "drugHistory", true, "drugHistory")}
+          {renderField("suspendedDx", "suspendedDx", true, "suspendedDx")}
+          {settingData.visitForm?.visitDentistryActive && (
+            <Select
+              label={intl.formatMessage({ id: "Visit Type" })}
+              value={formData.TypeOfExamination}
+              onChange={(value) => handleInputChange("TypeOfExamination", value)}
+              options={[
+                { value: "تقويم", label: "تقويم" },
+                { value: "زراعة", label: "زراعة" },
+              ]}
+            />
+          )}
+          {renderField("TotalAmount", "المبلغ الكلي", false, "TotalAmount")}
+          {renderField("TheArrivingAmount", "المبلغ المستلم", false, "TheArrivingAmount")}
+          {renderField("SessionPrice", "مبلغ الجلسة", false, "SessionPrice")}
+          <div className="w-full mb-4">
+            "تاريخ الزيارة القادمة" 
+            <input
+              type="date"
+              id="DateOfSecondvisit"
+              value={formData["DateOfSecondvisit"]}
+              onChange={(newValue) => handleInputChange("DateOfSecondvisit", newValue.target.value)}
+              className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+
+          </div>
+
+          {renderField("Notes", "ملاحضات", true, "Notes")}
+
+          {formData.TypeOfExamination === "زراعة" && (
+            <>
+              <div className="w-full mb-4">
+                <TextField
+                  label={intl.formatMessage({ id: "عدد زرعات الفك العلوي" })}
+                  value={formData["NumberOfMandibularImplants"]}
+                  onChange={(value) => handleInputChange("NumberOfMandibularImplants", value)}
+                  onClick={() => setTextSelector("NumberOfMandibularImplants")}
+                />
+              </div>
+              <div className="w-full mb-4">
+                <TextField
+                  label={intl.formatMessage({ id: "عدد زرعات الفك السفلي" })}
+                  value={formData["NumberOfMaxillaryImplants"]}
+                  onChange={(value) => handleInputChange("NumberOfMaxillaryImplants", value)}
+                  onClick={() => setTextSelector("NumberOfMaxillaryImplants")}
+                />
+              </div>
+            </>
+          )}
+
 
           {settingData.visitForm?.visitType && (
             <Select

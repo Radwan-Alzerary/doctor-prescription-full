@@ -103,7 +103,12 @@ const VisitDateTable = ({ visitData }) => {
             {paginatedData.map((row) => (
               <tr key={row._id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {FormattedDate(row.date)}
+                  {new Date(row.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                  })
+}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {row.visitReportCount}
@@ -166,11 +171,10 @@ const VisitDateTable = ({ visitData }) => {
                 <button
                   key={index}
                   onClick={() => setCurrentPage(index + 1)}
-                  className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                    currentPage === index + 1
+                  className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${currentPage === index + 1
                       ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
                       : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
                   {index + 1}
                 </button>
