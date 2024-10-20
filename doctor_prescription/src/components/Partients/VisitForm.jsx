@@ -302,12 +302,15 @@ function VisitForm({
           {renderField("suspendedDx", "suspendedDx", true, "suspendedDx")}
           {settingData.visitForm?.visitDentistryActive && (
             <Select
-              label={intl.formatMessage({ id: "Visit Type" })}
+              label={intl.formatMessage({ id: "نوع الفحص" })}
               value={formData.TypeOfExamination}
               onChange={(value) => handleInputChange("TypeOfExamination", value)}
               options={[
                 { value: "تقويم", label: "تقويم" },
                 { value: "زراعة", label: "زراعة" },
+                { value: "الحشوات", label: "الحشوات" },
+                { value: "الخلع", label: "الخلع" },
+                { value: "التركيب", label: "التركيب" },
               ]}
             />
           )}
