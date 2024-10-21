@@ -291,7 +291,7 @@ function VisitForm({
           {renderField("CauseOfVisite", "CauseOfVisite", true, "CauseOfVisite")}
           {renderField("PriorChronicTherapy", "PriorChronicTherapy", true, "PriorChronicTherapy")}
           {renderField("chiefComplaint", "Diagnostic Details", true, "Diagnostic Details")}
-          {renderField("investigation", "InvestigationFinding", true, "InvestigationFinding")}
+          {renderField("investigation", "investigation", true, "investigation")}
           {renderField("diagnosis", "diagnosis", true, "diagnosis")}
           {renderField("management", "management", true, "management")}
           {renderField("chronicTherapy", "chronicTherapy", true, "chronicTherapy")}
