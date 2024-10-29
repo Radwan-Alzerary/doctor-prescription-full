@@ -7,6 +7,7 @@ import MedicalFormChipAutoComplete from "./MedicalFormChipAutoComplete"
 import BackGroundShadow from "../pageCompond/BackGroundShadow"
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
+import DentalTooth from "./DentalTooth"
 
 const TextField = ({ label, value, onChange, multiline = false, onClick }) => (
   <div className="w-full mb-4">
@@ -306,32 +307,113 @@ function VisitForm({
               value={formData.TypeOfExamination}
               onChange={(value) => handleInputChange("TypeOfExamination", value)}
               options={[
+                { value: "", label: "النوع" },
                 { value: "تقويم", label: "تقويم" },
                 { value: "زراعة", label: "زراعة" },
                 { value: "الحشوات", label: "الحشوات" },
-                { value: "الخلع", label: "الخلع" },
+                { value: "قلع", label: "قلع" },
                 { value: "التركيب", label: "التركيب" },
+                { value: "استشارة", label: "استشارة" },
+                { value: "check", label: "check" },
+                { value: "check+x.ray", label: "check+x.ray" },
+                { value: "ش.ك", label: "ش.ك" },
+                { value: "", label: "" },
+
               ]}
             />
           )}
-          {renderField("TotalAmount", "المبلغ الكلي", false, "TotalAmount")}
-          {renderField("TheArrivingAmount", "المبلغ المستلم", false, "TheArrivingAmount")}
-          {renderField("SessionPrice", "مبلغ الجلسة", false, "SessionPrice")}
-          <div className="w-full mb-4">
-            "تاريخ الزيارة القادمة" 
-            <input
-              type="date"
-              id="DateOfSecondvisit"
-              value={formData["DateOfSecondvisit"]}
-              onChange={(newValue) => handleInputChange("DateOfSecondvisit", newValue.target.value)}
-              className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+
+          {formData.TypeOfExamination === "تقويم" && (
+            <Select
+              label={intl.formatMessage({ id: "الحالة" })}
+              value={formData.dentalState}
+              onChange={(value) => handleInputChange("dentalState", value)}
+              options={[
+                { value: "استشارة تقويم", label: "استشارة تقويم" },
+                { value: "مشكلة تقويم", label: "مشكلة تقويم" },
+                { value: "تقويم م.ق", label: "تقويم م.ق" },
+                { value: "تقويم ق.م", label: "تقويم ق.م" },
+                { value: "استلام تقويم شفاف", label: "استلام تقويم شفاف" },
+                { value: "م. تقويم شفاف", label: "م. تقويم شفاف" },
+                { value: "جلسة تقويم شفاف", label: "جلسة تقويم شفاف" },
+                { value: "اخذ قياس تقويم شفاف", label: "اخذ قياس تقويم شفاف" },
+                { value: "جلسة تقويم متحرك", label: "جلسة تقويم متحرك" },
+                { value: "استلام تقويم متحرك", label: "استلام تقويم متحرك" },
+                { value: "اخذ قياس تقويم متحرك", label: "اخذ قياس تقويم متحرك" },
+                { value: "م. تقويم متحرك", label: "م. تقويم متحرك" },
+              ]}
             />
+          )}
+          {formData.TypeOfExamination === "التركيب" && (
+            <Select
+              label={intl.formatMessage({ id: "الحالة" })}
+              value={formData.dentalState}
+              onChange={(value) => handleInputChange("dentalState", value)}
+              options={[
+                { value: "اخذ قياس تلبيس", label: "اخذ قياس تلبيس" },
+              ]}
+            />
+          )}
 
 
-          </div>
+          {formData.TypeOfExamination === "الحشوات" && (
+            <Select
+              label={intl.formatMessage({ id: "الحالة" })}
+              value={formData.dentalState}
+              onChange={(value) => handleInputChange("dentalState", value)}
+              options={[
+                { value: "تكملة حشوة", label: "تكملة حشوة" },
+                { value: "تكملة حشوة م.ق", label: "تكملة حشوة م.ق" },
+                { value: "تكملة حشوة ق.م", label: "تكملة حشوة ق.م" },
+                { value: "تكملة حشوة A", label: "تكملة حشوة A" },
+                { value: "م. حشوة", label: "م. حشوة" },
+                { value: "م.ف حشوة ق.م", label: "م.ف حشوة ق.م" },
+                { value: "pain في الحشوة", label: "pain في الحشوة" },
+              ]}
+            />
+          )}
 
-          {renderField("Notes", "ملاحضات", true, "Notes")}
 
+          {formData.TypeOfExamination === "زراعة" && (
+            <Select
+              label={intl.formatMessage({ id: "الحالة" })}
+              value={formData.dentalState}
+              onChange={(value) => handleInputChange("dentalState", value)}
+              options={[
+                { value: "استشارة زراعة", label: "استشارة زراعة" },
+                { value: "عملية زراعة", label: "عملية زراعة" },
+                { value: "فحص زراعة", label: "فحص زراعة" },
+                { value: "اخذ قياس زراعة", label: "اخذ قياس زراعة" },
+                { value: "pain في الزراعة", label: "pain في الزراعة" },
+              ]}
+            />
+          )}
+
+          {formData.TypeOfExamination === "قلع" && (
+            <Select
+              label={intl.formatMessage({ id: "الحالة" })}
+              value={formData.dentalState}
+              onChange={(value) => handleInputChange("dentalState", value)}
+              options={[
+                { value: "check بعد exo", label: "check بعد exo" },
+                { value: "exo سن العقل", label: "exo سن العقل" },
+              ]}
+            />
+          )}
+
+          {formData.TypeOfExamination === "استشارة" && (
+            <Select
+              label={intl.formatMessage({ id: "الحالة" })}
+              value={formData.dentalState}
+              onChange={(value) => handleInputChange("dentalState", value)}
+              options={[
+                { value: "استشارة فقط", label: "استشارة فقط" },
+                { value: "استشارة ليزر", label: "استشارة ليزر" },
+                { value: "عملية تبييض ليزر", label: "عملية تبييض ليزر" },
+                { value: "استشارة تلبيس", label: "استشارة تلبيس" },
+              ]}
+            />
+          )}
           {formData.TypeOfExamination === "زراعة" && (
             <>
               <div className="w-full mb-4">
@@ -352,6 +434,28 @@ function VisitForm({
               </div>
             </>
           )}
+          <div>{formData.TypeOfExamination}</div>
+
+
+
+          {renderField("TotalAmount", "المبلغ الكلي", false, "TotalAmount")}
+          {renderField("TheArrivingAmount", "المبلغ المستلم", false, "TheArrivingAmount")}
+          {renderField("SessionPrice", "مبلغ الجلسة", false, "SessionPrice")}
+          <div className="w-full mb-4">
+            "تاريخ الزيارة القادمة"
+            <input
+              type="date"
+              id="DateOfSecondvisit"
+              value={formData["DateOfSecondvisit"]}
+              onChange={(newValue) => handleInputChange("DateOfSecondvisit", newValue.target.value)}
+              className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+
+          </div>
+
+          {renderField("Notes", "ملاحضات", true, "Notes")}
+
 
 
           {settingData.visitForm?.visitType && (
@@ -379,7 +483,7 @@ function VisitForm({
               ]}
             />
           )}
-
+          {/* <DentalTooth></DentalTooth> */}
           <div className="flex justify-between items-center">
             <button
               type="submit"

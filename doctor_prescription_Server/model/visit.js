@@ -28,7 +28,7 @@ const visitSqema = new mongoose.Schema(
     NumberOfMaxillaryImplants: { type: Number },
     NumberOfMandibularImplants: { type: Number },
     NumberOfDaysForFreeReview: { type: Number },
-
+    dentalState:{type:String},
     freeVisitDate: { type: Date },
 
   },
