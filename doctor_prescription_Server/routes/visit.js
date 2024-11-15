@@ -165,6 +165,76 @@ router.delete("/delete/:id", async (req, res) => {
   }
 });
 
+router.get("/patient-visit-sums-totals", async (req, res) => {
+  try {
+    const dateRange = req.query.dateRange;
+    let startDate, endDate;
+
+    // Set up date range filter
+    const now = new Date();
+    switch (dateRange) {
+      case 'day':
+        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        break;
+      case 'month':
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        break;
+      case 'year':
+        startDate = new Date(now.getFullYear(), 0, 1);
+        endDate = new Date(now.getFullYear() + 1, 0, 1);
+        break;
+      case 'custom':
+        startDate = new Date(req.query.startDate);
+        endDate = new Date(req.query.endDate);
+        if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+          return res.status(400).json({ error: "Invalid date range provided" });
+        }
+        endDate.setDate(endDate.getDate() + 1); // Include the end date
+        break;
+      case 'all':
+      default:
+        startDate = new Date(0); // Start from the earliest possible date
+        endDate = new Date();    // Up to the current date
+        break;
+    }
+
+    // Aggregate the total sums over all visits in the date range
+    const totals = await Visit.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startDate, $lt: endDate }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: { $ifNull: ["$TotalAmount", 0] } },
+          totalArrivingAmount: { $sum: { $ifNull: ["$TheArrivingAmount", 0] } },
+          totalSessionPrice: { $sum: { $ifNull: ["$SessionPrice", 0] } }
+        }
+      }
+    ]);
+
+    const totalAmount = totals[0]?.totalAmount || 0;
+    const totalArrivingAmount = totals[0]?.totalArrivingAmount || 0;
+    const totalSessionPrice = totals[0]?.totalSessionPrice || 0;
+    const totalRemainingAmount = totalAmount - totalArrivingAmount;
+
+    res.json({
+      totalAmount,
+      totalArrivingAmount,
+      totalSessionPrice,
+      totalRemainingAmount
+    });
+
+  } catch (error) {
+    console.error("Error fetching patient visit totals:", error);
+    res.status(500).json({ error: "An error occurred while fetching data" });
+  }
+});
+
 
 
 
