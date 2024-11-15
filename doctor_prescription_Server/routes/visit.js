@@ -251,6 +251,8 @@ router.get("/patient-visit-sums", async (req, res) => {
     console.log("Total totalPages:", totalPages);
     console.log("Total totalResults:", totalResults);
     res.set('X-Total-Pages', totalPages.toString());
+    res.set('Access-Control-Expose-Headers', 'X-Total-Pages'); // Expose the header
+
     res.json(paginatedResults);
   } catch (error) {
     console.error("Error fetching patient visit sums:", error);
