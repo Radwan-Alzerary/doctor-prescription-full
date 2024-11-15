@@ -248,6 +248,7 @@ router.get("/patient-visit-sums", async (req, res) => {
     const paginatedResults = sortedPatients.slice(skip, skip + pageSize);
 
     // Send the response
+    console.log("Total totalPages:", totalResults);
     res.set('X-Total-Pages', totalPages.toString());
     res.json(paginatedResults);
   } catch (error) {
