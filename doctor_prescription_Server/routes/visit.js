@@ -259,6 +259,7 @@ router.get("/patient-visit-sums", async (req, res) => {
     const dateRange = req.query.dateRange;
     let startDate, endDate;
 
+    // Extract the search term
     const searchTerm = req.query.searchTerm || '';
 
     // Set up date range filter
@@ -284,99 +285,63 @@ router.get("/patient-visit-sums", async (req, res) => {
         }
         endDate.setDate(endDate.getDate() + 1); // Include the end date
         break;
-      case 'all':
-      default:
-        startDate = new Date(0); // Start from the earliest possible date
-        endDate = new Date();    // Up to the current date
-        break;
-    }
+        case 'all':
+          default:
+            startDate = new Date(0); // Start from the earliest date
+            endDate = new Date();    // Up to the current date
+            break;
+      }
 
-    // Build the match criteria for the aggregation pipeline
-    const matchCriteria = {
-      createdAt: { $gte: startDate, $lt: endDate }
-    };
-
-    // Now perform aggregation on the 'visit' collection
-    const aggregatePipeline = [
-      { $match: matchCriteria },
-      {
-        $group: {
-          _id: "$patients", // Group by patient ObjectId
-          totalAmount: { $sum: { $ifNull: ["$TotalAmount", 0] } },
-          arrivingAmount: { $sum: { $ifNull: ["$TheArrivingAmount", 0] } },
-          sessionPrice: { $sum: { $ifNull: ["$SessionPrice", 0] } },
-        }
-      },
-      {
-        $lookup: {
-          from: "patients", // The collection name in MongoDB (lowercase plural)
-          localField: "_id",
-          foreignField: "_id",
-          as: "patient"
-        }
-      },
-      { $unwind: "$patient" },
-    ];
-
-    // If searchTerm is provided, add a match stage after the lookup
+    // Build the patient search query
+    let patientSearchQuery = {};
     if (searchTerm) {
-      aggregatePipeline.push({
-        $match: {
-          "patient.name": { $regex: searchTerm, $options: 'i' }
-        }
-      });
+      patientSearchQuery.name = { $regex: searchTerm, $options: 'i' }; // Case-insensitive search
     }
 
-    // Filter out patients with zero totalAmount and sessionPrice
-    aggregatePipeline.push({
-      $match: {
-        $or: [
-          { totalAmount: { $gt: 0 } },
-          { sessionPrice: { $gt: 0 } }
-        ]
-      }
-    });
+    // Fetch patients with their visits using populate and date range filter
+    const patients = await Patients.find(patientSearchQuery)
+      .populate({
+        path: "visit",
+        match: {
+          createdAt: { $gte: startDate, $lt: endDate }
+        },
+        select: "TotalAmount TheArrivingAmount SessionPrice date"
+      })
+      .exec();
 
-    // Add field for sorting
-    aggregatePipeline.push({
-      $addFields: {
-        totalAmountMinusArrivingAmount: { $subtract: ["$totalAmount", "$arrivingAmount"] }
-      }
-    });
+    // Process the fetched patients to calculate sums
+    const processedPatients = patients
+      .map((patient) => {
+        // Calculate the sums for each patient
+        const totalAmount = patient.visit.reduce((sum, visit) => sum + (visit.TotalAmount || 0), 0);
+        const arrivingAmount = patient.visit.reduce((sum, visit) => sum + (visit.TheArrivingAmount || 0), 0);
+        const sessionPrice = patient.visit.reduce((sum, visit) => sum + (visit.SessionPrice || 0), 0);
 
-    // Sort by 'TotalAmount-TheArrivingAmount' descending
-    aggregatePipeline.push({
-      $sort: { totalAmountMinusArrivingAmount: -1 }
-    });
+        return {
+          patientId: patient._id,
+          patientName: patient.name,
+          TotalAmount: totalAmount,
+          TheArrivingAmount: arrivingAmount,
+          "TotalAmount-TheArrivingAmount": totalAmount - arrivingAmount,
+          SessionPrice: sessionPrice,
+        };
+      })
+      .filter((patient) => patient.TotalAmount > 0 || patient.SessionPrice > 0);
 
-    // Count total results
-    const countPipeline = [...aggregatePipeline, { $count: "total" }];
-    const countResult = await visit.aggregate(countPipeline);
-    const totalResults = countResult[0]?.total || 0;
+    // Sort by TotalAmount-TheArrivingAmount in descending order
+    const sortedPatients = processedPatients.sort(
+      (a, b) => b["TotalAmount-TheArrivingAmount"] - a["TotalAmount-TheArrivingAmount"]
+    );
+
+    // Implement pagination
+    const totalResults = sortedPatients.length;
     const totalPages = Math.ceil(totalResults / pageSize);
-
-    // Add pagination stages
-    aggregatePipeline.push({ $skip: skip }, { $limit: pageSize });
-
-    // Project the fields we need
-    aggregatePipeline.push({
-      $project: {
-        patientId: "$patient._id",
-        patientName: "$patient.name",
-        TotalAmount: "$totalAmount",
-        TheArrivingAmount: "$arrivingAmount",
-        "TotalAmount-TheArrivingAmount": "$totalAmountMinusArrivingAmount",
-        SessionPrice: "$sessionPrice"
-      }
-    });
-
-    const results = await Visit.aggregate(aggregatePipeline);
+    const paginatedResults = sortedPatients.slice(skip, skip + pageSize);
 
     // Send the response
     res.set('X-Total-Pages', totalPages.toString());
     res.set('Access-Control-Expose-Headers', 'X-Total-Pages');
-    res.json(results);
-
+    res.json(paginatedResults);
   } catch (error) {
     console.error("Error fetching patient visit sums:", error);
     res.status(500).json({ error: "An error occurred while fetching data" });
