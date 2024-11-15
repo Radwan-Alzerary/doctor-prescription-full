@@ -186,11 +186,11 @@ router.get("/patient-visit-sums", async (req, res) => {
         break;
       case 'month':
         startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
         break;
       case 'year':
         startDate = new Date(now.getFullYear(), 0, 1);
-        endDate = new Date(now.getFullYear() + 1, 0, 0);
+        endDate = new Date(now.getFullYear() + 1, 0, 1);
         break;
       case 'custom':
         startDate = new Date(req.query.startDate);
@@ -202,8 +202,8 @@ router.get("/patient-visit-sums", async (req, res) => {
         break;
       default:
         // If no date range specified, find the oldest visit date
-        const oldestVisit = await Patients.findOne().sort({ 'visit.createdAt': 1 }).select('visit.createdAt');
-        startDate = oldestVisit ? oldestVisit.visit[0].date : new Date(0);
+        const oldestVisit = await visit.findOne().sort({ createdAt: 1 }).select('createdAt');
+        startDate = oldestVisit ? oldestVisit.createdAt : new Date(0);
         endDate = new Date();
     }
 
@@ -235,7 +235,7 @@ router.get("/patient-visit-sums", async (req, res) => {
           SessionPrice: sessionPrice,
         };
       })
-      .filter((patient) => patient.TotalAmount > 0 || patient.sessionPrice > 0); // Only include patients with a non-zero TotalAmount
+      .filter((patient) => patient.TotalAmount > 0 || patient.SessionPrice > 0); // Corrected field name
 
     // Sort by TotalAmount-TheArrivingAmount in descending order
     const sortedPatients = processedPatients.sort(
@@ -255,7 +255,6 @@ router.get("/patient-visit-sums", async (req, res) => {
     res.status(500).json({ error: "An error occurred while fetching data" });
   }
 });
-
 
 
 
