@@ -16,6 +16,7 @@ const visitSqema = new mongoose.Schema(
     riskFactor: { type: String, default: "" },
     pastMedicalHistory: { type: String, default: "" },
     drugHistory: { type: String, default: "" },
+    selectedTeeth: [Number],
     suspendedDx: { type: String, default: "" },
     sequence: { type: String },
     TotalAmount: { type: Number },

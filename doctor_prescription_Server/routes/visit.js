@@ -39,6 +39,7 @@ router.post("/new", async (req, res) => {
       SessionPrice: req.body.data.SessionPrice,
       NumberOfMaxillaryImplants: req.body.data.NumberOfMaxillaryImplants,
       NumberOfMandibularImplants: req.body.data.NumberOfMandibularImplants,
+      selectedTeeth: req.body.data.selectedTeeth,
     });
     await visit.save();
     // Find the patient by ID
@@ -130,6 +131,7 @@ router.post("/editone/", async (req, res) => {
       pastMedicalHistory: req.body.data.pastMedicalHistory,
       drugHistory: req.body.data.drugHistory,
       suspendedDx: req.body.data.suspendedDx,
+      selectedTeeth: req.body.data.selectedTeeth,
 
       TotalAmount: req.body.data.TotalAmount,
       TheArrivingAmount: req.body.data.TheArrivingAmount,
@@ -163,22 +165,60 @@ router.delete("/delete/:id", async (req, res) => {
   }
 });
 
-// Define the route to get aggregated data by patients
+
+
+
 router.get("/patient-visit-sums", async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const page = parseInt(req.query.page) || 1;
     const pageSize = 20;
     const skip = (page - 1) * pageSize;
 
-    // Fetch patients with their visits using populate
+    const dateRange = req.query.dateRange;
+    let startDate, endDate;
+
+    // Set up date range filter
+    const now = new Date();
+    switch (dateRange) {
+      case 'day':
+        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        break;
+      case 'month':
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        break;
+      case 'year':
+        startDate = new Date(now.getFullYear(), 0, 1);
+        endDate = new Date(now.getFullYear() + 1, 0, 0);
+        break;
+      case 'custom':
+        startDate = new Date(req.query.startDate);
+        endDate = new Date(req.query.endDate);
+        if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+          return res.status(400).json({ error: "Invalid date range provided" });
+        }
+        endDate.setDate(endDate.getDate() + 1); // Include the end date
+        break;
+      default:
+        // If no date range specified, find the oldest visit date
+        const oldestVisit = await Patients.findOne().sort({ 'visit.createdAt': 1 }).select('visit.createdAt');
+        startDate = oldestVisit ? oldestVisit.visit[0].date : new Date(0);
+        endDate = new Date();
+    }
+
+    // Fetch patients with their visits using populate and date range filter
     const patients = await Patients.find({})
       .populate({
-        path: "visit", // Assuming 'visit' is the field name in Patients model
-        select: "TotalAmount TheArrivingAmount SessionPrice", // Only select relevant fields
+        path: "visit",
+        match: {
+          createdAt: { $gte: startDate, $lt: endDate }
+        },
+        select: "TotalAmount TheArrivingAmount SessionPrice date"
       })
       .exec();
 
-    // Process the fetched patients to calculate sums and filter by TotalAmount > 0
+    // Process the fetched patients to calculate sums
     const processedPatients = patients
       .map((patient) => {
         // Calculate the sums for each patient
@@ -195,7 +235,7 @@ router.get("/patient-visit-sums", async (req, res) => {
           SessionPrice: sessionPrice,
         };
       })
-      .filter((patient) => patient.TotalAmount > 0); // Only include patients with a non-zero TotalAmount
+      .filter((patient) => patient.TotalAmount > 0 || patient.sessionPrice > 0); // Only include patients with a non-zero TotalAmount
 
     // Sort by TotalAmount-TheArrivingAmount in descending order
     const sortedPatients = processedPatients.sort(
@@ -203,15 +243,20 @@ router.get("/patient-visit-sums", async (req, res) => {
     );
 
     // Implement pagination
+    const totalResults = sortedPatients.length;
+    const totalPages = Math.ceil(totalResults / pageSize);
     const paginatedResults = sortedPatients.slice(skip, skip + pageSize);
 
     // Send the response
+    res.set('X-Total-Pages', totalPages.toString());
     res.json(paginatedResults);
   } catch (error) {
     console.error("Error fetching patient visit sums:", error);
     res.status(500).json({ error: "An error occurred while fetching data" });
   }
 });
+
+
 
 
 

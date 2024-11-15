@@ -180,6 +180,7 @@ function VisitForm({
     Notes: "",
     NumberOfMaxillaryImplants: "",
     NumberOfMandibularImplants: "",
+    selectedTeeth: ""
   })
 
   const [locale, setLocale] = useState(() => {
@@ -434,7 +435,6 @@ function VisitForm({
               </div>
             </>
           )}
-          <div>{formData.TypeOfExamination}</div>
 
 
 
@@ -483,7 +483,12 @@ function VisitForm({
               ]}
             />
           )}
-          {/* <DentalTooth></DentalTooth> */}
+          {settingData.visitForm?.visitDentistryActive && (
+            <DentalTooth selectedTeeth={formData.selectedTeeth} changeValue={(value) => handleInputChange("selectedTeeth", value)}
+            ></DentalTooth>
+
+          )}
+
           <div className="flex justify-between items-center">
             <button
               type="submit"
