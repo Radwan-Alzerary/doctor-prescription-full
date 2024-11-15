@@ -200,12 +200,12 @@ router.get("/patient-visit-sums", async (req, res) => {
         }
         endDate.setDate(endDate.getDate() + 1); // Include the end date
         break;
-      default:
-        // If no date range specified, find the oldest visit date
-        const oldestVisit = await visit.findOne().sort({ createdAt: 1 }).select('createdAt');
-        startDate = oldestVisit ? oldestVisit.createdAt : new Date(0);
-        endDate = new Date();
-    }
+        case 'all':
+          default:
+            startDate = new Date(0); // Start from the earliest date
+            endDate = new Date();    // Up to the current date
+            break;
+      }
 
     // Fetch patients with their visits using populate and date range filter
     const patients = await Patients.find({})
