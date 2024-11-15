@@ -235,9 +235,6 @@ router.get("/patient-visit-sums-totals", async (req, res) => {
   }
 });
 
-
-
-
 router.get("/patient-visit-sums", async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -246,6 +243,9 @@ router.get("/patient-visit-sums", async (req, res) => {
 
     const dateRange = req.query.dateRange;
     let startDate, endDate;
+
+    // Extract the search term
+    const searchTerm = req.query.searchTerm || '';
 
     // Set up date range filter
     const now = new Date();
@@ -277,8 +277,14 @@ router.get("/patient-visit-sums", async (req, res) => {
             break;
       }
 
+    // Build the patient search query
+    let patientSearchQuery = {};
+    if (searchTerm) {
+      patientSearchQuery.name = { $regex: searchTerm, $options: 'i' }; // Case-insensitive search
+    }
+
     // Fetch patients with their visits using populate and date range filter
-    const patients = await Patients.find({})
+    const patients = await Patients.find(patientSearchQuery)
       .populate({
         path: "visit",
         match: {
@@ -305,7 +311,7 @@ router.get("/patient-visit-sums", async (req, res) => {
           SessionPrice: sessionPrice,
         };
       })
-      .filter((patient) => patient.TotalAmount > 0 || patient.SessionPrice > 0); // Corrected field name
+      .filter((patient) => patient.TotalAmount > 0 || patient.SessionPrice > 0);
 
     // Sort by TotalAmount-TheArrivingAmount in descending order
     const sortedPatients = processedPatients.sort(
@@ -318,17 +324,16 @@ router.get("/patient-visit-sums", async (req, res) => {
     const paginatedResults = sortedPatients.slice(skip, skip + pageSize);
 
     // Send the response
-    console.log("Total totalPages:", totalPages);
-    console.log("Total totalResults:", totalResults);
     res.set('X-Total-Pages', totalPages.toString());
-    res.set('Access-Control-Expose-Headers', 'X-Total-Pages'); // Expose the header
-
+    res.set('Access-Control-Expose-Headers', 'X-Total-Pages');
     res.json(paginatedResults);
   } catch (error) {
     console.error("Error fetching patient visit sums:", error);
     res.status(500).json({ error: "An error occurred while fetching data" });
   }
 });
+
+
 
 
 
