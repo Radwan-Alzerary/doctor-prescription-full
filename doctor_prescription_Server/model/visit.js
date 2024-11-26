@@ -9,6 +9,7 @@ const visitSqema = new mongoose.Schema(
     CauseOfVisite: { type: String, default: "" },
     management: { type: String, default: "" },
     type: { type: String, default: "" },
+    paymentVisit: { type: Boolean, default: false },
     priority: { type: String, default: "normal" },
     patients: { type: mongoose.Schema.Types.ObjectId, ref: "Patients" },
     chronicTherapy: { type: String, default: "" },
@@ -29,7 +30,7 @@ const visitSqema = new mongoose.Schema(
     NumberOfMaxillaryImplants: { type: Number },
     NumberOfMandibularImplants: { type: Number },
     NumberOfDaysForFreeReview: { type: Number },
-    dentalState:{type:String},
+    dentalState: { type: String },
     freeVisitDate: { type: Date },
 
   },

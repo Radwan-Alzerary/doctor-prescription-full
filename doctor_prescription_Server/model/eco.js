@@ -11,7 +11,7 @@ const EcoSchema = new Schema(
     type: { type: String },
     toDoctor: { type: String },
     wallThikness: {
-      wallThikness:{type: String,default:""},
+      wallThikness: { type: String, default: "" },
       IVS: { type: String, default: "" },
       LVIPW: { type: String, default: "" },
       EF: { type: String, default: "" },
@@ -41,6 +41,7 @@ const EcoSchema = new Schema(
     InteratrialSeptum: { type: String, default: "" },
     InteratrialCularSeptum: { type: String, default: "" },
     ECHOCARDIOGRAPHYFINDINGS: { type: String, default: "" },
+    SystolicFunction:{type:String,default:""},
     WallHypokinesia: { type: String, default: "" },
     PerticardialEffusion: { type: String, default: "" },
     active: { type: Boolean, default: false },
@@ -70,6 +71,7 @@ const EcoSchema = new Schema(
     MitralValvePML: { type: String, default: "" },
     EF: { type: String, default: "" },
     childred: {
+      CardiacPostion: { type: String, default: "" },
       Situs: { type: String, default: "" },
       Atrioventricular: { type: String, default: "" },
       GreatArteryRelation: { type: String, default: "" },
@@ -88,6 +90,7 @@ const EcoSchema = new Schema(
       TricuspedValve: { type: String, default: "" },
       AorticArch: { type: String, default: "" },
       PericardialEffusion: { type: String, default: "" },
+      CardiacPostion: { type: String, default: "" },
     },
   },
   {

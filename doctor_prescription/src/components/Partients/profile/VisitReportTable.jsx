@@ -1,5 +1,5 @@
 import React from 'react'
-import { ChevronRight, Trash2, Edit2, AlertCircle } from 'lucide-react'
+import { ChevronRight, Trash2, Edit2, AlertCircle, DollarSign } from 'lucide-react'
 
 const VisitReportTable = ({ visitData, onVisitDeleteHandel, onVisitEditHandel }) => {
   const getPriorityColor = (priority) => {
@@ -27,13 +27,15 @@ const VisitReportTable = ({ visitData, onVisitDeleteHandel, onVisitEditHandel })
                 <span className="text-sm font-medium text-gray-500">
                   {new Date(visit.createdAt).toLocaleString()}
                 </span>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(visit.priority)}`}>
-                  {visit.priority}
-                </span>
+                {!visit.paymentVisit && (
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(visit.priority)}`}>
+                    {visit.priority}
+                  </span>
+                )}
               </div>
               <div className="flex items-center space-x-2">
                 <button
-                  onClick={() => onVisitEditHandel(visit._id)}
+                  onClick={() => onVisitEditHandel(visit._id,visit.paymentVisit)}
                   className="p-1 rounded-full text-blue-600 hover:bg-blue-100 transition-colors duration-200"
                 >
                   <Edit2 size={16} />
@@ -46,23 +48,32 @@ const VisitReportTable = ({ visitData, onVisitDeleteHandel, onVisitEditHandel })
                 </button>
               </div>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{visit.CauseOfVisite}</h3>
-            <p className="text-sm text-gray-600 mb-4">{visit.chiefComplaint}</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="font-medium text-gray-500">الفحص السريري:</span> {visit.investigation}
+            {!visit.paymentVisit ? (
+              <>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{visit.CauseOfVisite}</h3>
+                <p className="text-sm text-gray-600 mb-4">{visit.chiefComplaint}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="font-medium text-gray-500">الفحص السريري:</span> {visit.investigation}
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-500">التشخيص:</span> {visit.diagnosis}
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-500">الادارية:</span> {visit.management}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <DollarSign size={24} className="text-green-600" />
+                <div className="text-lg font-medium text-gray-900">{visit.SessionPrice}</div>
               </div>
-              <div>
-                <span className="font-medium text-gray-500">التشخيص:</span> {visit.diagnosis}
-              </div>
-              <div>
-                <span className="font-medium text-gray-500">الادارية:</span> {visit.management}
-              </div>
-            </div>
+            )}
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6">
             <button
-              onClick={() => onVisitEditHandel(visit._id)}
+              onClick={() => onVisitEditHandel(visit._id,visit.paymentVisit)}
               className="flex items-center justify-center w-full text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors duration-200"
             >
               عرض التفاصيل الكاملة

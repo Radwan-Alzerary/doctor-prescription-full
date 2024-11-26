@@ -7,7 +7,8 @@ const systemSetting = require("../model/systemSetting");
 router.post("/new", async (req, res) => {
   try {
     console.log(req.body.data.patientId);
-    console.log(req.body.data.type);
+    console.log(req.body.data.paymentVisit);
+    
     const setting = await systemSetting.findOne();
     let visitNumberOfDaysForFreeReview = new Date();
     if (req.body.type !== "مراجعة") {
@@ -30,6 +31,7 @@ router.post("/new", async (req, res) => {
       riskFactor: req.body.data.riskFactor,
       pastMedicalHistory: req.body.data.pastMedicalHistory,
       drugHistory: req.body.data.drugHistory,
+      paymentVisit: req.body.data.paymentVisit,
       suspendedDx: req.body.data.suspendedDx,
       TotalAmount: req.body.data.TotalAmount,
       TheArrivingAmount: req.body.data.TheArrivingAmount,

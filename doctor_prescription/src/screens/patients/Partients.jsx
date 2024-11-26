@@ -43,6 +43,7 @@ import {
   Add,
   ArrowDropDown,
   ArrowDropUp,
+  AttachMoney,
   Book,
   Delete,
   Edit,
@@ -73,6 +74,7 @@ import CancelAlert from "../../components/pageCompond/CancelAlert";
 import DeleteAlert from "../../components/pageCompond/DeleteAlert";
 import VisitForm from "../../components/Partients/VisitForm";
 import { FixedSizeList as List } from "react-window";
+import PaymentVisit from "../../components/Partients/PaymentVisit";
 
 const Row = React.memo(
   ({
@@ -88,6 +90,7 @@ const Row = React.memo(
     onReportShowHandel,
     onLaboryShowHandel,
     onEditHande,
+    onCurrencyVisitHandel,
     onDeleteHande,
     onPrescriptionEditHandel,
     onPrescriptionDeleteHande,
@@ -112,7 +115,7 @@ const Row = React.memo(
     const isBeforeFreeVisitDate = (freeVisitDate) => {
       return new Date() < new Date(freeVisitDate);
     };
-    
+
     return (
       <React.Fragment>
         <TableRow
@@ -134,9 +137,9 @@ const Row = React.memo(
               align="center"
             >
               <div className={`flex ${new Date() < new Date(row.freeVisitDate) ? 'text-green-400' : ''} justify-center items-center gap-4 font-bold text-base`}>
-              {row.name}
-              
-              {row.bookedPriority > 0 ? (
+                {row.name}
+
+                {row.bookedPriority > 0 ? (
                   <div className=" bg-cyan-500 rounded-full w-8 h-8 flex justify-center items-center">
                     {row.bookedPriority}
                   </div>
@@ -397,6 +400,7 @@ const Row = React.memo(
                     >
                       <Delete fontSize="inherit" />
                     </IconButton>
+
                   </>
                 ) : (
                   ""
@@ -413,6 +417,16 @@ const Row = React.memo(
                 aria-label="delete"
               >
                 <Edit aria-label="expand row" size="small"></Edit>
+              </IconButton>
+              <IconButton
+                sx={{ color: green[400] }}
+                className=" hover:text-blue-600"
+                onClick={() => {
+                  onCurrencyVisitHandel(row._id);
+                }}
+                aria-label="delete"
+              >
+                <AttachMoney aria-label="expand row" size="small"></AttachMoney>
               </IconButton>
             </TableCell>
           ) : (
@@ -532,6 +546,7 @@ function Partients() {
   const [showPartientsEditForm, setShowPartientsEditForm] = useState(false);
   const [showAddReportForm, setShowAddReportForm] = useState(false);
   const [showVisitForm, setShowVisitForm] = useState(false);
+  const [showPaymentVisitForm, setShowPaymentVisitForm] = useState(false);
   const [showLaporyReportForm, setShowLaporyReportForm] = useState(false);
   const [showPartientProfile, setShowPartientProfile] = useState(false);
   const [showMidicalForm, setShowMidicalForm] = useState(false);
@@ -541,6 +556,9 @@ function Partients() {
   const [showLabReportEditForm, setShowLabReportEditForm] = useState(false);
   const [showVisitReportEditForm, setShowVisitReportEditForm] = useState(false);
   const [nextVisit, setNextVisit] = useState("");
+
+  const [ShowPaymentEditVisitForm, setShowPaymentEditVisitForm] = useState(false);
+
 
   const [partientsSelectId, setPartientsSelectId] = useState("");
   const [PrescriptionId, setPrescriptionId] = useState("");
@@ -590,8 +608,6 @@ function Partients() {
   const timeoutRef = useRef(null);
   const [orginBarcode, setOrginBarcode] = useState("");
   const [barcode, setBarcode] = useState("");
-
-
 
   const getPatientsList = useCallback(() => {
     axios
@@ -947,12 +963,17 @@ function Partients() {
   );
 
   const handelVisitReportEdit = useCallback(
-    (id) => {
+    (id, payment) => {
       axios
         .get(`${serverAddress}/visit/getone/${id}`)
         .then((response) => {
           setSelectedaLabory(response.data);
-          setShowVisitReportEditForm(true);
+          if (payment) {
+            setShowPaymentEditVisitForm(true)
+          } else {
+            setShowVisitReportEditForm(true);
+
+          }
         })
         .catch((error) => {
           console.error("Error fetching categories:", error);
@@ -1231,6 +1252,7 @@ function Partients() {
     [serverAddress]
   );
 
+
   const onPrescriptionShowHande = useCallback(
     (id) => {
       axios
@@ -1505,11 +1527,14 @@ function Partients() {
 
   const handleNewVisit = useCallback(
     (data) => {
+      console.log(data)
+
       axios
         .post(`${serverAddress}/visit/new`, { data })
         .then((response) => {
           getPatientsList();
           setShowVisitForm(false);
+          setShowPaymentVisitForm(false);
         })
         .catch((error) => {
           console.error("Error making POST request:", error);
@@ -1662,6 +1687,23 @@ function Partients() {
     },
     [serverAddress]
   );
+  const onCurrencyVisitHandel = useCallback(
+    (id) => {
+      setPartientsSelectId(id);
+      axios
+        .get(`${serverAddress}/patients/getOne/${id}`)
+        .then((response) => {
+          setUserEditData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+
+      setShowPaymentVisitForm(true);
+    },
+    [serverAddress]
+  );
+
 
   const onDeleteConfirmHandel = useCallback(
     (id, type) => {
@@ -2238,6 +2280,7 @@ function Partients() {
                   onDeleteHande={onDeleteHande}
                   onPrescriptionEditHandel={onPrescriptionEditHandel}
                   onPrescriptionDeleteHande={HandleOnPrescriptionDeleteHande}
+                  onCurrencyVisitHandel={onCurrencyVisitHandel}
                   currentUser={currentUser}
                 />
               ))}
@@ -2429,6 +2472,41 @@ function Partients() {
           />
         </>
       )}
+
+
+      {ShowPaymentEditVisitForm && (
+        <>
+          <BackGroundShadow onClick={() => setShowPaymentEditVisitForm(false)} />
+          <PaymentVisit
+            handleExit={() => ShowPaymentEditVisitForm(false)}
+            screenMode={settingData.pullUpFullScreenMode}
+            partientsSelectId={partientsSelectId}
+            onPrinterClick={HandleonPrinterClickText}
+            onFormSubmit={handelEditVisitReportData}
+            settingData={settingData}
+            type="edit"
+            data={selectedaLabory}
+          />
+        </>
+      )}
+
+
+      {showPaymentVisitForm && (
+        <>
+          <BackGroundShadow onClick={() => setShowPaymentVisitForm(false)} />
+          <PaymentVisit
+            userEditData={userEditData}
+            handleExit={handleHideClick}
+            screenMode={settingData.pullUpFullScreenMode}
+            partientsSelectId={partientsSelectId}
+            onPrinterClick={HandleonPrinterClickText}
+            settingData={settingData}
+            onFormSubmit={handleNewVisit}
+          />
+        </>
+      )}
+
+
       {showLabReportEditForm && (
         <>
           <BackGroundShadow onClick={() => setShowLabReportEditForm(false)} />
