@@ -182,7 +182,11 @@ router.get("/getall", async (req, res) => {
         populate: {
           path: "pharmaceutical.id",
         },
+      }).populate({
+        path: "visit",
+        match: { active: true }, // Filter prescriptions with active: true
       })
+
       .sort({
         booked: -1, // Sort by 'booked' field in descending order
         lastEditDate: -1,
@@ -193,6 +197,19 @@ router.get("/getall", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.get("/getallwithVisit", async (req, res) => {
+  try {
+    const patients = await Visit.find({ DateOfSecondvisit: { $exists: true, $ne: null } }
+    )
+      .populate("patients")
+    console.log(patients)
+    res.json(patients);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 router.get("/getbooked", async (req, res) => {
   try {
     const patients = await Patients.find({ booked: true }).sort({
@@ -389,9 +406,9 @@ router.get("/getbybarcode/:searchName", async (req, res) => {
       })
       .sort({ updatedAt: -1 }) // Sort by 'updatedAt' field in descending order
       .limit(10);
-      console.log(patients)
-      console.log(searchName)
-      res.json(patients);
+    console.log(patients)
+    console.log(searchName)
+    res.json(patients);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -46,6 +46,7 @@ import BookedScreen from "./screens/booked/BookedScreen";
 import AutoComplete from "./screens/AutoComplete/AutoComplete";
 import ConstDisease from "./screens/constDisease/ConstDisease";
 import FinancialScreen from "./screens/financial/FinancialScreen";
+import NextVisitCalender from "./screens/dashboard/NextVisitCalender";
 
 function App() {
   const location = useLocation();
@@ -178,8 +179,8 @@ function App() {
                   />
                   <Route exact path="/checkeco" element={<CheckPrint />} />
                   <Route exact path="/" element={<PrivateRoute />}>
-                  <Route index element={<Dashboard />} />
-                  <Route exact path="surgen">
+                    <Route index element={<Dashboard />} />
+                    <Route exact path="surgen">
                       <Route exact path="list" element={<SurgenList />}></Route>
                       <Route exact path="type" element={<SurgenType />}></Route>
                       <Route
@@ -206,6 +207,12 @@ function App() {
                       path="dashboard"
                       element={<Dashboard />}
                     ></Route>
+                    <Route
+                      exact
+                      path="NextVisitCalender"
+                      element={<NextVisitCalender />}
+                    ></Route>
+
                     <Route
                       exact
                       path="medicalreports"

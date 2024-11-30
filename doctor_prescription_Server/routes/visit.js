@@ -19,6 +19,7 @@ router.post("/new", async (req, res) => {
       freeVisitDate: visitNumberOfDaysForFreeReview,
       chiefComplaint: req.body.data.chiefComplaint,
       dateOfVisit: req.body.data.dateOfVisit,
+      patients : req.body.data.patientId,
       investigation: req.body.data.investigation,
       diagnosis: req.body.data.diagnosis,
       CauseOfVisite: req.body.data.CauseOfVisite,

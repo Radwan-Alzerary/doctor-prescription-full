@@ -10,7 +10,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import { useState, useMemo, useCallback } from "react";
 import Sidebaritems from "../../components/Sidebar/Sidebaritems";
 import LanguageSelector from "./lanquageSelector";
-import { Abc, Home, Medication, MonitorHeart, PriceCheck } from "@mui/icons-material";
+import { Abc, CalendarMonth, Home, Medication, MonitorHeart, PriceCheck } from "@mui/icons-material";
 import { FormattedMessage } from "react-intl";
 import logo from "../../logo.png";
 import AirlineSeatFlatAngledIcon from "@mui/icons-material/AirlineSeatFlatAngled";
@@ -166,6 +166,14 @@ const SideBarMenu = (props) => {
                 onClick={() => handleSubmenuChange("surgeryCalender")}
               />
             </SubMenu>
+            <Sidebaritems
+              active={activeSubmenu === "NextVisitCalender"}
+              title="NextVisitCalender"
+              icon={<CalendarMonth style={{ fontSize: "28px" }} />}
+              router="/NextVisitCalender"
+              onClick={() => handleSubmenuChange("NextVisitCalender")}
+            />
+
             <Sidebaritems
               active={activeSubmenu === "ECO"}
               title="ECO"
