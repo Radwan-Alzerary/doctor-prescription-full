@@ -86,8 +86,6 @@ router.post("/new", async (req, res) => {
   }
 });
 
-
-
 // Get all Medicalreports
 router.get("/getall", async (req, res) => {
   try {
@@ -115,7 +113,6 @@ router.get("/history/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 
 router.post("/editone/", async (req, res) => {
   try {
@@ -154,8 +151,6 @@ router.post("/editone/", async (req, res) => {
 });
 
 // Delete one Medicalreports by ID
-
-// Delete one Medicalreports by ID
 router.delete("/delete/:id", async (req, res) => {
   try {
     const visit = await Visit.findByIdAndDelete(req.params.id);
@@ -167,6 +162,7 @@ router.delete("/delete/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 router.get("/patient-visit-sums-totals", async (req, res) => {
   try {
@@ -235,13 +231,14 @@ router.get("/patient-visit-sums-totals", async (req, res) => {
       }
     ]);
 
-    const totalAmount = totals[0]?.totalAmount || 0;
+    const totalAmount = totals[0]?.totalAmount || 0 ;
     const totalArrivingAmount = totals[0]?.totalArrivingAmount || 0;
     const totalSessionPrice = totals[0]?.totalSessionPrice || 0;
     const totalRemainingAmount = totalAmount - totalArrivingAmount;
 
     res.json({
-      totalAmount,
+      totalAmount : totalAmount,
+      totalAmountWithSession : totalAmount+totalSessionPrice,
       totalArrivingAmount,
       totalSessionPrice,
       totalRemainingAmount
@@ -317,7 +314,7 @@ router.get("/patient-visit-sums", async (req, res) => {
       .map((patient) => {
         // Calculate the sums for each patient
         const totalAmount = patient.visit.reduce((sum, visit) => sum + (visit.TotalAmount || 0), 0);
-        const arrivingAmount = patient.visit.reduce((sum, visit) => sum + (visit.TheArrivingAmount || 0), 0);
+        const arrivingAmount = patient.visit.reduce((sum, visit) => sum + (visit.TheArrivingAmount || 0) , 0);
         const sessionPrice = patient.visit.reduce((sum, visit) => sum + (visit.SessionPrice || 0), 0);
 
         return {

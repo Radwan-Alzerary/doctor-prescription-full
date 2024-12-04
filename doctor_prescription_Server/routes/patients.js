@@ -231,6 +231,7 @@ router.get("/getcount", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 router.post("/reset-booked", async (req, res) => {
   try {
     // Update all patients and set booked to false
@@ -344,6 +345,7 @@ router.get("/getall/:page", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 router.get("/checktoken", async (req, res) => {
   let dayNum = 0;
   try {
@@ -373,6 +375,7 @@ router.get("/checktoken", async (req, res) => {
     res.status(500).json({ error: "An error occurred" });
   }
 });
+
 router.get("/getbyname/", async (req, res) => {
   const searchName = req.params.searchName;
   try {
@@ -391,6 +394,7 @@ router.get("/getbyname/", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 router.get("/getbybarcode/:searchName", async (req, res) => {
   const searchName = req.params.searchName;
   try {
@@ -413,6 +417,7 @@ router.get("/getbybarcode/:searchName", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 router.get("/getbymedical/", async (req, res) => {
   const searchName = req.params.searchName;
   try {
@@ -430,6 +435,7 @@ router.get("/getbymedical/", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 router.get("/getbymedical/:searchName", async (req, res) => {
   const searchName = req.params.searchName;
   try {

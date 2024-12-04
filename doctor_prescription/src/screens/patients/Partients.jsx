@@ -2323,9 +2323,7 @@ function Partients() {
           />
         </>
       )}
-
       {!loading && <Loading />}
-
       {showPartientsAddForm && (
         <>
           <BackGroundShadow onClick={handleHideClick} />
@@ -2472,8 +2470,6 @@ function Partients() {
           />
         </>
       )}
-
-
       {ShowPaymentEditVisitForm && (
         <>
           <BackGroundShadow onClick={() => setShowPaymentEditVisitForm(false)} />
@@ -2489,8 +2485,6 @@ function Partients() {
           />
         </>
       )}
-
-
       {showPaymentVisitForm && (
         <>
           <BackGroundShadow onClick={() => setShowPaymentVisitForm(false)} />
@@ -2505,8 +2499,6 @@ function Partients() {
           />
         </>
       )}
-
-
       {showLabReportEditForm && (
         <>
           <BackGroundShadow onClick={() => setShowLabReportEditForm(false)} />
