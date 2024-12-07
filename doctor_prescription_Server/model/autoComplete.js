@@ -20,7 +20,7 @@ const AutoComplteSchema = new mongoose.Schema(
     visitdiagnosis: [{ type: String }],
 
     visitChronicTherapy:[{type:String}],
-
+    visitinvestigation:[{type:String}],
     visitPriorChronicTherapy: [{ type: String }],
     visitCauseOfVisite: [{ type: String }],
     visitManagement: [{ type: String }],
