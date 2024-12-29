@@ -116,6 +116,8 @@ const Row = React.memo(
       return new Date() < new Date(freeVisitDate);
     };
 
+
+
     return (
       <React.Fragment>
         <TableRow
@@ -136,7 +138,43 @@ const Row = React.memo(
               scope="row"
               align="center"
             >
-              <div className={`flex ${new Date() < new Date(row.freeVisitDate) ? 'text-green-400' : ''} justify-center items-center gap-4 font-bold text-base`}>
+              <div className={`flex ${row.freeVisitDate
+                  ? (() => {
+                    // Parse the freeVisitDate
+                    const freeVisitDate = new Date(row.freeVisitDate);
+                    // Get the number of days to subtract
+                    const visitNumberOfDays = settingData.finanical.visitNumberOfDaysForFreeReview;
+                    // Create a new date by subtracting the specified number of days
+                    const todayCheck = new Date(freeVisitDate);
+                    todayCheck.setDate(freeVisitDate.getDate() - visitNumberOfDays);
+                    // Get today's date
+                    const today = new Date();
+                    // Normalize both dates to midnight to ignore time differences
+                    today.setHours(0, 0, 0, 0);
+                    todayCheck.setHours(0, 0, 0, 0);
+                    // Calculate the difference in days
+                    const diffTime = todayCheck - today;
+                    const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+                    // Debugging logs (optional)
+                    console.log('freeVisitDate:', freeVisitDate);
+                    console.log('todayCheck:', todayCheck);
+                    console.log('today:', today);
+                    console.log('diffDays:', diffDays);
+
+                    // Determine the class based on the difference
+                    if (diffDays === 0) {
+                      return 'text-green-400';
+                    } else if (diffDays < 0) {
+                      return 'text-purple-400';
+                    } else {
+                      return ''; // No additional class
+                    }
+                  })()
+                  : ''
+                } justify-center items-center gap-4 font-bold text-base`}
+
+              >
                 {row.name}
 
                 {row.bookedPriority > 0 ? (

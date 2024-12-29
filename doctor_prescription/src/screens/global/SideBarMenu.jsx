@@ -18,7 +18,7 @@ import AirlineSeatFlatAngledIcon from "@mui/icons-material/AirlineSeatFlatAngled
 const SideBarMenu = (props) => {
   const [collapsedMode, setCollapsedMode] = useState(true);
   const [activeSubmenu, setActiveSubmenu] = useState("main");
-
+  console.log(props.currentUser)
   const handleMenuToggle = useCallback(() => {
     setCollapsedMode(!collapsedMode);
   }, [collapsedMode]);
@@ -32,6 +32,7 @@ const SideBarMenu = (props) => {
       props.currentUser && new Date(props.currentUser.expireDate) > new Date(),
     [props.currentUser]
   );
+  console.log(isUserValid)
 
   const isDoctor = useMemo(
     () => isUserValid && props.currentUser.role === "doctor",
