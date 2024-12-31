@@ -34,7 +34,7 @@ router.get("/getone/:id", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-});
+}); 
 
 // Edit one ConstantDiseases by ID
 router.put("/edit/:id", async (req, res) => {
