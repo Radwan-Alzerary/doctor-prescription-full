@@ -69,7 +69,7 @@ function Register() {
       });
       console.log(response);
 
-      if (response.data.result) {
+      if (response.data.valid) {
         console.log("POST request successful:", response.data);
         const today = new Date();
         const futureDate = new Date(today);
